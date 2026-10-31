@@ -28,10 +28,37 @@ Working: language selection, loading screen, title screen, main menu, goal
 checklist, options, Create-A-Sim, and the in-game screen, with save data stored
 through the RMS shim.
 
+Audio works, all in Java:
+
+* the music and jingles are standard MIDI files, played through the JDK's
+  software synthesizer (`javax.sound.midi`) with looping and volume;
+* WAV (`audio/x-wav`) plays through `javax.sound.sampled`;
+* the game's AMR-NB sounds are decoded by
+  [AmrDecoder](./src/main/java/javax/microedition/media/AmrDecoder.java), a
+  pure-Java implementation of the 3GPP TS 26.073 decoding chain covering the
+  two modes the archive actually uses - **4.75 kbit/s** (`ck`, `cm`, `co`,
+  `cq`) and **12.2 kbit/s** (the other ten files): the LSF quantisers, pitch
+  decoding, gain quantisers and algebraic codebooks of those two modes, LSP/LPC
+  conversion, the MA gain predictor and the synthesis filter with the
+  standard's overflow guard. The standard's tables live in
+  [AmrTables](./src/main/java/javax/microedition/media/AmrTables.java),
+  [AmrLsfTables122](./src/main/java/javax/microedition/media/AmrLsfTables122.java),
+  [AmrLsfTables](./src/main/java/javax/microedition/media/AmrLsfTables.java) and
+  [AmrGainTables](./src/main/java/javax/microedition/media/AmrGainTables.java).
+  Nothing outside the JDK is involved.
+
+The MIDP `Player` contract - state machine, loop counts, `PlayerListener`
+events and `VolumeControl` - lives in
+[javax/microedition/media](./src/main/java/javax/microedition/media).
+
 Not implemented:
 
-* **Audio.** The retail archive ships no sound files, and the media shim
-  (`Manager`/`Player`) is a state-machine-only stub, so the game is silent.
+* **The other six AMR-NB modes.** No asset in the archive uses 5.15, 5.9, 6.7,
+  7.4, 7.95 or 10.2 kbit/s, so those frames decode to silence (timing is kept).
+* **AMR comfort noise (SID) frames.** SID frames decode to silence rather than
+  synthesised comfort noise; the game's clips carry no DTX.
+* **AMR post filter / phase dispersion.** The decoder reconstructs the speech
+  but skips those two enhancement stages of the reference decoder.
 * **M3G.** `javax.microedition.m3g` only implements what the game uses: one
   `Sprite3D` with a parallel camera, used for the full screen colour fades
   (`com/ea/sims3/ScreenFade.java`). It is not a general JSR-184 renderer.
@@ -72,6 +99,7 @@ java -jar build/libs/the-sims-3-mobile-1.0.jar
 | 0 – 9 | Number keys |
 | `*` and `#` | Star and pound |
 | F1 – F4 | Game keys A – D (the soft keys: usually *Select* and *Back*) |
+| Backspace | Also game key C (same as F3) |
 
 The emulator window can be scaled with system properties, for example
 `java -Dmidp.scale=3 -jar build/libs/the-sims-3-mobile-1.0.jar`.

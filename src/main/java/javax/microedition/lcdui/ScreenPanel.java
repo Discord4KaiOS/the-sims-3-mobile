@@ -182,6 +182,7 @@ final class ScreenPanel extends JPanel {
             case KeyEvent.VK_F2:
                 return Canvas.KEY_GAME_B;
             case KeyEvent.VK_F3:
+            case KeyEvent.VK_BACK_SPACE:
                 return Canvas.KEY_GAME_C;
             case KeyEvent.VK_F4:
                 return Canvas.KEY_GAME_D;
