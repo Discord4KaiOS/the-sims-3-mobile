@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-public final class t implements h {
+public final class SpriteRenderer implements SpriteIndex {
    private static byte[] a;
    private static short[][] a2;
    private static int a3;
@@ -14,12 +14,12 @@ public final class t implements h {
    private static short[][] c;
    private static short[][] d;
 
-   private t() {
+   private SpriteRenderer() {
    }
 
-   public static final boolean a(s var0) {
-      DataInputStream var1 = new DataInputStream(var0.a8(4));
-      a = new byte[s.a3(4)];
+   public static final boolean a(ResourceLoader var0) {
+      DataInputStream var1 = new DataInputStream(var0.openStream(4));
+      a = new byte[ResourceLoader.getSize(4)];
 
       try {
          var1.read(a);
@@ -36,10 +36,10 @@ public final class t implements h {
       var0.setColor(var3[var2] & 255, var3[var2 + 1] & 255, var3[var2 + 2] & 255);
    }
 
-   public static final boolean b(s var0) {
+   public static final boolean b(ResourceLoader var0) {
       try {
          short[][] var1 = new short[1418][5];
-         DataInputStream var2 = new DataInputStream(var0.a8(31));
+         DataInputStream var2 = new DataInputStream(var0.openStream(31));
 
          for (int var3 = 0; var3 < 1418; var3++) {
             short[] var4;
@@ -57,11 +57,11 @@ public final class t implements h {
       }
    }
 
-   public static final boolean c(s var0) {
+   public static final boolean c(ResourceLoader var0) {
       boolean var1 = false;
 
       try {
-         DataInputStream var2 = new DataInputStream(var0.a8(3));
+         DataInputStream var2 = new DataInputStream(var0.openStream(3));
          short[][] var3 = new short[710][];
          short[][] var4 = new short[710][];
          short[][] var5 = new short[710][];
@@ -95,7 +95,7 @@ public final class t implements h {
          c = var4;
          d = var5;
          var2.close();
-         var2 = new DataInputStream(var0.a8(3));
+         var2 = new DataInputStream(var0.openStream(3));
 
          for (int var17 = 0; var17 != 710; var17++) {
             int var19 = 0;
@@ -208,14 +208,14 @@ public final class t implements h {
       return var1 < var2.length - 1 ? var2[var1 + 1] : d[var0].length;
    }
 
-   public static final boolean a(s var0, int var1) {
+   public static final boolean a(ResourceLoader var0, int var1) {
       return a(var0, var1, null, null, 0);
    }
 
-   public static final boolean a(s var0, int var1, int[] var2, int[] var3, int var4) {
+   public static final boolean a(ResourceLoader var0, int var1, int[] var2, int[] var3, int var4) {
       int var5 = 0;
 
-      while (var5 < 72 && var1 != h.a[var5]) {
+      while (var5 < 72 && var1 != SpriteIndex.a[var5]) {
          var5++;
       }
 
@@ -226,9 +226,9 @@ public final class t implements h {
          if ((var6 = a4[var4])[var5] == null) {
             Image var7;
             if (var2 != null) {
-               var7 = var0.a(var1, var2, var3);
+               var7 = var0.loadImageRecolored(var1, var2, var3);
             } else {
-               var7 = s.a10(var1);
+               var7 = ResourceLoader.loadImage(var1);
             }
 
             var6[var5] = var7;
@@ -244,7 +244,7 @@ public final class t implements h {
    public static final boolean a5(int var0, int var1) {
       int var2 = 0;
 
-      while (var2 < 72 && var0 != h.a[var2]) {
+      while (var2 < 72 && var0 != SpriteIndex.a[var2]) {
          var2++;
       }
 
@@ -256,7 +256,7 @@ public final class t implements h {
       }
    }
 
-   public static final void a2(Graphics var0, int var1, int var2, int var3, int var4) {
+   public static final void drawFrame(Graphics var0, int var1, int var2, int var3, int var4) {
       if (var1 >= 0) {
          if ((var1 & 16384) != 0) {
             var1 &= -16385;
@@ -358,7 +358,7 @@ public final class t implements h {
             }
 
             if (var14 != null) {
-               int var38 = a3(var5);
+               int var38 = frameCount(var5);
 
                for (int var23 = 0; var23 < var38; var23++) {
                   int var24 = f(var5, var23);
@@ -442,7 +442,7 @@ public final class t implements h {
             }
 
             if (var14 != null) {
-               int var38 = a3(var5);
+               int var38 = frameCount(var5);
 
                for (int var23 = 0; var23 < var38; var23++) {
                   int var24 = f(var5, var23);
@@ -584,12 +584,12 @@ public final class t implements h {
       }
    }
 
-   public static final int a3(int var0) {
+   public static final int frameCount(int var0) {
       var0 &= -16385;
       return b[var0].length;
    }
 
-   public static final short a3(int var0, int var1) {
+   public static final short frameDuration(int var0, int var1) {
       var0 &= -16385;
       return b[var0][var1];
    }
@@ -861,7 +861,7 @@ public final class t implements h {
       return false;
    }
 
-   public static final Image a3(int var0, int var1, int var2) {
+   public static final Image getTileImage(int var0, int var1, int var2) {
       var0 &= -16385;
       short[] var3 = d[var0];
       int var4 = f(var0, var1);
@@ -919,8 +919,8 @@ public final class t implements h {
       return false;
    }
 
-   public static final void a(Graphics var0, d var1, int var2, int var3) {
-      a2(var0, var1.a, var1.b, var2, var3);
+   public static final void drawAnimator(Graphics var0, Animator var1, int var2, int var3) {
+      drawFrame(var0, var1.animId, var1.frame, var2, var3);
    }
 
    public static final void a12(int var0) {

@@ -6,7 +6,7 @@ import java.io.InputStream;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-public final class q {
+public final class Tile {
    public byte[] a;
    public short[] a2;
    public short[] b;
@@ -28,33 +28,33 @@ public final class q {
    private int j;
    private int k;
    private int l;
-   public q a7;
+   public Tile a7;
 
-   public static int a() {
+   public static int tileWidth() {
       return 16;
    }
 
-   public static int b() {
+   public static int tileHeight() {
       return 8;
    }
 
-   public static int a3(int var0) {
+   public static int toWorld16(int var0) {
       return var0 << 20;
    }
 
-   public static int b2(int var0) {
+   public static int toWorld8(int var0) {
       return var0 << 19;
    }
 
-   public final int c() {
+   public final int frameCount() {
       return this.a2 != null ? this.a2.length / 3 : 0;
    }
 
-   public final int d() {
+   public final int rowCount() {
       return this.b != null ? this.b.length / 3 : 0;
    }
 
-   public q() {
+   public Tile() {
       this.a2 = null;
       this.a4 = null;
       this.a5 = false;
@@ -66,7 +66,7 @@ public final class q {
       this.b2 = 0;
    }
 
-   public q(int var1, Image var2) {
+   public Tile(int var1, Image var2) {
       this.a2 = null;
       this.a4 = null;
       this.a5 = false;
@@ -82,7 +82,7 @@ public final class q {
       }
    }
 
-   public q(int var1, int var2, Image var3) {
+   public Tile(int var1, int var2, Image var3) {
       this.a4 = var3;
       this.c = var1;
       this.d = var2;
@@ -112,7 +112,7 @@ public final class q {
       this.h = var4;
    }
 
-   public final void a(Graphics var1) {
+   public final void draw(Graphics var1) {
       int var2 = var1.getClipX();
       int var3 = var1.getClipY();
       int var4 = var1.getClipWidth();
@@ -156,7 +156,7 @@ public final class q {
       if (this.a5) {
          return false;
       } else {
-         InputStream var3 = r.a7().a6.a8(var1);
+         InputStream var3 = GameCanvas.a7().a6.openStream(var1);
          System.gc();
          DataInputStream var4 = new DataInputStream(var3);
 
@@ -398,7 +398,7 @@ public final class q {
       }
    }
 
-   public final void a(boolean var1) {
+   public final void setLooping(boolean var1) {
       if (var1 && !this.b4) {
          if (this.g > 0 && this.h > 0) {
             this.b3 = Image.createImage(this.g, this.h);
@@ -419,7 +419,7 @@ public final class q {
       }
    }
 
-   public final void a10() {
+   public final void reset() {
       this.c2 = true;
    }
 

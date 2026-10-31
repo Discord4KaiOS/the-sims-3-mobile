@@ -2,7 +2,7 @@ package com.ea.sims3;
 
 import javax.microedition.lcdui.Graphics;
 
-public final class y extends u implements Runnable {
+public final class TitleScreen extends BaseScreen implements Runnable {
    public static int a5 = 0;
    private int b4 = 0;
    private int c3 = 0;
@@ -13,17 +13,17 @@ public final class y extends u implements Runnable {
    private Thread a6;
    private int p;
    private short[] c4;
-   private b[] a7;
+   private SdkString[] a7;
    private int q;
    private int r;
    private int s;
-   private d c5;
+   private Animator c5;
    private int t;
    private static final short[] d2 = new short[]{723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735};
    private int[] c6 = new int[32];
    private int[] d3 = new int[32];
-   private d d4;
-   private d e2;
+   private Animator d4;
+   private Animator e2;
    private int u;
    private int v;
    private int w;
@@ -64,13 +64,13 @@ public final class y extends u implements Runnable {
    private int M;
    private boolean e4;
 
-   public y(r var1) {
+   public TitleScreen(GameCanvas var1) {
       super(var1);
       var1.g = 197379;
-      this.d4 = new d();
-      this.e2 = new d();
-      this.c5 = new d();
-      this.c5.a(false);
+      this.d4 = new Animator();
+      this.e2 = new Animator();
+      this.c5 = new Animator();
+      this.c5.setRunning(false);
    }
 
    public final void a12(int var1) {
@@ -124,7 +124,7 @@ public final class y extends u implements Runnable {
    }
 
    private void a10() {
-      r var1 = super.a;
+      GameCanvas var1 = super.a;
       if (!super.a.a11()) {
          new StringBuffer().append("updateLoadingState: ").append(this.o).toString();
          switch (this.o) {
@@ -133,7 +133,7 @@ public final class y extends u implements Runnable {
                this.b5 = var2;
                this.d3(-1);
                this.d2();
-               com.ea.sims3.k.a3(1);
+               com.ea.sims3.SdkText.a3(1);
                this.o++;
                var1.o2();
                return;
@@ -151,7 +151,7 @@ public final class y extends u implements Runnable {
    }
 
    private void d2() {
-      super.a.a7.b7(10);
+      super.a.a7.play(10);
    }
 
    public final void b4() {
@@ -160,12 +160,12 @@ public final class y extends u implements Runnable {
    public final void c2() {
       super.a.c2(3076, -1);
       super.a.a12(-1);
-      com.ea.sims3.m.b4();
-      com.ea.sims3.k.b7(1);
+      com.ea.sims3.SdkSound.muteAll();
+      com.ea.sims3.SdkText.b7(1);
    }
 
    public final void a(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       int var3 = super.a.k2;
       if (super.a.k2 != -1) {
          if (var3 == 5) {
@@ -257,7 +257,7 @@ public final class y extends u implements Runnable {
 
    public final void a4(int var1, int var2) {
       if (a5 != 1) {
-         r var3 = super.a;
+         GameCanvas var3 = super.a;
          if (super.a.e4 && this.b4 != 0) {
             this.c4(this.b4);
             var3.k2();
@@ -281,13 +281,13 @@ public final class y extends u implements Runnable {
                      return;
                   case 5:
                      if (this.a3(var1, var2, 4128, 256)) {
-                        var3.a7.a(true);
+                        var3.a7.setEnabled(true);
                         this.f3(1);
                         return;
                      }
 
                      if (this.a3(var1, var2, 0, 512)) {
-                        var3.a7.a(false);
+                        var3.a7.setEnabled(false);
                         this.f3(1);
                         return;
                      }
@@ -423,7 +423,7 @@ public final class y extends u implements Runnable {
    }
 
    public final void c4(int var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       int var3 = a5;
       a5 = var1;
       var2.g2();
@@ -454,7 +454,7 @@ public final class y extends u implements Runnable {
          case 7:
             var2.a12(10);
             this.q = 18;
-            com.ea.sims3.t.a(super.a.a6, 82);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 82);
             var2.c2(2, 0);
             var2.a4(0, 16);
             return;
@@ -463,18 +463,18 @@ public final class y extends u implements Runnable {
             var2.a4(4, 0);
             return;
          case 9:
-            com.ea.sims3.t.a(super.a.a6, 48);
-            com.ea.sims3.t.a(super.a.a6, 47);
-            com.ea.sims3.t.a(super.a.a6, 46);
-            com.ea.sims3.t.a(super.a.a6, 45);
-            com.ea.sims3.t.a(super.a.a6, 44);
-            com.ea.sims3.t.a(super.a.a6, 43);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 48);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 47);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 46);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 45);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 44);
+            com.ea.sims3.SpriteRenderer.a(super.a.a6, 43);
             var2.c = true;
             var2.a5.a10();
             return;
          case 10:
-            this.d4.a4(681, 20);
-            this.e2.a4(679, 20);
+            this.d4.play(681, 20);
+            this.e2.play(679, 20);
             if (var3 != 11 && var3 != 17) {
                this.f2(0, 0);
             } else if (var3 == 11) {
@@ -551,34 +551,34 @@ public final class y extends u implements Runnable {
 
    public final void d3(int var1) {
       short[] var2 = this.b5;
-      com.ea.sims3.r.a(this.b5, 50, super.a.a22);
-      com.ea.sims3.r.c2(var2, 51);
-      com.ea.sims3.r.c2(var2, 59);
-      com.ea.sims3.r.c2(var2, 60);
-      com.ea.sims3.r.c2(var2, 61);
+      com.ea.sims3.GameCanvas.a(this.b5, 50, super.a.a22);
+      com.ea.sims3.GameCanvas.c2(var2, 51);
+      com.ea.sims3.GameCanvas.c2(var2, 59);
+      com.ea.sims3.GameCanvas.c2(var2, 60);
+      com.ea.sims3.GameCanvas.c2(var2, 61);
       if (super.a.a5.a11()) {
-         com.ea.sims3.r.c2(var2, 63);
+         com.ea.sims3.GameCanvas.c2(var2, 63);
       }
 
-      com.ea.sims3.r.c2(var2, 42);
-      com.ea.sims3.r.d2(var2, var1);
+      com.ea.sims3.GameCanvas.c2(var2, 42);
+      com.ea.sims3.GameCanvas.d2(var2, var1);
    }
 
    private void g2(int var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       switch (var1) {
          case 42:
             this.c4(19);
          default:
             return;
          case 51:
-            com.ea.sims3.t.a5(82, 0);
-            com.ea.sims3.t.a5(48, 0);
-            com.ea.sims3.t.a5(47, 0);
-            com.ea.sims3.t.a5(46, 0);
-            com.ea.sims3.t.a5(45, 0);
-            com.ea.sims3.t.a5(44, 0);
-            com.ea.sims3.t.a5(43, 0);
+            com.ea.sims3.SpriteRenderer.a5(82, 0);
+            com.ea.sims3.SpriteRenderer.a5(48, 0);
+            com.ea.sims3.SpriteRenderer.a5(47, 0);
+            com.ea.sims3.SpriteRenderer.a5(46, 0);
+            com.ea.sims3.SpriteRenderer.a5(45, 0);
+            com.ea.sims3.SpriteRenderer.a5(44, 0);
+            com.ea.sims3.SpriteRenderer.a5(43, 0);
             var2.l2(0);
             this.c4(14);
             return;
@@ -597,7 +597,7 @@ public final class y extends u implements Runnable {
    }
 
    private void e2() {
-      a var1 = super.a.a5;
+      PromoImages var1 = super.a.a5;
       if (super.a.a5.a7) {
          var1.b4();
       } else {
@@ -611,13 +611,13 @@ public final class y extends u implements Runnable {
          int var1 = super.a.f;
          short[] var2 = new short[5 + var1];
          this.c4 = var2;
-         com.ea.sims3.r.a(var2, 3, super.a.a22);
-         b[] var3 = new b[var1 + 1];
+         com.ea.sims3.GameCanvas.a(var2, 3, super.a.a22);
+         SdkString[] var3 = new SdkString[var1 + 1];
          this.a7 = var3;
 
          for (int var4 = 0; var4 < var1; var4++) {
-            com.ea.sims3.r.c2(var2, var4);
-            var3[var4] = com.ea.sims3.k.a(var4, 0, null);
+            com.ea.sims3.GameCanvas.c2(var2, var4);
+            var3[var4] = com.ea.sims3.SdkText.a(var4, 0, null);
          }
 
          int var5 = super.a.i2;
@@ -633,7 +633,7 @@ public final class y extends u implements Runnable {
    }
 
    private void c2(int var1, int var2) {
-      r var3 = super.a;
+      GameCanvas var3 = super.a;
       short var4 = this.c4[2];
       if (this.a3(var1, var2, 4128, 16384)) {
          var3.d3(var4);
@@ -646,7 +646,7 @@ public final class y extends u implements Runnable {
       } else {
          if (this.a3(var1, var2, 524288, 32768)) {
             if (var3.k2 == 5) {
-               com.ea.sims3.k.a13(var3.i2);
+               com.ea.sims3.SdkText.a13(var3.i2);
                var3.r2(0);
                return;
             }
@@ -654,7 +654,7 @@ public final class y extends u implements Runnable {
             super.a.b3(this.c4, var1);
             short var5;
             if ((var5 = this.c4[2]) != var4) {
-               com.ea.sims3.k.a13(var5);
+               com.ea.sims3.SdkText.a13(var5);
             }
          }
       }
@@ -804,21 +804,21 @@ public final class y extends u implements Runnable {
    }
 
    private void a(Graphics var1, int var2, int var3) {
-      r var4 = super.a;
+      GameCanvas var4 = super.a;
       int var5 = 255 - Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var4.b2(var1, 66, var6, 0, 0, var4.getWidth(), var4.getHeight());
    }
 
    private void d(Graphics var1, int var2, int var3) {
-      r var4 = super.a;
+      GameCanvas var4 = super.a;
       int var5 = Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var4.b2(var1, 65, var6, 0, 0, var4.getWidth(), var4.getHeight());
    }
 
    private void e(Graphics var1, int var2, int var3) {
-      r var4 = super.a;
+      GameCanvas var4 = super.a;
       int var5 = Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var1.setColor(var6);
@@ -826,21 +826,21 @@ public final class y extends u implements Runnable {
    }
 
    private void c(Graphics var1, int var2) {
-      r var3 = super.a;
-      com.ea.sims3.t.a(var1, var2);
+      GameCanvas var3 = super.a;
+      com.ea.sims3.SpriteRenderer.a(var1, var2);
       var1.fillRect(0, 0, var3.getWidth(), var3.getHeight());
    }
 
    private void f(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       this.c(var1, 60);
-      com.ea.sims3.t.a2(var1, 556, 0, var2.a(), var2.b());
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, 556, 0, var2.a(), var2.b());
    }
 
    private void g(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       short var3 = 0;
-      if (com.ea.sims3.r.b2 == 1) {
+      if (com.ea.sims3.GameCanvas.b2 == 1) {
          var3 = 558;
       } else {
          var3 = 557;
@@ -850,24 +850,24 @@ public final class y extends u implements Runnable {
       int var5 = var2.b();
       int var6 = 0;
       if (this.s != 0) {
-         var6 = com.ea.sims3.x.b(this.r, this.s);
+         var6 = com.ea.sims3.FixedMath.div(this.r, this.s);
       }
 
       if (this.q >= 12) {
-         com.ea.sims3.t.a2(var1, var3, 8, var4, var5);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 8, var4, var5);
          if (this.q == 12) {
             this.d(var1, this.s - this.r, this.s);
          }
       }
 
       if (this.q >= 11) {
-         com.ea.sims3.t.a2(var1, var3, 6, var4, var5);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 6, var4, var5);
          if (this.q == 11) {
             this.d(var1, this.s - this.r, this.s);
          }
       }
 
-      com.ea.sims3.t.a2(var1, var3, 0, var4, var5);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 0, var4, var5);
       int var7 = var4;
       if (this.q == 10) {
          int var8 = var2.getWidth();
@@ -876,17 +876,17 @@ public final class y extends u implements Runnable {
 
       int var14 = Math.min(0, var7 - var4);
       if (this.q >= 8) {
-         int var10 = -com.ea.sims3.t.d(var3, 1);
+         int var10 = -com.ea.sims3.SpriteRenderer.d(var3, 1);
          int var12 = var5;
          if (this.q == 8) {
             var12 = b(var10, var5, var6, 4);
          }
 
          if (var12 >= var5) {
-            com.ea.sims3.t.a2(var1, var3, 2, var4, var5);
+            com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 2, var4, var5);
          }
 
-         com.ea.sims3.t.a2(var1, var3, 1, var4 + var14, var12);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 1, var4 + var14, var12);
       }
 
       if (this.q >= 9) {
@@ -896,27 +896,27 @@ public final class y extends u implements Runnable {
          }
 
          int[] var15 = super.a2;
-         com.ea.sims3.t.a2(super.a2, var3, 3, 0);
+         com.ea.sims3.SpriteRenderer.a2(super.a2, var3, 3, 0);
          this.a4(var11 + var14 + var15[0], var5 + var15[1], 3);
       }
 
       if (this.q >= 10) {
-         com.ea.sims3.t.a2(var1, var3, 4, var7, var5);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 4, var7, var5);
          if (var7 <= var4) {
-            com.ea.sims3.t.a2(var1, var3, 5, var7, var5);
+            com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 5, var7, var5);
          }
       }
 
       if (this.q == 13 && this.r % 750 < 375) {
          int[] var9 = super.a2;
-         com.ea.sims3.t.a2(super.a2, var3, 7, 0);
+         com.ea.sims3.SpriteRenderer.a2(super.a2, var3, 7, 0);
          var2.a2(34, 0, var4 + var9[0], var5 + var9[1], 3);
       }
    }
 
    private void a4(int var1, int var2, int var3) {
-      r var4 = super.a;
-      b var5 = super.a.a4(25);
+      GameCanvas var4 = super.a;
+      SdkString var5 = super.a.a4(25);
       var4.a(var5, var3, var1, var2, 3);
    }
 
@@ -925,58 +925,58 @@ public final class y extends u implements Runnable {
       switch (var3) {
          case 0:
          default:
-            return var0 + com.ea.sims3.x.a(com.ea.sims3.x.a2(var2, var4), 0, var4);
+            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
          case 1:
-            var2 = com.ea.sims3.x.b(0, 65536, var2);
-            return var0 + com.ea.sims3.x.a(com.ea.sims3.x.a2(var2, var4), 0, var4);
+            var2 = com.ea.sims3.FixedMath.smoothStep(0, 65536, var2);
+            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
          case 2:
-            var2 = com.ea.sims3.x.b(0, 65536, 32768 + (var2 >> 1));
-            return var0 + com.ea.sims3.x.a(com.ea.sims3.x.a2(var2, var4), 0, var4);
+            var2 = com.ea.sims3.FixedMath.smoothStep(0, 65536, 32768 + (var2 >> 1));
+            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
          case 3:
             if (var2 < 58982) {
-               var2 = com.ea.sims3.x.a2(com.ea.sims3.x.b(0, 58982, var2), 68812);
+               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 58982, var2), 68812);
             } else {
-               int var16 = 65536 - com.ea.sims3.x.b(var2 - 58982, 6554);
-               var2 = 65536 + com.ea.sims3.x.a2(3276, var16);
+               int var16 = 65536 - com.ea.sims3.FixedMath.div(var2 - 58982, 6554);
+               var2 = 65536 + com.ea.sims3.FixedMath.mul(3276, var16);
             }
 
-            return var0 + com.ea.sims3.x.a2(var2, var4);
+            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
          case 4:
             if (var2 < 55705) {
-               var2 = com.ea.sims3.x.a2(com.ea.sims3.x.b(0, 55705, var2), 68812);
+               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 55705, var2), 68812);
             } else {
-               int var15 = 65536 - com.ea.sims3.x.b(var2 - 55705, 9831);
-               var2 = 65536 + com.ea.sims3.x.a2(3276, var15);
+               int var15 = 65536 - com.ea.sims3.FixedMath.div(var2 - 55705, 9831);
+               var2 = 65536 + com.ea.sims3.FixedMath.mul(3276, var15);
             }
 
-            return var0 + com.ea.sims3.x.a2(var2, var4);
+            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
          case 5:
             if (var2 < 49152) {
-               var2 = com.ea.sims3.x.a2(com.ea.sims3.x.b(0, 49152, var2), 98304);
+               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 49152, var2), 98304);
             } else {
-               int var14 = 65536 - com.ea.sims3.x.b(var2 - 49152, 16384);
-               var2 = 65536 + com.ea.sims3.x.a2(32768, var14);
+               int var14 = 65536 - com.ea.sims3.FixedMath.div(var2 - 49152, 16384);
+               var2 = 65536 + com.ea.sims3.FixedMath.mul(32768, var14);
             }
 
-            return var0 + com.ea.sims3.x.a2(var2, var4);
+            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
          case 6:
             if (var2 < 32768) {
-               var2 = com.ea.sims3.x.a2(com.ea.sims3.x.e(com.ea.sims3.x.b(com.ea.sims3.x.a2(var2, 102944), 32768)), 72089);
+               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul(var2, 102944), 32768)), 72089);
             } else {
                int var5;
-               int var6 = com.ea.sims3.x.a2(var5 = com.ea.sims3.x.b(var2 - 32768, 32768), 617662);
-               int var7 = 6554 - com.ea.sims3.x.a2(6554, var5);
-               var2 = com.ea.sims3.x.a2(com.ea.sims3.x.c(var6), var7) + 65536;
+               int var6 = com.ea.sims3.FixedMath.mul(var5 = com.ea.sims3.FixedMath.div(var2 - 32768, 32768), 617662);
+               int var7 = 6554 - com.ea.sims3.FixedMath.mul(6554, var5);
+               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(var6), var7) + 65536;
             }
 
-            return var0 + com.ea.sims3.x.a2(var2, var4);
+            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
       }
    }
 
    private void h(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       short var3 = 0;
-      if (com.ea.sims3.r.b2 == 1) {
+      if (com.ea.sims3.GameCanvas.b2 == 1) {
          var3 = 558;
       } else {
          var3 = 557;
@@ -984,11 +984,11 @@ public final class y extends u implements Runnable {
 
       int var4 = var2.a();
       int var5 = var2.b();
-      com.ea.sims3.t.a2(var1, var3, 8, var4, var5);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 8, var4, var5);
    }
 
    private void i(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       short[] var3 = this.b5;
       short var4 = this.b5[0];
       short var5 = var3[2];
@@ -998,7 +998,7 @@ public final class y extends u implements Runnable {
       int var10 = (var2.getHeight() - var7 >> 1) + 2;
       int var11 = 0;
       if (this.s != 0) {
-         var11 = com.ea.sims3.x.b(this.r, this.s);
+         var11 = com.ea.sims3.FixedMath.div(this.r, this.s);
       }
 
       int var12 = var10;
@@ -1014,12 +1014,12 @@ public final class y extends u implements Runnable {
          int var14;
          int var15 = var14 = var10 + 9;
          if (this.q == 15) {
-            var15 = b(-com.ea.sims3.t.d(557, 9), var14, var11, 3);
+            var15 = b(-com.ea.sims3.SpriteRenderer.d(557, 9), var14, var11, 3);
          }
 
-         com.ea.sims3.t.a2(var1, 557, 9, var13, var15);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, 557, 9, var13, var15);
          int[] var16 = super.a2;
-         com.ea.sims3.t.a2(super.a2, 557, 9, 0);
+         com.ea.sims3.SpriteRenderer.a2(super.a2, 557, 9, 0);
          this.a4(var13 + var16[0], var15 + var16[1], 4);
       }
 
@@ -1029,7 +1029,7 @@ public final class y extends u implements Runnable {
          int var24 = var4;
          if (this.q == 16) {
             var24 = this.r / 200;
-            var11 = com.ea.sims3.x.b(this.r % 200, 200);
+            var11 = com.ea.sims3.FixedMath.div(this.r % 200, 200);
          }
 
          int var25 = var10 + 22 + 7;
@@ -1059,8 +1059,8 @@ public final class y extends u implements Runnable {
    }
 
    private void h2() {
-      r var1 = super.a;
-      v var2 = super.a.a23;
+      GameCanvas var1 = super.a;
+      Neighborhood var2 = super.a.a23;
       var1.p2();
       var1.q2();
       this.a8 = var2.i(0, 6) != 0;
@@ -1073,9 +1073,9 @@ public final class y extends u implements Runnable {
 
    private void a(boolean var1) {
       this.b(var1);
-      r var2 = super.a;
-      o var3 = super.a.a24;
-      v var4 = var2.a23;
+      GameCanvas var2 = super.a;
+      Lot var3 = super.a.a24;
+      Neighborhood var4 = var2.a23;
       int[] var5 = this.c6;
       int[] var6 = this.d3;
       var3.a2(0, var5, var6);
@@ -1085,29 +1085,29 @@ public final class y extends u implements Runnable {
    }
 
    private void a(Graphics var1, int var2, int var3, boolean var4) {
-      r var5 = super.a;
-      v var6 = super.a.a23;
-      int var7 = this.c5.a;
+      GameCanvas var5 = super.a;
+      Neighborhood var6 = super.a.a23;
+      int var7 = this.c5.animId;
       if (var4) {
          int[] var8 = super.a2;
-         com.ea.sims3.t.a2(super.a2, var7, 0, 1);
+         com.ea.sims3.SpriteRenderer.a2(super.a2, var7, 0, 1);
          var2 -= var8[0];
          var3 -= var8[1];
       }
 
-      this.c5.a(var1, var2, var3);
+      this.c5.draw(var1, var2, var3);
       int[] var11 = super.a2;
-      this.c5.a2(var11, 0);
+      this.c5.matchesFrame(var11, 0);
       int var9 = var6.i(0, 2);
-      com.ea.sims3.t.a2(var1, this.t, var9, var2 + var11[0], var3 + var11[1]);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, this.t, var9, var2 + var11[0], var3 + var11[1]);
       if (var6.i(0, 8) != 0) {
          int var10 = var7 == 703 ? 704 : (var7 == 706 ? 707 : 17091);
-         com.ea.sims3.t.a2(var1, var10, 0, var2, var3);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var10, 0, var2, var3);
       }
    }
 
    private void b(boolean var1) {
-      v var2 = super.a.a23;
+      Neighborhood var2 = super.a.a23;
       short var3;
       short var4;
       if (super.a.a23.i(0, 0) == 0) {
@@ -1123,32 +1123,32 @@ public final class y extends u implements Runnable {
          var4 = 705;
       }
 
-      this.c5.a4(var3, 4);
+      this.c5.play(var3, 4);
       this.t = var4;
    }
 
    private void a2(int var1, boolean var2) {
-      if (!this.c5.a11()) {
+      if (!this.c5.isRunning()) {
          this.b(var2);
       }
 
-      this.c5.a13(var1);
+      this.c5.advance(var1);
    }
 
    private void l2(int var1) {
-      this.d4.a13(var1);
-      if (!this.d4.a11()) {
-         this.d4.a4(681, 20);
+      this.d4.advance(var1);
+      if (!this.d4.isRunning()) {
+         this.d4.play(681, 20);
       }
 
-      this.e2.a13(var1);
-      if (!this.e2.a11()) {
-         this.e2.a4(679, 20);
+      this.e2.advance(var1);
+      if (!this.e2.isRunning()) {
+         this.e2.play(679, 20);
       }
 
       this.i2(var1);
-      this.v = com.ea.sims3.u.a(this.v, this.w, var1, 8);
-      this.z = com.ea.sims3.u.a(this.z, this.A, var1, 8);
+      this.v = com.ea.sims3.BaseScreen.a(this.v, this.w, var1, 8);
+      this.z = com.ea.sims3.BaseScreen.a(this.z, this.A, var1, 8);
       if (Math.abs(this.v - this.w) < 32768) {
          this.v = this.w;
       }
@@ -1164,10 +1164,10 @@ public final class y extends u implements Runnable {
       } else if (this.a3(var1, var2, 0, 2)) {
          this.f3(11);
       } else if (this.a3(var1, var2, 8196, 0) && this.u > 0) {
-         this.d4.a4(680, 16);
+         this.d4.play(680, 16);
          this.f2(this.u - 1, -1);
       } else if (this.a3(var1, var2, 16640, 0) && this.u < d2.length - 1) {
-         this.e2.a4(678, 16);
+         this.e2.play(678, 16);
          this.f2(this.u + 1, 1);
       } else {
          if (d2[this.u] == 723) {
@@ -1200,7 +1200,7 @@ public final class y extends u implements Runnable {
    }
 
    private void m2(int var1) {
-      v var2 = super.a.a23;
+      Neighborhood var2 = super.a.a23;
       int var3 = super.a.a23.c6;
       if (var1 < 0) {
          var1 = var3 - 1;
@@ -1221,7 +1221,7 @@ public final class y extends u implements Runnable {
    }
 
    private void f2(int var1, int var2) {
-      r var3 = super.a;
+      GameCanvas var3 = super.a;
       if (!this.a8 && d2[var1] == 731) {
          var1 += var2;
       }
@@ -1234,12 +1234,12 @@ public final class y extends u implements Runnable {
          var1 += var2;
       }
 
-      int var4 = var3.getHeight() - 15 - (com.ea.sims3.t.d(697, 0) << 1);
-      int var6 = com.ea.sims3.t.a3(687);
-      int var7 = com.ea.sims3.t.d(688, 0);
+      int var4 = var3.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.d(697, 0) << 1);
+      int var6 = com.ea.sims3.SpriteRenderer.frameCount(687);
+      int var7 = com.ea.sims3.SpriteRenderer.d(688, 0);
       int var8 = (var4 >> 1) + 2 - var7 * var1 - (var7 >> 1);
       int var9 = var4 - 2 - var7 * var6;
-      var8 = com.ea.sims3.x.a(var8, var9, 2);
+      var8 = com.ea.sims3.FixedMath.clamp(var8, var9, 2);
       this.w = var8 << 16;
       if (var2 == 0) {
          this.v = var8 << 16;
@@ -1325,7 +1325,7 @@ public final class y extends u implements Runnable {
       if (var13 != -1) {
          this.G = var3.a24.a14(var13).length - 1;
       } else {
-         this.G = com.ea.sims3.t.a3(var5) - 1;
+         this.G = com.ea.sims3.SpriteRenderer.frameCount(var5) - 1;
       }
 
       if (var11 != -1) {
@@ -1345,7 +1345,7 @@ public final class y extends u implements Runnable {
    }
 
    private void b(int var1, boolean var2) {
-      v var3 = super.a.a23;
+      Neighborhood var3 = super.a.a23;
       this.E = var1;
       if (this.x != -1) {
          var3.i2(this.x, var1);
@@ -1379,15 +1379,15 @@ public final class y extends u implements Runnable {
       }
 
       int[] var14 = super.a2;
-      com.ea.sims3.t.b(super.a2, 689, 0, 0);
+      com.ea.sims3.SpriteRenderer.b(super.a2, 689, 0, 0);
       int var6 = var14[2];
       int var7 = this.G - this.F + 1;
-      int var8 = com.ea.sims3.t.d(683, 0);
+      int var8 = com.ea.sims3.SpriteRenderer.d(683, 0);
       int var9 = Math.min(var7 * var8, var6);
       int var10 = var6 - var9;
       int var11 = (var9 >> 1) + 0 - var8 * var1 - (var8 >> 1) + var10;
       int var12 = var9 - 0 - var8 * var7 + (var10 >> 1);
-      var11 = com.ea.sims3.x.a(var11, var12, 0);
+      var11 = com.ea.sims3.FixedMath.clamp(var11, var12, 0);
       this.A = var11 << 16;
       if (var2) {
          this.z = var11 << 16;
@@ -1400,7 +1400,7 @@ public final class y extends u implements Runnable {
       int var8 = 0;
 
       for (int var10 = 0; var10 < var6; var10++) {
-         com.ea.sims3.t.a(var0, var1[var10]);
+         com.ea.sims3.SpriteRenderer.a(var0, var1[var10]);
          int var9 = (var10 + 1) * var7 + 32768 >> 16;
          var0.fillRect(var2, var3 + var8, var4, var9 - var8);
          var8 = var9;
@@ -1415,18 +1415,18 @@ public final class y extends u implements Runnable {
    }
 
    private static final int a3(int var0) {
-      return com.ea.sims3.x.a2(17902, var0);
+      return com.ea.sims3.FixedMath.mul(17902, var0);
    }
 
    private void j(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       int var3 = super.a.getWidth();
       int var4 = var2.getHeight() - 15;
       c2(var1, 0, 0, var3, var4);
       int[] var5 = super.a2;
-      int var8 = com.ea.sims3.t.d(697, 0);
+      int var8 = com.ea.sims3.SpriteRenderer.d(697, 0);
       int var9;
-      int var14 = (var9 = com.ea.sims3.t.c(697, 0)) + 4;
+      int var14 = (var9 = com.ea.sims3.SpriteRenderer.c(697, 0)) + 4;
       int var15 = 0 + var8;
       int var16 = var9 - 4;
       int var17 = var4 - (var8 << 1);
@@ -1437,29 +1437,29 @@ public final class y extends u implements Runnable {
       int var22 = var1.getClipY();
       int var23 = var1.getClipWidth();
       int var24 = var1.getClipHeight();
-      com.ea.sims3.t.a(var1, 60);
+      com.ea.sims3.SpriteRenderer.a(var1, 60);
       var1.fillRect(2, 0, 1, var4);
       var1.fillRect(2 + var14 - 1, 0, 1, var4);
-      com.ea.sims3.t.a(var1, 77);
+      com.ea.sims3.SpriteRenderer.a(var1, 77);
       var1.fillRect(3, 0, 1, var4);
       var1.fillRect(2 + var14 - 2, 0, 1, var4);
-      com.ea.sims3.t.a(var1, 76);
+      com.ea.sims3.SpriteRenderer.a(var1, 76);
       var1.fillRect(4, var8, 2, var17);
       var1.fillRect(2 + var14 - 2 - 2, var8, 2, var17);
       a(var1, e3, 6, var15, var16, var17);
-      com.ea.sims3.t.a2(var1, 697, 0, 4, 0);
-      com.ea.sims3.t.a2(var1, 696, 0, 4, var4);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, 697, 0, 4, 0);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, 696, 0, 4, var4);
       int var25 = 6 + (var16 >> 1);
-      int var26 = com.ea.sims3.t.a3(687);
-      int var27 = com.ea.sims3.t.d(688, 0);
+      int var26 = com.ea.sims3.SpriteRenderer.frameCount(687);
+      int var27 = com.ea.sims3.SpriteRenderer.d(688, 0);
       if (this.u > 0) {
-         com.ea.sims3.t.a2(var5, 697, 0, 0);
-         this.d4.a(var1, 4 + var5[0], 0 + var5[1]);
+         com.ea.sims3.SpriteRenderer.a2(var5, 697, 0, 0);
+         this.d4.draw(var1, 4 + var5[0], 0 + var5[1]);
       }
 
       if (this.u < var26 - 1) {
-         com.ea.sims3.t.a2(var5, 696, 0, 0);
-         this.e2.a(var1, 4 + var5[0], var4 + var5[1]);
+         com.ea.sims3.SpriteRenderer.a2(var5, 696, 0, 0);
+         this.e2.draw(var1, 4 + var5[0], var4 + var5[1]);
       }
 
       var1.setClip(6, var15, var16, var17);
@@ -1483,12 +1483,12 @@ public final class y extends u implements Runnable {
             var31 = 0;
          }
 
-         com.ea.sims3.t.a2(var1, var30, var31, var25, var28);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var30, var31, var25, var28);
          var28 += var27;
       }
 
       var1.setClip(var21, var22, var23, var24);
-      com.ea.sims3.t.a2(var1, 702, 0, var18, var20);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, 702, 0, var18, var20);
       this.a(var1, var18, var20, false);
       short var44 = d2[this.u];
       var28 = var2.getWidth() - var14 - 2 - 8;
@@ -1496,29 +1496,29 @@ public final class y extends u implements Runnable {
       var25 = this.c(var1, var47, var28, 719, var44);
       var27 = this.B;
       if (this.B != 196) {
-         var47 = var25 + com.ea.sims3.x.a2(var4 - var19 - var25, 12179);
-         com.ea.sims3.t.a2(var1, var27, 0, var18, var47);
-         com.ea.sims3.t.b(var5, var27, 0, 0);
+         var47 = var25 + com.ea.sims3.FixedMath.mul(var4 - var19 - var25, 12179);
+         com.ea.sims3.SpriteRenderer.drawFrame(var1, var27, 0, var18, var47);
+         com.ea.sims3.SpriteRenderer.b(var5, var27, 0, 0);
          int var49 = var18 + var5[0];
          int var50 = var47 + var5[1];
          int var32 = var5[2];
          int var33 = var5[3];
          int var34 = var50 + (var33 >> 1);
-         int var35 = com.ea.sims3.t.c(683, 0);
+         int var35 = com.ea.sims3.SpriteRenderer.c(683, 0);
          var1.setClip(var49, var50, var32, var33);
          boolean var36 = this.y != -1;
          int var37 = var49 + (this.z >> 16) + (var36 ? 0 : var35 >> 1);
 
          for (int var38 = this.F; var38 <= this.G; var38++) {
             if (var36) {
-               o var39 = var2.a24;
+               Lot var39 = var2.a24;
                int var40 = this.y;
                byte[] var41 = var39.a14(var40);
                int[] var42 = var39.a15(var41[var38]);
                this.a(var1, var37, var34, var42, var38 == this.E);
             } else {
                int var51 = var38 == this.E ? this.C : this.D;
-               com.ea.sims3.t.a2(var1, var51, var38, var37, var34);
+               com.ea.sims3.SpriteRenderer.drawFrame(var1, var51, var38, var37, var34);
             }
 
             var37 += var35;
@@ -1526,13 +1526,13 @@ public final class y extends u implements Runnable {
 
          var1.setClip(var21, var22, var23, var24);
          if (this.E > this.F || var44 == 723) {
-            com.ea.sims3.t.a2(var5, var27, 0, 0);
-            super.a4.a(var1, var18 + var5[0], var47 + var5[1]);
+            com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 0);
+            super.a4.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
 
          if (this.E < this.G || var44 == 723) {
-            com.ea.sims3.t.a2(var5, var27, 0, 1);
-            super.b2.a(var1, var18 + var5[0], var47 + var5[1]);
+            com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 1);
+            super.b2.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
       }
 
@@ -1541,9 +1541,9 @@ public final class y extends u implements Runnable {
 
    private void a(Graphics var1, int var2, int var3, int[] var4, boolean var5) {
       int var6 = var5 ? 683 : 682;
-      com.ea.sims3.t.a2(var1, var6, 0, var2, var3);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, var6, 0, var2, var3);
       int[] var7 = super.a2;
-      com.ea.sims3.t.b(super.a2, 682, 0, 0);
+      com.ea.sims3.SpriteRenderer.b(super.a2, 682, 0, 0);
       int var8 = var2 + var7[0];
       int var9 = var3 + var7[1];
       int var10 = var7[2];
@@ -1572,7 +1572,7 @@ public final class y extends u implements Runnable {
    }
 
    private void k(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       this.a(var1, 18);
       int var3 = var2.getWidth();
       int var4 = var2.getHeight() - 15;
@@ -1581,13 +1581,13 @@ public final class y extends u implements Runnable {
    }
 
    private void i2() {
-      v var1 = super.a.a23;
+      Neighborhood var1 = super.a.a23;
       this.d(var1.j(), 15, 0);
    }
 
    public final void a2(Graphics var1, int var2, int var3, int var4, int var5) {
-      r var6 = super.a;
-      v var7 = super.a.a23;
+      GameCanvas var6 = super.a;
+      Neighborhood var7 = super.a.a23;
       int var8 = var2 + (var4 >> 1);
       int var9 = var3;
       int var10 = super.k;
@@ -1618,7 +1618,7 @@ public final class y extends u implements Runnable {
          var6.a2(var12, var14, var8, var9 + var13, 17);
          var9 += 15;
          var10++;
-         com.ea.sims3.u.a2(var1, var2, var9, var4);
+         com.ea.sims3.BaseScreen.a2(var1, var2, var9, var4);
       }
    }
 
@@ -1630,7 +1630,7 @@ public final class y extends u implements Runnable {
          int var7 = var2 + 4;
          int var8;
          int var9 = (var8 = var3 + 4) + super.e;
-         r var10 = super.a;
+         GameCanvas var10 = super.a;
          super.a.a2(722, 1, var7, var8, 20);
          int var11 = super.l;
          short var12 = var10.a23.b6(var11);
@@ -1645,8 +1645,8 @@ public final class y extends u implements Runnable {
    }
 
    private void h2(int var1, int var2) {
-      r var3 = super.a;
-      v var4 = super.a.a23;
+      GameCanvas var3 = super.a;
+      Neighborhood var4 = super.a.a23;
       this.a5(var1, var2);
       if (this.a3(var1, var2, 0, 4)) {
          this.c4(11);
@@ -1669,7 +1669,7 @@ public final class y extends u implements Runnable {
    }
 
    private void l(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       this.a(var1, 19);
       int var3 = var2.getWidth();
       int var4 = var2.getHeight() - 15;
@@ -1678,12 +1678,12 @@ public final class y extends u implements Runnable {
    }
 
    private void j2() {
-      this.d(com.ea.sims3.v.o(), 15, 0);
+      this.d(com.ea.sims3.Neighborhood.o(), 15, 0);
    }
 
    public final void b2(Graphics var1, int var2, int var3, int var4, int var5) {
-      r var6 = super.a;
-      v var7 = super.a.a23;
+      GameCanvas var6 = super.a;
+      Neighborhood var7 = super.a.a23;
       int var8 = var2 + (var4 >> 1);
       int var9 = var3;
       int var10 = super.k;
@@ -1714,7 +1714,7 @@ public final class y extends u implements Runnable {
          var6.a2(var12, var14, var8, var9 + var13, 17);
          var9 += 15;
          var10++;
-         com.ea.sims3.u.a2(var1, var2, var9, var4);
+         com.ea.sims3.BaseScreen.a2(var1, var2, var9, var4);
       }
    }
 
@@ -1754,7 +1754,7 @@ public final class y extends u implements Runnable {
    }
 
    private void o2(int var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       super.a.c4(1023);
       char[] var3 = a9[var1];
       if (this.d5 && var1 == this.J) {
@@ -1785,7 +1785,7 @@ public final class y extends u implements Runnable {
    }
 
    private void p2(int var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       this.I += var1;
       this.M -= var1 * 1638;
       this.L = var2.a2(957, 0);
@@ -1799,7 +1799,7 @@ public final class y extends u implements Runnable {
    }
 
    private void i2(int var1, int var2) {
-      r var3 = super.a;
+      GameCanvas var3 = super.a;
       int var4 = super.a.e();
       if (this.a3(var1, var2, 1023, 0)) {
          int var5;
@@ -1852,8 +1852,8 @@ public final class y extends u implements Runnable {
    }
 
    private void m(Graphics var1) {
-      r var2 = super.a;
-      v var3 = super.a.a23;
+      GameCanvas var2 = super.a;
+      Neighborhood var3 = super.a.a23;
       c2(var1, 0, 0, var2.getWidth(), var2.getHeight() - 15);
       int var4 = var2.getWidth();
       int var5 = var2.getHeight() - 15;
@@ -1862,7 +1862,7 @@ public final class y extends u implements Runnable {
       int var8 = super.i * 6 + 6 + 22 + 5;
       int var9 = var5 - var8 + 5;
       int var10 = this.c(var1, var7, var6, 746, -1);
-      b var11 = var2.b2();
+      SdkString var11 = var2.b2();
       int var12 = var2.a(var11, 1);
       int var13 = var7 + (var6 - var12 >> 1);
       int var14 = var10 - 16;
@@ -1877,22 +1877,22 @@ public final class y extends u implements Runnable {
          int var17 = 5;
          int var18 = var13;
          if (var11 != null) {
-            var18 = var13 + com.ea.sims3.k.a(var11, 0, var16);
+            var18 = var13 + com.ea.sims3.SdkText.a(var11, 0, var16);
             if (var16 != var2.e()) {
-               var17 = com.ea.sims3.k.a(var11, var16, 1);
+               var17 = com.ea.sims3.SdkText.a(var11, var16, 1);
             }
          }
 
          int var19 = var14 + var15;
-         com.ea.sims3.t.a(var1, 0);
+         com.ea.sims3.SpriteRenderer.a(var1, 0);
          var1.fillRect(var18, var19, var17, 1);
       }
 
       int var21 = var4 >> 1;
       var12 = var10 + (var5 - var10 - var8 >> 1);
-      com.ea.sims3.t.a2(var1, 709, 0, var21, var12);
+      com.ea.sims3.SpriteRenderer.drawFrame(var1, 709, 0, var21, var12);
       int[] var26 = super.a2;
-      com.ea.sims3.t.a2(super.a2, 709, 0, 0);
+      com.ea.sims3.SpriteRenderer.a2(super.a2, 709, 0, 0);
       var14 = var21 + var26[0];
       var15 = var12 + var26[1];
       this.c(var1, var14, var15);
@@ -1914,7 +1914,7 @@ public final class y extends u implements Runnable {
       }
 
       int var23 = var2.getHeight() - 30;
-      if (com.ea.sims3.r.b) {
+      if (com.ea.sims3.GameCanvas.b) {
          var2.a2(957, 0, this.M >> 16, var23, 20);
       }
 
@@ -1922,7 +1922,7 @@ public final class y extends u implements Runnable {
    }
 
    private void j2(int var1, int var2) {
-      r var3 = super.a;
+      GameCanvas var3 = super.a;
       int var4;
       int var5 = var4 = this.e4 ? 2 : var3.j;
       int var6 = 2 + (a5 == 14 ? 1 : 0);
@@ -1964,14 +1964,14 @@ public final class y extends u implements Runnable {
    }
 
    private void n(Graphics var1) {
-      r var2 = super.a;
+      GameCanvas var2 = super.a;
       int var3 = super.a.getWidth();
       int var4;
       int var5 = (var4 = var2.getHeight() - 15) - 6;
       int var6 = 3 + var5 - (a3(var5) >> 1);
       int var7 = var3 - 3 - 64 - 3 - 3;
       int var8 = a5 == 14 ? 77 : 43;
-      com.ea.sims3.t.a(var1, var8);
+      com.ea.sims3.SpriteRenderer.a(var1, var8);
       var1.fillRect(0, 0, var3, var4);
       var8 = var1.getClipX();
       int var9 = var1.getClipY();
@@ -1980,7 +1980,7 @@ public final class y extends u implements Runnable {
       var1.setClip(var8, 3, var10, var5);
       c2(var1, 3, 3, 64, var5);
       var1.setClip(var8, var9, var10, var11);
-      com.ea.sims3.t.a(var1, 0);
+      com.ea.sims3.SpriteRenderer.a(var1, 0);
       var1.drawRect(3, 3, 63, var5 - 1);
       if (!this.e4 && var2.e3()) {
          this.a(var1, 35, var6, false);
@@ -1996,14 +1996,14 @@ public final class y extends u implements Runnable {
 
       for (int var18 = 0; var18 < 2; var18++) {
          boolean var19 = !this.e4 && var18 == var2.j;
-         b var20 = var2.b8(var18) ? var2.b3(var18) : var2.a4(52);
+         SdkString var20 = var2.b8(var18) ? var2.b3(var18) : var2.a4(52);
          this.a(var1, 70, var17, var7, var16, var19, var20);
          var17 += var16 + 3;
       }
 
       this.k(var1, 70, var13, var7, var12);
       if (!this.e4 && var2.e3()) {
-         v var14 = var2.a23;
+         Neighborhood var14 = var2.a23;
          var16 = 70 + var7 - 4;
          var17 = var13 + 4 + 1;
          short var32 = var14.a11(var14.a11);
@@ -2018,7 +2018,7 @@ public final class y extends u implements Runnable {
          var2.a2(646, 1, 74, var17, 20);
          var2.a2(var21, 1, var16, var17, 24);
          var17 += super.i;
-         b var22 = var2.a2();
+         SdkString var22 = var2.a2();
          var2.g2(var14.e5);
          var2.a(var22, 1, 74, var17, 20);
       }

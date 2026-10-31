@@ -4,43 +4,43 @@ import java.io.DataInputStream;
 import java.io.InputStream;
 import javax.microedition.lcdui.Image;
 
-public final class s implements h, g, j {
-   private int[] a;
+public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources {
+   private int[] crcTable;
 
-   public s() {
-      this.a10();
+   public ResourceLoader() {
+      this.initCrcTable();
    }
 
-   public static final int a3(int var0) {
-      return j.b[var0];
+   public static final int getSize(int var0) {
+      return Resources.b[var0];
    }
 
-   public static final String a9(int var0) {
-      return j.a[var0];
+   public static final String getName(int var0) {
+      return Resources.a[var0];
    }
 
-   public static Image a10(int var0) {
+   public static Image loadImage(int var0) {
       try {
-         return Image.createImage(a9(var0));
+         return Image.createImage(getName(var0));
       } catch (Throwable var2) {
          return null;
       }
    }
 
-   public final InputStream a8(int var1) {
-      return this.getClass().getResourceAsStream(a9(var1));
+   public final InputStream openStream(int var1) {
+      return this.getClass().getResourceAsStream(getName(var1));
    }
 
-   public final byte[] a14(int var1) {
-      return this.b9(g.b[var1]);
+   public final byte[] loadSound(int var1) {
+      return this.loadBytes(SoundIndex.b[var1]);
    }
 
-   private byte[] b9(int var1) {
+   private byte[] loadBytes(int var1) {
       int var2;
-      byte[] var3 = new byte[var2 = j.b[var1]];
+      byte[] var3 = new byte[var2 = Resources.b[var1]];
 
       try {
-         DataInputStream var4 = new DataInputStream(this.a8(var1));
+         DataInputStream var4 = new DataInputStream(this.openStream(var1));
          var4.readFully(var3);
          return var3;
       } catch (Exception var5) {
@@ -48,11 +48,11 @@ public final class s implements h, g, j {
       }
    }
 
-   private static final int a(byte var0) {
+   private static final int ubyte(byte var0) {
       return 0xFF & var0;
    }
 
-   private static final int a(byte[] var0, int var1) {
+   private static final int readInt(byte[] var0, int var1) {
       int var2 = (var0[var1 + 0] & 255) << 24;
       int var3 = (var0[var1 + 1] & 255) << 16;
       int var4 = (var0[var1 + 2] & 255) << 8;
@@ -60,8 +60,8 @@ public final class s implements h, g, j {
       return var2 | var3 | var4 | var5;
    }
 
-   private final void a10() {
-      this.a = new int[256];
+   private final void initCrcTable() {
+      this.crcTable = new int[256];
 
       for (int var1 = 0; var1 <= 255; var1++) {
          int var2 = var1;
@@ -74,22 +74,22 @@ public final class s implements h, g, j {
             }
          }
 
-         this.a[var1] = var2;
+         this.crcTable[var1] = var2;
       }
    }
 
-   private int a(byte[] var1, int var2, int var3) {
+   private int crc32(byte[] var1, int var2, int var3) {
       int var4 = -1;
 
       for (int var5 = var2; var5 < var2 + var3; var5++) {
          int var6 = 255 & var1[var5] ^ var4 & 0xFF;
-         var4 = var4 >>> 8 ^ this.a[var6];
+         var4 = var4 >>> 8 ^ this.crcTable[var6];
       }
 
       return ~var4;
    }
 
-   private static void a(byte[] var0, int var1, int var2, int[] var3, int[] var4) {
+   private static void replacePalette(byte[] var0, int var1, int var2, int[] var3, int[] var4) {
       int var5 = var3.length;
       int var6 = var2 / 3;
 
@@ -120,18 +120,18 @@ public final class s implements h, g, j {
       }
    }
 
-   public final Image a(int var1, int[] var2, int[] var3) {
+   public final Image loadImageRecolored(int var1, int[] var2, int[] var3) {
       byte[] var4;
-      if (a((var4 = this.b9(var1))[0]) == 137
-         && a(var4[1]) == 80
-         && a(var4[2]) == 78
-         && a(var4[3]) == 71
-         && a(var4[4]) == 13
-         && a(var4[5]) == 10
-         && a(var4[6]) == 26
-         && a(var4[7]) == 10) {
-         int var5 = a(var4, 8);
-         int var6 = a(var4, 12);
+      if (ubyte((var4 = this.loadBytes(var1))[0]) == 137
+         && ubyte(var4[1]) == 80
+         && ubyte(var4[2]) == 78
+         && ubyte(var4[3]) == 71
+         && ubyte(var4[4]) == 13
+         && ubyte(var4[5]) == 10
+         && ubyte(var4[6]) == 26
+         && ubyte(var4[7]) == 10) {
+         int var5 = readInt(var4, 8);
+         int var6 = readInt(var4, 12);
          byte var7 = 0;
          byte var8 = 0;
          if (var5 > 0 && var6 == 1229472850) {
@@ -146,17 +146,17 @@ public final class s implements h, g, j {
 
             int var12;
             do {
-               var12 = a(var4, var11);
-               if (a(var4, var11 + 4) == 1347179589) {
+               var12 = readInt(var4, var11);
+               if (readInt(var4, var11 + 4) == 1347179589) {
                   var9 = var11;
                   var10 = var12;
                   break;
                }
             } while ((var11 += 12 + var12) < var4.length);
 
-            a(var4, var9 + 4 + 4, var10, var2, var3);
+            replacePalette(var4, var9 + 4 + 4, var10, var2, var3);
             if (var9 > 0) {
-               var12 = this.a(var4, var9 + 4, var10 + 4);
+               var12 = this.crc32(var4, var9 + 4, var10 + 4);
                int var13 = var9 + 4 + 4 + var10;
                var4[var13] = (byte)((var12 & 0xFF000000) >>> 24);
                var4[var13 + 1] = (byte)((var12 & 0xFF0000) >>> 16);

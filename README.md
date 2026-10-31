@@ -34,7 +34,7 @@ Not implemented:
   (`Manager`/`Player`) is a state-machine-only stub, so the game is silent.
 * **M3G.** `javax.microedition.m3g` only implements what the game uses: one
   `Sprite3D` with a parallel camera, used for the full screen colour fades
-  (`com/ea/sims3/l.java`). It is not a general JSR-184 renderer.
+  (`com/ea/sims3/ScreenFade.java`). It is not a general JSR-184 renderer.
 
 ## Requirements
 
@@ -119,13 +119,13 @@ annotated with a comment in the source:
 
 | File | Problem |
 |:-|:-|
-| `r.java` (`G`) | the entry counters were inferred as `byte`; the tables have more than 127 entries |
-| `b.java` (`a2`) | a comparison against the constant `1` was rendered as `!= true` |
-| `k.java` (`a4`) | one local slot is reused as two booleans and later as two ints |
-| `k.java` | `InputStream.read/skip` helpers cannot compile without handling `IOException` |
-| `v.java`, `w.java`, `o.java` | one local slot reused for two different variables |
-| `t.java`, `k.java` | `short`/`byte` arithmetic that needs an explicit cast |
-| `r.java`, `p.java`, `o.java`, `i.java` | calls that pass `null` to an overloaded method; the original descriptors were read from the class files to pick the right overload |
+| `GameCanvas.java` (`G`) | the entry counters were inferred as `byte`; the tables have more than 127 entries |
+| `SdkString.java` (`a2`) | a comparison against the constant `1` was rendered as `!= true` |
+| `SdkText.java` (`a4`) | one local slot is reused as two booleans and later as two ints |
+| `SdkText.java` | `InputStream.read/skip` helpers cannot compile without handling `IOException` |
+| `Neighborhood.java`, `SdkMoreGames.java`, `Lot.java` | one local slot reused for two different variables |
+| `SpriteRenderer.java`, `SdkText.java` | `short`/`byte` arithmetic that needs an explicit cast |
+| `GameCanvas.java`, `GameScreen.java`, `Lot.java`, `Sim.java` | calls that pass `null` to an overloaded method; the original descriptors were read from the class files to pick the right overload |
 
 ### Porting bugs found while play-testing
 
@@ -156,32 +156,45 @@ java -cp classes:asm.jar:asm-tree.jar:asm-analysis.jar NullArgs classes/**/*.cla
 
 ### Class map
 
-The names are left as they are in the archive. These are the roles that could be
-identified:
+The class names are no longer the obfuscated letters; each one is named after
+the role it plays (see [tools/rename-symbols.txt](./tools/rename-symbols.txt)
+for the mapping):
 
 | Class | Role |
 |:-|:-|
 | `MonkeyApp` | MIDlet entry point (`Display`, lifecycle) |
-| `r` | game controller: `Canvas`, frame timer, key handling, screen switching, save data |
-| `p` | in-game screen (the lot, Sims, cheats, day/hour advance) |
-| `y` | loading screen and title screen |
-| `u` | base class for the screens: panels, frames, soft keys |
-| `v` | the card based screen logic (it logs "trying card"/"final card") |
-| `o` | tile/room data of the lot plus the sprite drawing for it |
-| `c` | a placed object/Sim instance (position, state, animation list) |
-| `i` | `c` subclass for interactive Sims |
-| `d` | per-object animation state machine |
-| `n` | `TimerTask` that ticks the game loop every 15 ms |
-| `a`, `w` | EA "More Games" promo screen and its image provider |
-| `k` | EA SDK text engine: strings, glyph tables, text drawing |
-| `b` | EA SDK string class (`SDKString`) |
-| `s` | resource loader, including the PNG palette recolouring trick |
-| `t` | sprite/glyph drawing helpers and the image cache |
-| `m` | EA SDK sound manager |
-| `l` | the only M3G user: a full screen colour quad for fades |
-| `e`, `f` | EA SDK configuration flags/constants |
-| `g`, `h`, `j` | constant tables: key/action bits, sprite ids, resource names and sizes |
-| `q`, `x` | small helper/struct classes used by the renderer |
+| `GameCanvas` | game controller: `Canvas`, frame timer, key handling, screen switching, save data |
+| `GameScreen` | in-game screen (the lot, Sims, cheats, day/hour advance) |
+| `TitleScreen` | loading screen and title screen |
+| `BaseScreen` | base class for the screens: panels, frames, soft keys |
+| `Neighborhood` | card based screen logic and world data |
+| `Lot` | tile/room data of the lot plus the sprite drawing for it |
+| `Sim` | a Sim: motives, interaction routing, animation state |
+| `Entity` | base class for anything placed in the lot |
+| `Animator` | per-entity animation state machine (animation id, frame, timing, flags) |
+| `FrameTimer` | `TimerTask` that ticks the game loop every 15 ms |
+| `PromoImages`, `SdkMoreGames` | EA "More Games" promo screen and its image provider |
+| `SdkText` | EA SDK text engine: strings, glyph tables, text drawing |
+| `SdkString` | EA SDK string class with encodings |
+| `SdkSound`, `SdkConfig`, `SdkFeatures` | EA SDK sound manager and configuration |
+| `ResourceLoader` | resource loading, including the PNG palette recolouring trick |
+| `Resources` | resource name/size tables |
+| `SpriteRenderer` | sprite and glyph drawing helpers |
+| `SpriteIndex`, `SoundIndex` | sprite and sound index tables (constant interfaces) |
+| `Tile` | a tile/frame of a sprite sheet |
+| `ScreenFade` | the only M3G user: a full screen colour quad for fades |
+| `FixedMath` | 16.16 fixed point maths (sin, cos, sqrt, atan2, interpolation) |
+
+### Member names
+
+Classes, plus the members whose meaning could be established with confidence,
+were renamed by [tools/Rename.java](./tools/Rename.java), which resolves every
+occurrence through javac, so a rename can never hit an unrelated identifier.
+The mapping lives in [tools/rename-symbols.txt](./tools/rename-symbols.txt).
+
+Members that are still called `a`, `a2`, `b7`, … are the ones whose purpose is
+not obvious from the code; they are the natural next step for another pass.
+Locals are left as Vineflower's `varN`.
 
 ## Legal
 

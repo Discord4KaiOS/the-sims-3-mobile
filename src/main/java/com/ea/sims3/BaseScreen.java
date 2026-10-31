@@ -2,8 +2,8 @@ package com.ea.sims3;
 
 import javax.microedition.lcdui.Graphics;
 
-public abstract class u implements h, g, j {
-   public final r a;
+public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
+   public final GameCanvas a;
    public final int[] a2;
    public int d;
    private int a3;
@@ -14,8 +14,8 @@ public abstract class u implements h, g, j {
    public int i;
    private static final int[] c = new int[6];
    private final short[] b = new short[11];
-   public d a4;
-   public d b2;
+   public Animator a4;
+   public Animator b2;
    public int j;
    private int b3;
    public int k;
@@ -33,7 +33,7 @@ public abstract class u implements h, g, j {
       }
    }
 
-   public u(r var1) {
+   public BaseScreen(GameCanvas var1) {
       this.a = var1;
       this.a2 = new int[4];
    }
@@ -53,17 +53,17 @@ public abstract class u implements h, g, j {
    public abstract void c4(int var1);
 
    public final void a(Graphics var1, int var2) {
-      r var3 = this.a;
+      GameCanvas var3 = this.a;
       this.b(var1, var2, 0, 0, var3.getWidth(), var3.getHeight() - 15);
    }
 
    public final void b(Graphics var1, int var2, int var3) {
-      r var4 = this.a;
+      GameCanvas var4 = this.a;
       this.b(var1, var2, 0, var3, var4.getWidth(), var4.getHeight() - 15 - var3);
    }
 
    public final void n2() {
-      r var1 = this.a;
+      GameCanvas var1 = this.a;
       this.e = var1.b2(1);
       this.f = 216;
       this.g = this.f * 4 / 5;
@@ -71,29 +71,29 @@ public abstract class u implements h, g, j {
       this.h = 192;
       this.a3 = var1.getHeight() * 3 / 5 / var1.b2(1);
       this.i = var1.b2(1) + 2;
-      this.a4 = new d();
-      this.b2 = new d();
-      this.a4.a4(560, 4);
-      this.b2.a4(562, 4);
+      this.a4 = new Animator();
+      this.b2 = new Animator();
+      this.a4.play(560, 4);
+      this.b2.play(562, 4);
    }
 
    public final void o2() {
-      this.a4.a4(559, 16);
+      this.a4.play(559, 16);
    }
 
    public final void p2() {
-      this.b2.a4(561, 16);
+      this.b2.play(561, 16);
    }
 
    public final void i2(int var1) {
-      this.a4.a13(var1);
-      this.b2.a13(var1);
-      if (!this.a4.a11()) {
-         this.a4.a4(560, 20);
+      this.a4.advance(var1);
+      this.b2.advance(var1);
+      if (!this.a4.isRunning()) {
+         this.a4.play(560, 20);
       }
 
-      if (!this.b2.a11()) {
-         this.b2.a4(562, 20);
+      if (!this.b2.isRunning()) {
+         this.b2.play(562, 20);
       }
    }
 
@@ -208,7 +208,7 @@ public abstract class u implements h, g, j {
    }
 
    private void a(Graphics var1, int var2, int[] var3) {
-      r var4 = this.a;
+      GameCanvas var4 = this.a;
       int var5 = var3[0];
       int var6 = var3[1];
       int var7 = var3[2];
@@ -273,7 +273,7 @@ public abstract class u implements h, g, j {
          case 12:
          case 13:
          case 14:
-            b var20;
+            SdkString var20;
             if (var1 != null && (var20 = this.a4(var9)) != null) {
                int var24 = var5;
                int var27 = var6 + 1;
@@ -312,7 +312,7 @@ public abstract class u implements h, g, j {
             if (var1 != null) {
                int var23 = var5 + 1;
                int var26 = var7 - 3;
-               t.a(var1, var9);
+               SpriteRenderer.a(var1, var9);
                var1.fillRect(var23, var6, var26, 1);
             }
 
@@ -323,9 +323,9 @@ public abstract class u implements h, g, j {
             int var22 = var6 + 3;
             int var14 = var4.getHeight() - 15 - 3 - var22;
             if (var1 != null) {
-               t.a(var1, 77);
+               SpriteRenderer.a(var1, 77);
                var1.fillRect(0, var6, var19, 3);
-               t.a(var1, 76);
+               SpriteRenderer.a(var1, 76);
                var1.fillRect(0, var22, var19, var14);
                var6 = var22;
                var10 = var8 - var14;
@@ -342,15 +342,15 @@ public abstract class u implements h, g, j {
                int var18 = this.i + 2;
                int var21 = var4.getWidth();
                int var25 = var6 - 2;
-               t.a(var1, 77);
+               SpriteRenderer.a(var1, 77);
                var1.fillRect(0, var25, var21, 1);
                var1.fillRect(0, var25 + var18 - 1, var4.getWidth(), 1);
-               t.a(var1, 1);
+               SpriteRenderer.a(var1, 1);
                var1.fillRect(0, var25 + 1, var21, var18 - 2);
                int var29 = var5 + var7 - 25 + 3;
                int var31 = var5 + var7 + 3;
-               t.a2(var1, 660, 0, var29, var6);
-               t.a2(var1, 659, 0, var31, var6);
+               SpriteRenderer.drawFrame(var1, 660, 0, var29, var6);
+               SpriteRenderer.drawFrame(var1, 659, 0, var31, var6);
             }
             break;
          case 21:
@@ -410,7 +410,7 @@ public abstract class u implements h, g, j {
             var6 += var10;
             break;
          case 30:
-            var10 = ((y)this).a(var1, var5, var6, var7);
+            var10 = ((TitleScreen)this).a(var1, var5, var6, var7);
             var6 += var10;
             break;
          case 31:
@@ -420,22 +420,22 @@ public abstract class u implements h, g, j {
             var6 += var10;
             break;
          case 32:
-            var10 = ((p)this).a(var1, var5, var6, var7);
+            var10 = ((GameScreen)this).a(var1, var5, var6, var7);
             var6 += var10;
             break;
          case 34:
-            var10 = ((p)this).a(var1, var5, var6, var7, var9);
+            var10 = ((GameScreen)this).a(var1, var5, var6, var7, var9);
             var6 += var10;
             break;
          case 35:
-            var10 = ((p)this).b(var1, var5, var6, var7);
+            var10 = ((GameScreen)this).b(var1, var5, var6, var7);
             var6 += var10;
             break;
          case 37:
-            ((p)this).a(var1, var3);
+            ((GameScreen)this).a(var1, var3);
             return;
          case 38:
-            var10 = ((p)this).c(var1, var5, var6, var7);
+            var10 = ((GameScreen)this).c(var1, var5, var6, var7);
             var6 += var10;
       }
 
@@ -446,7 +446,7 @@ public abstract class u implements h, g, j {
    }
 
    public final void a2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      r var8 = this.a;
+      GameCanvas var8 = this.a;
       if (var7 == 4) {
          this.i(var1, var2, var3, var4, var5);
       }
@@ -455,19 +455,19 @@ public abstract class u implements h, g, j {
       int var10 = var1.getClipY();
       int var11 = var1.getClipWidth();
       int var12 = var1.getClipHeight();
-      int var13 = t.c(582, 0);
-      int var14 = t.d(582, 0);
-      t.a2(var1, 582, 0, var2, var3);
-      t.a2(var1, 582, 2, var2 + var4 - var13, var3);
+      int var13 = SpriteRenderer.c(582, 0);
+      int var14 = SpriteRenderer.d(582, 0);
+      SpriteRenderer.drawFrame(var1, 582, 0, var2, var3);
+      SpriteRenderer.drawFrame(var1, 582, 2, var2 + var4 - var13, var3);
       var1.setClip(var2 + var13, var10, var4 - (var13 << 1), var12);
-      t.a2(var1, 582, 1, var2 + var13, var3);
+      SpriteRenderer.drawFrame(var1, 582, 1, var2 + var13, var3);
       var1.setClip(var9, var10, var11, var12);
       if (var7 != 4) {
-         t.a(var1, 0);
+         SpriteRenderer.a(var1, 0);
          var1.fillRect(var2, var3 + var14, 1, var5 - var14);
          var1.fillRect(var2 + var4 - 1, var3 + var14, 1, var5 - var14);
          var1.fillRect(var2, var3 + var5 - 1, var4, 1);
-         t.a(var1, 76);
+         SpriteRenderer.a(var1, 76);
          var1.fillRect(var2 + 1, var3 + var14, var4 - 2, var5 - var14 - 1);
       }
 
@@ -481,14 +481,14 @@ public abstract class u implements h, g, j {
          int var19 = var3 + 3;
          int var21 = var2 + 4;
          int var17 = var2 + var4 - 4;
-         if (r.b) {
+         if (GameCanvas.b) {
             var21 = var2 + 56;
             var17 = var2 + var4 - 56;
          }
 
-         if (((p)this).c9 != 0 || p.a5 != 11 && p.a5 != 10) {
-            this.a4.a(var1, var21, var19);
-            this.b2.a(var1, var17, var19);
+         if (((GameScreen)this).c9 != 0 || GameScreen.a5 != 11 && GameScreen.a5 != 10) {
+            this.a4.draw(var1, var21, var19);
+            this.b2.draw(var1, var17, var19);
          }
       }
 
@@ -507,18 +507,18 @@ public abstract class u implements h, g, j {
 
          if (var20 != -1) {
             int[] var22 = this.a2;
-            t.b(this.a2, var20, 0, 0);
+            SpriteRenderer.b(this.a2, var20, 0, 0);
             var1.setClip(var2 + var22[0], var3 + var22[1], var22[2], var22[3]);
-            t.a2(var1, var20, 0, var2, var3);
+            SpriteRenderer.drawFrame(var1, var20, 0, var2, var3);
             var1.setClip(var2 + var4 - var22[2] + var22[0], var3 + var22[1], var22[2], var22[3]);
-            t.a2(var1, var20, 0, var2 + var4 - var22[2], var3);
+            SpriteRenderer.drawFrame(var1, var20, 0, var2 + var4 - var22[2], var3);
             var1.setClip(var9, var10, var11, var12);
          }
       }
    }
 
    public static void f(Graphics var0, int var1, int var2, int var3, int var4) {
-      t.a(var0, 77);
+      SpriteRenderer.a(var0, 77);
       var0.fillRect(var1, var2, var3, 6);
       var0.fillRect(var1, var2 + var4 - 6, var3, 6);
       var0.fillRect(var1, var2 + 6, 6, var4 - 12);
@@ -530,27 +530,27 @@ public abstract class u implements h, g, j {
       int var8 = var0.getClipY();
       int var9 = var0.getClipWidth();
       int var10 = var0.getClipHeight();
-      int var11 = t.c(var5, 0);
-      int var12 = t.d(var5, 0);
+      int var11 = SpriteRenderer.c(var5, 0);
+      int var12 = SpriteRenderer.d(var5, 0);
       int var13 = var1 + var11;
       int var14 = var1 + var3 - var11;
       int var15 = var3 - (var11 << 1);
       int var16 = var2 + var12;
       int var17 = var2 + var4 - var12;
       int var18 = var4 - (var12 << 1);
-      t.a2(var0, var5, 0, var1, var2);
-      t.a2(var0, var5, 2, var14, var2);
-      t.a2(var0, var5, 6, var1, var17);
-      t.a2(var0, var5, 4, var14, var17);
+      SpriteRenderer.drawFrame(var0, var5, 0, var1, var2);
+      SpriteRenderer.drawFrame(var0, var5, 2, var14, var2);
+      SpriteRenderer.drawFrame(var0, var5, 6, var1, var17);
+      SpriteRenderer.drawFrame(var0, var5, 4, var14, var17);
       var0.setClip(var7, var16, var9, var18);
-      t.a2(var0, var5, 7, var1, var16);
-      t.a2(var0, var5, 3, var14, var16);
+      SpriteRenderer.drawFrame(var0, var5, 7, var1, var16);
+      SpriteRenderer.drawFrame(var0, var5, 3, var14, var16);
       var0.setClip(var13, var8, var15, var10);
-      t.a2(var0, var5, 1, var13, var2);
-      t.a2(var0, var5, 5, var13, var17);
+      SpriteRenderer.drawFrame(var0, var5, 1, var13, var2);
+      SpriteRenderer.drawFrame(var0, var5, 5, var13, var17);
       var0.setClip(var7, var8, var9, var10);
       if (var6 != -1) {
-         t.a(var0, var6);
+         SpriteRenderer.a(var0, var6);
          var0.fillRect(var13, var16, var15, var18);
       }
    }
@@ -567,7 +567,7 @@ public abstract class u implements h, g, j {
       this.a(var1, var2, var3, var4, var5, var6, this.a.a4(var7));
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, b var7) {
+   public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, SdkString var7) {
       byte var8;
       if (var6) {
          var8 = 0;
@@ -585,12 +585,12 @@ public abstract class u implements h, g, j {
    }
 
    public static void c(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      t.a(var0, var5);
+      SpriteRenderer.a(var0, var5);
       var0.drawRect(var1, var2, var3 - 1, var4 - 1);
-      t.a(var0, 73);
+      SpriteRenderer.a(var0, 73);
       var0.fillRect(var1 + 1, var2 + 1, var3 - 2, 1);
       var0.fillRect(var1 + 1, var2 + 2, 1, var4 - 3);
-      t.a(var0, 74);
+      SpriteRenderer.a(var0, 74);
       var0.fillRect(var1 + 2, var2 + 2, var3 - 3, var4 - 3);
    }
 
@@ -603,7 +603,7 @@ public abstract class u implements h, g, j {
    }
 
    public final void b(Graphics var1, int[] var2) {
-      r var3 = this.a;
+      GameCanvas var3 = this.a;
       int var4 = this.a.b2(1);
       int var5 = Math.max(5, Math.min(var3.c(), this.a3));
       int var6 = var4 * var5 + 16;
@@ -623,7 +623,7 @@ public abstract class u implements h, g, j {
    }
 
    public final int b(Graphics var1, int var2, int var3, int var4, int var5) {
-      r var6 = this.a;
+      GameCanvas var6 = this.a;
       int var7 = var4 - 3 - 3;
       int var9 = 6 + var7 + 3;
       this.i(var1, var2, -3, var3, var9);
@@ -639,7 +639,7 @@ public abstract class u implements h, g, j {
    }
 
    public final int c(Graphics var1, int var2, int var3, int var4, int var5) {
-      r var6 = this.a;
+      GameCanvas var6 = this.a;
       this.i(var1, var2, -3, var3, 47);
       int var9 = var3 - 6;
       int var10 = var2 + (var3 - var9 >> 1);
@@ -658,13 +658,13 @@ public abstract class u implements h, g, j {
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, boolean var5, int var6) {
-      r var7 = this.a;
-      v var8 = this.a.a23;
+      GameCanvas var7 = this.a;
+      Neighborhood var8 = this.a.a23;
       int var9 = this.a.a23.i(var4, 0) == 0 ? (var5 ? 595 : 594) : (var5 ? 593 : 592);
       int var10 = var8.i(var4, 2);
-      t.a12(var6);
-      t.a2(var1, var9, var10, var2, var3 + 0);
-      t.a12(0);
+      SpriteRenderer.a12(var6);
+      SpriteRenderer.drawFrame(var1, var9, var10, var2, var3 + 0);
+      SpriteRenderer.a12(0);
    }
 
    public static void d(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
@@ -675,8 +675,8 @@ public abstract class u implements h, g, j {
       var0.fillRect(var1 + var3 - var5, var2 + var5, var5, var7);
    }
 
-   public final b a4(int var1) {
-      r var2 = this.a;
+   public final SdkString a4(int var1) {
+      GameCanvas var2 = this.a;
       if (var1 >= -12) {
          return var2.a4(var1);
       } else {
@@ -730,7 +730,7 @@ public abstract class u implements h, g, j {
    }
 
    public final void e(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      r var7 = this.a;
+      GameCanvas var7 = this.a;
       int var8 = var4 - b();
       int var9 = var2 + 2;
       int var10 = var3 + 2;
@@ -759,8 +759,8 @@ public abstract class u implements h, g, j {
       int var18 = var1.getClipWidth();
       int var19 = var1.getClipHeight();
       var1.setClip(var9, var10, var11, var12);
-      y var20 = var7.a9();
-      p var21 = var7.a6();
+      TitleScreen var20 = var7.a9();
+      GameScreen var21 = var7.a6();
       switch (var6) {
          case 0:
             var20.a2(var1, var9, var10, var11, var12);
@@ -792,7 +792,7 @@ public abstract class u implements h, g, j {
    }
 
    public static void a2(Graphics var0, int var1, int var2, int var3) {
-      t.a(var0, 75);
+      SpriteRenderer.a(var0, 75);
       var0.fillRect(var1, var2, var3, 1);
    }
 
@@ -807,26 +807,26 @@ public abstract class u implements h, g, j {
    }
 
    private static void a(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      t.a(var0, var5);
+      SpriteRenderer.a(var0, var5);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1);
    }
 
    private static void f(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      t.a(var0, var5);
+      SpriteRenderer.a(var0, var5);
       var0.fillRect(var1 + 1, var2, var3 - 2, 1);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1);
    }
 
    private static void g(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      t.a(var0, var5);
+      SpriteRenderer.a(var0, var5);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1 - 1);
       var0.fillRect(var1 + 1, var2 + var4 - 1, var3 - 2, 1);
    }
 
    public final void b(Graphics var1, int var2) {
-      r var3 = this.a;
+      GameCanvas var3 = this.a;
       int var4 = this.a.a23.m();
-      b var5 = var3.a2();
+      SdkString var5 = var3.a2();
       var3.e3(551);
       var3.f3(var3.g());
       var3.e3(27);
@@ -848,7 +848,7 @@ public abstract class u implements h, g, j {
    }
 
    private int b2(int var1) {
-      r var2 = this.a;
+      GameCanvas var2 = this.a;
       int var3 = this.a.a23.m();
       int var4 = var2.f();
       int var5 = var2.g();
@@ -881,15 +881,15 @@ public abstract class u implements h, g, j {
    }
 
    private void h(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      r var7 = this.a;
-      v var8 = this.a.a23;
+      GameCanvas var7 = this.a;
+      Neighborhood var8 = this.a.a23;
       int var9 = var2 + 3;
-      int var10 = t.d(565, 0);
+      int var10 = SpriteRenderer.d(565, 0);
       int var11 = 13 - (var10 >> 1);
       int var12;
       int var13 = (var12 = var2 + 3 + var10 + 3) + 3;
       int var14 = var2 + var4 - var13 - 3;
-      t.a(var1, 75);
+      SpriteRenderer.a(var1, 75);
       var1.fillRect(var12, var3, 1, var5);
       int var15 = var3;
       int var16 = 0;
@@ -947,7 +947,7 @@ public abstract class u implements h, g, j {
          }
 
          var7.a(var16, var19, 1, var14, var13, var15 + 13, 6);
-         t.a2(var1, var20, var21, var9, var15 + var11);
+         SpriteRenderer.drawFrame(var1, var20, var21, var9, var15 + var11);
          var16++;
          var15 += 27;
          var17++;
@@ -958,12 +958,12 @@ public abstract class u implements h, g, j {
    public final int d(Graphics var1, int var2, int var3, int var4, int var5) {
       int var6 = 8 + 6 * this.e;
       if (var1 != null) {
-         r var7 = this.a;
-         v var8 = this.a.a23;
+         GameCanvas var7 = this.a;
+         Neighborhood var8 = this.a.a23;
          int var9 = 0;
          int var10 = 5;
          if (var5 == 36) {
-            var9 = ((p)this).a();
+            var9 = ((GameScreen)this).a();
             var10 = var8.X(var9);
          }
 
@@ -988,7 +988,7 @@ public abstract class u implements h, g, j {
             var18 = var7.a2();
             var7.f3(var20 + 1);
             var7.e3(29);
-            var7.a((b)var18, 1, var11, var19, 20);
+            var7.a((SdkString)var18, 1, var11, var19, 20);
             int var21 = var8.k(var9, var20);
             if (var5 == 36 && !var8.d3(var9, var21)) {
                var21 = -1;
@@ -998,7 +998,7 @@ public abstract class u implements h, g, j {
                short var22 = var8.f2(var21);
                var7.a2(var22, 1, var13, var19, 20);
             } else {
-               t.a(var1, 0);
+               SpriteRenderer.a(var1, 0);
                var1.fillRect(var13, var19 + var15, var4 - var16, 1);
             }
 
@@ -1006,9 +1006,9 @@ public abstract class u implements h, g, j {
          }
 
          if (var5 == 36) {
-            ((p)this).d2(var1, var2, var3, var4, var6);
+            ((GameScreen)this).d2(var1, var2, var3, var4, var6);
          } else if (var5 == 33) {
-            ((p)this).e(var1, var2, var3, var4, var6);
+            ((GameScreen)this).e(var1, var2, var3, var4, var6);
          }
       }
 
@@ -1048,9 +1048,9 @@ public abstract class u implements h, g, j {
       this.a(var1, var2, var3, null);
    }
 
-   public final void a(Graphics var1, short[] var2, int var3, b[] var4) {
-      r var5 = this.a;
-      o var6 = this.a.a24;
+   public final void a(Graphics var1, short[] var2, int var3, SdkString[] var4) {
+      GameCanvas var5 = this.a;
+      Lot var6 = this.a.a24;
       short var7 = var2[0];
       short var8 = var2[3];
       short var9 = var2[2];
@@ -1096,9 +1096,9 @@ public abstract class u implements h, g, j {
             var22 = 76;
          }
 
-         t.a(var1, 77);
+         SpriteRenderer.a(var1, 77);
          var1.drawRect(var19, var20, var15, var18);
-         t.a(var1, var22);
+         SpriteRenderer.a(var1, var22);
          d(var1, var19 + 1, var20 + 1, var15 - 1, var18 - 1, var14 - 1);
          var19 += var14;
          var20 += var14;
@@ -1110,9 +1110,9 @@ public abstract class u implements h, g, j {
       int var36 = var19 + 3;
       int var23 = var15 - 6 + (var35 ? -9 : 1);
       int var24 = var36 + (var23 >> 1);
-      t.a(var1, 76);
+      SpriteRenderer.a(var1, 76);
       var1.fillRect(var19, var20, var15, var18);
-      t.a(var1, 77);
+      SpriteRenderer.a(var1, 77);
       var1.drawRect(var19, var20, var15, var18);
       if ((var3 & 16) == 0) {
          var1.fillRect(var19, var20 + var17, var15, 1);
@@ -1139,10 +1139,10 @@ public abstract class u implements h, g, j {
          if (var9 == var39 && var29 != 274 && var29 != 275) {
             var28 = 0;
             if ((var3 & 32) != 0) {
-               t.a(var1, 1);
+               SpriteRenderer.a(var1, 1);
                var1.fillRect(var36, var37, var23, 15);
             } else if (var16) {
-               t.a(var1, 77);
+               SpriteRenderer.a(var1, 77);
                var1.fillRect(var36, var37, var23, 15);
             } else {
                l(var1, var36, var37, var23, 15);
@@ -1164,7 +1164,7 @@ public abstract class u implements h, g, j {
                var5.a2(var1, var29, var28, var36, var37, var23, 17);
             }
          } else {
-            b var40 = var4[var39];
+            SdkString var40 = var4[var39];
             if (var9 == var39) {
                var5.a(1, var1, var40, var28, var36, var37, var23, 17);
             } else {
@@ -1177,17 +1177,17 @@ public abstract class u implements h, g, j {
    }
 
    public static void l(Graphics var0, int var1, int var2, int var3, int var4) {
-      t.a(var0, 62);
+      SpriteRenderer.a(var0, 62);
       var0.fillRect(var1, var2, var3, 1);
-      t.a(var0, 63);
+      SpriteRenderer.a(var0, 63);
       var0.fillRect(var1, var2 + 1, var3, var4 - 3);
-      t.a(var0, 64);
+      SpriteRenderer.a(var0, 64);
       var0.fillRect(var1, var2 + var4 - 2, var3, 1);
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7, boolean var8) {
       var2 += 3;
-      int var9 = t.d(599, 0);
+      int var9 = SpriteRenderer.d(599, 0);
       int var10 = var3 + var9 + 1 + 2;
       int var11 = var4 - (var9 + 1 + 2 << 1);
       int var12;
@@ -1211,17 +1211,17 @@ public abstract class u implements h, g, j {
 
       int var17 = var3 + 2;
       int var18 = var3 + var4 - 2 - var9;
-      t.a2(var1, 599, var12, var2, var17);
-      t.a2(var1, 598, var13, var2, var18);
+      SpriteRenderer.drawFrame(var1, 599, var12, var2, var17);
+      SpriteRenderer.drawFrame(var1, 598, var13, var2, var18);
       if (var14 == 2) {
          a2(var1, var2, var10, var11, 1);
       }
 
       a2(var1, var2, var15, var16, var14);
       if (var8) {
-         t.a(var1, 77);
+         SpriteRenderer.a(var1, 77);
          int var19 = var2 - 2;
-         int var20 = t.c(602, 0) + 4;
+         int var20 = SpriteRenderer.c(602, 0) + 4;
          var1.fillRect(var19, var3, var20, 1);
          var1.fillRect(var19, var3 + var4 - 1, var20, 1);
          var1.fillRect(var19 + var20, var3, 1, var4);
@@ -1229,24 +1229,24 @@ public abstract class u implements h, g, j {
    }
 
    private static void a2(Graphics var0, int var1, int var2, int var3, int var4) {
-      int var5 = t.d(601, var4);
-      int var6 = t.d(600, var4);
+      int var5 = SpriteRenderer.d(601, var4);
+      int var6 = SpriteRenderer.d(600, var4);
       int var7 = var0.getClipX();
       int var8 = var0.getClipY();
       int var9 = var0.getClipWidth();
       int var10 = var0.getClipHeight();
       var0.setClip(var7, var2, var9, var3);
-      t.a2(var0, 601, var4, var1, var2);
-      t.a2(var0, 600, var4, var1, var2 + var3 - var6);
+      SpriteRenderer.drawFrame(var0, 601, var4, var1, var2);
+      SpriteRenderer.drawFrame(var0, 600, var4, var1, var2 + var3 - var6);
       var2 += var5;
       var3 -= var5 + var6;
       var0.setClip(var7, var2, var9, var3);
-      t.a2(var0, 602, var4, var1, var2);
+      SpriteRenderer.drawFrame(var0, 602, var4, var1, var2);
       var0.setClip(var7, var8, var9, var10);
    }
 
    public static int b() {
-      return t.c(602, 0) + 6;
+      return SpriteRenderer.c(602, 0) + 6;
    }
 
    public static int a(int var0, int var1, int var2, int var3) {
@@ -1254,7 +1254,7 @@ public abstract class u implements h, g, j {
          int var4;
          int var5;
          if ((var5 = (var4 = var1 - var0) * var2 >> var3) == 0) {
-            var5 = x.a3(var4);
+            var5 = FixedMath.sign(var4);
          } else if (var4 > 0 && var0 + var5 > var1 || var4 < 0 && var0 + var5 < var1) {
             var5 = var4;
          }

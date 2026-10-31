@@ -2,10 +2,10 @@ package com.ea.sims3;
 
 import javax.microedition.lcdui.Graphics;
 
-public class c implements h, g, j {
+public class Entity implements SpriteIndex, SoundIndex, Resources {
    public static final int[] a = new int[10];
-   public final p a2;
-   public final r a3;
+   public final GameScreen a2;
+   public final GameCanvas a3;
    public int a4;
    public int b;
    private short a5;
@@ -27,31 +27,31 @@ public class c implements h, g, j {
    private int m;
    private int n;
    private short c2;
-   private d[] a8;
+   private Animator[] a8;
    private short d2;
    private int o;
    private int p;
-   private i a9;
-   private i b5;
+   private Sim a9;
+   private Sim b5;
 
-   public final v a8() {
+   public final Neighborhood a8() {
       return this.a3.a23;
    }
 
-   public final o a5() {
+   public final Lot a5() {
       return this.a3.a24;
    }
 
-   public c(p var1) {
+   public Entity(GameScreen var1) {
       this.a2 = var1;
-      this.a3 = r.a7();
-      this.a8 = new d[1];
-      this.a8[0] = new d();
+      this.a3 = GameCanvas.a7();
+      this.a8 = new Animator[1];
+      this.a8[0] = new Animator();
    }
 
    public void a2(int var1, int var2, int var3, int var4, int var5) {
-      o var6 = this.a5();
-      v var7 = this.a8();
+      Lot var6 = this.a5();
+      Neighborhood var7 = this.a8();
       this.a4(var2, var3);
       this.n2(var4);
       this.a4 = var1;
@@ -197,7 +197,7 @@ public class c implements h, g, j {
    }
 
    public final void a4(int var1, int var2, int var3) {
-      c var4 = null;
+      Entity var4 = null;
       if (this.a() == 8) {
          var4 = this.b3();
       }
@@ -225,19 +225,19 @@ public class c implements h, g, j {
    }
 
    public final void a(int[] var1) {
-      o var2 = this.a5();
+      Lot var2 = this.a5();
       int var3 = 0;
       int var4 = 0;
-      d var5;
-      int var6 = (var5 = this.a6(0)).a;
-      int var7 = var5.b;
+      Animator var5;
+      int var6 = (var5 = this.a6(0)).animId;
+      int var7 = var5.frame;
       if (this.a() == 16) {
          var6 = 270;
          var7 = 0;
       }
 
       if (var6 != -1) {
-         if (t.a2(var1, var6, var7, 0)) {
+         if (SpriteRenderer.a2(var1, var6, var7, 0)) {
             var3 = var1[0];
             var4 = var1[1];
          } else if (this.a13(16384)) {
@@ -250,19 +250,19 @@ public class c implements h, g, j {
    }
 
    public final void a(int[] var1, int var2) {
-      o var3 = this.a5();
-      int var4 = com.ea.sims3.o.f(this.c);
-      int var5 = com.ea.sims3.o.g(this.d);
+      Lot var3 = this.a5();
+      int var4 = com.ea.sims3.Lot.f(this.c);
+      int var5 = com.ea.sims3.Lot.g(this.d);
       int var6 = var3.b(this.a4, var2, this.e);
       int var7 = var3.c(this.a4, var2, this.e);
       int var8 = var4 + var6;
       int var9 = var5 + var7;
-      var1[0] = com.ea.sims3.o.d(var8);
-      var1[1] = com.ea.sims3.o.e(var9);
+      var1[0] = com.ea.sims3.Lot.d(var8);
+      var1[1] = com.ea.sims3.Lot.e(var9);
    }
 
-   public final int a(int var1, int var2, boolean var3, i var4) {
-      o var5 = this.a5();
+   public final int a(int var1, int var2, boolean var3, Sim var4) {
+      Lot var5 = this.a5();
       int[] var6 = a;
       int var7;
       if ((var7 = var5.r(this.a4)) <= 0) {
@@ -278,16 +278,16 @@ public class c implements h, g, j {
                int var12 = var6[1];
                if (var5.b3(var11, var12)) {
                   if (var3 && !this.a13(4194304)) {
-                     int var13 = com.ea.sims3.o.f(var11);
-                     int var14 = com.ea.sims3.o.g(var12);
+                     int var13 = com.ea.sims3.Lot.f(var11);
+                     int var14 = com.ea.sims3.Lot.g(var12);
                      boolean var15 = false;
-                     i[] var16 = this.a2.a13();
+                     Sim[] var16 = this.a2.a13();
 
                      for (int var17 = 0; var17 < var16.length && !var15; var17++) {
-                        i var18;
+                        Sim var18;
                         if ((var18 = var16[var17]) != var4) {
-                           int var19 = com.ea.sims3.o.f(var18.c);
-                           int var20 = com.ea.sims3.o.g(var18.d);
+                           int var19 = com.ea.sims3.Lot.f(var18.c);
+                           int var20 = com.ea.sims3.Lot.g(var18.d);
                            if (var19 == var13 && var20 == var14) {
                               var15 = true;
                            }
@@ -361,7 +361,7 @@ public class c implements h, g, j {
       if (this.b == -1) {
          return 0;
       } else {
-         o var1 = this.a5();
+         Lot var1 = this.a5();
          return this.a8().l(var1.a(), this.b);
       }
    }
@@ -370,15 +370,15 @@ public class c implements h, g, j {
       if (this.b == -1) {
          return -1;
       } else {
-         o var1 = this.a5();
+         Lot var1 = this.a5();
          return this.a8().m(var1.a(), this.b);
       }
    }
 
    private void E() {
       if (this.b != -1) {
-         o var1 = this.a5();
-         v var2 = this.a8();
+         Lot var1 = this.a5();
+         Neighborhood var2 = this.a8();
          int var3 = 0;
          if (this.a4 == 92) {
             var3 = this.h;
@@ -505,9 +505,9 @@ public class c implements h, g, j {
 
    public final void g2(int var1) {
       if (this.b8(2048)) {
-         var1 = x.a2(var1 << 16, 81920) >> 16;
+         var1 = FixedMath.mul(var1 << 16, 81920) >> 16;
       } else if (this.b8(4096)) {
-         var1 = x.a2(var1 << 16, 49152) >> 16;
+         var1 = FixedMath.mul(var1 << 16, 49152) >> 16;
       }
 
       boolean var2 = this.a5(var1, 0);
@@ -521,22 +521,22 @@ public class c implements h, g, j {
    }
 
    public final boolean a5(int var1, int var2) {
-      d var3;
-      return (var3 = this.a6(var2)) != null ? var3.a13(var1) : false;
+      Animator var3;
+      return (var3 = this.a6(var2)) != null ? var3.advance(var1) : false;
    }
 
    public final void e2() {
       int[] var1 = a;
-      d var2 = this.a6(0);
-      d var3 = this.a6(1);
+      Animator var2 = this.a6(0);
+      Animator var3 = this.a6(1);
       byte var4 = 1;
-      d var5 = var2;
+      Animator var5 = var2;
       int var6 = 0;
       int var7 = 0;
-      if (var3 != null && var3.a11()) {
+      if (var3 != null && var3.isRunning()) {
          var5 = var3;
          var4 = 0;
-         if (var2.a2(var1, 1)) {
+         if (var2.matchesFrame(var1, 1)) {
             var6 = var1[0];
             var7 = var1[1];
          } else if (this.b8(1024)) {
@@ -545,13 +545,13 @@ public class c implements h, g, j {
       }
 
       int var8;
-      if ((var8 = var5.a()) > var4) {
-         o var9 = this.a5();
+      if ((var8 = var5.frameDuration()) > var4) {
+         Lot var9 = this.a5();
          if (this.a() == 16) {
-            int var16 = var5.b;
+            int var16 = var5.frame;
             int var18 = this.j();
             int var20 = 2 + var18 - var16;
-            this.b5(var20).a4(this.d2, 16);
+            this.b5(var20).play(this.d2, 16);
             return;
          }
 
@@ -560,7 +560,7 @@ public class c implements h, g, j {
             int var12 = this.d;
             int var13 = var9.a2(var11, var12);
             int var14 = var9.b(var11, var12);
-            var5.a2(var1, var10);
+            var5.matchesFrame(var1, var10);
             var13 += var1[0] + var6 << 16;
             var14 += var1[1] + var7 << 16;
             var11 = var9.e(var13, var14);
@@ -575,7 +575,7 @@ public class c implements h, g, j {
       }
    }
 
-   public boolean a(int var1, i var2) {
+   public boolean a(int var1, Sim var2) {
       if (this.a4 == 92) {
          if (var1 == 148) {
             this.e3(0);
@@ -712,10 +712,10 @@ public class c implements h, g, j {
    }
 
    private void e2(int var1, int var2) {
-      r var3 = this.a3;
-      int var4 = x.b(0, 1500, this.i);
-      int var5 = -40 + x.a2(var4, -30);
-      b var6 = var3.a2();
+      GameCanvas var3 = this.a3;
+      int var4 = FixedMath.smoothStep(0, 1500, this.i);
+      int var5 = -40 + FixedMath.mul(var4, -30);
+      SdkString var6 = var3.a2();
       var3.g2(this.n);
       var3.a(var6, 0, var1, var2 + var5, 17);
    }
@@ -763,10 +763,10 @@ public class c implements h, g, j {
    }
 
    public final void b(int[] var1) {
-      o var2;
+      Lot var2;
       int var3 = (var2 = this.a5()).c(this.c, this.d);
       int var4 = var2.d(this.c, this.d);
-      this.a6(2).a2(var1, 0);
+      this.a6(2).matchesFrame(var1, 0);
       var1[0] += var3;
       var1[1] += var4;
    }
@@ -805,21 +805,21 @@ public class c implements h, g, j {
             var3 = false;
       }
 
-      d var4 = this.b5(2);
+      Animator var4 = this.b5(2);
       if (var2 != -1) {
          int var5 = this.a5().i(var2, this.e);
-         var4.a4(var5, var3 ? 20 : 16);
+         var4.play(var5, var3 ? 20 : 16);
       } else {
-         var4.a(false);
+         var4.setRunning(false);
       }
    }
 
    public final int d() {
-      c[] var1 = this.a2.a12();
-      c var2 = null;
+      Entity[] var1 = this.a2.a12();
+      Entity var2 = null;
 
       for (int var3 = 0; var3 < var1.length; var3++) {
-         c var4;
+         Entity var4;
          if ((var4 = var1[var3]) != this && var4.a() == 4) {
             var2 = var4;
             break;
@@ -834,17 +834,17 @@ public class c implements h, g, j {
    }
 
    public final boolean f3() {
-      o var1 = this.a5();
-      int var2 = com.ea.sims3.o.f(this.c);
-      int var3 = com.ea.sims3.o.g(this.d);
+      Lot var1 = this.a5();
+      int var2 = com.ea.sims3.Lot.f(this.c);
+      int var3 = com.ea.sims3.Lot.g(this.d);
       return !var1.a3(var2, var3, 1, 1, this.e) && this.a4 != 41;
    }
 
-   public final c a3() {
-      c[] var1 = this.a2.a12();
+   public final Entity a3() {
+      Entity[] var1 = this.a2.a12();
 
       for (int var2 = 0; var2 < var1.length; var2++) {
-         c var3;
+         Entity var3;
          if ((var3 = var1[var2]).a() == 8 && var3.b3() == this) {
             return var3;
          }
@@ -904,7 +904,7 @@ public class c implements h, g, j {
       var1[2] = var4;
    }
 
-   public final c b3() {
+   public final Entity b3() {
       int[] var1 = a;
       this.c(var1);
       return this.a2.a2(41, var1[0], var1[1]);
@@ -931,12 +931,12 @@ public class c implements h, g, j {
       }
 
       if (var2 != -1) {
-         o var4;
+         Lot var4;
          int var5 = (var4 = this.a5()).h(this.a4, var2);
          int var6 = var4.i(var5, this.e);
-         this.b5(2).a4(var6, var3);
+         this.b5(2).play(var6, var3);
       } else {
-         this.b5(2).a(false);
+         this.b5(2).setRunning(false);
       }
    }
 
@@ -974,7 +974,7 @@ public class c implements h, g, j {
       int var1 = -1;
       int var2 = -1;
       int var3 = this.a5().b2(this.a4);
-      v var4;
+      Neighborhood var4;
       int var5 = (var4 = this.a8()).b6;
 
       for (int var6 = 0; var6 < var5; var6++) {
@@ -990,8 +990,8 @@ public class c implements h, g, j {
       if (var1 == -1 && var2 == -1) {
          return 201;
       } else {
-         r var9 = this.a3;
-         b var7;
+         GameCanvas var9 = this.a3;
+         SdkString var7;
          if (var1 == 0) {
             var7 = var9.b2();
          } else {
@@ -1001,7 +1001,7 @@ public class c implements h, g, j {
          if (var2 == -1) {
             var9.a2(-10, 202, var7);
          } else {
-            b var8 = var9.a4(var4.R(var2));
+            SdkString var8 = var9.a4(var4.R(var2));
             var9.a(-10, 203, var7, var8);
          }
 
@@ -1077,7 +1077,7 @@ public class c implements h, g, j {
    }
 
    public final void k2(int var1) {
-      o var2 = this.a5();
+      Lot var2 = this.a5();
       int var3 = a3(var1);
       this.a4 = var3;
       var2.b2(this.b, var3);
@@ -1122,7 +1122,7 @@ public class c implements h, g, j {
       }
 
       if (var1) {
-         v var2;
+         Neighborhood var2;
          (var2 = this.a8()).e3(32);
          if (this.a4 == 21) {
             var2.e3(33);
@@ -1140,9 +1140,9 @@ public class c implements h, g, j {
       this.c2(196, 16);
 
       for (int var1 = 2; var1 <= 9; var1++) {
-         d var2;
+         Animator var2;
          if ((var2 = this.a6(var1)) != null) {
-            var2.a4(196, 16);
+            var2.play(196, 16);
          }
       }
    }
@@ -1153,9 +1153,9 @@ public class c implements h, g, j {
       int var4 = 2 + var3 - 1;
 
       for (int var5 = 0; var5 < var3; var5++) {
-         d var6;
-         (var6 = this.b5(var4 - var5)).a4(var2, 16);
-         var6.a10();
+         Animator var6;
+         (var6 = this.b5(var4 - var5)).play(var2, 16);
+         var6.rewind();
       }
    }
 
@@ -1208,17 +1208,17 @@ public class c implements h, g, j {
                var2 = 271;
             }
 
-            d var4;
-            (var4 = this.b5(1)).a4(var5, 16);
-            var4.a10();
+            Animator var4;
+            (var4 = this.b5(1)).play(var5, 16);
+            var4.rewind();
             break;
          case 2:
             if (this.l3()) {
                this.w2(0);
                var2 = 271;
-               d var3;
-               (var3 = this.b5(1)).a4(267, 16);
-               var3.a10();
+               Animator var3;
+               (var3 = this.b5(1)).play(267, 16);
+               var3.rewind();
             } else {
                var2 = 272;
             }
@@ -1229,7 +1229,7 @@ public class c implements h, g, j {
 
       this.c4(128);
       this.o2(var2);
-      this.a6(0).a10();
+      this.a6(0).rewind();
    }
 
    private void y2(int var1) {
@@ -1305,7 +1305,7 @@ public class c implements h, g, j {
       this.q2(var2);
    }
 
-   public final void a(i var1) {
+   public final void a(Sim var1) {
       this.a2.a(21, var1, this);
       this.a2(var1);
       this.n2((this.e + 2) % 4);
@@ -1335,34 +1335,34 @@ public class c implements h, g, j {
       this.q2(var3);
    }
 
-   public final d a6(int var1) {
+   public final Animator a6(int var1) {
       return var1 < this.a8.length ? this.a8[var1] : null;
    }
 
-   public final d b5(int var1) {
+   public final Animator b5(int var1) {
       if (var1 >= this.a8.length) {
-         d[] var2 = new d[var1 + 1];
+         Animator[] var2 = new Animator[var1 + 1];
          System.arraycopy(this.a8, 0, var2, 0, this.a8.length);
          this.a8 = var2;
       }
 
       if (this.a8[var1] == null) {
-         d var3 = new d();
+         Animator var3 = new Animator();
          this.a8[var1] = var3;
-         var3.a(false);
+         var3.setRunning(false);
       }
 
       return this.a8[var1];
    }
 
    public final void c2(int var1, int var2) {
-      this.b5(1).a4(var1, var2);
+      this.b5(1).play(var1, var2);
    }
 
    public final void C() {
-      d var1;
+      Animator var1;
       if ((var1 = this.a6(1)) != null) {
-         var1.a(false);
+         var1.setRunning(false);
       }
    }
 
@@ -1386,7 +1386,7 @@ public class c implements h, g, j {
       this.b4 = true;
    }
 
-   public final void b(i var1) {
+   public final void b(Sim var1) {
       if (this.a9 == null) {
          this.a9 = var1;
       } else {
@@ -1396,7 +1396,7 @@ public class c implements h, g, j {
       }
    }
 
-   public final void c(i var1) {
+   public final void c(Sim var1) {
       if (this.a9 == var1) {
          this.a9 = null;
       }
@@ -1407,7 +1407,7 @@ public class c implements h, g, j {
    }
 
    public void a(Graphics var1) {
-      o var2 = this.a5();
+      Lot var2 = this.a5();
       int[] var3 = a;
       int var4 = var2.d();
       int var5 = var2.e();
@@ -1416,49 +1416,49 @@ public class c implements h, g, j {
       if (this.a4 == 8) {
          this.e2(var6, var7);
       } else {
-         d var8;
-         (var8 = this.a6(0)).a(var1, var6, var7);
+         Animator var8;
+         (var8 = this.a6(0)).draw(var1, var6, var7);
          int var9;
-         d var10;
-         if ((var9 = this.a()) == 8 && (var10 = this.a6(2)) != null && var10.a11()) {
-            var10.a(var1, var6, var7);
+         Animator var10;
+         if ((var9 = this.a()) == 8 && (var10 = this.a6(2)) != null && var10.isRunning()) {
+            var10.draw(var1, var6, var7);
          }
 
          int var20 = var6;
          int var11 = var7;
-         d var12;
-         if ((var12 = this.a6(1)) != null && var12.a11()) {
-            if (var8.a2(var3, 1)) {
+         Animator var12;
+         if ((var12 = this.a6(1)) != null && var12.isRunning()) {
+            if (var8.matchesFrame(var3, 1)) {
                var20 = var6 + var3[0];
                var11 = var7 + var3[1];
-            } else if (var8.a2(var3, 0)) {
+            } else if (var8.matchesFrame(var3, 0)) {
                var20 = var6 + var3[0];
                var11 = var7 + var3[1];
             }
 
-            var12.a(var1, var20, var11);
+            var12.draw(var1, var20, var11);
          }
 
          if (var9 == 16 && var12 != null) {
-            int var13 = var12.a;
-            if (var12.a != 196) {
+            int var13 = var12.animId;
+            if (var12.animId != 196) {
                int var14;
                for (int var15 = (var14 = this.j()) - 1; var15 >= 0; var15--) {
-                  d var16;
+                  Animator var16;
                   if ((var16 = this.a6(2 + var15)) != null) {
                      int var17 = var14 - var15;
-                     t.a2(var3, var13, var17, 0);
+                     SpriteRenderer.a2(var3, var13, var17, 0);
                      int var18 = var20 + var3[0];
                      int var19 = var11 + var3[1];
-                     var16.a(var1, var18, var19);
+                     var16.draw(var1, var18, var19);
                   }
                }
             }
          }
 
-         d var21;
-         if (var9 == 3 && (var21 = this.a6(2)).a11()) {
-            var21.a(var1, var6, var7);
+         Animator var21;
+         if (var9 == 3 && (var21 = this.a6(2)).isRunning()) {
+            var21.draw(var1, var6, var7);
          }
 
          if (this.a13(33554432)) {
@@ -1472,28 +1472,28 @@ public class c implements h, g, j {
 
             int var22 = var2.h(this.a4, 1);
             int var23 = var2.i(var22, this.e);
-            t.a2(var1, var23, 0, var6, var7);
+            SpriteRenderer.drawFrame(var1, var23, 0, var6, var7);
          }
       }
    }
 
    public final void a2(short[] var1) {
-      r.b2(var1, this.a5);
+      GameCanvas.b2(var1, this.a5);
       if (!this.m3()) {
          if (this.k3()) {
-            r.c2(var1, 326);
+            GameCanvas.c2(var1, 326);
          }
 
          if (this.j3()) {
-            r.c2(var1, 325);
+            GameCanvas.c2(var1, 325);
          }
 
          if (this.i3()) {
-            r.c2(var1, 324);
+            GameCanvas.c2(var1, 324);
             return;
          }
       } else {
-         r.c2(var1, 275);
+         GameCanvas.c2(var1, 275);
       }
    }
 
@@ -1505,9 +1505,9 @@ public class c implements h, g, j {
             this.m2(5);
          }
       } else {
-         o var2 = this.a5();
-         int var3 = com.ea.sims3.o.f(this.c);
-         int var4 = com.ea.sims3.o.g(this.d);
+         Lot var2 = this.a5();
+         int var3 = com.ea.sims3.Lot.f(this.c);
+         int var4 = com.ea.sims3.Lot.g(this.d);
          int var5 = var2.o(this.a4);
          int var6 = var2.p(this.a4);
          if (this.e == 1 || this.e == 3) {
@@ -1566,7 +1566,7 @@ public class c implements h, g, j {
       this.n2(Math.abs(var1) > Math.abs(var2) ? (var1 < 0 ? 2 : 0) : (var2 < 0 ? 3 : 1));
    }
 
-   public final void a2(c var1) {
+   public final void a2(Entity var1) {
       int var2 = Math.max(var1.a6 - 1, 0);
       int var3 = Math.max(var1.b2 - 1, 0);
       int var4 = var2 << 18;
@@ -1577,16 +1577,16 @@ public class c implements h, g, j {
    }
 
    public final void o2(int var1) {
-      this.a6(0).a4(var1, this.b8(128) ? 20 : 16);
+      this.a6(0).play(var1, this.b8(128) ? 20 : 16);
    }
 
    public final boolean h3() {
-      return this.a8[0].a11();
+      return this.a8[0].isRunning();
    }
 
    public final boolean e4(int var1) {
-      d var2;
-      return (var2 = this.a6(var1)) != null && var2.a11();
+      Animator var2;
+      return (var2 = this.a6(var1)) != null && var2.isRunning();
    }
 
    public final void p2(int var1) {
@@ -1604,7 +1604,7 @@ public class c implements h, g, j {
          return true;
       } else {
          if (this.a13(262144)) {
-            o var1 = this.a5();
+            Lot var1 = this.a5();
             int var2 = this.a4;
             int var3 = var1.o(var2);
             int var4 = var1.p(var2);
@@ -1614,8 +1614,8 @@ public class c implements h, g, j {
                var4 = var5;
             }
 
-            int var11 = com.ea.sims3.o.f(this.c);
-            int var6 = com.ea.sims3.o.g(this.d);
+            int var11 = com.ea.sims3.Lot.f(this.c);
+            int var6 = com.ea.sims3.Lot.g(this.d);
 
             for (int var7 = 0; var7 < var3; var7++) {
                for (int var8 = 0; var8 < var4; var8++) {
@@ -1626,7 +1626,7 @@ public class c implements h, g, j {
             }
          }
 
-         i[] var9 = this.a2.a13();
+         Sim[] var9 = this.a2.a13();
 
          for (int var10 = 0; var10 < var9.length; var10++) {
             if (var9[var10].a10 == this) {
@@ -1643,7 +1643,7 @@ public class c implements h, g, j {
    }
 
    public final boolean j3() {
-      o var1 = this.a5();
+      Lot var1 = this.a5();
       this.a(false);
       int var2 = var1.c(this.a4);
       this.a2.h2();
@@ -1656,20 +1656,20 @@ public class c implements h, g, j {
    }
 
    private int k() {
-      o var1 = this.a5();
+      Lot var1 = this.a5();
       boolean var2;
       if (!(var2 = this.a13(524288))) {
          this.a(false);
       }
 
       int var3 = this.e;
-      int var4 = com.ea.sims3.o.f(this.c);
-      int var5 = com.ea.sims3.o.g(this.d);
+      int var4 = com.ea.sims3.Lot.f(this.c);
+      int var5 = com.ea.sims3.Lot.g(this.d);
       int var6 = var1.a(this.a4, var4, var5);
 
       for (int var7 = 1; var7 <= 4; var7++) {
          int var8 = (var3 + var7) % 4;
-         int var9 = com.ea.sims3.o.a7[var8];
+         int var9 = com.ea.sims3.Lot.a7[var8];
          if ((var6 & var9) != 0) {
             var3 = var8;
             break;

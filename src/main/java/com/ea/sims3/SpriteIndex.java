@@ -1,6 +1,6 @@
 package com.ea.sims3;
 
-public interface h {
+public interface SpriteIndex {
    short[] a = new short[]{
       5,
       55,

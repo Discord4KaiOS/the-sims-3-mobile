@@ -2,7 +2,7 @@ package com.ea.sims3;
 
 import javax.microedition.lcdui.Graphics;
 
-public final class i extends c {
+public final class Sim extends Entity {
    private int j2;
    private int k2;
    public int f2;
@@ -10,20 +10,20 @@ public final class i extends c {
    private int m2;
    private int n2;
    private int o2;
-   public c a10;
+   public Entity a10;
    public int g2;
    private int p2;
    public int h2;
-   public c b6;
+   public Entity b6;
    private int q;
    private int r;
    private int s;
-   private c c3;
+   private Entity c3;
    private int t;
    private int u;
    private int v;
    private int w;
-   private c d3;
+   private Entity d3;
    private int x;
    private int y;
    private int z;
@@ -45,7 +45,7 @@ public final class i extends c {
    private int J = -551;
    private static final int[] d5 = new int[]{4, 2, 8, 16, 64};
 
-   public i(p var1) {
+   public Sim(GameScreen var1) {
       super(var1);
    }
 
@@ -89,7 +89,7 @@ public final class i extends c {
       this.b5(1);
       this.j2 = -1;
       this.k2 = 0;
-      v var6 = this.a8();
+      Neighborhood var6 = this.a8();
       if (super.a2.b5()) {
          this.f2 = var6.T(var5);
          this.v2(2);
@@ -161,25 +161,25 @@ public final class i extends c {
 
    public final void a(Graphics var1) {
       if (this.l2 != 8 && this.f2 != -1) {
-         o var2;
+         Lot var2;
          int var3 = (var2 = this.a5()).d();
          int var4 = var2.e();
          int var5 = var3 + var2.c(super.c, super.d);
          int var6 = var4 + var2.d(super.c, super.d);
-         d var7 = null;
+         Animator var7 = null;
          if (this.k2 != 50) {
             if (!super.a2.b5() && !super.a2.e3() && (this.o2 == 0 || this.o2 == 6)) {
-               com.ea.sims3.t.a2(var1, 33, 0, var5, var6);
+               com.ea.sims3.SpriteRenderer.drawFrame(var1, 33, 0, var5, var6);
             }
 
-            com.ea.sims3.t.a12(this.f2);
+            com.ea.sims3.SpriteRenderer.a12(this.f2);
             var7 = this.a6(0);
             if (!super.a2.b5()) {
-               int var8 = var7.a;
-               int var9 = var7.b;
+               int var8 = var7.animId;
+               int var9 = var7.frame;
                this.a2(var1, var8, var9, var5, var6);
             } else {
-               var7.a(var1, var5, var6);
+               var7.draw(var1, var5, var6);
                if (super.b == 0) {
                   super.a2.a(var1, var5, var6 - 16);
                }
@@ -189,25 +189,25 @@ public final class i extends c {
                this.a4().b(var1);
             }
 
-            com.ea.sims3.t.a12(0);
+            com.ea.sims3.SpriteRenderer.a12(0);
          }
 
-         d var17 = this.a6(2);
-         if (this.i2 > 0 && var17.a11()) {
-            int[] var18 = com.ea.sims3.c.a;
-            int var13 = (this.e2 ? com.ea.sims3.x.b(1000, 2000, this.i2) : 65536) * 10;
+         Animator var17 = this.a6(2);
+         if (this.i2 > 0 && var17.isRunning()) {
+            int[] var18 = com.ea.sims3.Entity.a;
+            int var13 = (this.e2 ? com.ea.sims3.FixedMath.smoothStep(1000, 2000, this.i2) : 65536) * 10;
             int var15 = var6 + (var13 >> 16) - 60 - 10;
-            com.ea.sims3.t.a(var1, var17, var5, var15);
+            com.ea.sims3.SpriteRenderer.drawAnimator(var1, var17, var5, var15);
             if (this.h2 == 5) {
-               var17.a2(var18, 0);
-               com.ea.sims3.t.a2(var1, this.I, 0, var5 + var18[0], var15 + var18[1]);
+               var17.matchesFrame(var18, 0);
+               com.ea.sims3.SpriteRenderer.drawFrame(var1, this.I, 0, var5 + var18[0], var15 + var18[1]);
             }
          }
       }
    }
 
    public final void b(Graphics var1) {
-      o var2;
+      Lot var2;
       int var3;
       int var4;
       if ((var3 = (var2 = this.a5()).a(this.j2, this.k2, true)) != 0 && (var4 = var2.i(var3, super.e)) != 196) {
@@ -216,7 +216,7 @@ public final class i extends c {
          int var7;
          int var8;
          if (this.k2 == 50) {
-            int[] var9 = com.ea.sims3.c.a;
+            int[] var9 = com.ea.sims3.Entity.a;
             this.b6.b(var9);
             var7 = var5 + var9[0];
             var8 = var6 + var9[1];
@@ -225,10 +225,10 @@ public final class i extends c {
             var8 = var6 + var2.d(super.c, super.d);
          }
 
-         int var10 = this.a6(0).b;
-         com.ea.sims3.t.a12(this.f2);
+         int var10 = this.a6(0).frame;
+         com.ea.sims3.SpriteRenderer.a12(this.f2);
          this.a2(var1, var4, var10, var7, var8);
-         com.ea.sims3.t.a12(0);
+         com.ea.sims3.SpriteRenderer.a12(0);
       }
    }
 
@@ -238,10 +238,10 @@ public final class i extends c {
       int[] var8 = null;
       boolean var9;
       if (var9 = super.b == 0) {
-         var8 = com.ea.sims3.c.a;
+         var8 = com.ea.sims3.Entity.a;
       }
 
-      boolean var10 = com.ea.sims3.t.a(var1, var2, var3, var4, var5, var6, var7, var8);
+      boolean var10 = com.ea.sims3.SpriteRenderer.a(var1, var2, var3, var4, var5, var6, var7, var8);
       if (var9 && var10) {
          super.a2.a(var1, var8[0], var8[1]);
       }
@@ -275,7 +275,7 @@ public final class i extends c {
          this.n2(this.J);
       }
 
-      p var2 = super.a2;
+      GameScreen var2 = super.a2;
       switch (this.l2) {
          case 2:
             if (this.a10 != null && this.n2 == 0) {
@@ -288,7 +288,7 @@ public final class i extends c {
             if (var1 != 3 && var2.b5()) {
                this.v2(2);
                if (var2.a11 == this) {
-                  var2.c((c) null);
+                  var2.c((Entity) null);
                }
             }
       }
@@ -307,7 +307,7 @@ public final class i extends c {
          case 2:
             byte var13 = -1;
             int var15 = this.n2;
-            c var16 = this.b6;
+            Entity var16 = this.b6;
             switch (this.n2) {
                case 0:
                default:
@@ -441,21 +441,21 @@ public final class i extends c {
             }
             break;
          case 4:
-            v var12 = this.a8();
+            Neighborhood var12 = this.a8();
             if (this.H != -1) {
-               this.a6(2).a4(this.H, 20);
+               this.a6(2).play(this.H, 20);
                if (this.h2 == 5) {
                   this.I = var12.M(this.g2);
                }
             } else {
-               this.a6(2).a(false);
+               this.a6(2).setRunning(false);
             }
 
             if (this.G == -1) {
                this.G = var12.I(this.g2);
             }
 
-            i var5 = this.a4();
+            Sim var5 = this.a4();
             if (this.g2 != 82 && this.g2 != 83) {
                if (this.g2 == 93) {
                   var5.c4(128);
@@ -536,25 +536,25 @@ public final class i extends c {
       this.w += var1;
       if (super.a4 == 0) {
          if (this.m2 > 3000 && this.a8().z(10) != -1) {
-            this.a(3, (c) null);
+            this.a(3, (Entity) null);
             return;
          }
 
          if (this.m2 > 3500 && this.n2 == 0) {
             int var2;
             if ((var2 = this.a8().h6) > 4915200) {
-               this.a(5, (c) null);
+               this.a(5, (Entity) null);
                return;
             }
 
             if (var2 < -3276800) {
-               this.a(6, (c) null);
+               this.a(6, (Entity) null);
                return;
             }
          }
       }
 
-      c var8;
+      Entity var8;
       if (this.n2 == 1 && this.a10.a() == 9 && (var8 = super.a2.b4(22)) != null && var8.b8(64) && this.m2 > 1000) {
          if (super.b == 0) {
             this.a8().e3(36);
@@ -565,16 +565,16 @@ public final class i extends c {
             var10 = 15;
          }
 
-         this.a(var10, (c) null);
+         this.a(var10, (Entity) null);
       } else {
          if (this.n2 == 0 && this.m2 > 5000 && (var8 = super.a2.b4(18)) != null && var8.b8(64)) {
             Object var3 = null;
-            int var4 = com.ea.sims3.o.f(var8.c);
-            int var5 = com.ea.sims3.o.g(var8.d);
-            int var6 = com.ea.sims3.o.f(super.c);
-            int var7 = com.ea.sims3.o.g(super.d);
+            int var4 = com.ea.sims3.Lot.f(var8.c);
+            int var5 = com.ea.sims3.Lot.g(var8.d);
+            int var6 = com.ea.sims3.Lot.f(super.c);
+            int var7 = com.ea.sims3.Lot.g(super.d);
             if (Math.abs(var6 - var4) + Math.abs(var7 - var5) < 8) {
-               this.a(17, (c) null);
+               this.a(17, (Entity) null);
                return;
             }
          }
@@ -608,7 +608,7 @@ public final class i extends c {
                   var4 = -1;
             }
 
-            c var5 = this.a10;
+            Entity var5 = this.a10;
             if (this.a10.b8(131072)) {
                var5.c4(131072);
                var5.a4(var5.c + var3 * 196608, var5.d + var4 * 196608);
@@ -616,7 +616,7 @@ public final class i extends c {
                var2 += 196608;
             }
 
-            o var6 = this.a5();
+            Lot var6 = this.a5();
             int var7 = super.c + var4 * 524288 + var3 * -var2;
             int var8 = super.d + var3 * 524288 + var4 * -var2;
             boolean var9 = var6.b3(var7, var8);
@@ -641,16 +641,16 @@ public final class i extends c {
    }
 
    private final void z2(int var1) {
-      o var2 = this.a5();
+      Lot var2 = this.a5();
       int var3 = super.c;
       int var4 = super.d;
       int var5 = this.y;
       int var6 = this.z;
-      int var7 = com.ea.sims3.o.f(var3);
-      int var8 = com.ea.sims3.o.g(var4);
+      int var7 = com.ea.sims3.Lot.f(var3);
+      int var8 = com.ea.sims3.Lot.g(var4);
       int var9 = var2.g(var7, var8);
       int var10;
-      int var11 = (var10 = com.ea.sims3.x.a3(var5 - var3)) != 0 ? 0 : com.ea.sims3.x.a3(var6 - var4);
+      int var11 = (var10 = com.ea.sims3.FixedMath.sign(var5 - var3)) != 0 ? 0 : com.ea.sims3.FixedMath.sign(var6 - var4);
       short var12 = 2048;
       short var13 = 1024;
       if (this.b8(2048)) {
@@ -664,20 +664,20 @@ public final class i extends c {
       if (super.a2.b5()) {
          var12 = var13;
          if (this.p3()) {
-            int var14 = com.ea.sims3.o.f(var3);
-            int var15 = com.ea.sims3.o.g(var4);
+            int var14 = com.ea.sims3.Lot.f(var3);
+            int var15 = com.ea.sims3.Lot.g(var4);
             boolean var17;
             if (var17 = (var2.g(var14, var15) & 32) != 0) {
                int var16;
                if (var11 == 0) {
-                  int var18 = com.ea.sims3.o.d(var14);
+                  int var18 = com.ea.sims3.Lot.d(var14);
                   if ((var10 >= 0 || var3 > var18) && (var10 <= 0 || var3 < var18)) {
                      var16 = var2.g(var14 - var10, var15);
                   } else {
                      var16 = var2.g(var14 + var10, var15);
                   }
                } else {
-                  int var28 = com.ea.sims3.o.e(var15);
+                  int var28 = com.ea.sims3.Lot.e(var15);
                   if ((var11 >= 0 || var4 > var28) && (var11 <= 0 || var4 < var28)) {
                      var16 = var2.g(var14, var15 - var11);
                   } else {
@@ -711,10 +711,10 @@ public final class i extends c {
       this.d2(var10, var11);
       this.a4(var3, var4);
       if (!super.a2.b5()) {
-         int var22 = com.ea.sims3.o.f(var3);
-         int var24 = com.ea.sims3.o.g(var4);
+         int var22 = com.ea.sims3.Lot.f(var3);
+         int var24 = com.ea.sims3.Lot.g(var4);
          int var26 = var2.g(var22, var24);
-         c var29;
+         Entity var29;
          if ((var9 & 32) == 0 && (var26 & 32) != 0 && (var29 = super.a2.b4(10)) != null && !var29.b8(64)) {
             var29.a(150, this);
          }
@@ -763,8 +763,8 @@ public final class i extends c {
       }
    }
 
-   private final void a(c var1, int var2, int var3) {
-      o var4 = this.a5();
+   private final void a(Entity var1, int var2, int var3) {
+      Lot var4 = this.a5();
       boolean var6 = false;
       int var7 = var2;
       int var8 = var3;
@@ -775,7 +775,7 @@ public final class i extends c {
             var9 = var1.a(super.c, super.d, false, null);
          }
 
-         int[] var10 = com.ea.sims3.c.a;
+         int[] var10 = com.ea.sims3.Entity.a;
          var1.a(var10, var9);
          var7 = var10[0];
          var8 = var10[1];
@@ -783,17 +783,17 @@ public final class i extends c {
          this.C = var1.d;
       }
 
-      var7 = com.ea.sims3.o.d(com.ea.sims3.o.f(var7));
-      var8 = com.ea.sims3.o.e(com.ea.sims3.o.g(var8));
+      var7 = com.ea.sims3.Lot.d(com.ea.sims3.Lot.f(var7));
+      var8 = com.ea.sims3.Lot.e(com.ea.sims3.Lot.g(var8));
       if ((var7 != super.c || var8 != super.d) && this.n2 != 0) {
          this.p2--;
          this.F2(30);
       } else {
          if (super.a2.a11() && var4.a() != 0 && super.b == 0 && this.g2 != 153 && !this.b8(32) && !this.a8().b3(0, 1)) {
-            int var18 = com.ea.sims3.o.f(super.c);
-            int var20 = com.ea.sims3.o.g(super.d);
-            int var11 = com.ea.sims3.o.f(var7);
-            int var12 = com.ea.sims3.o.g(var8);
+            int var18 = com.ea.sims3.Lot.f(super.c);
+            int var20 = com.ea.sims3.Lot.g(super.d);
+            int var11 = com.ea.sims3.Lot.f(var7);
+            int var12 = com.ea.sims3.Lot.g(var8);
             if ((var4.g(var18, var20) & 16) == 0 && (var4.g(var11, var12) & 16) != 0) {
                this.s = this.g2;
                this.c3 = this.b6;
@@ -815,15 +815,15 @@ public final class i extends c {
             }
          } else {
             var19 = 8;
-            i[] var21;
+            Sim[] var21;
             if ((var21 = super.a2.a13()).length > 1) {
                var4.d2();
 
                for (int var23 = 0; var23 < var21.length; var23++) {
-                  i var25;
+                  Sim var25;
                   if ((var25 = var21[var23]) != this) {
-                     int var13 = com.ea.sims3.o.f(var25.c);
-                     int var14 = com.ea.sims3.o.g(var25.d);
+                     int var13 = com.ea.sims3.Lot.f(var25.c);
+                     int var14 = com.ea.sims3.Lot.g(var25.d);
                      var4.c2(var13, var14);
                   }
                }
@@ -867,10 +867,10 @@ public final class i extends c {
    }
 
    private final void A2(int var1) {
-      int var2 = this.a6(0).b;
+      int var2 = this.a6(0).frame;
       this.g2(var1);
-      int var3 = this.a6(0).b;
-      d var4 = this.a6(0);
+      int var3 = this.a6(0).frame;
+      Animator var4 = this.a6(0);
       if (var2 != var3) {
          if (this.g2 == 147 && var3 == 2) {
             this.b6.a(this);
@@ -890,20 +890,20 @@ public final class i extends c {
          }
       }
 
-      this.a6(2).a13(var1);
+      this.a6(2).advance(var1);
       boolean var6;
       if (this.c5) {
          if (this.d4) {
             var6 = this.i2 <= this.a8().d6;
          } else {
-            if (!com.ea.sims3.p.f3()) {
+            if (!com.ea.sims3.GameScreen.f3()) {
                this.i2 -= var1;
             }
 
             var6 = this.i2 <= 0;
          }
       } else {
-         var6 = !var4.a11();
+         var6 = !var4.isRunning();
       }
 
       if (this.h2 == 49 && this.b6.g3()) {
@@ -932,7 +932,7 @@ public final class i extends c {
 
    private final void B2(int var1) {
       this.g2(var1);
-      i var2 = this.a4();
+      Sim var2 = this.a4();
       if (this.g2 != 94) {
          int var3 = var2.c - super.c;
          int var4 = var2.d - super.d;
@@ -946,7 +946,7 @@ public final class i extends c {
          this.c(false);
       } else {
          if (var2.c3()) {
-            var2.a(2, (c) this);
+            var2.a(2, (Entity) this);
             this.E();
          }
       }
@@ -965,10 +965,10 @@ public final class i extends c {
 
    private final void D2(int var1) {
       this.g2(var1);
-      i var2;
+      Sim var2;
       if ((var2 = this.a4()) != null && !var2.c3()) {
          if (var2 != null && var2.b8(1024)) {
-            v var3;
+            Neighborhood var3;
             if ((var3 = this.a8()).j(super.b, 12) != -1) {
                if (!this.b8(262144)) {
                   var3.e3(super.b, 12);
@@ -1009,8 +1009,8 @@ public final class i extends c {
       }
    }
 
-   public final i a4() {
-      return this.b6 instanceof i ? (i)this.b6 : null;
+   public final Sim a4() {
+      return this.b6 instanceof Sim ? (Sim)this.b6 : null;
    }
 
    public final boolean c3() {
@@ -1029,7 +1029,7 @@ public final class i extends c {
       return (this.g2 == 122 || this.g2 == 121) && this.n2 == 4;
    }
 
-   public final void a(int var1, c var2, int var3, int var4) {
+   public final void a(int var1, Entity var2, int var3, int var4) {
       if (this.l3()) {
          this.b(var1, var2, var3, var4);
       } else {
@@ -1040,12 +1040,12 @@ public final class i extends c {
       }
    }
 
-   public final void a(int var1, c var2) {
+   public final void a(int var1, Entity var2) {
       this.b(var1, var2, 0, 0);
    }
 
-   public final void b(int var1, c var2, int var3, int var4) {
-      v var5 = this.a8();
+   public final void b(int var1, Entity var2, int var3, int var4) {
+      Neighborhood var5 = this.a8();
       if (this.h2 != 0) {
          this.b(true);
       }
@@ -1063,7 +1063,7 @@ public final class i extends c {
          this.a3(var2);
       }
 
-      i var6;
+      Sim var6;
       if ((var6 = this.a4()) != null && (var5.K(var1) & 1) != 0) {
          this.d(var6);
       }
@@ -1073,16 +1073,16 @@ public final class i extends c {
       this.F2(var7);
    }
 
-   public final void b(c var1) {
+   public final void b(Entity var1) {
       if (var1 != this && (this.v & 32) != 0) {
-         i var2 = super.a2.a14.a4();
+         Sim var2 = super.a2.a14.a4();
          if (this.D == 0 || var2 != null && this.D == var2.b) {
             this.Q();
          }
       }
    }
 
-   public final boolean a3(c var1) {
+   public final boolean a3(Entity var1) {
       if (var1 == this.d3) {
          return true;
       } else {
@@ -1098,9 +1098,9 @@ public final class i extends c {
             if (var1.b5()) {
                int var2 = 0;
                if (var1.a() == 10) {
-                  o var3 = this.a5();
-                  int var4 = com.ea.sims3.o.f(super.c);
-                  int var5 = com.ea.sims3.o.g(super.d);
+                  Lot var3 = this.a5();
+                  int var4 = com.ea.sims3.Lot.f(super.c);
+                  int var5 = com.ea.sims3.Lot.g(super.d);
                   if ((var3.g(var4, var5) & 16) != 0) {
                      var2 = 0;
                   } else {
@@ -1124,13 +1124,13 @@ public final class i extends c {
 
    private final void I() {
       boolean var1 = this.b8(4);
-      v var2 = this.a8();
+      Neighborhood var2 = this.a8();
       this.c4(12);
       int var3 = this.g2;
-      c var4 = this.b6;
-      i var5 = this.a4();
+      Entity var4 = this.b6;
+      Sim var5 = this.a4();
       boolean var6 = super.b == 0;
-      this.a(0, (c) null);
+      this.a(0, (Entity) null);
       int var7 = var2.K(var3);
       if (!var1 && var5 != null && (var7 & 1) != 0) {
          this.a3(null);
@@ -1227,11 +1227,11 @@ public final class i extends c {
       }
    }
 
-   public final boolean a(int var1, i var2) {
-      v var3 = this.a8();
+   public final boolean a(int var1, Sim var2) {
+      Neighborhood var3 = this.a8();
       int var4 = var2.b;
       int var5 = super.b;
-      int[] var6 = com.ea.sims3.c.a;
+      int[] var6 = com.ea.sims3.Entity.a;
       var3.a(var6, var4, var5, var1);
       int var7 = var6[0];
       int var8 = var6[1];
@@ -1241,7 +1241,7 @@ public final class i extends c {
       }
 
       if (var1 == 103 || var1 == 98) {
-         this.a(0, (c) null);
+         this.a(0, (Entity) null);
          this.s2(256);
       } else if (var8 != -1) {
          if ((var3.K(var8) & 1) == 0 && var8 != 106) {
@@ -1262,21 +1262,21 @@ public final class i extends c {
       return (var7 & 32) != 0;
    }
 
-   public final boolean a2(int var1, i var2, c var3) {
-      v var4 = this.a8();
+   public final boolean a2(int var1, Sim var2, Entity var3) {
+      Neighborhood var4 = this.a8();
       if (this.n3()) {
          return false;
       } else if (var1 == 25 && var4.S(super.b) != var3.b) {
          return false;
       } else {
-         int[] var5 = com.ea.sims3.c.a;
+         int[] var5 = com.ea.sims3.Entity.a;
          var4.a(var5, var2.b, super.b, var1);
          int var6;
          if ((var6 = var5[1]) != -1) {
             int var7;
             Object var8 = ((var7 = var5[0]) & 16384) != 0 ? var3 : var2;
             this.F();
-            this.a(var6, (c)var8, 0, 0);
+            this.a(var6, (Entity)var8, 0, 0);
             if (var1 == 25 && var2.b == 0) {
                var4.e3(51);
             }
@@ -1290,12 +1290,12 @@ public final class i extends c {
    }
 
    private final void F2(int var1) {
-      p var2 = super.a2;
-      v var3 = this.a8();
+      GameScreen var2 = super.a2;
+      Neighborhood var3 = this.a8();
       this.h2 = var1;
       int var4 = this.g2;
-      c var5 = this.b6;
-      i var6 = this.a4();
+      Entity var5 = this.b6;
+      Sim var6 = this.a4();
       int var7 = this.q;
       int var8 = this.r;
       boolean var9;
@@ -1469,7 +1469,7 @@ public final class i extends c {
                var3.e3(36);
             }
 
-            c var15;
+            Entity var15;
             if ((var15 = var2.b4(9)) != null) {
                this.b(144, var15, 0, 0);
             } else {
@@ -1479,7 +1479,7 @@ public final class i extends c {
             var10 = true;
             break;
          case 24:
-            c var14;
+            Entity var14;
             if ((var14 = var2.c2(128)) != null) {
                this.b6 = var14;
                this.E();
@@ -1592,7 +1592,7 @@ public final class i extends c {
             this.a(4, 2000, -1, false, false);
             break;
          case 51:
-            c var11 = var5.b3();
+            Entity var11 = var5.b3();
             this.b6 = var11;
             this.a2(var11);
             this.F2(31);
@@ -1617,8 +1617,8 @@ public final class i extends c {
    }
 
    private void e2(int var1, int var2) {
-      v var3 = this.a8();
-      c var4;
+      Neighborhood var3 = this.a8();
+      Entity var4;
       if (var1 == 152 && (var4 = super.a2.b4(10)) != null && var4.b8(64)) {
          this.E();
       } else {
@@ -1636,13 +1636,13 @@ public final class i extends c {
                var7 = 9;
             }
 
-            r var8;
-            (var8 = com.ea.sims3.r.a7()).a7.d = var8.b(var6, (int)var7);
+            GameCanvas var8;
+            (var8 = com.ea.sims3.GameCanvas.a7()).a7.pendingSound = var8.b(var6, (int)var7);
          }
 
          boolean var10 = false;
          if (var1 != 136 && var1 != 137 && var1 != 111 && this.q != 0) {
-            var5 = com.ea.sims3.v.D(this.q);
+            var5 = com.ea.sims3.Neighborhood.D(this.q);
             var10 = true;
          }
 
@@ -1671,7 +1671,7 @@ public final class i extends c {
    }
 
    private void G2(int var1) {
-      v var2;
+      Neighborhood var2;
       int var3 = (var2 = this.a8()).d6;
       int var4 = var2.b2(super.b);
       if (var1 == 19) {
@@ -1710,7 +1710,7 @@ public final class i extends c {
    }
 
    private void J() {
-      v var1;
+      Neighborhood var1;
       int var2 = (var1 = this.a8()).a3(this.g2);
       int var3 = var1.e5;
       if (var1.e5 >= var2) {
@@ -1723,7 +1723,7 @@ public final class i extends c {
    }
 
    private void K() {
-      v var1 = this.a8();
+      Neighborhood var1 = this.a8();
       boolean var2 = true;
       if (super.a2.a13().length > 1) {
          var2 = false;
@@ -1741,7 +1741,7 @@ public final class i extends c {
    }
 
    private void L() {
-      v var1;
+      Neighborhood var1;
       if ((var1 = this.a8()).z(12) == -1 && var1.z(11) == -1) {
          this.E();
       } else {
@@ -1755,7 +1755,7 @@ public final class i extends c {
    }
 
    private void M() {
-      v var1 = this.a8();
+      Neighborhood var1 = this.a8();
       int var2 = this.q;
       if (var1.c(var2) > 0) {
          var1.b2(var2, -1);
@@ -1767,7 +1767,7 @@ public final class i extends c {
    }
 
    private void N() {
-      v var1;
+      Neighborhood var1;
       if ((var1 = this.a8()).c(3) > 0 && var1.c(4) > 0) {
          var1.b2(4, -1);
          this.b6.t2();
@@ -1782,11 +1782,11 @@ public final class i extends c {
    }
 
    private final void b(boolean var1) {
-      v var2 = this.a8();
+      Neighborhood var2 = this.a8();
       int var4 = this.a5().a();
       int var5 = var2.L(this.g2);
       boolean var6 = super.b == 0;
-      c var7 = this.b6;
+      Entity var7 = this.b6;
       switch (this.h2) {
          case 5:
          case 6:
@@ -2042,24 +2042,24 @@ public final class i extends c {
    }
 
    private final void O() {
-      r var1 = super.a3;
+      GameCanvas var1 = super.a3;
       int var2 = this.v;
       if ((this.v & 257) != 0) {
-         c var11 = super.a2.a5(4);
+         Entity var11 = super.a2.a5(4);
          this.a(159, var11);
       } else if (super.a2.b9 != this && (super.a4 != 0 || super.a2.b9 == null)) {
          if (this.F != -1 || (this.v & 32) == 0 || super.b == 0 && (!var1.h2 || !super.a2.d3()) || super.b != 0 && (this.v & 4) != 0 || !this.o3()) {
             if ((var2 & 94) != 0) {
                int var3 = var1.b(0, d5.length - 1);
                if ((var2 & 4) != 0) {
-                  var3 = com.ea.sims3.r.a(4, d5);
+                  var3 = com.ea.sims3.GameCanvas.a(4, d5);
                }
 
                for (int var4 = 0; var4 < d5.length; var4++) {
                   int var5 = d5[var3];
-                  c var6;
+                  Entity var6;
                   if ((var2 & var5) != 0 && (var6 = super.a2.c2(var5)) != null) {
-                     o var7 = this.a5();
+                     Lot var7 = this.a5();
                      int var8 = var6.a4;
                      short var9 = var7.a16(var8)[0];
                      this.a(var9, var6);
@@ -2076,9 +2076,9 @@ public final class i extends c {
    }
 
    private final boolean o3() {
-      r var1 = super.a3;
-      v var2 = this.a8();
-      i var3 = null;
+      GameCanvas var1 = super.a3;
+      Neighborhood var2 = this.a8();
+      Sim var3 = null;
       if (this.D != -1) {
          var3 = super.a2.a7(this.D);
          if (!this.a2(var3)) {
@@ -2100,7 +2100,7 @@ public final class i extends c {
             return true;
          }
 
-         c var5;
+         Entity var5;
          if ((var5 = super.a2.b4(10)) != null) {
             this.a(152, var5);
             this.v |= 512;
@@ -2111,12 +2111,12 @@ public final class i extends c {
       }
 
       if (var3 == null) {
-         i[] var10;
+         Sim[] var10;
          int var6 = (var10 = super.a2.a13()).length;
          int var7 = var1.b(0, var6 - 1);
 
          for (int var8 = 0; var8 < var6; var8++) {
-            i var9 = var10[var7];
+            Sim var9 = var10[var7];
             var7 = (var7 + 1) % var10.length;
             if (this.a2(var9)) {
                var3 = var9;
@@ -2128,16 +2128,16 @@ public final class i extends c {
       if (var3 != null) {
          int var11;
          int var12 = (var11 = var1.d()) < 30 ? 63 : (var11 < 70 ? 90 : 76);
-         this.a(var12, (c)var3);
+         this.a(var12, (Entity)var3);
          return true;
       } else {
          return false;
       }
    }
 
-   private final boolean a2(i var1) {
+   private final boolean a2(Sim var1) {
       if (var1 != this && var1 != null) {
-         c var2 = super.a2.b9;
+         Entity var2 = super.a2.b9;
          if (var1 == var2) {
             return false;
          } else if (var1.b == 0 && var2 != null) {
@@ -2214,7 +2214,7 @@ public final class i extends c {
       }
    }
 
-   private void d(i var1) {
+   private void d(Sim var1) {
       this.D = var1.b;
       this.F = -1;
       this.s2(32);
@@ -2224,7 +2224,7 @@ public final class i extends c {
    }
 
    private final void Q() {
-      i var1;
+      Sim var1;
       if ((var1 = super.a2.a7(this.D)) != null) {
          var1.v &= -33;
          var1.D = -1;
@@ -2239,7 +2239,7 @@ public final class i extends c {
    }
 
    private final boolean p3() {
-      v var1;
+      Neighborhood var1;
       int var2;
       if ((var2 = (var1 = this.a8()).V(super.b)) != -1) {
          int var3 = var1.W(super.b);
@@ -2251,9 +2251,9 @@ public final class i extends c {
       return super.a4 == 0 && var1.c(35) != 0 ? true : var1.c3(super.b, 1);
    }
 
-   public final void c(c var1) {
+   public final void c(Entity var1) {
       this.a3(var1);
-      int[] var3 = com.ea.sims3.c.a;
+      int[] var3 = com.ea.sims3.Entity.a;
       var1.a(var3, this.x);
       this.a4(var3[0], var3[1]);
       this.a2(var1);

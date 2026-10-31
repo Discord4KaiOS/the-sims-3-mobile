@@ -5,18 +5,18 @@ import javax.microedition.midlet.MIDlet;
 
 public final class MonkeyApp extends MIDlet {
    private boolean a = false;
-   private r a2;
+   private GameCanvas a2;
    private Display a3;
 
    public MonkeyApp() {
       this.a = false;
       this.a3 = Display.getDisplay(this);
-      r.a(this);
-      this.a2 = r.a7();
+      GameCanvas.a(this);
+      this.a2 = GameCanvas.a7();
    }
 
    public final void startApp() {
-      r var1 = this.a2;
+      GameCanvas var1 = this.a2;
       this.a2.setFullScreenMode(true);
       this.a3.setCurrent(var1);
       var1.setFullScreenMode(true);

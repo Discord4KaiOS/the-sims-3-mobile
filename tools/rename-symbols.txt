@@ -1,0 +1,173 @@
+# Semantic renames applied to the decompiled sources.
+#
+#   C <class>                <newName>
+#   F <class> <field>        <newName>
+#   M <class> <name(types)>  <newName>
+#
+# Applied by tools/Rename.java (javac resolves every occurrence).
+
+# ---------------------------------------------------------------- classes
+C a  PromoImages
+C b  SdkString
+C c  Entity
+C d  Animator
+C e  SdkConfig
+C f  SdkFeatures
+C g  SoundIndex
+C h  SpriteIndex
+C i  Sim
+C j  Resources
+C k  SdkText
+C l  ScreenFade
+C m  SdkSound
+C n  FrameTimer
+C o  Lot
+C p  GameScreen
+C q  Tile
+C r  GameCanvas
+C s  ResourceLoader
+C t  SpriteRenderer
+C u  BaseScreen
+C v  Neighborhood
+C w  SdkMoreGames
+C x  FixedMath
+C y  TitleScreen
+
+# ---------------------------------------------------------------- Animator
+F d a animId
+F d b frame
+F d c frameTime
+F d d flags
+M d a13(int) advance
+M d b4() stepForward
+M d c2() stepBackward
+M d a4(int,int) play
+M d a(Graphics,int,int) draw
+M d b() frameCount
+M d a() frameDuration
+M d a2(int[],int) matchesFrame
+M d a11() isRunning
+M d b5() isLooping
+M d a(boolean) setRunning
+M d a10() rewind
+
+# ---------------------------------------------------------------- ScreenFade
+F l a x
+F l b y
+F l c width
+F l d height
+F l a2 world
+F l a3 image
+F l a4 compositingMode
+F l a5 rgba
+M l a12(int) setColor
+M l b7(int) setBlending
+M l a2(int,int,int,int) setViewport
+M l a(Graphics) render
+
+# ---------------------------------------------------------------- FrameTimer
+F n a lastTick
+F n a2 canvas
+
+# ---------------------------------------------------------------- FixedMath
+F x a sinTableNegative
+F x b sinTablePositive
+F x c sqrtTable
+F x a2 sqrtTableLength
+F x b2 sqrtTableMax
+M x a3(int) sign
+M x a(int,int,int) clamp
+M x a2(int,int) mul
+M x b(int,int) div
+M x c(int,int) length
+M x b2(int) wrapAngle
+M x c(int) cos
+M x d(int) sin
+M x e(int) sinShifted
+M x d(int,int) atan2
+M x f(int) sqrt
+M x b(int,int,int) smoothStep
+
+# ---------------------------------------------------------------- ResourceLoader
+F s a crcTable
+M s a3(int) getSize
+M s a9(int) getName
+M s a10(int) loadImage
+M s a8(int) openStream
+M s a14(int) loadSound
+M s b9(int) loadBytes
+M s a(byte) ubyte
+M s a(byte[],int) readInt
+M s a10() initCrcTable
+M s a(byte[],int,int) crc32
+M s a(byte[],int,int,int[],int[]) replacePalette
+M s a(int,int[],int[]) loadImageRecolored
+
+# ---------------------------------------------------------------- SdkConfig
+M e a() softKey1
+M e b() softKey2
+M e c() softKey3
+M e d() softKey4
+M e e() softKey5
+M e f() softKey6
+M e g() softKey7
+M e h() targetFps
+M e a11() isDebugEnabled
+M e i() vibrateScaleNum
+M e j() vibrateScaleDen
+
+# ---------------------------------------------------------------- SdkFeatures
+M f a11() isLoggingEnabled
+M f a() configMode
+M f b5() isRectangleFontEnabled
+M f c3() isSystemFontEnabled
+M f d3() isFreeTypeFontEnabled
+M f e3() isMoreGamesEnabled
+
+# ---------------------------------------------------------------- SdkSound
+F m a isWavFormat
+F m a2 currentSound
+F m b loopCount
+F m c currentLoop
+F m b2 enabled
+F m a3 player
+F m a4 resources
+F m a5 display
+F m d pendingSound
+M m a12(int) setLoopCount
+M m b7(int) play
+M m a10() stopAll
+M m d3(int) playIfEnabled
+M m e3(int) startPlayer
+M m b4() muteAll
+M m f2() stopCurrent
+M m c2() stop
+M m c4(int) vibrate
+M m a(boolean) setEnabled
+M m a14(int) soundBytes
+M m a2(byte[]) createPlayer
+M m a11() isFirstLoop
+M m d2() playQueued
+M m e2() update
+
+# ---------------------------------------------------------------- PromoImages
+M a a3(String) getImage
+M w a3(String) getImage
+
+# ---------------------------------------------------------------- Tile
+M q a() tileWidth
+M q b() tileHeight
+M q a3(int) toWorld16
+M q b2(int) toWorld8
+M q c() frameCount
+M q d() rowCount
+M q a(Graphics) draw
+M q a(boolean) setLooping
+M q a10() reset
+
+# ---------------------------------------------------------------- SpriteRenderer
+M t a3(int) frameCount
+M t a3(int,int) frameDuration
+M t a2(Graphics,int,int,int,int) drawFrame
+M t a(Graphics,d,int,int) drawAnimator
+M t a3(int,int,int) getTileImage

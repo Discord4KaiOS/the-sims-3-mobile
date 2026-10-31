@@ -6,8 +6,8 @@ import java.io.IOException;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-public final class o implements h, g, j {
-   private r a;
+public final class Lot implements SpriteIndex, SoundIndex, Resources {
+   private GameCanvas a;
    private byte[] a2;
    private short[] b;
    private short[] c;
@@ -70,8 +70,8 @@ public final class o implements h, g, j {
    private int n3;
    private int o3;
    private byte[] k4;
-   public q a8;
-   private q b6;
+   public Tile a8;
+   private Tile b6;
    public int e5;
    public int f4;
    private int[][] a9;
@@ -95,7 +95,7 @@ public final class o implements h, g, j {
    private short[] r2;
    private int y;
 
-   public o(r var1) {
+   public Lot(GameCanvas var1) {
       this.a = var1;
       this.e2();
       this.f2();
@@ -108,12 +108,12 @@ public final class o implements h, g, j {
    }
 
    private void e2() {
-      s var1 = this.a.a6;
+      ResourceLoader var1 = this.a.a6;
 
       try {
          DataInputStream var2;
          short var3;
-         byte[] var4 = new byte[var3 = (var2 = new DataInputStream(var1.a8(64))).readShort()];
+         byte[] var4 = new byte[var3 = (var2 = new DataInputStream(var1.openStream(64))).readShort()];
          short[] var5 = new short[var3];
          short[] var6 = new short[var3];
          int[] var7 = new int[var3];
@@ -275,12 +275,12 @@ public final class o implements h, g, j {
    }
 
    private void f2() {
-      s var1 = this.a.a6;
+      ResourceLoader var1 = this.a.a6;
 
       try {
          DataInputStream var2;
          byte var3;
-         short[] var4 = new short[var3 = (var2 = new DataInputStream(var1.a8(62))).readByte()];
+         short[] var4 = new short[var3 = (var2 = new DataInputStream(var1.openStream(62))).readByte()];
          byte[][] var5 = new byte[var3][];
          byte[][] var6 = new byte[var3][];
          byte[][] var7 = new byte[var3][];
@@ -373,7 +373,7 @@ public final class o implements h, g, j {
    }
 
    public final int a() {
-      return com.ea.sims3.r.a(this.g3, g4) != -1 ? 0 : this.g3;
+      return com.ea.sims3.GameCanvas.a(this.g3, g4) != -1 ? 0 : this.g3;
    }
 
    public final int a3(int var1) {
@@ -381,7 +381,7 @@ public final class o implements h, g, j {
    }
 
    public final int b2(int var1) {
-      return com.ea.sims3.r.a(var1, this.m);
+      return com.ea.sims3.GameCanvas.a(var1, this.m);
    }
 
    private void g2() {
@@ -393,7 +393,7 @@ public final class o implements h, g, j {
          this.j3 = new byte[150];
       }
 
-      com.ea.sims3.r.a2(this.o2, -1);
+      com.ea.sims3.GameCanvas.a2(this.o2, -1);
       byte[] var1 = this.m2[0];
       byte[] var2 = this.n[0];
       short[] var3 = this.e4[0];
@@ -429,12 +429,12 @@ public final class o implements h, g, j {
 
       for (int var4 = var2.length - 1; var4 >= 0; var4--) {
          short var5;
-         if ((var5 = var2[var4]) != -1 && (var3[var5] & 131072) != 0 && com.ea.sims3.r.a(var5, var2, var4 + 1) == -1) {
+         if ((var5 = var2[var4]) != -1 && (var3[var5] & 131072) != 0 && com.ea.sims3.GameCanvas.a(var5, var2, var4 + 1) == -1) {
             var1++;
          }
       }
 
-      int var6 = com.ea.sims3.r.b(131072, var3);
+      int var6 = com.ea.sims3.GameCanvas.b(131072, var3);
       return var1 == var6;
    }
 
@@ -456,7 +456,7 @@ public final class o implements h, g, j {
          byte var13 = var3[var10];
          if (var11 != var6[var10]) {
             if (var6[var10] != -1) {
-               int var14 = com.ea.sims3.r.a(-1, var6);
+               int var14 = com.ea.sims3.GameCanvas.a(-1, var6);
                var6[var14] = var6[var10];
                var7[var14] = var7[var10];
                var8[var14] = var8[var10];
@@ -513,7 +513,7 @@ public final class o implements h, g, j {
    }
 
    public final int a(int var1, int var2, int var3, int var4) {
-      int var5 = com.ea.sims3.r.a(-1, this.o2);
+      int var5 = com.ea.sims3.GameCanvas.a(-1, this.o2);
       this.o2[var5] = (short)var1;
       this.h3[var5] = (byte)f(var2);
       this.i3[var5] = (byte)g(var3);
@@ -554,7 +554,7 @@ public final class o implements h, g, j {
    }
 
    public final boolean b8(int var1) {
-      return com.ea.sims3.r.a(var1, this.o2) != -1;
+      return com.ea.sims3.GameCanvas.a(var1, this.o2) != -1;
    }
 
    public final void b4() {
@@ -604,7 +604,7 @@ public final class o implements h, g, j {
          this.k4 = new byte[this.l3 * this.m3];
       }
 
-      com.ea.sims3.r.a3(this.k4, 0);
+      com.ea.sims3.GameCanvas.a3(this.k4, 0);
    }
 
    public final void b7(int var1) {
@@ -619,7 +619,7 @@ public final class o implements h, g, j {
    }
 
    private void d3(int var1) {
-      p var2 = (p)this.a.a2;
+      GameScreen var2 = (GameScreen)this.a.a2;
       byte[] var3 = this.m2[var1];
       byte[] var4 = this.n[var1];
       short[] var5 = this.e4[var1];
@@ -660,23 +660,23 @@ public final class o implements h, g, j {
 
       this.i2();
       int var7 = this.a() == 0 ? 2 : 3;
-      var8 = com.ea.sims3.r.a(var7, var5);
+      var8 = com.ea.sims3.GameCanvas.a(var7, var5);
       int var23 = var3[var8];
       byte var25 = var4[var8];
       byte var29 = var6[var8];
       var2.b(0, var23, var25, var29, 0);
       var23 = var7 == 2 ? var8 : -1;
-      v var26 = var2.a17;
+      Neighborhood var26 = var2.a17;
       int var28 = var2.a17.b6;
 
       for (int var30 = 1; var30 < var28; var30++) {
          int var31;
          if (var26.U(var30) == var1 && ((var31 = var26.o(var30)) & 8) != 0) {
-            var23 = com.ea.sims3.r.a(2, var5, var23 + 1);
+            var23 = com.ea.sims3.GameCanvas.a(2, var5, var23 + 1);
             byte var32 = var3[var23];
             byte var33 = var4[var23];
             byte var17 = var6[var23];
-            i var18 = (i)var2.b(1, var32, var33, var17, var30);
+            Sim var18 = (Sim)var2.b(1, var32, var33, var17, var30);
             if ((var31 & 16) != 0 && this.a.d() < 30) {
                var2.a(var18);
             }
@@ -787,7 +787,7 @@ public final class o implements h, g, j {
    }
 
    public final int c(int var1) {
-      p var2 = (p)this.a.a2;
+      GameScreen var2 = (GameScreen)this.a.a2;
       byte[] var3 = this.h3;
       byte[] var4 = this.i3;
       short[] var5 = this.o2;
@@ -842,22 +842,22 @@ public final class o implements h, g, j {
 
    public final void c4(int var1) {
       this.h2();
-      r var2 = this.a;
-      Image var4 = com.ea.sims3.s.a10(0);
-      q var5;
-      (var5 = new q(var1, var4)).a2(this.a6, this.b5, this.c6, this.d6);
-      var5.a(true);
+      GameCanvas var2 = this.a;
+      Image var4 = com.ea.sims3.ResourceLoader.loadImage(0);
+      Tile var5;
+      (var5 = new Tile(var1, var4)).a2(this.a6, this.b5, this.c6, this.d6);
+      var5.setLooping(true);
       this.a8 = var5;
       this.f3(var1);
       this.b(true);
-      p var6;
-      c var7;
+      GameScreen var6;
+      Entity var7;
       int var8 = f((var7 = (var6 = this.a.a6()).a5(3)).c);
       int var9 = g(var7.d);
       var6.b(0, var8, var9, 3, 0);
       int var10 = var2.r;
       if (var2.r != -1) {
-         c var11 = var6.b(1, var8, var9 - 1, 1, var10);
+         Entity var11 = var6.b(1, var8, var9 - 1, 1, var10);
          var6.b(var11);
          var6.f(var11);
       }
@@ -865,19 +865,19 @@ public final class o implements h, g, j {
 
    public final void a(boolean var1) {
       this.h2();
-      r var2 = this.a;
-      Image var4 = com.ea.sims3.s.a10(1);
-      q var6;
-      (var6 = new q(40, var4)).a2(this.a6, this.b5, this.c6, this.d6);
-      var6.a(true);
+      GameCanvas var2 = this.a;
+      Image var4 = com.ea.sims3.ResourceLoader.loadImage(1);
+      Tile var6;
+      (var6 = new Tile(40, var4)).a2(this.a6, this.b5, this.c6, this.d6);
+      var6.setLooping(true);
       this.a8 = var6;
       this.l2();
       this.b(false);
-      p var7 = var2.a6();
+      GameScreen var7 = var2.a6();
       if (var1) {
-         v var11;
+         Neighborhood var11;
          int var13 = (var11 = var7.a17).s(var11.V(0));
-         c var14 = var7.a5(var13);
+         Entity var14 = var7.a5(var13);
          var7.a(0, var14, 0);
          var7.a(159, var14, 0, 0);
       } else {
@@ -885,7 +885,7 @@ public final class o implements h, g, j {
          if (var2.l2 != -1) {
             this.g3 = 13;
             int var12 = this.a3(var8);
-            c var10 = var7.a5(var12);
+            Entity var10 = var7.a5(var12);
             var7.a(0, var10, 0);
          } else {
             var7.a(0, var2.n2, var2.o2, 0, 0);
@@ -894,15 +894,15 @@ public final class o implements h, g, j {
                var7.a(1, var2.p2, var2.q, 0, var9);
             }
 
-            var2.a((i) null);
+            var2.a((Sim) null);
          }
       }
    }
 
    private void b(boolean var1) {
-      p var2 = this.a.a6();
-      q var3 = this.a8;
-      int var4 = this.a8.c();
+      GameScreen var2 = this.a.a6();
+      Tile var3 = this.a8;
+      int var4 = this.a8.frameCount();
       short[] var5 = var3.a2;
 
       for (int var6 = 0; var6 < var4; var6++) {
@@ -920,7 +920,7 @@ public final class o implements h, g, j {
          var2.a(var8, var11, var12, 0, -1);
       }
 
-      int var16 = var3.d();
+      int var16 = var3.rowCount();
       short[] var17 = var3.b;
 
       for (int var18 = 0; var18 < var16; var18++) {
@@ -935,7 +935,7 @@ public final class o implements h, g, j {
             var14 = e(g(var14));
          }
 
-         c var15;
+         Entity var15;
          (var15 = var2.a(98, var13, var14, 0, -1)).o2(var20);
          if (var20 == 170 || var20 == 171 || var20 == 172 || var20 == 173 || var20 == 174) {
             var15.m2(-50);
@@ -1070,7 +1070,7 @@ public final class o implements h, g, j {
    }
 
    private void b(Graphics var1) {
-      q var2 = this.a8;
+      Tile var2 = this.a8;
       int var3 = var1.getClipX();
       int var4 = var1.getClipY();
       int var5 = var1.getClipWidth();
@@ -1078,23 +1078,23 @@ public final class o implements h, g, j {
       var1.setClip(this.a6, this.b5, this.c6, this.d6);
       var2.a3 = this.e5 - (this.c6 >> 1 << 16);
       var2.b2 = this.f4 - (this.d6 >> 1 << 16);
-      var2.a(var1);
+      var2.draw(var1);
       this.c(var1);
       var1.setClip(var3, var4, var5, var6);
    }
 
    private void e3(int var1) {
       if (this.a8 == null) {
-         Image var3 = com.ea.sims3.s.a10(0);
-         q var4;
-         (var4 = new q(64, 64, var3)).a2(this.a6, this.b5, this.c6, this.d6);
-         var4.a(true);
+         Image var3 = com.ea.sims3.ResourceLoader.loadImage(0);
+         Tile var4;
+         (var4 = new Tile(64, 64, var3)).a2(this.a6, this.b5, this.c6, this.d6);
+         var4.setLooping(true);
          this.a8 = var4;
       }
 
       if (this.b6 == null) {
-         Image var27 = com.ea.sims3.s.a10(2);
-         q var29 = new q(64, 64, var27);
+         Image var27 = com.ea.sims3.ResourceLoader.loadImage(2);
+         Tile var29 = new Tile(64, 64, var27);
          this.b6 = var29;
          var29.a2(this.a6, this.b5, this.c6, this.d6);
          this.a8.a7 = var29;
@@ -1136,8 +1136,8 @@ public final class o implements h, g, j {
          }
       }
 
-      com.ea.sims3.r.a3(this.a8.a, 16);
-      com.ea.sims3.r.a3(this.b6.a, 60);
+      com.ea.sims3.GameCanvas.a3(this.a8.a, 16);
+      com.ea.sims3.GameCanvas.a3(this.b6.a, 60);
       int var32 = this.n3;
 
       for (int var35 = 0; var35 < var12; var35++) {
@@ -1173,11 +1173,11 @@ public final class o implements h, g, j {
 
       this.j2();
       this.k2();
-      this.a8.a10();
+      this.a8.reset();
    }
 
    private void b(int var1, int var2, int var3, int var4, int var5, int var6) {
-      q var7 = this.a8;
+      Tile var7 = this.a8;
       byte[] var8 = this.a8.a;
       byte[] var9 = this.b6.a;
       int var10 = var7.c;
@@ -1226,7 +1226,7 @@ public final class o implements h, g, j {
    }
 
    private void c(int var1, int var2, int var3, int var4, int var5, int var6) {
-      q var7 = this.a8;
+      Tile var7 = this.a8;
       int var8 = this.a8.c;
       byte[] var9 = this.b6.a;
       int var10 = l(var1, var2);
@@ -1295,8 +1295,8 @@ public final class o implements h, g, j {
    }
 
    private void d(int var1, int var2, int var3, int var4) {
-      r var5 = this.a;
-      q var6 = this.a8;
+      GameCanvas var5 = this.a;
+      Tile var6 = this.a8;
       byte[] var7 = this.a8.a;
       int var8 = var6.c;
       int var9 = l(var1, var2);
@@ -1353,9 +1353,9 @@ public final class o implements h, g, j {
    }
 
    private void i2() {
-      p var1 = this.a.a6();
+      GameScreen var1 = this.a.a6();
       boolean var2 = false;
-      c var3;
+      Entity var3;
       if ((var3 = var1.b4(10)).e == 1) {
          var2 = true;
          byte[] var4 = this.b9(1);
@@ -1397,7 +1397,7 @@ public final class o implements h, g, j {
    }
 
    private void a2(int var1, byte[] var2) {
-      q var3 = this.a8;
+      Tile var3 = this.a8;
       byte[] var4 = this.a8.a;
       int var5 = var3.c;
       int var6 = var3.d;
@@ -1416,14 +1416,14 @@ public final class o implements h, g, j {
          for (int var14 = 0; var9 + var14 < var6 && var14 < var2.length; var14++) {
             byte var15 = var2[var14];
             int var16;
-            if ((var8 & 1) == 0 && (var16 = com.ea.sims3.r.a(var15, var12)) != -1) {
+            if ((var8 & 1) == 0 && (var16 = com.ea.sims3.GameCanvas.a(var15, var12)) != -1) {
                var15 = var13[var16];
             }
 
             var16 = var9 + var14;
             var4[var8 + var16 * var5] = var15;
-            int var17 = com.ea.sims3.q.a3(var8);
-            int var18 = com.ea.sims3.q.b2(var16);
+            int var17 = com.ea.sims3.Tile.toWorld16(var8);
+            int var18 = com.ea.sims3.Tile.toWorld8(var16);
             int var19 = this.e(var17, var18);
             int var20 = this.f(var17, var18);
             int var21 = f(var19);
@@ -1436,7 +1436,7 @@ public final class o implements h, g, j {
    }
 
    private void j2() {
-      q var1 = this.a8;
+      Tile var1 = this.a8;
       byte[] var2 = this.b6.a;
       byte[] var3 = var1.a;
       int var4 = var1.c;
@@ -1467,7 +1467,7 @@ public final class o implements h, g, j {
                var21 = var9[0];
             }
 
-            if ((this.n(var20, 27) != -1 || com.ea.sims3.r.a(var20, var11) != -1) && var21 == 60) {
+            if ((this.n(var20, 27) != -1 || com.ea.sims3.GameCanvas.a(var20, var11) != -1) && var21 == 60) {
                var21 = var10[0];
                int var22 = var16 + var4;
                if (var2[var22] == 60) {
@@ -1475,7 +1475,7 @@ public final class o implements h, g, j {
                }
             }
 
-            if ((com.ea.sims3.r.a(var20, var8) != -1 || com.ea.sims3.r.a(var20, var12) != -1) && var21 == 60) {
+            if ((com.ea.sims3.GameCanvas.a(var20, var8) != -1 || com.ea.sims3.GameCanvas.a(var20, var12) != -1) && var21 == 60) {
                var21 = var9[0];
                int var34 = var16 + var4;
                if (var2[var34] == 60) {
@@ -1484,27 +1484,27 @@ public final class o implements h, g, j {
             }
 
             int var35;
-            if ((var35 = com.ea.sims3.r.a(var20, var10)) != -1) {
-               if (com.ea.sims3.r.a(var21, var9) != -1 || com.ea.sims3.r.a(var21, var11) != -1) {
+            if ((var35 = com.ea.sims3.GameCanvas.a(var20, var10)) != -1) {
+               if (com.ea.sims3.GameCanvas.a(var21, var9) != -1 || com.ea.sims3.GameCanvas.a(var21, var11) != -1) {
                   var20 = var12[var35];
-               } else if (com.ea.sims3.r.a(var19, var7) != -1 && var21 == 60) {
+               } else if (com.ea.sims3.GameCanvas.a(var19, var7) != -1 && var21 == 60) {
                   var21 = this.a(18, var35);
                }
             }
 
-            if ((var35 = com.ea.sims3.r.a(var20, var9)) != -1) {
-               if (com.ea.sims3.r.a(var21, var10) != -1 || com.ea.sims3.r.a(var21, var12) != -1) {
+            if ((var35 = com.ea.sims3.GameCanvas.a(var20, var9)) != -1) {
+               if (com.ea.sims3.GameCanvas.a(var21, var10) != -1 || com.ea.sims3.GameCanvas.a(var21, var12) != -1) {
                   var20 = var11[var35];
-               } else if (com.ea.sims3.r.a(var19, var7) != -1 && var21 == 60) {
+               } else if (com.ea.sims3.GameCanvas.a(var19, var7) != -1 && var21 == 60) {
                   var21 = this.a(12, var35);
                }
             }
 
             int var23;
-            if ((var23 = com.ea.sims3.r.a(var18, var7)) != -1) {
+            if ((var23 = com.ea.sims3.GameCanvas.a(var18, var7)) != -1) {
                int var24;
-               if ((var24 = com.ea.sims3.r.a(var21, var9)) == -1 && (var24 = com.ea.sims3.r.a(var21, var11)) == -1) {
-                  if ((var24 = com.ea.sims3.r.a(var21, var10)) == -1 && (var24 = com.ea.sims3.r.a(var21, var12)) == -1) {
+               if ((var24 = com.ea.sims3.GameCanvas.a(var21, var9)) == -1 && (var24 = com.ea.sims3.GameCanvas.a(var21, var11)) == -1) {
+                  if ((var24 = com.ea.sims3.GameCanvas.a(var21, var10)) == -1 && (var24 = com.ea.sims3.GameCanvas.a(var21, var12)) == -1) {
                      byte[] var43 = this.b9(24);
                      if (var23 == 3) {
                         int var45 = this.a.b(0, var6.length - 1);
@@ -1512,7 +1512,7 @@ public final class o implements h, g, j {
                      }
 
                      byte var51;
-                     if (com.ea.sims3.r.a(var51 = var2[var13 + 1 + var15 * var4], var11) != -1) {
+                     if (com.ea.sims3.GameCanvas.a(var51 = var2[var13 + 1 + var15 * var4], var11) != -1) {
                         if (var14) {
                            if (var20 == 60) {
                               var20 = this.a(22, 0);
@@ -1538,16 +1538,16 @@ public final class o implements h, g, j {
                      }
 
                      byte var56;
-                     if (com.ea.sims3.r.a(var56 = var2[var13 - 1 + var15 * var4], var12) != -1) {
+                     if (com.ea.sims3.GameCanvas.a(var56 = var2[var13 - 1 + var15 * var4], var12) != -1) {
                         if (var20 == 60) {
                            byte var59;
-                           int var61 = com.ea.sims3.r.a(var59 = var2[var13 - 1 + (var15 + 1) * var4], var9);
+                           int var61 = com.ea.sims3.GameCanvas.a(var59 = var2[var13 - 1 + (var15 + 1) * var4], var9);
                            var20 = var43[var61];
                            var21 = this.a(25, var61);
                         }
                      } else {
                         int var55;
-                        if ((var55 = com.ea.sims3.r.a(var56, var8)) != -1) {
+                        if ((var55 = com.ea.sims3.GameCanvas.a(var56, var8)) != -1) {
                            if (!var14) {
                               var55 = 0;
                               byte var58 = this.a(33, 0);
@@ -1598,9 +1598,9 @@ public final class o implements h, g, j {
                         var2[var49] = 48;
                      }
 
-                     if ((var24 = com.ea.sims3.r.a(var21, var10)) != -1) {
+                     if ((var24 = com.ea.sims3.GameCanvas.a(var21, var10)) != -1) {
                         var21 = this.a(19, var24);
-                     } else if ((var24 = com.ea.sims3.r.a(var21, var12)) != -1) {
+                     } else if ((var24 = com.ea.sims3.GameCanvas.a(var21, var12)) != -1) {
                         var21 = var8[var24];
                      }
 
@@ -1629,9 +1629,9 @@ public final class o implements h, g, j {
                      var2[var46] = 48;
                   }
 
-                  if ((var24 = com.ea.sims3.r.a(var21, var9)) != -1) {
+                  if ((var24 = com.ea.sims3.GameCanvas.a(var21, var9)) != -1) {
                      var21 = this.a(13, var24);
-                  } else if ((var24 = com.ea.sims3.r.a(var21, var11)) != -1) {
+                  } else if ((var24 = com.ea.sims3.GameCanvas.a(var21, var11)) != -1) {
                      var21 = this.a(27, var24);
                   }
 
@@ -1648,7 +1648,7 @@ public final class o implements h, g, j {
    }
 
    private void k2() {
-      q var1 = this.b6;
+      Tile var1 = this.b6;
       byte[] var2 = this.b6.a;
       int var3 = var1.c;
       int var4 = var1.d;
@@ -1678,8 +1678,8 @@ public final class o implements h, g, j {
                || this.n(var8, 14) != -1
                || this.n(var8, 16) != -1
                || this.n(var8, 15) != -1) {
-               int var9 = com.ea.sims3.q.a3(var15);
-               int var10 = com.ea.sims3.q.b2(var7);
+               int var9 = com.ea.sims3.Tile.toWorld16(var15);
+               int var10 = com.ea.sims3.Tile.toWorld8(var7);
                int var11 = this.e(var9, var10);
                int var12 = this.f(var9, var10);
                int var13 = f(var11);
@@ -1691,19 +1691,19 @@ public final class o implements h, g, j {
    }
 
    private void l2() {
-      q var1 = this.a8;
+      Tile var1 = this.a8;
       byte[] var2 = this.a8.a;
       int var3 = var1.c;
       int var4 = var1.d;
       byte[] var5 = this.b9(34);
-      com.ea.sims3.r.a3(this.k4, 128);
+      com.ea.sims3.GameCanvas.a3(this.k4, 128);
 
       for (int var6 = 0; var6 < var3; var6++) {
          for (int var7 = 0; var7 < var4; var7++) {
             byte var8;
-            if (com.ea.sims3.r.a(var8 = var2[var6 + var7 * var3], var5) != -1) {
-               int var9 = com.ea.sims3.q.a3(var6);
-               int var10 = com.ea.sims3.q.b2(var7);
+            if (com.ea.sims3.GameCanvas.a(var8 = var2[var6 + var7 * var3], var5) != -1) {
+               int var9 = com.ea.sims3.Tile.toWorld16(var6);
+               int var10 = com.ea.sims3.Tile.toWorld8(var7);
                int var11 = this.e(var9, var10);
                int var12 = this.f(var9, var10);
                int var13 = f(var11);
@@ -1736,7 +1736,7 @@ public final class o implements h, g, j {
 
    private void f3(int var1) {
       byte[] var2 = this.b9(var1 == 39 ? 36 : 35);
-      q var3 = this.a8;
+      Tile var3 = this.a8;
       byte[] var4 = this.a8.a;
       int var5 = var3.c;
       int var6 = var3.d;
@@ -1744,15 +1744,15 @@ public final class o implements h, g, j {
       for (int var7 = 0; var7 < var5; var7++) {
          for (int var8 = 0; var8 < var6; var8++) {
             byte var9;
-            boolean var10 = com.ea.sims3.r.a(var9 = var4[var7 + var8 * var5], var2) != -1;
+            boolean var10 = com.ea.sims3.GameCanvas.a(var9 = var4[var7 + var8 * var5], var2) != -1;
             if (var7 == 0 || var7 == var5 - 1 || var8 == 0 || var8 == var6 - 1 || var10) {
                int var11 = var7;
                if (!var10 && var7 == var5 - 1) {
                   var11 = var7 + 1;
                }
 
-               int var12 = com.ea.sims3.q.a3(var11);
-               int var13 = com.ea.sims3.q.b2(var8);
+               int var12 = com.ea.sims3.Tile.toWorld16(var11);
+               int var13 = com.ea.sims3.Tile.toWorld8(var8);
                int var14 = this.e(var12, var13);
                int var15 = this.f(var12, var13);
                int var16 = f(var14);
@@ -1764,14 +1764,14 @@ public final class o implements h, g, j {
    }
 
    private void m2() {
-      r var1 = this.a;
-      c[] var3 = this.a.a6().a12();
+      GameCanvas var1 = this.a;
+      Entity[] var3 = this.a.a6().a12();
       boolean var4 = false;
 
       for (int var5 = 0; var5 < var3.length; var5++) {
          for (int var6 = 1; var6 < var3.length; var6++) {
-            c var7 = var3[var6];
-            c var8 = var3[var6 - 1];
+            Entity var7 = var3[var6];
+            Entity var8 = var3[var6 - 1];
             int var9 = this.c(var7.c, var7.d);
             int var10 = this.c(var8.c, var8.d);
             if (var9 < var10) {
@@ -1831,8 +1831,8 @@ public final class o implements h, g, j {
    }
 
    private void n2() {
-      r var1 = this.a;
-      c[] var3 = this.a.a6().a12();
+      GameCanvas var1 = this.a;
+      Entity[] var3 = this.a.a6().a12();
       int var4 = this.a6 - 50;
       int var5 = this.b5 - 20;
       int var6 = this.a6 + this.c6 + 50;
@@ -1841,7 +1841,7 @@ public final class o implements h, g, j {
       int var9 = this.e();
 
       for (int var10 = 0; var10 < var3.length; var10++) {
-         c var11 = var3[var10];
+         Entity var11 = var3[var10];
          int var12 = var8 + this.c(var11.c, var11.d);
          int var13 = var9 + this.d(var11.c, var11.d);
          var11.a7 = var12 >= var4 && var12 <= var6 && var13 >= var5 && var13 <= var7;
@@ -1851,29 +1851,29 @@ public final class o implements h, g, j {
    private void c(Graphics var1) {
       this.m2();
       this.n2();
-      r var2 = this.a;
-      c[] var4;
+      GameCanvas var2 = this.a;
+      Entity[] var4;
       int var5 = (var4 = this.a.a6().a12()).length;
 
       for (int var6 = 0; var6 < var5; var6++) {
-         c var7;
+         Entity var7;
          if ((var7 = var4[var6]).a7 && !var7.b8(8192)) {
             var7.a(var1);
          }
       }
    }
 
-   public final void a(Graphics var1, c var2, c var3, int var4, int var5) {
+   public final void a(Graphics var1, Entity var2, Entity var3, int var4, int var5) {
       int var6 = this.e5;
       int var7 = this.f4;
       this.e5 = var4;
       this.f4 = var5;
-      r var8 = this.a;
-      c[] var10;
+      GameCanvas var8 = this.a;
+      Entity[] var10;
       int var11 = (var10 = this.a.a6().a12()).length;
 
       for (int var12 = 0; var12 < var11; var12++) {
-         c var13;
+         Entity var13;
          if ((var13 = var10[var12]) == var2 || var13 == var3) {
             var13.a(var1);
          }
@@ -2064,11 +2064,11 @@ public final class o implements h, g, j {
    }
 
    public final int g() {
-      return this.e.length - com.ea.sims3.r.c(-1, this.e);
+      return this.e.length - com.ea.sims3.GameCanvas.c(-1, this.e);
    }
 
    public final int t(int var1) {
-      return com.ea.sims3.r.b(var1, this.e, -1);
+      return com.ea.sims3.GameCanvas.b(var1, this.e, -1);
    }
 
    private final byte[] b9(int var1) {
@@ -2080,7 +2080,7 @@ public final class o implements h, g, j {
    }
 
    private final int n(int var1, int var2) {
-      return com.ea.sims3.r.a(var1, this.c5[var2]);
+      return com.ea.sims3.GameCanvas.a(var1, this.c5[var2]);
    }
 
    public final int h() {
@@ -2112,7 +2112,7 @@ public final class o implements h, g, j {
    }
 
    public final int A(int var1) {
-      return com.ea.sims3.r.a(var1, this.i);
+      return com.ea.sims3.GameCanvas.a(var1, this.i);
    }
 
    private static int J(int var0) {
@@ -2137,16 +2137,16 @@ public final class o implements h, g, j {
    }
 
    public final int B(int var1) {
-      return com.ea.sims3.r.b(J(var1), this.d2);
+      return com.ea.sims3.GameCanvas.b(J(var1), this.d2);
    }
 
    public final int j(int var1, int var2) {
       int var3 = J(var1);
-      return com.ea.sims3.r.a(var2, this.d2, var3);
+      return com.ea.sims3.GameCanvas.a(var2, this.d2, var3);
    }
 
    public final int C(int var1) {
-      return com.ea.sims3.x.a2(this.f2[var1] << 16, 22937);
+      return com.ea.sims3.FixedMath.mul(this.f2[var1] << 16, 22937);
    }
 
    public final int D(int var1) {
@@ -2162,7 +2162,7 @@ public final class o implements h, g, j {
    }
 
    public final int F(int var1) {
-      return com.ea.sims3.r.a(var1, this.e2);
+      return com.ea.sims3.GameCanvas.a(var1, this.e2);
    }
 
    public final int G(int var1) {
@@ -2180,12 +2180,12 @@ public final class o implements h, g, j {
    }
 
    private void o2() {
-      s var1 = this.a.a6;
+      ResourceLoader var1 = this.a.a6;
 
       try {
          DataInputStream var2;
          byte var3;
-         int[][] var4 = new int[var3 = (var2 = new DataInputStream(var1.a8(60))).readByte()][];
+         int[][] var4 = new int[var3 = (var2 = new DataInputStream(var1.openStream(60))).readByte()][];
 
          for (int var5 = 0; var5 < var3; var5++) {
             byte var6;
@@ -2248,7 +2248,7 @@ public final class o implements h, g, j {
    }
 
    public final void a2(int var1, int[] var2, int[] var3) {
-      v var4 = this.a.a23;
+      Neighborhood var4 = this.a.a23;
       byte var5 = this.p[1][var4.i(var1, 3)];
       byte var6 = this.p[2][var4.i(var1, 4)];
       byte var7 = this.p[3][var4.i(var1, 5)];
@@ -2552,9 +2552,9 @@ public final class o implements h, g, j {
    private void q2() {
       this.x = 0;
       this.w = 0;
-      com.ea.sims3.r.a(this.f5, 0);
-      com.ea.sims3.r.a(this.c7, 0);
-      com.ea.sims3.r.a(this.b7, 0);
-      com.ea.sims3.r.a(this.d7, 0);
+      com.ea.sims3.GameCanvas.a(this.f5, 0);
+      com.ea.sims3.GameCanvas.a(this.c7, 0);
+      com.ea.sims3.GameCanvas.a(this.b7, 0);
+      com.ea.sims3.GameCanvas.a(this.d7, 0);
    }
 }

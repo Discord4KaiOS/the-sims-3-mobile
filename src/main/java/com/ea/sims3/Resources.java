@@ -1,6 +1,6 @@
 package com.ea.sims3;
 
-public interface j {
+public interface Resources {
    int[] b = new int[]{
       4591,
       3889,
