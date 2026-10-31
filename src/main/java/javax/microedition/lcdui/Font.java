@@ -100,20 +100,20 @@ public class Font {
     }
 
     public int getHeight() {
-        java.awt.FontMetrics fm = metrics();
-        return fm.getHeight();
+        java.awt.FontMetrics fontMetrics = metrics();
+        return fontMetrics.getHeight();
     }
 
     public int getBaselinePosition() {
         return metrics().getAscent();
     }
 
-    public int charWidth(char ch) {
-        return metrics().charWidth(ch);
+    public int charWidth(char character) {
+        return metrics().charWidth(character);
     }
 
-    public int charsWidth(char[] ch, int offset, int length) {
-        return metrics().charsWidth(ch, offset, length);
+    public int charsWidth(char[] characters, int offset, int length) {
+        return metrics().charsWidth(characters, offset, length);
     }
 
     public int stringWidth(String str) {
@@ -133,8 +133,8 @@ public class Font {
     }
 
     java.awt.FontMetrics metrics() {
-        java.awt.Graphics2D g = scratchGraphics();
-        return g.getFontMetrics(awtFont);
+        java.awt.Graphics2D scratch = scratchGraphics();
+        return scratch.getFontMetrics(awtFont);
     }
 
     private static synchronized java.awt.Graphics2D scratchGraphics() {

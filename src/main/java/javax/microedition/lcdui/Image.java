@@ -27,19 +27,19 @@ public class Image {
         if (width <= 0 || height <= 0) {
             throw new IllegalArgumentException("bad size " + width + "x" + height);
         }
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        return new Image(img, true);
+        BufferedImage buffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        return new Image(buffered, true);
     }
 
     public static Image createImage(String name) throws IOException {
-        InputStream in = openResource(name);
-        if (in == null) {
+        InputStream stream = openResource(name);
+        if (stream == null) {
             throw new IOException("resource not found: " + name);
         }
         try {
-            return decode(in, name);
+            return decode(stream, name);
         } finally {
-            in.close();
+            stream.close();
         }
     }
 
@@ -48,45 +48,45 @@ public class Image {
     }
 
     public static Image createImage(Image source, int x, int y, int width, int height) {
-        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = img.createGraphics();
-        g.drawImage(source.image, -x, -y, null);
-        g.dispose();
-        return new Image(img, false);
+        BufferedImage buffered = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D awtGraphics = buffered.createGraphics();
+        awtGraphics.drawImage(source.image, -x, -y, null);
+        awtGraphics.dispose();
+        return new Image(buffered, false);
     }
 
     public static Image createImage(InputStream stream) throws IOException {
         return decode(stream, "<stream>");
     }
 
-    private static Image decode(InputStream in, String name) throws IOException {
-        BufferedImage img = ImageIO.read(in);
-        if (img == null) {
+    private static Image decode(InputStream stream, String name) throws IOException {
+        BufferedImage source = ImageIO.read(stream);
+        if (source == null) {
             throw new IOException("unsupported image data: " + name);
         }
         // Normalise to ARGB so alpha blending works the same for every source type.
-        BufferedImage argb = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = argb.createGraphics();
-        g.drawImage(img, 0, 0, null);
-        g.dispose();
+        BufferedImage argb = new BufferedImage(source.getWidth(), source.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D awtGraphics = argb.createGraphics();
+        awtGraphics.drawImage(source, 0, 0, null);
+        awtGraphics.dispose();
         return new Image(argb, false);
     }
 
     private static InputStream openResource(String name) {
         String path = name.startsWith("/") ? name : "/" + name;
-        InputStream in = Image.class.getResourceAsStream(path);
-        if (in == null) {
-            in = Thread.currentThread().getContextClassLoader().getResourceAsStream(path.substring(1));
+        InputStream stream = Image.class.getResourceAsStream(path);
+        if (stream == null) {
+            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path.substring(1));
         }
-        return in;
+        return stream;
     }
 
     public Graphics getGraphics() {
         if (!mutable) {
             throw new IllegalStateException("image is immutable");
         }
-        Graphics2D g = image.createGraphics();
-        return new Graphics(g, image.getWidth(), image.getHeight());
+        Graphics2D awtGraphics = image.createGraphics();
+        return new Graphics(awtGraphics, image.getWidth(), image.getHeight());
     }
 
     public int getWidth() {

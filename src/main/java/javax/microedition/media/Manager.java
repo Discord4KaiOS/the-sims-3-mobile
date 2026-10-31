@@ -147,9 +147,9 @@ public final class Manager {
         }
 
         private void notifyListener(String event, Object data) {
-            PlayerListener l = listener;
-            if (l != null) {
-                l.playerUpdate(this, event, data);
+            PlayerListener playerListener = listener;
+            if (playerListener != null) {
+                playerListener.playerUpdate(this, event, data);
             }
         }
     }

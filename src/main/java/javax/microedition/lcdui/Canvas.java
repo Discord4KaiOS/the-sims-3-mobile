@@ -45,7 +45,7 @@ public abstract class Canvas extends Displayable {
     protected Canvas() {
     }
 
-    protected abstract void paint(Graphics g);
+    protected abstract void paint(Graphics graphics);
 
     protected void keyPressed(int keyCode) {
     }
@@ -57,9 +57,9 @@ public abstract class Canvas extends Displayable {
     }
 
     public void repaint() {
-        Display d = display;
-        if (d != null) {
-            d.postRepaint(this);
+        Display currentDisplay = display;
+        if (currentDisplay != null) {
+            currentDisplay.postRepaint(this);
         }
     }
 
@@ -68,9 +68,9 @@ public abstract class Canvas extends Displayable {
     }
 
     public void serviceRepaints() {
-        Display d = display;
-        if (d != null) {
-            d.paintNow(this);
+        Display currentDisplay = display;
+        if (currentDisplay != null) {
+            currentDisplay.paintNow(this);
         }
     }
 

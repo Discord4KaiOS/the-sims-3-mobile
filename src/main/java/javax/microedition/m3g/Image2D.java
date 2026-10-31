@@ -29,35 +29,35 @@ public class Image2D extends Object3D {
         int pos = 0;
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                int r;
-                int g;
-                int b;
-                int a = 0xFF;
+                int red;
+                int green;
+                int blue;
+                int alpha = 0xFF;
                 switch (bytesPerPixel) {
                     case 4:
-                        r = data[pos] & 0xFF;
-                        g = data[pos + 1] & 0xFF;
-                        b = data[pos + 2] & 0xFF;
-                        a = data[pos + 3] & 0xFF;
+                        red = data[pos] & 0xFF;
+                        green = data[pos + 1] & 0xFF;
+                        blue = data[pos + 2] & 0xFF;
+                        alpha = data[pos + 3] & 0xFF;
                         break;
                     case 3:
-                        r = data[pos] & 0xFF;
-                        g = data[pos + 1] & 0xFF;
-                        b = data[pos + 2] & 0xFF;
+                        red = data[pos] & 0xFF;
+                        green = data[pos + 1] & 0xFF;
+                        blue = data[pos + 2] & 0xFF;
                         break;
                     case 2:
-                        r = g = b = data[pos] & 0xFF;
-                        a = data[pos + 1] & 0xFF;
+                        red = green = blue = data[pos] & 0xFF;
+                        alpha = data[pos + 1] & 0xFF;
                         break;
                     default:
-                        r = g = b = data[pos] & 0xFF;
+                        red = green = blue = data[pos] & 0xFF;
                         break;
                 }
                 pos += bytesPerPixel;
                 int dstX = x + col;
                 int dstY = y + row;
                 if (dstX >= 0 && dstX < this.width && dstY >= 0 && dstY < this.height) {
-                    pixels[dstY * this.width + dstX] = (a << 24) | (r << 16) | (g << 8) | b;
+                    pixels[dstY * this.width + dstX] = (alpha << 24) | (red << 16) | (green << 8) | blue;
                 }
             }
         }

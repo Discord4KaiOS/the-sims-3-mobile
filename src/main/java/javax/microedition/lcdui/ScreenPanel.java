@@ -44,10 +44,10 @@ final class ScreenPanel extends JPanel {
     }
 
     private void ensureBuffer() {
-        int w = Display.logicalWidth();
-        int h = Display.logicalHeight();
-        if (buffer == null || buffer.getWidth() != w || buffer.getHeight() != h) {
-            buffer = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        int width = Display.logicalWidth();
+        int height = Display.logicalHeight();
+        if (buffer == null || buffer.getWidth() != width || buffer.getHeight() != height) {
+            buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             bufferGraphics = buffer.createGraphics();
             bufferGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
             bufferGraphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -83,64 +83,64 @@ final class ScreenPanel extends JPanel {
     }
 
     @Override
-    protected void paintComponent(java.awt.Graphics g0) {
-        super.paintComponent(g0);
-        java.awt.Graphics2D g = (java.awt.Graphics2D) g0;
-        Displayable d = displayable;
-        if (d == null) {
+    protected void paintComponent(java.awt.Graphics awtGraphics) {
+        super.paintComponent(awtGraphics);
+        java.awt.Graphics2D windowGraphics = (java.awt.Graphics2D) awtGraphics;
+        Displayable current = displayable;
+        if (current == null) {
             return;
         }
-        java.awt.Graphics2D bg = gameBufferGraphics();
-        bg.setComposite(AlphaComposite.Src);
-        bg.setClip(0, 0, buffer.getWidth(), buffer.getHeight());
-        if (d instanceof Canvas) {
-            Graphics lg = new Graphics(bg, buffer.getWidth(), buffer.getHeight());
+        java.awt.Graphics2D gameBuffer = gameBufferGraphics();
+        gameBuffer.setComposite(AlphaComposite.Src);
+        gameBuffer.setClip(0, 0, buffer.getWidth(), buffer.getHeight());
+        if (current instanceof Canvas) {
+            Graphics logicalGraphics = new Graphics(gameBuffer, buffer.getWidth(), buffer.getHeight());
             try {
-                ((Canvas) d).paint(lg);
-            } catch (RuntimeException e) {
-                e.printStackTrace();
+                ((Canvas) current).paint(logicalGraphics);
+            } catch (RuntimeException exception) {
+                exception.printStackTrace();
             } finally {
-                lg.dispose();
+                logicalGraphics.dispose();
             }
-        } else if (d instanceof Alert) {
-            ((Alert) d).paintTo(new Graphics(bg, buffer.getWidth(), buffer.getHeight()));
+        } else if (current instanceof Alert) {
+            ((Alert) current).paintTo(new Graphics(gameBuffer, buffer.getWidth(), buffer.getHeight()));
         }
 
-        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        windowGraphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         double scale = Math.min((double) getWidth() / buffer.getWidth(), (double) getHeight() / buffer.getHeight());
-        int dw = Math.max(1, (int) Math.round(buffer.getWidth() * scale));
-        int dh = Math.max(1, (int) Math.round(buffer.getHeight() * scale));
-        int dx = (getWidth() - dw) / 2;
-        int dy = (getHeight() - dh) / 2;
-        g.drawImage(buffer, dx, dy, dw, dh, null);
+        int destWidth = Math.max(1, (int) Math.round(buffer.getWidth() * scale));
+        int destHeight = Math.max(1, (int) Math.round(buffer.getHeight() * scale));
+        int destX = (getWidth() - destWidth) / 2;
+        int destY = (getHeight() - destHeight) / 2;
+        windowGraphics.drawImage(buffer, destX, destY, destWidth, destHeight, null);
     }
 
     private void installKeyDispatcher() {
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
             @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (e.getID() == KeyEvent.KEY_PRESSED) {
-                    onKeyPressed(e);
-                } else if (e.getID() == KeyEvent.KEY_RELEASED) {
-                    onKeyReleased(e);
+            public boolean dispatchKeyEvent(KeyEvent event) {
+                if (event.getID() == KeyEvent.KEY_PRESSED) {
+                    onKeyPressed(event);
+                } else if (event.getID() == KeyEvent.KEY_RELEASED) {
+                    onKeyReleased(event);
                 }
                 return false;
             }
         });
     }
 
-    private void onKeyPressed(KeyEvent e) {
-        int keyCode = mapKey(e.getKeyCode());
+    private void onKeyPressed(KeyEvent event) {
+        int keyCode = mapKey(event.getKeyCode());
         if (keyCode == Integer.MIN_VALUE) {
             return;
         }
-        Displayable d = displayable;
-        if (!(d instanceof Canvas)) {
+        Displayable current = displayable;
+        if (!(current instanceof Canvas)) {
             return;
         }
-        Canvas canvas = (Canvas) d;
+        Canvas canvas = (Canvas) current;
         synchronized (pressedKeys) {
-            if (!pressedKeys.add(e.getKeyCode())) {
+            if (!pressedKeys.add(event.getKeyCode())) {
                 canvas.deliverKeyRepeated(keyCode);
                 return;
             }
@@ -148,24 +148,24 @@ final class ScreenPanel extends JPanel {
         canvas.deliverKeyPressed(keyCode);
     }
 
-    private void onKeyReleased(KeyEvent e) {
-        int keyCode = mapKey(e.getKeyCode());
+    private void onKeyReleased(KeyEvent event) {
+        int keyCode = mapKey(event.getKeyCode());
         if (keyCode == Integer.MIN_VALUE) {
             return;
         }
-        Displayable d = displayable;
-        if (!(d instanceof Canvas)) {
+        Displayable current = displayable;
+        if (!(current instanceof Canvas)) {
             return;
         }
         synchronized (pressedKeys) {
-            pressedKeys.remove(e.getKeyCode());
+            pressedKeys.remove(event.getKeyCode());
         }
-        ((Canvas) d).deliverKeyReleased(keyCode);
+        ((Canvas) current).deliverKeyReleased(keyCode);
     }
 
     /** Maps an AWT virtual key code to a MIDP key code. */
-    private static int mapKey(int vk) {
-        switch (vk) {
+    private static int mapKey(int keyCode) {
+        switch (keyCode) {
             case KeyEvent.VK_UP:
                 return Canvas.KEY_UP;
             case KeyEvent.VK_DOWN:
@@ -193,11 +193,11 @@ final class ScreenPanel extends JPanel {
             default:
                 break;
         }
-        if (vk >= KeyEvent.VK_0 && vk <= KeyEvent.VK_9) {
-            return Canvas.KEY_NUM0 + (vk - KeyEvent.VK_0);
+        if (keyCode >= KeyEvent.VK_0 && keyCode <= KeyEvent.VK_9) {
+            return Canvas.KEY_NUM0 + (keyCode - KeyEvent.VK_0);
         }
-        if (vk >= KeyEvent.VK_NUMPAD0 && vk <= KeyEvent.VK_NUMPAD9) {
-            return Canvas.KEY_NUM0 + (vk - KeyEvent.VK_NUMPAD0);
+        if (keyCode >= KeyEvent.VK_NUMPAD0 && keyCode <= KeyEvent.VK_NUMPAD9) {
+            return Canvas.KEY_NUM0 + (keyCode - KeyEvent.VK_NUMPAD0);
         }
         return Integer.MIN_VALUE;
     }

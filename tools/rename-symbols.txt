@@ -737,3 +737,13 @@ V Entity setMode(int) var1 mode
 V Entity setValueA(int) var1 value
 V Entity setValueB(int) var1 value
 V Entity setValueC(int) var1 value
+
+# ------------------------------------------------------------ J2ME shims
+# The desktop shims under javax/microedition and com/ea/sims3/m3g were written
+# by hand for this port and their identifiers were tidied directly (they are
+# not decompiler output, so they never went through tools/Rename.java):
+#   g -> awtGraphics / graphics, img -> image, in -> stream, fm -> fontMetrics,
+#   w/h -> rectWidth/rectHeight, dw/dh -> destWidth/destHeight,
+#   ch -> character, vk -> keyCode, bg -> gameBuffer, lg -> logicalGraphics,
+#   a -> alpha, r -> red, b -> blue, l -> playerListener, e -> event/failure,
+#   d -> current / currentDisplay, f/n/i -> storeFile/storeName/index.

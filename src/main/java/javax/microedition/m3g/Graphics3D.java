@@ -99,8 +99,8 @@ public final class Graphics3D extends Object3D {
         }
         Camera active = camera != null ? camera : world.getActiveCamera();
         clear(world.getBackground());
-        for (int i = 0; i < world.getChildCount(); i++) {
-            renderNode(world.getChild(i), active);
+        for (int index = 0; index < world.getChildCount(); index++) {
+            renderNode(world.getChild(index), active);
         }
     }
 
@@ -116,8 +116,8 @@ public final class Graphics3D extends Object3D {
             renderSprite((Sprite3D) node, activeCamera);
         } else if (node instanceof Group) {
             Group group = (Group) node;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                renderNode(group.getChild(i), activeCamera);
+            for (int index = 0; index < group.getChildCount(); index++) {
+                renderNode(group.getChild(index), activeCamera);
             }
         }
     }
@@ -158,11 +158,11 @@ public final class Graphics3D extends Object3D {
         if (blending == CompositingMode.ALPHA || blending == CompositingMode.ALPHA_ADD) {
             color = argb;
         } else if (blending == CompositingMode.MODULATE || blending == CompositingMode.MODULATE_X2) {
-            int a = ((argb >>> 24) & 0xFF);
+            int alpha = ((argb >>> 24) & 0xFF);
             if (blending == CompositingMode.MODULATE_X2) {
-                a = Math.min(255, a * 2);
+                alpha = Math.min(255, alpha * 2);
             }
-            color = (a << 24) | (argb & 0xFFFFFF);
+            color = (alpha << 24) | (argb & 0xFFFFFF);
         } else {
             color = 0xFF000000 | (argb & 0xFFFFFF);
         }

@@ -66,10 +66,10 @@ public class RecordStore {
             return null;
         }
         List<String> names = new ArrayList<>();
-        for (File f : files) {
-            String n = f.getName();
-            if (n.endsWith(STORE_SUFFIX)) {
-                names.add(n.substring(0, n.length() - STORE_SUFFIX.length()));
+        for (File storeFile : files) {
+            String storeName = storeFile.getName();
+            if (storeName.endsWith(STORE_SUFFIX)) {
+                names.add(storeName.substring(0, storeName.length() - STORE_SUFFIX.length()));
             }
         }
         return names.toArray(new String[0]);
@@ -141,8 +141,8 @@ public class RecordStore {
     public int getSize() throws RecordStoreNotOpenException {
         checkOpen();
         int size = 0;
-        for (Map.Entry<Integer, byte[]> e : records.entrySet()) {
-            size += e.getValue().length + 12;
+        for (Map.Entry<Integer, byte[]> entry : records.entrySet()) {
+            size += entry.getValue().length + 12;
         }
         return size;
     }
@@ -162,8 +162,8 @@ public class RecordStore {
         open = false;
         try {
             save();
-        } catch (RecordStoreException e) {
-            System.err.println("warning: could not persist record store " + name + ": " + e.getMessage());
+        } catch (RecordStoreException failure) {
+            System.err.println("warning: could not persist record store " + name + ": " + failure.getMessage());
         }
     }
 
@@ -180,18 +180,18 @@ public class RecordStore {
     }
 
     private void load() throws RecordStoreException {
-        try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
-            nextRecordId = in.readInt();
-            int count = in.readInt();
-            for (int i = 0; i < count; i++) {
-                int id = in.readInt();
-                int length = in.readInt();
+        try (DataInputStream stream = new DataInputStream(new FileInputStream(file))) {
+            nextRecordId = stream.readInt();
+            int count = stream.readInt();
+            for (int index = 0; index < count; index++) {
+                int id = stream.readInt();
+                int length = stream.readInt();
                 byte[] data = new byte[length];
-                in.readFully(data);
+                stream.readFully(data);
                 records.put(id, data);
             }
-        } catch (Exception e) {
-            throw new RecordStoreException("could not read store " + name + ": " + e);
+        } catch (Exception failure) {
+            throw new RecordStoreException("could not read store " + name + ": " + failure);
         }
     }
 
@@ -203,13 +203,13 @@ public class RecordStore {
         try (DataOutputStream out = new DataOutputStream(new FileOutputStream(file))) {
             out.writeInt(nextRecordId);
             out.writeInt(records.size());
-            for (Map.Entry<Integer, byte[]> e : records.entrySet()) {
-                out.writeInt(e.getKey());
-                out.writeInt(e.getValue().length);
-                out.write(e.getValue());
+            for (Map.Entry<Integer, byte[]> entry : records.entrySet()) {
+                out.writeInt(entry.getKey());
+                out.writeInt(entry.getValue().length);
+                out.write(entry.getValue());
             }
-        } catch (Exception e) {
-            throw new RecordStoreException("could not write store " + name + ": " + e);
+        } catch (Exception failure) {
+            throw new RecordStoreException("could not write store " + name + ": " + failure);
         }
     }
 

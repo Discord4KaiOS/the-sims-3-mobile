@@ -38,10 +38,10 @@ public abstract class Transformable extends Object3D {
             throw new IllegalArgumentException("axis must not be zero length");
         }
         float half = (float) Math.toRadians(angle) / 2f;
-        float s = (float) Math.sin(half) / length;
-        orientation[0] = ax * s;
-        orientation[1] = ay * s;
-        orientation[2] = az * s;
+        float scale = (float) Math.sin(half) / length;
+        orientation[0] = ax * scale;
+        orientation[1] = ay * scale;
+        orientation[2] = az * scale;
         orientation[3] = (float) Math.cos(half);
     }
 

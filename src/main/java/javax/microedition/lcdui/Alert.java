@@ -49,18 +49,18 @@ public class Alert extends Screen {
         return title;
     }
 
-    void paintTo(Graphics g) {
-        g.setColor(0x000000);
-        g.fillRect(0, 0, getWidth(), getHeight());
+    void paintTo(Graphics graphics) {
+        graphics.setColor(0x000000);
+        graphics.fillRect(0, 0, getWidth(), getHeight());
         if (!reported) {
             reported = true;
             System.err.println("[Alert/" + type.getName() + "] " + title + ": " + text);
         }
-        g.setColor(0xFFFFFF);
+        graphics.setColor(0xFFFFFF);
         int y = 8;
         String message = title.isEmpty() ? text : title + "\n" + text;
         for (String line : message.split("\n")) {
-            g.drawString(line, getWidth() / 2, y, Graphics.TOP | Graphics.HCENTER);
+            graphics.drawString(line, getWidth() / 2, y, Graphics.TOP | Graphics.HCENTER);
             y += Font.getDefaultFont().getHeight() + 2;
         }
     }
