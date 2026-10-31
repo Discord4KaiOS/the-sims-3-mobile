@@ -2578,11 +2578,11 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void a(Sim var1) {
       Sim var2 = this.a6().a14;
-      this.n2 = var2.c;
-      this.o2 = var2.d;
+      this.n2 = var2.posX;
+      this.o2 = var2.posY;
       if (var1 != null) {
-         this.p2 = var1.c;
-         this.q = var1.d;
+         this.p2 = var1.posX;
+         this.q = var1.posY;
          this.r = var1.b;
       } else {
          this.r = -1;

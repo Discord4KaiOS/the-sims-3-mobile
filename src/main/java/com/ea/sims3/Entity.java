@@ -4,18 +4,18 @@ import javax.microedition.lcdui.Graphics;
 
 public class Entity implements SpriteIndex, SoundIndex, Resources {
    public static final int[] a = new int[10];
-   public final GameScreen a2;
-   public final GameCanvas a3;
-   public int a4;
+   public final GameScreen screen;
+   public final GameCanvas canvas;
+   public int type;
    public int b;
    private short a5;
-   private int f;
-   private int g;
+   private int flags;
+   private int state;
    private int h;
    private int i;
-   public int c;
-   public int d;
-   public int e;
+   public int posX;
+   public int posY;
+   public int facing;
    private byte a6;
    private byte b2;
    public boolean a7;
@@ -27,75 +27,75 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    private int m;
    private int n;
    private short c2;
-   private Animator[] a8;
+   private Animator[] animators;
    private short d2;
    private int o;
    private int p;
-   private Sim a9;
-   private Sim b5;
+   private Sim owner;
+   private Sim partner;
 
-   public final Neighborhood a8() {
-      return this.a3.a23;
+   public final Neighborhood neighborhood() {
+      return this.canvas.a23;
    }
 
-   public final Lot a5() {
-      return this.a3.a24;
+   public final Lot lot() {
+      return this.canvas.a24;
    }
 
    public Entity(GameScreen var1) {
-      this.a2 = var1;
-      this.a3 = GameCanvas.a7();
-      this.a8 = new Animator[1];
-      this.a8[0] = new Animator();
+      this.screen = var1;
+      this.canvas = GameCanvas.a7();
+      this.animators = new Animator[1];
+      this.animators[0] = new Animator();
    }
 
-   public void a2(int var1, int var2, int var3, int var4, int var5) {
-      Lot var6 = this.a5();
-      Neighborhood var7 = this.a8();
-      this.a4(var2, var3);
-      this.n2(var4);
-      this.a4 = var1;
-      this.b = var5;
-      this.f = var6.k(var1);
-      this.g = 0;
-      this.a5 = (short)var6.i(var1);
+   public void a2(int type, int x, int y, int facing, int value) {
+      Lot lot = this.lot();
+      Neighborhood var7 = this.neighborhood();
+      this.moveTo(x, y);
+      this.n2(facing);
+      this.type = type;
+      this.b = value;
+      this.flags = lot.k(type);
+      this.state = 0;
+      this.a5 = (short)lot.i(type);
       this.o = 0;
       this.p = 0;
-      this.a9 = null;
-      this.b5 = null;
-      this.b7(128);
+      this.owner = null;
+      this.partner = null;
+      this.addState(128);
       this.m = 0;
-      int var8 = var6.q(var1);
-      int var9 = var6.h(var1, 0);
-      if (var1 == 99) {
-         var8 = var6.c();
+      int var8 = lot.q(type);
+      int var9 = lot.h(type, 0);
+      if (type == 99) {
+         var8 = lot.c();
       }
 
       if (var8 == 196 && var9 != 0) {
-         this.p2(var9);
+         this.setValueB(var9);
       } else {
          this.c2 = -1;
-         this.o2(var8);
+         this.playIdleAnimation(var8);
       }
 
-      this.l2(-1);
+      this.setValueA(-1);
       int var10 = this.g();
       int var11 = 0;
-      if (var1 == 9) {
+      if (type == 9) {
          var11 = 1;
-      } else if (var1 == 92) {
-         if ((var11 = var10 & 16777215) != 0 && var6.a() != 0) {
+      } else if (type == 92) {
+         if ((var11 = var10 & 16777215) != 0 && lot.a() != 0) {
             int var12 = var7.d6;
             int var13;
             if ((var13 = this.h()) != -1 && var12 - var13 > 1440) {
                var11 = 0;
             }
          }
-      } else if (var6.h(var1) == 16) {
+      } else if (lot.h(type) == 16) {
          var11 = var10 & 16777215;
       }
 
-      this.e3(var11);
+      this.setModeFromState(var11);
       if ((var10 & 16777216) != 0) {
          this.f2();
       }
@@ -104,25 +104,25 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          this.h2();
       }
 
-      if (this.a13(201326592) && !this.b8(768)) {
+      if (this.hasFlag(201326592) && !this.hasState(768)) {
          this.b3 = (short)(var10 & 16777215);
          this.j = 0;
          if (this.b3 == 0) {
-            this.b3 = (short)this.a3.b(0, 100);
+            this.b3 = (short)this.canvas.b(0, 100);
          }
       }
 
       if (this.a() == 10) {
          byte var14 = 47;
-         if (var1 == 48) {
+         if (type == 48) {
             var14 = 49;
-         } else if (var1 == 50) {
+         } else if (type == 50) {
             var14 = 51;
-         } else if (var1 == 52) {
+         } else if (type == 52) {
             var14 = 53;
          }
 
-         this.a2.a(var14, this.c, this.d, this.e, this.b).m2(20);
+         this.screen.a(var14, this.posX, this.posY, this.facing, this.b).setValueC(20);
       }
 
       if (this.a() == 8) {
@@ -135,64 +135,64 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          this.b3().a10();
       }
 
-      this.a2.e(this);
-      this.a9 = null;
-      this.b5 = null;
+      this.screen.e(this);
+      this.owner = null;
+      this.partner = null;
    }
 
    public final int a() {
-      return this.a5().h(this.a4);
+      return this.lot().h(this.type);
    }
 
    public final int b() {
-      return this.a13(64) ? this.i() : this.a5;
+      return this.hasFlag(64) ? this.i() : this.a5;
    }
 
-   public final void a4(int var1, int var2) {
+   public final void moveTo(int var1, int var2) {
       this.b4 = true;
-      this.c = var1;
-      this.d = var2;
+      this.posX = var1;
+      this.posY = var2;
    }
 
-   public final boolean a13(int var1) {
-      return (this.f & var1) != 0;
+   public final boolean hasFlag(int var1) {
+      return (this.flags & var1) != 0;
    }
 
-   public final void a12(int var1) {
-      this.f |= var1;
+   public final void addFlag(int var1) {
+      this.flags |= var1;
    }
 
-   public final boolean b8(int var1) {
-      return (this.g & var1) != 0;
+   public final boolean hasState(int var1) {
+      return (this.state & var1) != 0;
    }
 
    public final void a2(int var1, boolean var2) {
       if (var2) {
-         this.b7(var1);
+         this.addState(var1);
       } else {
-         this.c4(var1);
+         this.clearState(var1);
       }
    }
 
-   public final void b7(int var1) {
-      this.g |= var1;
+   public final void addState(int var1) {
+      this.state |= var1;
    }
 
-   public final void c4(int var1) {
-      this.g &= ~var1;
+   public final void clearState(int var1) {
+      this.state &= ~var1;
    }
 
-   public final void b4() {
-      this.b7(8192);
+   public final void setBusy() {
+      this.addState(8192);
       if (this.a() == 8) {
-         this.b3().b7(8192);
+         this.b3().addState(8192);
       }
    }
 
-   public final void c2() {
-      this.c4(8192);
+   public final void clearBusy() {
+      this.clearState(8192);
       if (this.a() == 8) {
-         this.b3().c4(8192);
+         this.b3().clearState(8192);
       }
    }
 
@@ -202,7 +202,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          var4 = this.b3();
       }
 
-      this.a4(var1, var2);
+      this.moveTo(var1, var2);
       this.n2(var3);
       if (var4 != null) {
          int[] var5 = a;
@@ -211,25 +211,25 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final void d2() {
+   public final void update() {
       if (this.b4) {
          this.b4 = false;
-         int var2 = this.a5().d(this.c, this.d);
+         int var2 = this.lot().d(this.posX, this.posY);
          this.k = var2 + this.o;
          this.l = var2 + this.p;
       }
    }
 
    public int c() {
-      return this.a13(16) ? this.b() : 24;
+      return this.hasFlag(16) ? this.b() : 24;
    }
 
    public final void a(int[] var1) {
-      Lot var2 = this.a5();
+      Lot var2 = this.lot();
       int var3 = 0;
       int var4 = 0;
       Animator var5;
-      int var6 = (var5 = this.a6(0)).animId;
+      int var6 = (var5 = this.animatorAt(0)).animId;
       int var7 = var5.frame;
       if (this.a() == 16) {
          var6 = 270;
@@ -240,21 +240,21 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          if (SpriteRenderer.hitTest(var1, var6, var7, 0)) {
             var3 = var1[0];
             var4 = var1[1];
-         } else if (this.a13(16384)) {
-            var4 = 0 - (this.a2.b5() ? 7 : 38);
+         } else if (this.hasFlag(16384)) {
+            var4 = 0 - (this.screen.b5() ? 7 : 38);
          }
       }
 
-      var1[0] = var2.a2(this.c, this.d) + (var3 << 16);
-      var1[1] = var2.b(this.c, this.d) + (var4 << 16);
+      var1[0] = var2.a2(this.posX, this.posY) + (var3 << 16);
+      var1[1] = var2.b(this.posX, this.posY) + (var4 << 16);
    }
 
    public final void a(int[] var1, int var2) {
-      Lot var3 = this.a5();
-      int var4 = com.ea.sims3.Lot.f(this.c);
-      int var5 = com.ea.sims3.Lot.g(this.d);
-      int var6 = var3.b(this.a4, var2, this.e);
-      int var7 = var3.c(this.a4, var2, this.e);
+      Lot var3 = this.lot();
+      int var4 = com.ea.sims3.Lot.f(this.posX);
+      int var5 = com.ea.sims3.Lot.g(this.posY);
+      int var6 = var3.b(this.type, var2, this.facing);
+      int var7 = var3.c(this.type, var2, this.facing);
       int var8 = var4 + var6;
       int var9 = var5 + var7;
       var1[0] = com.ea.sims3.Lot.d(var8);
@@ -262,10 +262,10 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int a(int var1, int var2, boolean var3, Sim var4) {
-      Lot var5 = this.a5();
+      Lot var5 = this.lot();
       int[] var6 = a;
       int var7;
-      if ((var7 = var5.r(this.a4)) <= 0) {
+      if ((var7 = var5.r(this.type)) <= 0) {
          return -1;
       } else {
          int var8 = -1;
@@ -277,17 +277,17 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                int var11 = var6[0];
                int var12 = var6[1];
                if (var5.b3(var11, var12)) {
-                  if (var3 && !this.a13(4194304)) {
+                  if (var3 && !this.hasFlag(4194304)) {
                      int var13 = com.ea.sims3.Lot.f(var11);
                      int var14 = com.ea.sims3.Lot.g(var12);
                      boolean var15 = false;
-                     Sim[] var16 = this.a2.a13();
+                     Sim[] var16 = this.screen.a13();
 
                      for (int var17 = 0; var17 < var16.length && !var15; var17++) {
                         Sim var18;
                         if ((var18 = var16[var17]) != var4) {
-                           int var19 = com.ea.sims3.Lot.f(var18.c);
-                           int var20 = com.ea.sims3.Lot.g(var18.d);
+                           int var19 = com.ea.sims3.Lot.f(var18.posX);
+                           int var20 = com.ea.sims3.Lot.g(var18.posY);
                            if (var19 == var13 && var20 == var14) {
                               var15 = true;
                            }
@@ -315,10 +315,10 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean c5(int var1) {
-      if (this.a13(4194304)) {
+      if (this.hasFlag(4194304)) {
          return true;
       } else {
-         if (this.a13(8388608)) {
+         if (this.hasFlag(8388608)) {
             if ((this.m & 1 << var1) == 0) {
                this.m |= 1 << var1;
                return true;
@@ -333,7 +333,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void d3(int var1) {
-      if (this.a13(8388608)) {
+      if (this.hasFlag(8388608)) {
          this.m &= ~(1 << var1);
       } else {
          this.m = 0;
@@ -341,14 +341,14 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean a11() {
-      return this.a13(4194304) ? true : this.m == 0;
+      return this.hasFlag(4194304) ? true : this.m == 0;
    }
 
    public final boolean b5() {
       if (this.a11()) {
          return true;
       } else {
-         int var1 = this.a5().r(this.a4);
+         int var1 = this.lot().r(this.type);
          return this.m < (1 << var1) - 1;
       }
    }
@@ -361,8 +361,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       if (this.b == -1) {
          return 0;
       } else {
-         Lot var1 = this.a5();
-         return this.a8().l(var1.a(), this.b);
+         Lot var1 = this.lot();
+         return this.neighborhood().l(var1.a(), this.b);
       }
    }
 
@@ -370,43 +370,43 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       if (this.b == -1) {
          return -1;
       } else {
-         Lot var1 = this.a5();
-         return this.a8().m(var1.a(), this.b);
+         Lot var1 = this.lot();
+         return this.neighborhood().m(var1.a(), this.b);
       }
    }
 
    private void E() {
       if (this.b != -1) {
-         Lot var1 = this.a5();
-         Neighborhood var2 = this.a8();
+         Lot var1 = this.lot();
+         Neighborhood var2 = this.neighborhood();
          int var3 = 0;
-         if (this.a4 == 92) {
+         if (this.type == 92) {
             var3 = this.h;
          } else if (this.a() == 16) {
             var3 = this.h;
          }
 
-         if (this.a13(67108864) && this.b8(256)) {
+         if (this.hasFlag(67108864) && this.hasState(256)) {
             var3 |= 16777216;
          }
 
-         if (this.a13(134217728) && this.b8(512)) {
+         if (this.hasFlag(134217728) && this.hasState(512)) {
             var3 |= 33554432;
          }
 
-         if (var1.a() == 0 && this.a13(201326592)) {
+         if (var1.a() == 0 && this.hasFlag(201326592)) {
             var3 |= this.b3;
          }
 
-         if (this.b8(32768)) {
+         if (this.hasState(32768)) {
             var3 |= 134217728;
          }
 
-         if (this.b8(16384)) {
+         if (this.hasState(16384)) {
             var3 |= 67108864;
          }
 
-         if (this.b8(65536)) {
+         if (this.hasState(65536)) {
             var3 |= 268435456;
          }
 
@@ -415,14 +415,14 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public boolean c3() {
-      return this.a() == 16 ? !this.h3() && !this.e4(1) && this.h != 1 : this.h == 0;
+      return this.a() == 16 ? !this.isAnimating() && !this.e4(1) && this.h != 1 : this.h == 0;
    }
 
    public final boolean d3() {
-      return this.a() != 16 || !this.h3() && !this.e4(1) ? this.h == 1 : false;
+      return this.a() != 16 || !this.isAnimating() && !this.e4(1) ? this.h == 1 : false;
    }
 
-   public final void e3(int var1) {
+   public final void setModeFromState(int var1) {
       int var2;
       if ((var2 = this.a()) == 2) {
          this.r2(var1);
@@ -431,7 +431,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       } else if (var2 == 7) {
          this.u2(var1);
       } else if (var2 == 8) {
-         this.j2(var1);
+         this.setMode(var1);
       } else if (var2 == 10) {
          this.v2(var1);
       } else if (var2 == 17) {
@@ -440,20 +440,20 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          this.A2(var1);
       } else if (var2 == 16) {
          this.x2(var1);
-      } else if (this.a4 == 92) {
+      } else if (this.type == 92) {
          this.B2(var1);
       }
 
       this.h = var1;
       this.i = 0;
-      if (this.a4 == 92) {
+      if (this.type == 92) {
          this.E();
       }
    }
 
-   public void f3(int var1) {
+   public void advanceTime(int var1) {
       this.i += var1;
-      if (this.a13(201326592) && !this.b8(768)) {
+      if (this.hasFlag(201326592) && !this.hasState(768)) {
          this.j += var1;
          if (this.j > 4000) {
             this.j -= 4000;
@@ -461,11 +461,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          }
       }
 
-      if (this.b8(1)) {
-         var1 = this.a2.b5;
+      if (this.hasState(1)) {
+         var1 = this.screen.b5;
       }
 
-      int var2 = this.a4;
+      int var2 = this.type;
       int var3;
       if ((var3 = this.a()) == 3) {
          this.s2(var1);
@@ -473,11 +473,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          this.y2(var1);
       } else {
          this.g2(var1);
-         if (!this.h3()) {
+         if (!this.isAnimating()) {
             if (var3 == 7) {
-               this.e3(2);
-            } else if (this.a4 == 92 && this.h == 2) {
-               this.e3(1);
+               this.setModeFromState(2);
+            } else if (this.type == 92 && this.h == 2) {
+               this.setModeFromState(1);
             }
          }
 
@@ -485,16 +485,16 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             this.a5(var1, 2);
             if (!this.e4(2)) {
                if (this.h == 2) {
-                  this.e3(1);
+                  this.setModeFromState(1);
                } else {
-                  this.e3(0);
+                  this.setModeFromState(0);
                }
             }
          }
       }
 
       if (var2 == 7) {
-         if (!this.h3()) {
+         if (!this.isAnimating()) {
             this.a10();
             return;
          }
@@ -504,9 +504,9 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void g2(int var1) {
-      if (this.b8(2048)) {
+      if (this.hasState(2048)) {
          var1 = FixedMath.mul(var1 << 16, 81920) >> 16;
-      } else if (this.b8(4096)) {
+      } else if (this.hasState(4096)) {
          var1 = FixedMath.mul(var1 << 16, 49152) >> 16;
       }
 
@@ -516,19 +516,19 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
 
       if (this.d2 != -1 && var2) {
-         this.e2();
+         this.draw();
       }
    }
 
    public final boolean a5(int var1, int var2) {
       Animator var3;
-      return (var3 = this.a6(var2)) != null ? var3.advance(var1) : false;
+      return (var3 = this.animatorAt(var2)) != null ? var3.advance(var1) : false;
    }
 
-   public final void e2() {
+   public final void draw() {
       int[] var1 = a;
-      Animator var2 = this.a6(0);
-      Animator var3 = this.a6(1);
+      Animator var2 = this.animatorAt(0);
+      Animator var3 = this.animatorAt(1);
       byte var4 = 1;
       Animator var5 = var2;
       int var6 = 0;
@@ -539,25 +539,25 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          if (var2.matchesFrame(var1, 1)) {
             var6 = var1[0];
             var7 = var1[1];
-         } else if (this.b8(1024)) {
+         } else if (this.hasState(1024)) {
             var7 = -30;
          }
       }
 
       int var8;
       if ((var8 = var5.frameDuration()) > var4) {
-         Lot var9 = this.a5();
+         Lot var9 = this.lot();
          if (this.a() == 16) {
             int var16 = var5.frame;
             int var18 = this.j();
             int var20 = 2 + var18 - var16;
-            this.b5(var20).play(this.d2, 16);
+            this.animatorFor(var20).play(this.d2, 16);
             return;
          }
 
          for (int var10 = var4; var10 < var8; var10++) {
-            int var11 = this.c;
-            int var12 = this.d;
+            int var11 = this.posX;
+            int var12 = this.posY;
             int var13 = var9.a2(var11, var12);
             int var14 = var9.b(var11, var12);
             var5.matchesFrame(var1, var10);
@@ -566,53 +566,53 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var11 = var9.e(var13, var14);
             var12 = var9.f(var13, var14);
             int var15 = -(var1[1] + var7);
-            if (this.a13(524288)) {
+            if (this.hasFlag(524288)) {
                var15 += 5;
             }
 
-            this.a2.a2(var11, var12, this.d2, var15);
+            this.screen.a2(var11, var12, this.d2, var15);
          }
       }
    }
 
    public boolean a(int var1, Sim var2) {
-      if (this.a4 == 92) {
+      if (this.type == 92) {
          if (var1 == 148) {
-            this.e3(0);
+            this.setModeFromState(0);
          }
-      } else if (this.a4 == 9) {
+      } else if (this.type == 9) {
          if (var1 == 149) {
             if (this.b != -1) {
-               this.a5().a12(this.b);
+               this.lot().a12(this.b);
             }
 
             this.a10();
          }
       } else if (this.a() == 10) {
          if (var1 == 150 || var1 == 153) {
-            this.e3(1);
-            if (var2.b == 0 && !this.a8().b3(0, 1)) {
-               this.a2.a(23, var2, this);
+            this.setModeFromState(1);
+            if (var2.b == 0 && !this.neighborhood().b3(0, 1)) {
+               this.screen.a(23, var2, this);
             }
          } else if (var1 == 151) {
-            if (!this.a2.a5(0, this.c, this.d)) {
-               this.e3(0);
+            if (!this.screen.a5(0, this.posX, this.posY)) {
+               this.setModeFromState(0);
             }
          } else if (var1 == 152 && var2.b == 0) {
-            this.a2.a(24, var2, this);
+            this.screen.a(24, var2, this);
          }
       } else if (this.a() == 22) {
          if (var1 == 131) {
-            this.c4(16384);
-            this.b7(32768);
+            this.clearState(16384);
+            this.addState(32768);
             this.E();
          } else if (var1 == 130) {
-            this.b7(16384);
-            this.c4(32768);
+            this.addState(16384);
+            this.clearState(32768);
             this.E();
          }
       } else if (this.a() == 16 && var1 == 112) {
-         this.b7(65536);
+         this.addState(65536);
          this.E();
       }
 
@@ -620,43 +620,43 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void f2() {
-      this.b7(256);
+      this.addState(256);
       switch (this.a()) {
          case 15:
          case 22:
             this.k2();
          default:
             this.E();
-            this.c2(28, 20);
-            this.a2.a2((byte)8);
+            this.playAnimation(28, 20);
+            this.screen.a2((byte)8);
       }
    }
 
    public final void g2() {
-      this.c4(256);
+      this.clearState(256);
       this.E();
       this.C();
    }
 
    public final void h2() {
-      this.b7(512);
+      this.addState(512);
       this.E();
-      this.c2(41, 20);
-      this.a2.a2((byte)9);
+      this.playAnimation(41, 20);
+      this.screen.a2((byte)9);
    }
 
    public final void i2() {
-      this.c4(512);
+      this.clearState(512);
       this.E();
       this.C();
    }
 
    public final void h2(int var1) {
-      if (this.a5().a() == 0) {
+      if (this.lot().a() == 0) {
          this.b3 = (short)(this.b3 + var1);
          if (this.b3 > 300) {
             this.b3 = 0;
-            if (this.a13(67108864)) {
+            if (this.hasFlag(67108864)) {
                this.f2();
             } else {
                this.h2();
@@ -673,13 +673,13 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          this.q2(1);
       }
 
-      if (var1 == 22 && !this.b8(49152)) {
-         this.b7(32768);
+      if (var1 == 22 && !this.hasState(49152)) {
+         this.addState(32768);
       } else if (var1 == 8) {
-         this.e3(2);
+         this.setModeFromState(2);
       }
 
-      this.b7(64);
+      this.addState(64);
       this.h2(15);
    }
 
@@ -688,31 +688,31 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       if ((var1 = this.a()) == 15 || var1 == 22 || var1 == 18) {
          this.q2(0);
       } else if (var1 == 8) {
-         this.e3(3);
+         this.setModeFromState(3);
       }
 
-      this.c4(64);
+      this.clearState(64);
       this.h2(15);
    }
 
    public final void b2(int var1, int var2) {
-      this.c4(128);
-      this.o2(var1);
+      this.clearState(128);
+      this.playIdleAnimation(var1);
       if (var1 == 35 || var1 == 36) {
-         this.b7(1);
+         this.addState(1);
       }
 
-      this.m2(var2);
+      this.setValueC(var2);
    }
 
    public final void i2(int var1) {
       this.n = var1;
-      this.o2(196);
-      this.m2(30);
+      this.playIdleAnimation(196);
+      this.setValueC(30);
    }
 
    private void e2(int var1, int var2) {
-      GameCanvas var3 = this.a3;
+      GameCanvas var3 = this.canvas;
       int var4 = FixedMath.smoothStep(0, 1500, this.i);
       int var5 = -40 + FixedMath.mul(var4, -30);
       SdkString var6 = var3.a2();
@@ -721,11 +721,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void l2() {
-      this.e3(1);
+      this.setModeFromState(1);
    }
 
    public final void m2() {
-      this.e3(0);
+      this.setModeFromState(0);
    }
 
    private void r2(int var1) {
@@ -742,31 +742,31 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var2 = 1;
       }
 
-      this.l2(var3);
+      this.setValueA(var3);
       this.q2(var2);
    }
 
    public final void n2() {
       if (this.h == 0 || this.h == 3) {
-         this.e3(2);
+         this.setModeFromState(2);
       }
    }
 
    public final void o2() {
       if (this.h == 1 || this.h == 2) {
-         this.e3(3);
+         this.setModeFromState(3);
       }
    }
 
-   public final boolean e3() {
+   public final boolean isModeOne() {
       return this.h == 1;
    }
 
    public final void b(int[] var1) {
       Lot var2;
-      int var3 = (var2 = this.a5()).c(this.c, this.d);
-      int var4 = var2.d(this.c, this.d);
-      this.a6(2).matchesFrame(var1, 0);
+      int var3 = (var2 = this.lot()).c(this.posX, this.posY);
+      int var4 = var2.d(this.posX, this.posY);
+      this.animatorAt(2).matchesFrame(var1, 0);
       var1[0] += var3;
       var1[1] += var4;
    }
@@ -776,12 +776,12 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       this.a5(var1, 2);
       if (!this.e4(2)) {
          if (this.h == 2) {
-            this.e3(1);
+            this.setModeFromState(1);
             return;
          }
 
          if (this.h == 3) {
-            this.e3(0);
+            this.setModeFromState(0);
          }
       }
    }
@@ -805,9 +805,9 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var3 = false;
       }
 
-      Animator var4 = this.b5(2);
+      Animator var4 = this.animatorFor(2);
       if (var2 != -1) {
-         int var5 = this.a5().i(var2, this.e);
+         int var5 = this.lot().i(var2, this.facing);
          var4.play(var5, var3 ? 20 : 16);
       } else {
          var4.setRunning(false);
@@ -815,7 +815,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int d() {
-      Entity[] var1 = this.a2.a12();
+      Entity[] var1 = this.screen.a12();
       Entity var2 = null;
 
       for (int var3 = 0; var3 < var1.length; var3++) {
@@ -834,14 +834,14 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean f3() {
-      Lot var1 = this.a5();
-      int var2 = com.ea.sims3.Lot.f(this.c);
-      int var3 = com.ea.sims3.Lot.g(this.d);
-      return !var1.a3(var2, var3, 1, 1, this.e) && this.a4 != 41;
+      Lot var1 = this.lot();
+      int var2 = com.ea.sims3.Lot.f(this.posX);
+      int var3 = com.ea.sims3.Lot.g(this.posY);
+      return !var1.a3(var2, var3, 1, 1, this.facing) && this.type != 41;
    }
 
    public final Entity a3() {
-      Entity[] var1 = this.a2.a12();
+      Entity[] var1 = this.screen.a12();
 
       for (int var2 = 0; var2 < var1.length; var2++) {
          Entity var3;
@@ -854,11 +854,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void p2() {
-      this.e3(1);
+      this.setModeFromState(1);
    }
 
    public final void q2() {
-      this.e3(0);
+      this.setModeFromState(0);
    }
 
    private void u2(int var1) {
@@ -876,21 +876,21 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       this.q2(var2);
    }
 
-   public final boolean g3() {
+   public final boolean isModeTwo() {
       return this.h == 2;
    }
 
    private void F() {
       int[] var2 = a;
       this.c(var2);
-      this.a2.a(41, var2[0], var2[1], var2[2], -1);
+      this.screen.a(41, var2[0], var2[1], var2[2], -1);
    }
 
    private void c(int[] var1) {
-      int var2 = this.c;
-      int var3 = this.d;
+      int var2 = this.posX;
+      int var3 = this.posY;
       byte var4 = 3;
-      if (this.e == 0) {
+      if (this.facing == 0) {
          var2 += 524288;
          var3 -= 524288;
          var4 = 2;
@@ -907,10 +907,10 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    public final Entity b3() {
       int[] var1 = a;
       this.c(var1);
-      return this.a2.a2(41, var1[0], var1[1]);
+      return this.screen.a2(41, var1[0], var1[1]);
    }
 
-   public final void j2(int var1) {
+   public final void setMode(int var1) {
       this.h = var1;
       byte var2 = -1;
       byte var3 = 20;
@@ -932,11 +932,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
 
       if (var2 != -1) {
          Lot var4;
-         int var5 = (var4 = this.a5()).h(this.a4, var2);
-         int var6 = var4.i(var5, this.e);
-         this.b5(2).play(var6, var3);
+         int var5 = (var4 = this.lot()).h(this.type, var2);
+         int var6 = var4.i(var5, this.facing);
+         this.animatorFor(2).play(var6, var3);
       } else {
-         this.b5(2).setRunning(false);
+         this.animatorFor(2).setRunning(false);
       }
    }
 
@@ -948,17 +948,17 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          case 0:
             var2 = 0;
             var3 = 0;
-            this.c4(64);
+            this.clearState(64);
             break;
          case 1:
             var2 = 1;
             var3 = -15;
-            this.b7(64);
+            this.addState(64);
       }
 
       this.q2(var2);
-      this.a(!this.b8(64));
-      this.m2(var3);
+      this.a(!this.hasState(64));
+      this.setValueC(var3);
    }
 
    public final void r2() {
@@ -973,9 +973,9 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    private final int i() {
       int var1 = -1;
       int var2 = -1;
-      int var3 = this.a5().b2(this.a4);
+      int var3 = this.lot().b2(this.type);
       Neighborhood var4;
-      int var5 = (var4 = this.a8()).b6;
+      int var5 = (var4 = this.neighborhood()).b6;
 
       for (int var6 = 0; var6 < var5; var6++) {
          if (var4.U(var6) == var3) {
@@ -990,7 +990,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       if (var1 == -1 && var2 == -1) {
          return 201;
       } else {
-         GameCanvas var9 = this.a3;
+         GameCanvas var9 = this.canvas;
          SdkString var7;
          if (var1 == 0) {
             var7 = var9.b2();
@@ -1073,24 +1073,24 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    private boolean l3() {
-      return (this.a5().k(this.a4) & 65536) != 0;
+      return (this.lot().k(this.type) & 65536) != 0;
    }
 
    public final void k2(int var1) {
-      Lot var2 = this.a5();
+      Lot var2 = this.lot();
       int var3 = a3(var1);
-      this.a4 = var3;
+      this.type = var3;
       var2.b2(this.b, var3);
       this.a5 = (short)var2.i(var3);
       this.h = 2;
       this.E();
-      this.c4(128);
+      this.clearState(128);
       if (this.l3()) {
-         this.o2(271);
-         this.c2(267, 16);
-         this.l2(a2(var3, 0));
+         this.playIdleAnimation(271);
+         this.playAnimation(267, 16);
+         this.setValueA(a2(var3, 0));
       } else {
-         this.o2(272);
+         this.playIdleAnimation(272);
       }
    }
 
@@ -1102,33 +1102,33 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             if (this.l3()) {
                var1 = true;
                this.h = 1;
-               this.c4(128);
-               this.o2(271);
-               this.c2(267, 16);
-               this.l2(a2(this.a4, 1));
+               this.clearState(128);
+               this.playIdleAnimation(271);
+               this.playAnimation(267, 16);
+               this.setValueA(a2(this.type, 1));
             } else {
                this.h = 3;
-               this.c4(128);
-               this.o2(273);
+               this.clearState(128);
+               this.playIdleAnimation(273);
             }
             break;
          case 3:
             var1 = true;
             this.h = 1;
-            this.c4(128);
-            this.o2(274);
-            this.c2(275, 16);
-            this.l2(a2(this.a4, 0));
+            this.clearState(128);
+            this.playIdleAnimation(274);
+            this.playAnimation(275, 16);
+            this.setValueA(a2(this.type, 0));
       }
 
       if (var1) {
          Neighborhood var2;
-         (var2 = this.a8()).e3(32);
-         if (this.a4 == 21) {
+         (var2 = this.neighborhood()).e3(32);
+         if (this.type == 21) {
             var2.e3(33);
-         } else if (this.a4 == 19) {
+         } else if (this.type == 19) {
             var2.e3(34);
-         } else if (this.a4 == 20) {
+         } else if (this.type == 20) {
             var2.e3(35);
          }
       }
@@ -1137,43 +1137,43 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    private void G() {
-      this.c2(196, 16);
+      this.playAnimation(196, 16);
 
       for (int var1 = 2; var1 <= 9; var1++) {
          Animator var2;
-         if ((var2 = this.a6(var1)) != null) {
+         if ((var2 = this.animatorAt(var1)) != null) {
             var2.play(196, 16);
          }
       }
    }
 
    private void w2(int var1) {
-      int var2 = a2(this.a4, var1);
+      int var2 = a2(this.type, var1);
       int var3 = this.j();
       int var4 = 2 + var3 - 1;
 
       for (int var5 = 0; var5 < var3; var5++) {
          Animator var6;
-         (var6 = this.b5(var4 - var5)).play(var2, 16);
+         (var6 = this.animatorFor(var4 - var5)).play(var2, 16);
          var6.rewind();
       }
    }
 
    public final void u2() {
-      int var1 = b2(this.a4);
+      int var1 = b2(this.type);
       int var2 = this.j();
-      if (this.b8(65536)) {
+      if (this.hasState(65536)) {
          var2 += 2;
-         this.c4(65536);
+         this.clearState(65536);
       }
 
-      this.a8().h2(var2);
-      this.a8().b2(var1, var2);
-      this.a2.b2(var1, var2, 289, 715);
+      this.neighborhood().h2(var2);
+      this.neighborhood().b2(var1, var2);
+      this.screen.b2(var1, var2, 289, 715);
       if (this.l3()) {
          this.v2();
       } else {
-         this.e3(3);
+         this.setModeFromState(3);
       }
 
       this.G();
@@ -1181,13 +1181,13 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void v2() {
-      this.a4 = 17;
-      this.a5().b2(this.b, 17);
-      this.a5 = (short)this.a5().i(17);
+      this.type = 17;
+      this.lot().b2(this.b, 17);
+      this.a5 = (short)this.lot().i(17);
       this.h = 0;
       this.G();
-      this.c4(128);
-      this.o2(270);
+      this.clearState(128);
+      this.playIdleAnimation(270);
       this.E();
    }
 
@@ -1209,7 +1209,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             }
 
             Animator var4;
-            (var4 = this.b5(1)).play(var5, 16);
+            (var4 = this.animatorFor(1)).play(var5, 16);
             var4.rewind();
             break;
          case 2:
@@ -1217,7 +1217,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                this.w2(0);
                var2 = 271;
                Animator var3;
-               (var3 = this.b5(1)).play(267, 16);
+               (var3 = this.animatorFor(1)).play(267, 16);
                var3.rewind();
             } else {
                var2 = 272;
@@ -1227,9 +1227,9 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var2 = 273;
       }
 
-      this.c4(128);
-      this.o2(var2);
-      this.a6(0).rewind();
+      this.clearState(128);
+      this.playIdleAnimation(var2);
+      this.animatorAt(0).rewind();
    }
 
    private void y2(int var1) {
@@ -1251,12 +1251,12 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void y() {
-      this.e3(1);
+      this.setModeFromState(1);
    }
 
    public final void z() {
       this.h2(15);
-      this.e3(0);
+      this.setModeFromState(0);
    }
 
    private void z2(int var1) {
@@ -1274,16 +1274,16 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var2 = 1;
       }
 
-      this.l2(var3);
+      this.setValueA(var3);
       this.q2(var2);
    }
 
    public final void A() {
-      this.e3(1);
+      this.setModeFromState(1);
    }
 
    public final void B() {
-      this.e3(0);
+      this.setModeFromState(0);
    }
 
    private void A2(int var1) {
@@ -1301,15 +1301,15 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var2 = 1;
       }
 
-      this.l2(var3);
+      this.setValueA(var3);
       this.q2(var2);
    }
 
    public final void a(Sim var1) {
-      this.a2.a(21, var1, this);
+      this.screen.a(21, var1, this);
       this.a2(var1);
-      this.n2((this.e + 2) % 4);
-      this.e3(2);
+      this.n2((this.facing + 2) % 4);
+      this.setModeFromState(2);
    }
 
    private void B2(int var1) {
@@ -1322,11 +1322,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             var3 = 0;
             break;
          case 1:
-            this.c2(41, 4);
+            this.playAnimation(41, 4);
             var3 = 2;
             break;
          case 2:
-            this.c2(41, 20);
+            this.playAnimation(41, 20);
             var3 = 1;
             var2 = false;
       }
@@ -1335,99 +1335,99 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       this.q2(var3);
    }
 
-   public final Animator a6(int var1) {
-      return var1 < this.a8.length ? this.a8[var1] : null;
+   public final Animator animatorAt(int var1) {
+      return var1 < this.animators.length ? this.animators[var1] : null;
    }
 
-   public final Animator b5(int var1) {
-      if (var1 >= this.a8.length) {
+   public final Animator animatorFor(int var1) {
+      if (var1 >= this.animators.length) {
          Animator[] var2 = new Animator[var1 + 1];
-         System.arraycopy(this.a8, 0, var2, 0, this.a8.length);
-         this.a8 = var2;
+         System.arraycopy(this.animators, 0, var2, 0, this.animators.length);
+         this.animators = var2;
       }
 
-      if (this.a8[var1] == null) {
+      if (this.animators[var1] == null) {
          Animator var3 = new Animator();
-         this.a8[var1] = var3;
+         this.animators[var1] = var3;
          var3.setRunning(false);
       }
 
-      return this.a8[var1];
+      return this.animators[var1];
    }
 
-   public final void c2(int var1, int var2) {
-      this.b5(1).play(var1, var2);
+   public final void playAnimation(int var1, int var2) {
+      this.animatorFor(1).play(var1, var2);
    }
 
    public final void C() {
       Animator var1;
-      if ((var1 = this.a6(1)) != null) {
+      if ((var1 = this.animatorAt(1)) != null) {
          var1.setRunning(false);
       }
    }
 
-   public final void l2(int var1) {
+   public final void setValueA(int var1) {
       this.d2 = (short)var1;
    }
 
    public final int e() {
-      this.d2();
+      this.update();
       return this.k;
    }
 
    public final int f() {
-      this.d2();
+      this.update();
       return this.l;
    }
 
-   public final void m2(int var1) {
+   public final void setValueC(int var1) {
       this.o = var1;
       this.p = var1;
       this.b4 = true;
    }
 
    public final void b(Sim var1) {
-      if (this.a9 == null) {
-         this.a9 = var1;
+      if (this.owner == null) {
+         this.owner = var1;
       } else {
-         if (this.b5 == null) {
-            this.b5 = var1;
+         if (this.partner == null) {
+            this.partner = var1;
          }
       }
    }
 
    public final void c(Sim var1) {
-      if (this.a9 == var1) {
-         this.a9 = null;
+      if (this.owner == var1) {
+         this.owner = null;
       }
 
-      if (this.b5 == var1) {
-         this.b5 = null;
+      if (this.partner == var1) {
+         this.partner = null;
       }
    }
 
    public void a(Graphics var1) {
-      Lot var2 = this.a5();
+      Lot var2 = this.lot();
       int[] var3 = a;
       int var4 = var2.d();
       int var5 = var2.e();
-      int var6 = var4 + var2.c(this.c, this.d);
-      int var7 = var5 + var2.d(this.c, this.d);
-      if (this.a4 == 8) {
+      int var6 = var4 + var2.c(this.posX, this.posY);
+      int var7 = var5 + var2.d(this.posX, this.posY);
+      if (this.type == 8) {
          this.e2(var6, var7);
       } else {
          Animator var8;
-         (var8 = this.a6(0)).draw(var1, var6, var7);
+         (var8 = this.animatorAt(0)).draw(var1, var6, var7);
          int var9;
          Animator var10;
-         if ((var9 = this.a()) == 8 && (var10 = this.a6(2)) != null && var10.isRunning()) {
+         if ((var9 = this.a()) == 8 && (var10 = this.animatorAt(2)) != null && var10.isRunning()) {
             var10.draw(var1, var6, var7);
          }
 
          int var20 = var6;
          int var11 = var7;
          Animator var12;
-         if ((var12 = this.a6(1)) != null && var12.isRunning()) {
+         if ((var12 = this.animatorAt(1)) != null && var12.isRunning()) {
             if (var8.matchesFrame(var3, 1)) {
                var20 = var6 + var3[0];
                var11 = var7 + var3[1];
@@ -1445,7 +1445,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                int var14;
                for (int var15 = (var14 = this.j()) - 1; var15 >= 0; var15--) {
                   Animator var16;
-                  if ((var16 = this.a6(2 + var15)) != null) {
+                  if ((var16 = this.animatorAt(2 + var15)) != null) {
                      int var17 = var14 - var15;
                      SpriteRenderer.hitTest(var3, var13, var17, 0);
                      int var18 = var20 + var3[0];
@@ -1457,21 +1457,21 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          }
 
          Animator var21;
-         if (var9 == 3 && (var21 = this.a6(2)).isRunning()) {
+         if (var9 == 3 && (var21 = this.animatorAt(2)).isRunning()) {
             var21.draw(var1, var6, var7);
          }
 
-         if (this.a13(33554432)) {
-            if (this.a9 != null) {
-               this.a9.b(var1);
+         if (this.hasFlag(33554432)) {
+            if (this.owner != null) {
+               this.owner.b(var1);
             }
 
-            if (this.b5 != null) {
-               this.b5.b(var1);
+            if (this.partner != null) {
+               this.partner.b(var1);
             }
 
-            int var22 = var2.h(this.a4, 1);
-            int var23 = var2.i(var22, this.e);
+            int var22 = var2.h(this.type, 1);
+            int var23 = var2.i(var22, this.facing);
             SpriteRenderer.drawFrame(var1, var23, 0, var6, var7);
          }
       }
@@ -1488,7 +1488,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             GameCanvas.c2(var1, 325);
          }
 
-         if (this.i3()) {
+         if (this.hasFurnitureSlots()) {
             GameCanvas.c2(var1, 324);
             return;
          }
@@ -1498,19 +1498,19 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a(boolean var1) {
-      if (this.a13(524288)) {
-         this.m2(5);
-      } else if (this.a13(4)) {
-         if (this.a4 == 11) {
-            this.m2(5);
+      if (this.hasFlag(524288)) {
+         this.setValueC(5);
+      } else if (this.hasFlag(4)) {
+         if (this.type == 11) {
+            this.setValueC(5);
          }
       } else {
-         Lot var2 = this.a5();
-         int var3 = com.ea.sims3.Lot.f(this.c);
-         int var4 = com.ea.sims3.Lot.g(this.d);
-         int var5 = var2.o(this.a4);
-         int var6 = var2.p(this.a4);
-         if (this.e == 1 || this.e == 3) {
+         Lot var2 = this.lot();
+         int var3 = com.ea.sims3.Lot.f(this.posX);
+         int var4 = com.ea.sims3.Lot.g(this.posY);
+         int var5 = var2.o(this.type);
+         int var6 = var2.p(this.type);
+         if (this.facing == 1 || this.facing == 3) {
             int var7 = var5;
             var5 = var6;
             var6 = var7;
@@ -1522,7 +1522,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             if (this.a() == 10) {
                var9 = 255;
                var8 = 32;
-            } else if (this.a4 == 116) {
+            } else if (this.type == 116) {
                var9 = -129;
                var8 = 0;
             } else {
@@ -1537,12 +1537,12 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          var2.a(var3 - var5 + 1, var4 - var6 + 1, var5, var6, var9, var8);
          this.a6 = (byte)var5;
          this.b2 = (byte)var6;
-         if (this.a13(16777216)) {
-            this.m2(-10);
-         } else if (this.a13(8)) {
-            this.m2(0);
+         if (this.hasFlag(16777216)) {
+            this.setValueC(-10);
+         } else if (this.hasFlag(8)) {
+            this.setValueC(0);
          } else if (this.a() == 14 || this.a() == 12) {
-            this.m2(20);
+            this.setValueC(20);
          } else if (var5 != 0 && var6 != 0) {
             this.o = var5 * -8 + 4;
             this.p = var6 * -8 + 4;
@@ -1553,11 +1553,11 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void n2(int var1) {
-      if (this.e != var1) {
+      if (this.facing != var1) {
          this.b4 = true;
-         this.e = var1;
+         this.facing = var1;
          if (this.c2 != -1) {
-            this.p2(this.c2);
+            this.setValueB(this.c2);
          }
       }
    }
@@ -1571,51 +1571,51 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       int var3 = Math.max(var1.b2 - 1, 0);
       int var4 = var2 << 18;
       int var5 = var3 << 18;
-      int var6 = var1.c - var4;
-      int var7 = var1.d - var5;
-      this.d2(var6 - this.c, var7 - this.d);
+      int var6 = var1.posX - var4;
+      int var7 = var1.posY - var5;
+      this.d2(var6 - this.posX, var7 - this.posY);
    }
 
-   public final void o2(int var1) {
-      this.a6(0).play(var1, this.b8(128) ? 20 : 16);
+   public final void playIdleAnimation(int var1) {
+      this.animatorAt(0).play(var1, this.hasState(128) ? 20 : 16);
    }
 
-   public final boolean h3() {
-      return this.a8[0].isRunning();
+   public final boolean isAnimating() {
+      return this.animators[0].isRunning();
    }
 
    public final boolean e4(int var1) {
       Animator var2;
-      return (var2 = this.a6(var1)) != null && var2.isRunning();
+      return (var2 = this.animatorAt(var1)) != null && var2.isRunning();
    }
 
-   public final void p2(int var1) {
+   public final void setValueB(int var1) {
       this.c2 = (short)var1;
-      int var2 = this.a5().i(var1, this.e);
-      this.o2(var2);
+      int var2 = this.lot().i(var1, this.facing);
+      this.playIdleAnimation(var2);
    }
 
    public final void q2(int var1) {
-      this.p2(this.a5().h(this.a4, var1));
+      this.setValueB(this.lot().h(this.type, var1));
    }
 
    private boolean m3() {
       if (this.m != 0) {
          return true;
       } else {
-         if (this.a13(262144)) {
-            Lot var1 = this.a5();
-            int var2 = this.a4;
+         if (this.hasFlag(262144)) {
+            Lot var1 = this.lot();
+            int var2 = this.type;
             int var3 = var1.o(var2);
             int var4 = var1.p(var2);
-            if (this.e == 1 || this.e == 3) {
+            if (this.facing == 1 || this.facing == 3) {
                int var5 = var3;
                var3 = var4;
                var4 = var5;
             }
 
-            int var11 = com.ea.sims3.Lot.f(this.c);
-            int var6 = com.ea.sims3.Lot.g(this.d);
+            int var11 = com.ea.sims3.Lot.f(this.posX);
+            int var6 = com.ea.sims3.Lot.g(this.posY);
 
             for (int var7 = 0; var7 < var3; var7++) {
                for (int var8 = 0; var8 < var4; var8++) {
@@ -1626,7 +1626,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             }
          }
 
-         Sim[] var9 = this.a2.a13();
+         Sim[] var9 = this.screen.a13();
 
          for (int var10 = 0; var10 < var9.length; var10++) {
             if (var9[var10].a10 == this) {
@@ -1638,34 +1638,34 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final boolean i3() {
-      return this.a5().n(this.a4) > 0;
+   public final boolean hasFurnitureSlots() {
+      return this.lot().n(this.type) > 0;
    }
 
    public final boolean j3() {
-      Lot var1 = this.a5();
+      Lot var1 = this.lot();
       this.a(false);
-      int var2 = var1.c(this.a4);
-      this.a2.h2();
+      int var2 = var1.c(this.type);
+      this.screen.h2();
       this.a(true);
       return var2 > 1;
    }
 
    public final boolean k3() {
-      return this.k() != this.e;
+      return this.k() != this.facing;
    }
 
    private int k() {
-      Lot var1 = this.a5();
+      Lot var1 = this.lot();
       boolean var2;
-      if (!(var2 = this.a13(524288))) {
+      if (!(var2 = this.hasFlag(524288))) {
          this.a(false);
       }
 
-      int var3 = this.e;
-      int var4 = com.ea.sims3.Lot.f(this.c);
-      int var5 = com.ea.sims3.Lot.g(this.d);
-      int var6 = var1.a(this.a4, var4, var5);
+      int var3 = this.facing;
+      int var4 = com.ea.sims3.Lot.f(this.posX);
+      int var5 = com.ea.sims3.Lot.g(this.posY);
+      int var6 = var1.a(this.type, var4, var5);
 
       for (int var7 = 1; var7 <= 4; var7++) {
          int var8 = (var3 + var7) % 4;
@@ -1686,7 +1686,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    public final void D() {
       int var1 = this.k();
       this.a(false);
-      this.a4(this.c, this.d, var1);
+      this.a4(this.posX, this.posY, var1);
       this.a(true);
    }
 }

@@ -671,3 +671,69 @@ V SdkMoreGames softKeyMask(int) var1 keyCode
 V SdkMoreGames reset() var1 i
 V SdkMoreGames loadProducts() var1 i
 V SdkMoreGames setProductData(byte[]) var1 data
+
+# ---------------------------------------------------------------- Entity
+F Entity a2 screen
+F Entity a3 canvas
+F Entity a4 type
+F Entity f flags
+F Entity g state
+F Entity c posX
+F Entity d posY
+F Entity e facing
+F Entity a8 animators
+F Entity a9 owner
+F Entity b5 partner
+M Entity a8() neighborhood
+M Entity a5() lot
+M Entity a13(int) hasFlag
+M Entity a12(int) addFlag
+M Entity b8(int) hasState
+M Entity b7(int) addState
+M Entity c4(int) clearState
+M Entity b4() setBusy
+M Entity c2() clearBusy
+M Entity a4(int,int) moveTo
+M Entity d2() update
+M Entity e2() draw
+M Entity f3(int) advanceTime
+M Entity h3() isAnimating
+M Entity a6(int) animatorAt
+M Entity b5(int) animatorFor
+M Entity c2(int,int) playAnimation
+M Entity o2(int) playIdleAnimation
+M Entity i3() hasFurnitureSlots
+M Entity l2(int) setValueA
+M Entity p2(int) setValueB
+M Entity m2(int) setValueC
+M Entity j2(int) setMode
+M Entity e3(int) setModeFromState
+M Entity e3() isModeOne
+M Entity g3() isModeTwo
+V Entity a2(int,int,int,int,int) var1 type
+V Entity a2(int,int,int,int,int) var2 x
+V Entity a2(int,int,int,int,int) var3 y
+V Entity a2(int,int,int,int,int) var4 facing
+V Entity a2(int,int,int,int,int) var5 value
+V Entity a2(int,int,int,int,int) var6 lot
+V Entity moveTo(int,int) var1 x
+V Entity moveTo(int,int) var2 y
+V Entity hasFlag(int) var1 flag
+V Entity addFlag(int) var1 flag
+V Entity hasState(int) var1 flag
+V Entity addState(int) var1 flag
+V Entity clearState(int) var1 flag
+V Entity update() var0 ignored
+V Entity update() var1 delta
+V Entity draw() var1 g
+V Entity draw() var2 lot
+V Entity advanceTime(int) var1 delta
+V Entity animatorAt(int) var1 index
+V Entity animatorFor(int) var1 index
+V Entity playAnimation(int,int) var1 animationId
+V Entity playAnimation(int,int) var1 flags
+V Entity playIdleAnimation(int) var1 animationId
+V Entity setMode(int) var1 mode
+V Entity setValueA(int) var1 value
+V Entity setValueB(int) var1 value
+V Entity setValueC(int) var1 value

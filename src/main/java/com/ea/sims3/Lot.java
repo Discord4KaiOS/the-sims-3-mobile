@@ -852,8 +852,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       this.b(true);
       GameScreen var6;
       Entity var7;
-      int var8 = f((var7 = (var6 = this.a.a6()).a5(3)).c);
-      int var9 = g(var7.d);
+      int var8 = f((var7 = (var6 = this.a.a6()).a5(3)).posX);
+      int var9 = g(var7.posY);
       var6.b(0, var8, var9, 3, 0);
       int var10 = var2.r;
       if (var2.r != -1) {
@@ -936,11 +936,11 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          }
 
          Entity var15;
-         (var15 = var2.a(98, var13, var14, 0, -1)).o2(var20);
+         (var15 = var2.a(98, var13, var14, 0, -1)).playIdleAnimation(var20);
          if (var20 == 170 || var20 == 171 || var20 == 172 || var20 == 173 || var20 == 174) {
-            var15.m2(-50);
+            var15.setValueC(-50);
          } else if (var20 == 151 || var20 == 152 || var20 == 153 || var20 == 154) {
-            var15.m2(-18);
+            var15.setValueC(-18);
          }
       }
    }
@@ -1356,7 +1356,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       GameScreen var1 = this.a.a6();
       boolean var2 = false;
       Entity var3;
-      if ((var3 = var1.b4(10)).e == 1) {
+      if ((var3 = var1.b4(10)).facing == 1) {
          var2 = true;
          byte[] var4 = this.b9(1);
          this.a2(1, var4);
@@ -1371,7 +1371,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       if (!var2) {
          boolean var9 = false;
-         int var12 = g(var3.d);
+         int var12 = g(var3.posY);
          var1.b(57, 21, var12, 0, -1);
 
          for (int var14 = var12 + 6; var14 < 15; var14 += 4) {
@@ -1382,7 +1382,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
             var1.b(54, 21, var15, 0, -1);
          }
       } else {
-         int var8 = f(var3.c);
+         int var8 = f(var3.posX);
          boolean var11 = false;
          var1.b(57, var8, 21, 1, -1);
 
@@ -1772,8 +1772,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          for (int var6 = 1; var6 < var3.length; var6++) {
             Entity var7 = var3[var6];
             Entity var8 = var3[var6 - 1];
-            int var9 = this.c(var7.c, var7.d);
-            int var10 = this.c(var8.c, var8.d);
+            int var9 = this.c(var7.posX, var7.posY);
+            int var10 = this.c(var8.posX, var8.posY);
             if (var9 < var10) {
                if (var7.f() < var8.e()) {
                   var3[var6 - 1] = var7;
@@ -1781,8 +1781,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                   var4 = true;
                }
 
-               if (var7.a4 == 98
-                  && var8.a4 == 0
+               if (var7.type == 98
+                  && var8.type == 0
                   && var3.length < 25
                   && (var7.f() == 176 || var7.f() == 144 || var7.f() == 112 || var7.f() == 80 || var7.f() == 48)) {
                   var3[var6 - 1] = var7;
@@ -1790,8 +1790,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                   var4 = true;
                }
 
-               if (var7.a4 == 0
-                  && var8.a4 == 98
+               if (var7.type == 0
+                  && var8.type == 98
                   && var3.length < 25
                   && (var8.f() == 400 || var8.f() == 368 || var8.f() == 336 || var8.f() == 304 || var8.f() == 272)) {
                   var3[var6 - 1] = var7;
@@ -1805,14 +1805,14 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                   var4 = true;
                }
 
-               if (var7.a4 == 98 && var8.a4 == 0 && var3.length < 25 && (var7.f() == 176 || var7.f() == 144 || var7.f() == 112 || var7.f() == 80)) {
+               if (var7.type == 98 && var8.type == 0 && var3.length < 25 && (var7.f() == 176 || var7.f() == 144 || var7.f() == 112 || var7.f() == 80)) {
                   var3[var6 - 1] = var7;
                   var3[var6] = var8;
                   var4 = true;
                }
 
-               if (var7.a4 == 0
-                  && var8.a4 == 98
+               if (var7.type == 0
+                  && var8.type == 98
                   && var3.length < 25
                   && (var8.f() == 400 || var8.f() == 368 || var8.f() == 336 || var8.f() == 304 || var8.f() == 272)) {
                   var3[var6 - 1] = var7;
@@ -1842,8 +1842,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       for (int var10 = 0; var10 < var3.length; var10++) {
          Entity var11 = var3[var10];
-         int var12 = var8 + this.c(var11.c, var11.d);
-         int var13 = var9 + this.d(var11.c, var11.d);
+         int var12 = var8 + this.c(var11.posX, var11.posY);
+         int var13 = var9 + this.d(var11.posX, var11.posY);
          var11.a7 = var12 >= var4 && var12 <= var6 && var13 >= var5 && var13 <= var7;
       }
    }
@@ -1857,7 +1857,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       for (int var6 = 0; var6 < var5; var6++) {
          Entity var7;
-         if ((var7 = var4[var6]).a7 && !var7.b8(8192)) {
+         if ((var7 = var4[var6]).a7 && !var7.hasState(8192)) {
             var7.a(var1);
          }
       }

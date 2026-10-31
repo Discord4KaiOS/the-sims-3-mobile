@@ -269,8 +269,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
             if (var12) {
                Sim var13 = this.a14;
-               int var14 = this.a14.c;
-               int var18 = var13.d;
+               int var14 = this.a14.posX;
+               int var18 = var13.posY;
                this.K = var9.a2(var14, var18);
                this.L = var9.b(var14, var18);
             }
@@ -290,19 +290,19 @@ public final class GameScreen extends BaseScreen implements Runnable {
                   var8 = 24;
                   Entity var11;
                   if ((var11 = this.b4(10)) != null) {
-                     if (var11.a4 == 46) {
+                     if (var11.type == 46) {
                         var8 = 24 | 134217728;
                      }
 
-                     if (var11.a4 == 48) {
+                     if (var11.type == 48) {
                         var8 |= 268435456;
                      }
 
-                     if (var11.a4 == 50) {
+                     if (var11.type == 50) {
                         var8 |= 536870912;
                      }
 
-                     if (var11.a4 == 52) {
+                     if (var11.type == 52) {
                         var8 |= 1073741824;
                      }
                   }
@@ -490,8 +490,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.b7 = true;
       this.c7 = true;
       Sim var5 = this.a14;
-      int var6 = this.a14.c;
-      int var7 = var5.d;
+      int var6 = this.a14.posX;
+      int var7 = var5.posY;
       this.K = var2.a2(var6, var7);
       this.L = var2.b(var6, var7);
       this.I = this.K;
@@ -1321,8 +1321,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    public final void a2(Entity var1) {
-      int var2 = var1.a4;
-      if (var1.a4 == 116) {
+      int var2 = var1.type;
+      if (var1.type == 116) {
          super.canvas.a((Sim) null);
          super.canvas.m2 = 39;
          this.p(2, 100);
@@ -1580,10 +1580,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
             if (var19 == 106) {
                var23 = 3;
             } else if (var20 != null) {
-               if (var20.a13(16384) && !this.b5()) {
+               if (var20.hasFlag(16384) && !this.b5()) {
                   var23 = 6;
                } else {
-                  var23 = this.a18.j(var20.a4);
+                  var23 = this.a18.j(var20.type);
                }
             }
 
@@ -2117,7 +2117,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void w2(int var1) {
       this.O = var1;
-      if (this.c6 == null || !this.c6.a13(var1)) {
+      if (this.c6 == null || !this.c6.hasFlag(var1)) {
          this.b((Entity) null);
       }
    }
@@ -2138,7 +2138,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          (var12 = var8[var11]).a(var2);
          int var13 = var2[0];
          int var14 = var2[1];
-         if (var12 != this.c6 && var12.a13(var10)) {
+         if (var12 != this.c6 && var12.hasFlag(var10)) {
             int var15 = this.u << 16;
             int var16 = this.v << 16;
             int var17 = Math.abs(var5 - var13);
@@ -2179,7 +2179,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          (var10 = var6[var9]).a(var1);
          int var11 = var1[0];
          int var12 = var1[1];
-         if (var10 != this.c6 && var10.a13(var8)) {
+         if (var10 != this.c6 && var10.hasFlag(var8)) {
             int var13 = var4 - var11 >> 8;
             int var14 = var5 - var12 >> 8;
             int var15;
@@ -2208,13 +2208,13 @@ public final class GameScreen extends BaseScreen implements Runnable {
          var5 = var6[1];
       } else if (this.p2 || var3.i6 != -1) {
          Entity var17 = this.b9;
-         if (this.b9 == null && this.c6 != null && this.c6.a13(16384) && ((Sim)this.c6).b == var3.i6) {
+         if (this.b9 == null && this.c6 != null && this.c6.hasFlag(16384) && ((Sim)this.c6).b == var3.i6) {
             var17 = this.c6;
          }
 
          if (var17 != null) {
             int var7 = this.u << 14;
-            if (var17.a13(16384)) {
+            if (var17.hasFlag(16384)) {
                var4 -= var7;
             } else {
                var4 += var7;
@@ -2390,7 +2390,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       this.a18.a(var1);
-      this.a14.a12(1);
+      this.a14.addFlag(1);
    }
 
    public final Entity[] a12() {
@@ -2414,7 +2414,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int var2 = 0;
 
          for (int var3 = 0; var3 < var1.length; var3++) {
-            if (var1[var3].a13(16384)) {
+            if (var1[var3].hasFlag(16384)) {
                var2++;
             }
          }
@@ -2429,7 +2429,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int var4 = 0;
 
          for (int var5 = 0; var5 < var1.length; var5++) {
-            if (var1[var5].a13(16384)) {
+            if (var1[var5].hasFlag(16384)) {
                var6[var4] = (Sim)var1[var5];
                var4++;
             }
@@ -2446,7 +2446,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int var4 = 0; var4 < var2.length; var4++) {
          int var5 = (var3 + var4) % var2.length;
          Entity var6;
-         if ((var6 = var2[var5]).a4 == var1) {
+         if ((var6 = var2[var5]).type == var1) {
             return var6;
          }
       }
@@ -2462,7 +2462,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int var7 = 0; var7 < var6.length; var7++) {
          Entity var8;
          int var9;
-         if ((var8 = var6[var7]).a4 == var1 && ((var9 = Math.abs(var2 - var8.c) + Math.abs(var3 - var8.d)) < var5 || var4 == null)) {
+         if ((var8 = var6[var7]).type == var1 && ((var9 = Math.abs(var2 - var8.posX) + Math.abs(var3 - var8.posY)) < var5 || var4 == null)) {
             var5 = var9;
             var4 = var8;
          }
@@ -2479,8 +2479,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int var8 = 0; var8 < var7.length; var8++) {
          Entity var9;
          if ((var9 = var7[var8]).a() == var1) {
-            int var10 = com.ea.sims3.Lot.f(var9.c);
-            int var11 = com.ea.sims3.Lot.g(var9.d);
+            int var10 = com.ea.sims3.Lot.f(var9.posX);
+            int var11 = com.ea.sims3.Lot.g(var9.posY);
             if (var10 == var5 && var11 == var6) {
                return true;
             }
@@ -2513,8 +2513,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int var5 = 0; var5 < var3.length; var5++) {
          int var6 = (var4 + var5) % var3.length;
          Entity var7;
-         int var8 = (var7 = var3[var6]).a4;
-         if ((var2.l(var8) & var1) != 0 && var7.b5() && !var7.b8(768)) {
+         int var8 = (var7 = var3[var6]).type;
+         if ((var2.l(var8) & var1) != 0 && var7.b5() && !var7.hasState(768)) {
             return var7;
          }
       }
@@ -2555,7 +2555,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if (var7 != null) {
          ((Entity)var7).a2(var1, var2, var3, var4, var5);
          this.h((Entity)var7);
-         if (((Entity)var7).a13(16384)) {
+         if (((Entity)var7).hasFlag(16384)) {
             this.b((Sim)var7);
          }
       }
@@ -2599,7 +2599,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       var1.a(true);
       this.a15.addElement(var1);
       this.b7 = true;
-      if (var1.a13(16384)) {
+      if (var1.hasFlag(16384)) {
          this.c7 = true;
       }
    }
@@ -2614,7 +2614,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       int var2 = -1;
-      if (var1.a13(16384)) {
+      if (var1.hasFlag(16384)) {
          var2 = var1.b;
       }
 
@@ -2637,7 +2637,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if ((var2 = this.a12()) != null) {
          for (int var3 = 0; var3 < var2.length; var3++) {
             Entity var4;
-            (var4 = var2[var3]).f3(var1);
+            (var4 = var2[var3]).advanceTime(var1);
          }
       }
    }
@@ -2647,8 +2647,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if ((var3 = this.a12()) != null) {
          for (int var4 = 0; var4 < var3.length; var4++) {
             Entity var5;
-            if ((var5 = var3[var4]).a4 == var2) {
-               var5.f3(var1);
+            if ((var5 = var3[var4]).type == var2) {
+               var5.advanceTime(var1);
             }
          }
       }
@@ -2659,7 +2659,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       for (int var2 = 0; var2 < var1.length; var2++) {
          Entity var3;
-         if ((var3 = var1[var2]).a13(4)) {
+         if ((var3 = var1[var2]).hasFlag(4)) {
             var3.a10();
          }
       }
@@ -2687,7 +2687,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int var5;
          if ((var5 = com.ea.sims3.GameCanvas.a(this.b9, this.b10)) != -1 && this.f5[var5] != 2) {
             int var6;
-            if (this.b9.a13(16384)) {
+            if (this.b9.hasFlag(16384)) {
                var6 = this.a17.R(this.b9.b);
             } else {
                var6 = this.b9.b();
@@ -2722,14 +2722,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    private void l(Graphics var1) {
-      int var3 = this.b9 != null && this.b9.a13(16384) ? 2 : 4;
+      int var3 = this.b9 != null && this.b9.hasFlag(16384) ? 2 : 4;
       this.a(var1, this.b8, var3);
    }
 
    private int d() {
       Neighborhood var1 = this.a17;
       if (!this.e2 && this.p2) {
-         if (this.b9 != null && this.b9.a13(16384)) {
+         if (this.b9 != null && this.b9.hasFlag(16384)) {
             return ((Sim)this.b9).b;
          }
       } else if (var1.i3()) {
@@ -2744,7 +2744,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var3 = this.d();
       boolean var4 = !this.p2 || this.e2;
       if (!this.e2 && this.p2) {
-         if (this.b9 != null && this.b9.a13(16384)) {
+         if (this.b9 != null && this.b9.hasFlag(16384)) {
             var3 = ((Sim)this.b9).b;
          }
       } else if (var2.i3()) {
@@ -3177,10 +3177,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
             }
             break;
          case 11:
-            this.X = this.c6.a4;
+            this.X = this.c6.type;
             this.d6 = this.c6;
             this.d6.a(false);
-            this.d6.b4();
+            this.d6.setBusy();
             var2.c(this.X);
             this.w2(4);
             this.G();
@@ -3278,9 +3278,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
                var4 = 709;
                var5 = this.a18.m(this.X);
             } else {
-               var3 = this.a18.i(this.c6.a4);
+               var3 = this.a18.i(this.c6.type);
                var4 = 710;
-               var5 = this.a18.n(this.c6.a4);
+               var5 = this.a18.n(this.c6.type);
             }
 
             this.setValue(1, var3);
@@ -3421,7 +3421,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          if (this.W == 11) {
             this.h2();
             var3.a(true);
-            var3.c2();
+            var3.clearBusy();
             this.d6 = null;
             this.C2(1);
          } else {
@@ -3432,10 +3432,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
             if (this.W == 11) {
                Entity var4 = this.c6;
                if (this.c6 != null) {
-                  var3.c2();
-                  var3.a4(var4.c, var4.d, var4.e);
+                  var3.clearBusy();
+                  var3.a4(var4.posX, var4.posY, var4.facing);
                   var3.a(true);
-                  this.a18.a2(var3.b, var4.c, var4.d, var4.e);
+                  this.a18.a2(var3.b, var4.posX, var4.posY, var4.facing);
                   this.b(var3);
                   this.d6 = null;
                   this.h2();
@@ -3457,11 +3457,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
             Neighborhood var4 = this.a17;
             Lot var5 = this.a18;
             int var6 = this.a18.m(this.X);
-            this.b2(var3.c, var3.d, var6);
+            this.b2(var3.posX, var3.posY, var6);
             var4.a12(-var6);
-            int var7 = var5.a(this.X, var3.c, var3.d, var3.e);
+            int var7 = var5.a(this.X, var3.posX, var3.posY, var3.facing);
             this.h2();
-            Entity var8 = this.a(this.X, var3.c, var3.d, var3.e, var7);
+            Entity var8 = this.a(this.X, var3.posX, var3.posY, var3.facing, var7);
             this.b(var8);
             var4.f3(this.X);
             this.C2(6);
@@ -3476,7 +3476,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void E(int var1, int var2) {
       if (this.matchesInput(var1, var2, 4128, 256)) {
          Entity var3 = this.c6;
-         int var4 = this.c6.a4;
+         int var4 = this.c6.type;
          int[] var5 = this.c3;
          this.c6.a(var5);
          this.a18.a12(this.c6.b);
@@ -4611,7 +4611,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          for (int var15 = 0; var15 < var14.length; var15++) {
             int var17 = var2.b(0, var14.length - 1);
             Sim var18;
-            if ((var18 = var14[var17]).c3() && var18.a11() && var18.a4 != 0) {
+            if ((var18 = var14[var17]).c3() && var18.a11() && var18.type != 0) {
                int var19 = (var2.d() < 50 ? 2 : 0) | (var2.d() < 25 ? 8 : 0) | (var2.d() < 50 ? 64 : 0) | (var2.d() < 25 ? 16 : 0) | (var2.d() < 60 ? 32 : 0);
                if (var5 != var3.U(var18.b)) {
                   var19 &= -19;
@@ -4731,7 +4731,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       for (int var3 = 0; var3 < var1.length; var3++) {
          Entity var4;
-         if ((var4 = var1[var2]).a13(2048)) {
+         if ((var4 = var1[var2]).hasFlag(2048)) {
             return var4;
          }
 
@@ -4887,7 +4887,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          case 326:
             this.x();
             this.c6.D();
-            this.a18.a4(this.c6.b, this.c6.e);
+            this.a18.a4(this.c6.b, this.c6.facing);
             return;
          case 327:
             if (this.b5()) {
@@ -5060,7 +5060,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.c2(762, 309);
          } else if (this.c() != -1 && var3.e4(var2)) {
             Entity var6 = this.a5(4);
-            ((Sim)this.a(1, var6.c, var6.d, var6.e, var2)).s2(32);
+            ((Sim)this.a(1, var6.posX, var6.posY, var6.facing, var2)).s2(32);
             this.c2(763, 309);
          } else {
             this.c2(764, 309);
@@ -5746,10 +5746,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
       Sim var4 = this.a14;
       Sim var5 = this.a7(this.aB);
       int[] var6 = super.a2;
-      int var7 = var4.c;
-      int var8 = var4.d;
-      int var9 = var5.c;
-      int var10 = var5.d;
+      int var7 = var4.posX;
+      int var8 = var4.posY;
+      int var9 = var5.posX;
+      int var10 = var5.posY;
       int var11 = var3.a2(var7, var8) + var3.a2(var9, var10) >> 1;
       int var12 = var3.b(var7, var8) + var3.b(var9, var10) >> 1;
       com.ea.sims3.SpriteRenderer.hitTest(var6, 67, 0, 2);
@@ -5804,11 +5804,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       switch (var1) {
          case 0:
             if (this.aE == 1) {
-               int var11 = this.a14.c;
-               int var12 = this.a14.d;
+               int var11 = this.a14.posX;
+               int var12 = this.a14.posY;
                int var7 = var2.c(var11, var12);
                int var8 = var2.d(var11, var12);
-               if (this.f6.a4 == 5) {
+               if (this.f6.type == 5) {
                   var7 += 50;
                } else {
                   var7 -= 10;
@@ -5856,7 +5856,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                   }
                   break;
                case 1:
-                  this.f6.c2();
+                  this.f6.clearBusy();
                   var3.e3(22);
                   if (this.aW == 32) {
                      var3.e3(23);
@@ -5881,7 +5881,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             break;
          case 3:
             if (this.aE == 1) {
-               this.f6.c2();
+               this.f6.clearBusy();
             }
 
             this.b(this.f6);
@@ -5896,7 +5896,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             break;
          case 4:
             if (this.aE == 1) {
-               this.f6.c2();
+               this.f6.clearBusy();
             }
 
             this.as = 0;
@@ -5913,12 +5913,12 @@ public final class GameScreen extends BaseScreen implements Runnable {
             break;
          case 7:
             Sim var9 = this.a14;
-            this.a14.c4(128);
+            this.a14.clearState(128);
             var9.r2(22);
             break;
          case 8:
             Sim var5 = this.a14;
-            this.a14.c4(128);
+            this.a14.clearState(128);
             int var6 = this.k3() ? 26 : 23;
             var5.r2(var6);
             break;
@@ -6087,8 +6087,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void Q2(int var1) {
       if (!this.r2 && !this.g2) {
-         this.a14.f3(var1);
-         this.f6.f3(var1);
+         this.a14.advanceTime(var1);
+         this.f6.advanceTime(var1);
          this.u(var1, 7);
          if (this.aD == 0) {
             this.y2(var1);
@@ -6380,7 +6380,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.aF = 2;
       this.j2 = false;
       this.k2 = false;
-      this.f6.b4();
+      this.f6.setBusy();
       int var2;
       int var3;
       switch (var3 = this.a17.k(2)) {
@@ -6488,11 +6488,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void S2(int var1) {
       Sim var2 = this.a14;
       if (this.aD == 7) {
-         if (!var2.h3()) {
+         if (!var2.isAnimating()) {
             this.P2(1);
          }
       } else if (this.aD == 8) {
-         if (!var2.h3()) {
+         if (!var2.isAnimating()) {
             int var6 = this.k3() ? 2 : 3;
             this.P2(var6);
          }
@@ -6554,7 +6554,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             var9 = 25;
          }
 
-         var2.b7(128);
+         var2.addState(128);
          var2.r2(var9);
       }
    }
@@ -7094,8 +7094,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    public final void g(Entity var1) {
-      int var2 = var1.a4;
-      if (var1.a4 == 114 && !super.canvas.j2) {
+      int var2 = var1.type;
+      if (var1.type == 114 && !super.canvas.j2) {
          this.c2(785, 784);
       } else {
          this.bl = var2;
@@ -7342,7 +7342,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                Entity[] var11 = this.a12();
 
                for (int var15 = 0; var15 < var11.length; var15++) {
-                  if (var11[var15].a13(67108864) && !var11[var15].b8(256)) {
+                  if (var11[var15].hasFlag(67108864) && !var11[var15].hasState(256)) {
                      var11[var15].f2();
                   }
                }
@@ -7353,7 +7353,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                Entity[] var10 = this.a12();
 
                for (int var14 = 0; var14 < var10.length; var14++) {
-                  if (var10[var14].a13(67108864) && var10[var14].b8(256)) {
+                  if (var10[var14].hasFlag(67108864) && var10[var14].hasState(256)) {
                      var10[var14].g2();
                   }
                }
@@ -7364,7 +7364,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                Entity[] var9 = this.a12();
 
                for (int var13 = 0; var13 < var9.length; var13++) {
-                  if (var9[var13].a13(134217728) && !var9[var13].b8(512)) {
+                  if (var9[var13].hasFlag(134217728) && !var9[var13].hasState(512)) {
                      var9[var13].h2();
                   }
                }
@@ -7375,7 +7375,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                Entity[] var8 = this.a12();
 
                for (int var12 = 0; var12 < var8.length; var12++) {
-                  if (var8[var12].a13(134217728) && var8[var12].b8(512)) {
+                  if (var8[var12].hasFlag(134217728) && var8[var12].hasState(512)) {
                      var8[var12].i2();
                   }
                }

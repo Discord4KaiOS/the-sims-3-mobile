@@ -1229,8 +1229,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    public final int a(Entity var1) {
       byte var2 = this.j3[0];
       int var3 = -1;
-      if (var1 != null && var1.a4 != 77) {
-         var3 = com.ea.sims3.GameCanvas.a(var1.a4, this.e);
+      if (var1 != null && var1.type != 77) {
+         var3 = com.ea.sims3.GameCanvas.a(var1.type, this.e);
       } else {
          int var4;
          if ((var4 = this.a()) >= 450 && var4 <= 1110 && this.e7 != var2) {
@@ -1343,7 +1343,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          return false;
       } else if (var1 != null) {
          int var4 = this.s(var3);
-         return var1.a4 == var4;
+         return var1.type == var4;
       } else {
          return false;
       }
@@ -2932,7 +2932,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a(Entity var1, short[] var2, short[] var3) {
-      if (var1.a13(16384)) {
+      if (var1.hasFlag(16384)) {
          Sim var4 = (Sim)var1;
          this.a(var4, var2, var3);
       } else {
@@ -3028,8 +3028,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                         break;
                      case 94:
                         Sim var20 = this.a.a6().a14;
-                        int var21 = Math.abs(var1.c - var20.c);
-                        int var15 = Math.abs(var1.d - var20.d);
+                        int var21 = Math.abs(var1.posX - var20.posX);
+                        int var15 = Math.abs(var1.posY - var20.posY);
                         var11 = var21 + var15 > 2097152;
                         break;
                      case 97:
@@ -3056,17 +3056,17 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       int var7 = var1.b();
       com.ea.sims3.GameCanvas.b2(var2, var7);
       com.ea.sims3.GameCanvas.b2(var3, var7);
-      int var8 = var1.a4;
+      int var8 = var1.type;
       Lot var9 = this.a.a24;
       short[] var10 = this.a.a24.a16(var8);
       int var11 = var9.k(var8);
       int var12 = var10.length;
-      if ((var11 & 67108864) != 0 && var1.b8(256)) {
+      if ((var11 & 67108864) != 0 && var1.hasState(256)) {
          com.ea.sims3.GameCanvas.c2(var2, var5[110]);
          com.ea.sims3.GameCanvas.c2(var3, 110);
       }
 
-      if ((var11 & 134217728) != 0 && var1.b8(512)) {
+      if ((var11 & 134217728) != 0 && var1.hasState(512)) {
          com.ea.sims3.GameCanvas.c2(var2, var5[109]);
          com.ea.sims3.GameCanvas.c2(var3, 109);
       }
@@ -3075,12 +3075,12 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          short var14 = var10[var13];
          int var15;
          if (((var15 = var6[var14]) & 1) == 0
-            && ((var15 & 32) == 0 || var1.b8(64))
-            && ((var15 & 64) == 0 || !var1.b8(64))
+            && ((var15 & 32) == 0 || var1.hasState(64))
+            && ((var15 & 64) == 0 || !var1.hasState(64))
             && ((var15 & 128) == 0 || var1.c3())
             && ((var15 & 256) == 0 || var1.d3())
-            && ((var15 & 512) == 0 || !var1.b8(256))
-            && ((var15 & 1024) == 0 || !var1.b8(512))
+            && ((var15 & 512) == 0 || !var1.hasState(256))
+            && ((var15 & 1024) == 0 || !var1.hasState(512))
             && ((var15 & 4096) == 0 || this.b(var1, 0))
             && ((var15 & 8192) == 0 || this.a(var1, 0))
             && ((var15 & 2048) == 0 || !this.b(var1, 0))
@@ -3094,13 +3094,13 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                }
             }
 
-            if ((var14 != 130 || !var1.b8(16384))
-               && (var14 != 131 || !var1.b8(32768))
+            if ((var14 != 130 || !var1.hasState(16384))
+               && (var14 != 131 || !var1.hasState(32768))
                && (var14 != 150 || this.b3(0, 1) || var9.a() == 0)
                && (var14 != 153 || !this.b3(0, 1) && var9.a() != 0)) {
                if (var14 == 152) {
-                  int var18 = com.ea.sims3.Lot.f(var4.c);
-                  int var17 = com.ea.sims3.Lot.g(var4.d);
+                  int var18 = com.ea.sims3.Lot.f(var4.posX);
+                  int var17 = com.ea.sims3.Lot.g(var4.posY);
                   if ((var9.g(var18, var17) & 16) != 0) {
                      continue;
                   }
