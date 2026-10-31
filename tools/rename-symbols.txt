@@ -1,10 +1,16 @@
 # Semantic renames applied to the decompiled sources.
 #
-#   C <class>                <newName>
-#   F <class> <field>        <newName>
-#   M <class> <name(types)>  <newName>
+#   C <class>                          <newName>
+#   F <class> <field>                  <newName>
+#   M <class> <name(types)>            <newName>
+#   V <class> <name(types)> <variable> <newName>
 #
-# Applied by tools/Rename.java (javac resolves every occurrence).
+# Types in a key are the simple names the source spells (arrays as int[]).
+# Applied by tools/Rename.java (javac resolves every occurrence), in two phases:
+# declarations first (`decl`), then variables (`vars`). Chained entries are
+# replayed until they stop changing anything, which is what
+# tools/merge-renames.sh does. The file is the history of the pass, so early
+# entries stay even when a later entry supersedes them.
 
 # ---------------------------------------------------------------- classes
 C a  PromoImages

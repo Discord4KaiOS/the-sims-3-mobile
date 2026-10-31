@@ -53,8 +53,6 @@ public final class Rename {
     private static final java.util.Set<String> USED = new java.util.HashSet<>();
     /** "all" (default), "decl" (classes/fields/methods) or "vars" (variables). */
     private static String phase = "all";
-    private static final java.util.Set<String> DEBUG_MISS = new java.util.HashSet<>();
-    private static final java.util.Set<String> DEBUG_HIT = new java.util.HashSet<>();
 
     public static void main(String[] args) throws Exception {
         if (args.length > 2) {
@@ -162,11 +160,6 @@ public final class Rename {
             System.out.println("renamed file " + from.getFileName() + " -> " + to.getFileName());
         }
         System.out.println("applied " + edits + " edits");
-        if (System.getenv("RENAME_DEBUG") != null) {
-            System.out.println("DEBUG hits=" + DEBUG_HIT.size() + " misses=" + DEBUG_MISS.size());
-            DEBUG_HIT.stream().limit(3).forEach(k -> System.out.println("  HIT  " + k));
-            DEBUG_MISS.stream().limit(10).forEach(k -> System.out.println("  MISS " + k));
-        }
         String allSourceText = allText.toString();
 
         // Only report entries whose old name still exists in the sources: entries
@@ -396,11 +389,6 @@ public final class Rename {
                     String key = parent.getEnclosingElement().getSimpleName() + "#"
                             + signature((ExecutableElement) parent) + "#" + element.getSimpleName();
                     String name = VARIABLES.get(key);
-                    if (name == null && System.getenv("RENAME_DEBUG") != null) {
-                        DEBUG_MISS.add(key);
-                    } else if (name != null && System.getenv("RENAME_DEBUG") != null) {
-                        DEBUG_HIT.add(key);
-                    }
                     if (name != null) {
                         USED.add("V " + key);
                     }
