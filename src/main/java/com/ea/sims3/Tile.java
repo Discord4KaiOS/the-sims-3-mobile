@@ -98,18 +98,18 @@ public final class Tile {
       this.loaded = true;
    }
 
-   public final void setBounds(int var1, int var2, int var3, int var4) {
-      if (this.backingEnabled && (this.drawWidth != var3 || this.drawHeight != var4)) {
+   public final void setBounds(int x, int y, int width, int height) {
+      if (this.backingEnabled && (this.drawWidth != width || this.drawHeight != height)) {
          this.backing = null;
-         this.backing = Image.createImage(var3, var4);
+         this.backing = Image.createImage(width, height);
          this.backingGraphics = this.backing.getGraphics();
          this.backingDirty = true;
       }
 
-      this.drawX = var1;
-      this.drawY = var2;
-      this.drawWidth = var3;
-      this.drawHeight = var4;
+      this.drawX = x;
+      this.drawY = y;
+      this.drawWidth = width;
+      this.drawHeight = height;
    }
 
    public final void draw(Graphics g) {
@@ -151,55 +151,55 @@ public final class Tile {
       g.setClip(clipX, clipY, clipW, clipH);
    }
 
-   private boolean load(int var1) {
+   private boolean load(int index) {
       System.gc();
       if (this.loaded) {
          return false;
       } else {
-         InputStream var3 = GameCanvas.a7().a6.openStream(var1);
+         InputStream in = GameCanvas.a7().a6.openStream(index);
          System.gc();
-         DataInputStream var4 = new DataInputStream(var3);
+         DataInputStream stream = new DataInputStream(in);
 
          try {
-            var4.readUnsignedByte();
-            int var5 = var4.readUnsignedByte();
-            int var6 = var4.readUnsignedByte();
-            var4.readUnsignedByte();
-            var4.readUnsignedByte();
-            this.columns = var5;
-            this.rowCountValue = var6;
+            stream.readUnsignedByte();
+            int columns = stream.readUnsignedByte();
+            int rows = stream.readUnsignedByte();
+            stream.readUnsignedByte();
+            stream.readUnsignedByte();
+            this.columns = columns;
+            this.rowCountValue = rows;
             System.gc();
-            byte[] var7 = new byte[var5 * var6];
+            byte[] cells = new byte[columns * rows];
 
-            for (int var8 = 0; var8 < var5 * var6; var8++) {
-               var7[var8] = var4.readByte();
+            for (int i = 0; i < columns * rows; i++) {
+               cells[i] = stream.readByte();
             }
 
-            this.cellIndices = var7;
-            int var13;
-            if ((var13 = var4.readUnsignedByte()) > 0) {
-               short[] var9 = new short[var13 * 3];
+            this.cellIndices = cells;
+            int frameCount;
+            if ((frameCount = stream.readUnsignedByte()) > 0) {
+               short[] frames = new short[frameCount * 3];
 
-               for (int var10 = 0; var10 < var9.length; var10++) {
-                  var9[var10] = var4.readShort();
+               for (int i2 = 0; i2 < frames.length; i2++) {
+                  frames[i2] = stream.readShort();
                }
 
-               this.frames = var9;
+               this.frames = frames;
             }
 
-            int var14;
-            if ((var14 = var4.readUnsignedByte()) > 0) {
-               short[] var15 = new short[var14 * 3];
+            int rowCount;
+            if ((rowCount = stream.readUnsignedByte()) > 0) {
+               short[] rowsData = new short[rowCount * 3];
 
-               for (int var11 = 0; var11 < var15.length; var11++) {
-                  var15[var11] = var4.readShort();
+               for (int i3 = 0; i3 < rowsData.length; i3++) {
+                  rowsData[i3] = stream.readShort();
                }
 
-               this.rows = var15;
+               this.rows = rowsData;
             }
 
-            var3.close();
-         } catch (IOException var12) {
+            in.close();
+         } catch (IOException exception) {
          }
 
          System.gc();
@@ -208,15 +208,15 @@ public final class Tile {
       }
    }
 
-   private void drawCells(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
+   private void drawCells(Graphics g, int x, int y, int left, int top, int width, int height) {
       int var8 = 0;
       int var9 = 0;
       int var10 = 0;
       int var11 = 0;
       int var12 = 0;
       int var13 = 0;
-      int var14 = var2 & 15;
-      int var15 = var3 & 7;
+      int var14 = x & 15;
+      int var15 = y & 7;
       int var16 = 0;
       if (var14 > 0) {
          var16 = 16 - var14;
@@ -227,27 +227,27 @@ public final class Tile {
          var17 = 8 - var15;
       }
 
-      if (var16 > var6) {
-         var16 = var6;
+      if (var16 > width) {
+         var16 = width;
       } else {
-         var9 = (var8 = var6 - var16) >> 4;
+         var9 = (var8 = width - var16) >> 4;
          var10 = var8 & 15;
       }
 
-      if (var17 > var7) {
-         var17 = var7;
+      if (var17 > height) {
+         var17 = height;
       } else {
-         var12 = (var11 = var7 - var17) >> 3;
+         var12 = (var11 = height - var17) >> 3;
          var13 = var11 & 7;
       }
 
       int var18;
-      int var19 = var18 = (var3 >> 3) * this.columns + (var2 >> 4);
+      int var19 = var18 = (y >> 3) * this.columns + (x >> 4);
       int var20 = 0;
       int var21 = 0;
       int var22 = 0;
-      int var23 = var4;
-      int var24 = var5;
+      int var23 = left;
+      int var24 = top;
       int var25 = this.cellIndices.length - 1;
       byte[] var26 = this.cellIndices;
       Image var27 = this.sheet;
@@ -261,11 +261,11 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21 + var14, var22 + var15, var16, var17, 0, var4, var5, 20);
+                  g.drawRegion(var27, var21 + var14, var22 + var15, var16, var17, 0, left, top, 20);
                }
             }
 
-            var23 = var4 + var16;
+            var23 = left + var16;
          }
 
          for (int var29 = 0; var29 < var9; var29++) {
@@ -277,7 +277,7 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21, var22 + var15, 16, var17, 0, var23, var24, 20);
+                  g.drawRegion(var27, var21, var22 + var15, 16, var17, 0, var23, var24, 20);
                }
             }
 
@@ -292,7 +292,7 @@ public final class Tile {
             if ((var20 = var26[var18] & 255) != 255) {
                var21 = (var20 & 7) << 4;
                var22 = var20 >> 3 << 3;
-               var1.drawRegion(this.sheet, var21, var22 + var15, var10, var17, 0, var23, var24, 20);
+               g.drawRegion(this.sheet, var21, var22 + var15, var10, var17, 0, var23, var24, 20);
             }
          }
 
@@ -301,7 +301,7 @@ public final class Tile {
       }
 
       for (int var62 = 0; var62 < var12; var62++) {
-         var23 = var4;
+         var23 = left;
          if (var16 > 0) {
             if (var18 >= 0) {
                if (var18 > var25) {
@@ -311,11 +311,11 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21 + var14, var22, var16, 8, 0, var4, var24, 20);
+                  g.drawRegion(var27, var21 + var14, var22, var16, 8, 0, left, var24, 20);
                }
             }
 
-            var23 = var4 + var16;
+            var23 = left + var16;
          }
 
          for (int var30 = 0; var30 < var9; var30++) {
@@ -327,7 +327,7 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21, var22, 16, 8, 0, var23, var24, 20);
+                  g.drawRegion(var27, var21, var22, 16, 8, 0, var23, var24, 20);
                }
             }
 
@@ -342,7 +342,7 @@ public final class Tile {
             if ((var20 = var26[var18] & 255) != 255) {
                var21 = (var20 & 7) << 4;
                var22 = var20 >> 3 << 3;
-               var1.drawRegion(var27, var21, var22, var10, 8, 0, var23, var24, 20);
+               g.drawRegion(var27, var21, var22, var10, 8, 0, var23, var24, 20);
             }
          }
 
@@ -351,7 +351,7 @@ public final class Tile {
       }
 
       if (var13 > 0) {
-         var23 = var4;
+         var23 = left;
          if (var16 > 0) {
             if (var18 >= 0) {
                if (var18 > var25) {
@@ -361,11 +361,11 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21 + var14, var22, var16, var13, 0, var4, var24, 20);
+                  g.drawRegion(var27, var21 + var14, var22, var16, var13, 0, left, var24, 20);
                }
             }
 
-            var23 = var4 + var16;
+            var23 = left + var16;
          }
 
          for (int var63 = 0; var63 < var9; var63++) {
@@ -377,7 +377,7 @@ public final class Tile {
                if ((var20 = var26[var18++] & 255) != 255) {
                   var21 = (var20 & 7) << 4;
                   var22 = var20 >> 3 << 3;
-                  var1.drawRegion(var27, var21, var22, 16, var13, 0, var23, var24, 20);
+                  g.drawRegion(var27, var21, var22, 16, var13, 0, var23, var24, 20);
                }
             }
 
@@ -392,7 +392,7 @@ public final class Tile {
             if ((var20 = var26[var18] & 255) != 255) {
                var21 = (var20 & 7) << 4;
                var22 = var20 >> 3 << 3;
-               var1.drawRegion(var27, var21, var22, var10, var13, 0, var23, var24, 20);
+               g.drawRegion(var27, var21, var22, var10, var13, 0, var23, var24, 20);
             }
          }
       }

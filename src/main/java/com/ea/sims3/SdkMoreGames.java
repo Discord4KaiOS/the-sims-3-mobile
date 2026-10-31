@@ -6,362 +6,362 @@ import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 
 public abstract class SdkMoreGames {
-   private static final byte[] a = new byte[5];
-   private static boolean b = false;
-   private short a2 = 0;
-   private int a3 = 0;
-   private int b2 = -1;
-   private int c = 0;
-   private boolean c2 = true;
-   public SdkString a4 = null;
-   public SdkString b3 = null;
-   private MIDlet a5 = null;
-   private Object[] a6 = null;
-   public boolean a7 = false;
-   private Image a8 = null;
-   private int d = 0;
-   private int e = 0;
-   private String a9 = null;
-   private int f = 0;
-   private boolean d2 = true;
-   private boolean e2 = true;
-   private String[] a10 = null;
-   private short[] a11 = null;
-   private short[] b4 = null;
-   private short[] c3 = null;
-   private int[] a12 = null;
-   private String[] b5 = null;
-   private String[] c4 = null;
-   private int g = 0;
-   private int h = 0;
-   private boolean f2 = false;
-   private short[] d3 = null;
-   private short[] e3 = null;
-   private short[] f3 = null;
-   private SdkString c5 = null;
-   private SdkString d4 = null;
-   private SdkString e4 = null;
-   private int i = 0;
-   private int j = 0;
-   private int k = 6;
-   private int l = 0;
-   private int m = 0;
-   private int n = 0;
-   private int o = 0;
-   private int p = 0;
-   private int q = 0;
-   private short[] g2 = new short[11];
-   private SdkString[] a13 = new SdkString[11];
-   private int r = -1;
-   private int s = -1;
+   private static final byte[] keyState = new byte[5];
+   private static boolean dataLoaded = false;
+   private short keySequence = 0;
+   private int keyStep = 0;
+   private int keyRemainder = -1;
+   private int keyBits = 0;
+   private boolean dirty = true;
+   public SdkString titleText = null;
+   public SdkString bodyText = null;
+   private MIDlet midlet = null;
+   private Object[] fonts = null;
+   public boolean available = false;
+   private Image productImage = null;
+   private int selectedIndex = 0;
+   private int currentProduct = 0;
+   private String buyUri = null;
+   private int animationFrame = 0;
+   private boolean productsLoaded = true;
+   private boolean layoutValid = true;
+   private String[] categoryUris = null;
+   private short[] productNameIds = null;
+   private short[] productDescIds = null;
+   private short[] productPriceIds = null;
+   private int[] productIndexes = null;
+   private String[] productBuyUris = null;
+   private String[] productCategoryUris = null;
+   private int screen = 0;
+   private int state = 0;
+   private boolean textDirty = false;
+   private short[] wrappedTitle = null;
+   private short[] wrappedBody = null;
+   private short[] wrappedFooter = null;
+   private SdkString productName = null;
+   private SdkString productDescription = null;
+   private SdkString productPrice = null;
+   private int titleX = 0;
+   private int titleY = 0;
+   private int lineSpacing = 6;
+   private int bodyX = 0;
+   private int bodyY = 0;
+   private int buttonX = 0;
+   private int buttonY = 0;
+   private int buttonWidth = 0;
+   private int buttonHeight = 0;
+   private short[] textIds = new short[11];
+   private SdkString[] texts = new SdkString[11];
+   private int screenHeight = -1;
+   private int screenWidth = -1;
 
    public SdkMoreGames(int var1, int var2) {
       if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && (var1 <= 0 || var2 <= 0)) {
-         com.ea.sims3.SdkText.a("SDKMoreGamesSDKMoreGames::constructor was called with zero or negative screen size. Aborting...", 4);
+         com.ea.sims3.SdkText.log("SDKMoreGamesSDKMoreGames::constructor was called with zero or negative screen size. Aborting...", 4);
       }
 
-      this.s = var1;
-      this.r = var2;
+      this.screenWidth = var1;
+      this.screenHeight = var2;
       if (com.ea.sims3.SdkFeatures.isMoreGamesEnabled()) {
-         for (int var3 = 0; var3 < a.length; var3++) {
-            a[var3] = -1;
+         for (int var3 = 0; var3 < keyState.length; var3++) {
+            keyState[var3] = -1;
          }
       }
    }
 
    public abstract Image getImage(String var1);
 
-   public final void a4(int var1, int var2) {
+   public final void setScreenSize(int var1, int var2) {
       if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && (var1 <= 0 || var2 <= 0)) {
-         com.ea.sims3.SdkText.a("SDKMoreGamessetScreenSize:: was called with zero or negative screen size. Aborting...", 4);
+         com.ea.sims3.SdkText.log("SDKMoreGamessetScreenSize:: was called with zero or negative screen size. Aborting...", 4);
       }
 
-      boolean var3 = var1 != this.s || var2 != this.r;
-      this.s = var1;
-      this.r = var2;
-      if (this.a7 && var3) {
-         this.c2();
+      boolean var3 = var1 != this.screenWidth || var2 != this.screenHeight;
+      this.screenWidth = var1;
+      this.screenHeight = var2;
+      if (this.available && var3) {
+         this.parseProductData();
       }
    }
 
-   public final void a10() {
+   public final void reset() {
       if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-         if (this.a5 == null) {
-            com.ea.sims3.SdkText.a("SDKMoreGamesreset:: was called before the midlet instance was set. Aborting...", 4);
+         if (this.midlet == null) {
+            com.ea.sims3.SdkText.log("SDKMoreGamesreset:: was called before the midlet instance was set. Aborting...", 4);
          }
 
-         if (this.a11 == null || this.b4 == null || this.c3 == null) {
-            com.ea.sims3.SdkText.a("SDKMoreGamesreset:: was called before seting the product data. Aborting...", 4);
+         if (this.productNameIds == null || this.productDescIds == null || this.productPriceIds == null) {
+            com.ea.sims3.SdkText.log("SDKMoreGamesreset:: was called before seting the product data. Aborting...", 4);
          }
 
-         if (!this.a11()) {
-            com.ea.sims3.SdkText.a("SDKMoreGamesreset:: was called even though MoreGames is unavailable. Aborting...", 4);
+         if (!this.isAvailable()) {
+            com.ea.sims3.SdkText.log("SDKMoreGamesreset:: was called even though MoreGames is unavailable. Aborting...", 4);
          }
 
-         if (this.a6 == null) {
-            com.ea.sims3.SdkText.a("SDKMoreGamesreset:: was called before the fonts were set. Aborting...", 4);
+         if (this.fonts == null) {
+            com.ea.sims3.SdkText.log("SDKMoreGamesreset:: was called before the fonts were set. Aborting...", 4);
          }
       }
 
-      if (this.a12 == null || com.ea.sims3.SdkFeatures.isMoreGamesEnabled() && b) {
-         this.d2();
+      if (this.productIndexes == null || com.ea.sims3.SdkFeatures.isMoreGamesEnabled() && dataLoaded) {
+         this.loadProducts();
       }
 
-      for (int var1 = 0; var1 < this.a13.length; var1++) {
-         this.a13[var1] = com.ea.sims3.SdkText.a(this.g2[var1], null);
+      for (int var1 = 0; var1 < this.texts.length; var1++) {
+         this.texts[var1] = com.ea.sims3.SdkText.getString(this.textIds[var1], null);
       }
 
-      this.d = 0;
-      this.a7 = true;
-      this.h = 0;
-      this.a12(0);
-      com.ea.sims3.SdkText.a(this.a6[0]);
-      this.d3 = com.ea.sims3.SdkText.a(this.a13[0], null, this.s - 10, (short)124);
-      this.e3 = com.ea.sims3.SdkText.a(this.a13[4], null, this.s - 10, (short)124);
+      this.selectedIndex = 0;
+      this.available = true;
+      this.state = 0;
+      this.selectProduct(0);
+      com.ea.sims3.SdkText.setFont(this.fonts[0]);
+      this.wrappedTitle = com.ea.sims3.SdkText.wrapText(this.texts[0], null, this.screenWidth - 10, (short)124);
+      this.wrappedBody = com.ea.sims3.SdkText.wrapText(this.texts[4], null, this.screenWidth - 10, (short)124);
    }
 
-   public final void b4() {
-      switch (this.h) {
+   public final void handleKeys() {
+      switch (this.state) {
          case 0:
-            if ((this.c & 2052) != 0 && this.a12.length > 0) {
-               this.d--;
-               if (this.d < 0) {
-                  this.d = this.a12.length - 1;
+            if ((this.keyBits & 2052) != 0 && this.productIndexes.length > 0) {
+               this.selectedIndex--;
+               if (this.selectedIndex < 0) {
+                  this.selectedIndex = this.productIndexes.length - 1;
                }
 
-               this.e = this.a12[this.d];
-               this.a12(this.d);
-            } else if ((this.c & 8200) != 0 && this.a12.length > 0) {
-               this.d++;
-               this.d = this.d % this.a12.length;
-               this.e = this.a12[this.d];
-               this.a12(this.d);
-            } else if (((this.c & 513) != 0 || (this.c & 32770) != 0) && this.a12.length > 0 && this.d2 && this.e2) {
-               if (this.f == 1) {
-                  this.f = 0;
+               this.currentProduct = this.productIndexes[this.selectedIndex];
+               this.selectProduct(this.selectedIndex);
+            } else if ((this.keyBits & 8200) != 0 && this.productIndexes.length > 0) {
+               this.selectedIndex++;
+               this.selectedIndex = this.selectedIndex % this.productIndexes.length;
+               this.currentProduct = this.productIndexes[this.selectedIndex];
+               this.selectProduct(this.selectedIndex);
+            } else if (((this.keyBits & 513) != 0 || (this.keyBits & 32770) != 0) && this.productIndexes.length > 0 && this.productsLoaded && this.layoutValid) {
+               if (this.animationFrame == 1) {
+                  this.animationFrame = 0;
                } else {
-                  this.f = 1;
+                  this.animationFrame = 1;
                }
-            } else if ((this.c & 64) != 0) {
-               this.a7 = false;
-            } else if ((this.c & 4144) != 0) {
-               if (this.f == 0) {
-                  this.a9 = this.b5[this.d];
+            } else if ((this.keyBits & 64) != 0) {
+               this.available = false;
+            } else if ((this.keyBits & 4144) != 0) {
+               if (this.animationFrame == 0) {
+                  this.buyUri = this.productBuyUris[this.selectedIndex];
                   if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-                     this.a4 = this.a13[8];
-                     this.b3 = this.a13[7];
+                     this.titleText = this.texts[8];
+                     this.bodyText = this.texts[7];
                   } else {
-                     this.a4 = this.a13[7];
-                     this.b3 = this.a13[8];
+                     this.titleText = this.texts[7];
+                     this.bodyText = this.texts[8];
                   }
 
-                  this.h = 1;
-               } else if (this.f == 1) {
-                  if (this.g == 1 || this.g == 3 && (this.c4[this.d] == null || this.c4[this.d].compareTo("") == 0)) {
+                  this.state = 1;
+               } else if (this.animationFrame == 1) {
+                  if (this.screen == 1 || this.screen == 3 && (this.productCategoryUris[this.selectedIndex] == null || this.productCategoryUris[this.selectedIndex].compareTo("") == 0)) {
                      if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-                        this.a4 = this.a13[6];
-                        this.b3 = null;
+                        this.titleText = this.texts[6];
+                        this.bodyText = null;
                      } else {
-                        this.a4 = null;
-                        this.b3 = this.a13[6];
+                        this.titleText = null;
+                        this.bodyText = this.texts[6];
                      }
 
-                     this.h = 2;
+                     this.state = 2;
                   } else {
                      if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-                        this.a4 = this.a13[8];
-                        this.b3 = this.a13[7];
+                        this.titleText = this.texts[8];
+                        this.bodyText = this.texts[7];
                      } else {
-                        this.a4 = this.a13[7];
-                        this.b3 = this.a13[8];
+                        this.titleText = this.texts[7];
+                        this.bodyText = this.texts[8];
                      }
 
-                     this.a9 = this.c4[this.d];
-                     this.h = 1;
+                     this.buyUri = this.productCategoryUris[this.selectedIndex];
+                     this.state = 1;
                   }
                }
             }
             break;
          case 1:
-            if ((this.c & 64) != 0) {
+            if ((this.keyBits & 64) != 0) {
                if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-                  this.a4 = this.a13[6];
-                  this.b3 = this.a13[5];
+                  this.titleText = this.texts[6];
+                  this.bodyText = this.texts[5];
                } else {
-                  this.a4 = this.a13[5];
-                  this.b3 = this.a13[6];
+                  this.titleText = this.texts[5];
+                  this.bodyText = this.texts[6];
                }
 
-               this.h = 0;
-            } else if ((this.c & 32) != 0) {
-               this.a4(this.a9);
+               this.state = 0;
+            } else if ((this.keyBits & 32) != 0) {
+               this.openBuyUri(this.buyUri);
             }
             break;
          case 2:
-            if ((this.c & 64) != 0) {
+            if ((this.keyBits & 64) != 0) {
                if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-                  this.a4 = this.a13[6];
-                  this.b3 = this.a13[5];
+                  this.titleText = this.texts[6];
+                  this.bodyText = this.texts[5];
                } else {
-                  this.a4 = this.a13[5];
-                  this.b3 = this.a13[6];
+                  this.titleText = this.texts[5];
+                  this.bodyText = this.texts[6];
                }
 
-               this.h = 0;
+               this.state = 0;
             }
       }
 
-      this.c = 0;
+      this.keyBits = 0;
    }
 
-   public final void a(Graphics var1) {
-      this.b(var1);
-      com.ea.sims3.SdkText.a(var1);
-      switch (this.h) {
+   public final void draw(Graphics var1) {
+      this.drawOverlay(var1);
+      com.ea.sims3.SdkText.setGraphics(var1);
+      switch (this.state) {
          case 0:
-            this.k--;
-            if (this.k < 0) {
-               this.k = 6;
+            this.lineSpacing--;
+            if (this.lineSpacing < 0) {
+               this.lineSpacing = 6;
             }
 
-            if (this.f2) {
+            if (this.textDirty) {
                var1.setColor(19855);
-               com.ea.sims3.SdkText.a(this.a6[4]);
-               var1.fillRect(0, 0, this.s, this.i);
-               com.ea.sims3.SdkText.a(this.a13[9], this.s >> 1, 1, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.a);
+               com.ea.sims3.SdkText.setFont(this.fonts[4]);
+               var1.fillRect(0, 0, this.screenWidth, this.titleX);
+               com.ea.sims3.SdkText.drawString(this.texts[9], this.screenWidth >> 1, 1, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.TOP);
             }
 
-            if (this.a8 != null) {
-               var1.drawImage(this.a8, this.s >> 1, this.l, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.a);
-               if (this.a12.length > 1) {
-                  this.a(var1, (this.s - this.a8.getWidth() >> 2) - 4, this.m);
-                  this.b(var1, this.s - (this.s - this.a8.getWidth() >> 2) + 4, this.m);
+            if (this.productImage != null) {
+               var1.drawImage(this.productImage, this.screenWidth >> 1, this.bodyX, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.TOP);
+               if (this.productIndexes.length > 1) {
+                  this.drawTitle(var1, (this.screenWidth - this.productImage.getWidth() >> 2) - 4, this.bodyY);
+                  this.drawBody(var1, this.screenWidth - (this.screenWidth - this.productImage.getWidth() >> 2) + 4, this.bodyY);
                }
 
-               com.ea.sims3.SdkText.a(this.a6[0]);
-               com.ea.sims3.SdkText.a(this.c5, this.f3, 1, this.f3[0], this.s >> 1, this.n, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.a);
+               com.ea.sims3.SdkText.setFont(this.fonts[0]);
+               com.ea.sims3.SdkText.drawWrappedString(this.productName, this.wrappedFooter, 1, this.wrappedFooter[0], this.screenWidth >> 1, this.buttonX, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.TOP);
             } else {
-               com.ea.sims3.SdkText.a(this.a6[0]);
-               com.ea.sims3.SdkText.a(this.d4, this.s >> 1, this.l, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.a);
-               com.ea.sims3.SdkText.a(this.c5, this.f3, 1, this.f3[0], this.s >> 1, this.n, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.a);
-               if (this.a12.length > 1) {
-                  this.a(var1, 1, this.m);
-                  this.b(var1, this.s - 1, this.m);
+               com.ea.sims3.SdkText.setFont(this.fonts[0]);
+               com.ea.sims3.SdkText.drawString(this.productDescription, this.screenWidth >> 1, this.bodyX, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.TOP);
+               com.ea.sims3.SdkText.drawWrappedString(this.productName, this.wrappedFooter, 1, this.wrappedFooter[0], this.screenWidth >> 1, this.buttonX, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.TOP);
+               if (this.productIndexes.length > 1) {
+                  this.drawTitle(var1, 1, this.bodyY);
+                  this.drawBody(var1, this.screenWidth - 1, this.bodyY);
                }
             }
 
-            if (this.d2) {
-               this.a(var1, this.o, this.j, this.a13[10], this.f == 0);
+            if (this.productsLoaded) {
+               this.drawText(var1, this.buttonY, this.titleY, this.texts[10], this.animationFrame == 0);
             }
 
-            if (this.e2) {
-               this.a(var1, this.p, this.j, this.e4, this.f == 1);
+            if (this.layoutValid) {
+               this.drawText(var1, this.buttonWidth, this.titleY, this.productPrice, this.animationFrame == 1);
             }
             break;
          case 1:
-            com.ea.sims3.SdkText.a(this.a6[0]);
-            com.ea.sims3.SdkText.a(this.a13[4], this.e3, 1, this.e3[0], this.s >> 1, this.r - this.q >> 1, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.e);
+            com.ea.sims3.SdkText.setFont(this.fonts[0]);
+            com.ea.sims3.SdkText.drawWrappedString(this.texts[4], this.wrappedBody, 1, this.wrappedBody[0], this.screenWidth >> 1, this.screenHeight - this.buttonHeight >> 1, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.VCENTER);
             break;
          case 2:
-            com.ea.sims3.SdkText.a(this.a6[0]);
-            com.ea.sims3.SdkText.a(this.a13[0], this.d3, 1, this.d3[0], this.s >> 1, this.r - this.q >> 1, com.ea.sims3.SdkText.d | com.ea.sims3.SdkText.e);
+            com.ea.sims3.SdkText.setFont(this.fonts[0]);
+            com.ea.sims3.SdkText.drawWrappedString(this.texts[0], this.wrappedTitle, 1, this.wrappedTitle[0], this.screenWidth >> 1, this.screenHeight - this.buttonHeight >> 1, com.ea.sims3.SdkText.HCENTER | com.ea.sims3.SdkText.VCENTER);
       }
 
-      if (this.c2) {
-         com.ea.sims3.SdkText.a(this.a6[3]);
-         if (this.a4 != null) {
-            com.ea.sims3.SdkText.a(this.a4, 2, this.r + com.ea.sims3.SdkText.b() - 2, com.ea.sims3.SdkText.f | com.ea.sims3.SdkText.b);
+      if (this.dirty) {
+         com.ea.sims3.SdkText.setFont(this.fonts[3]);
+         if (this.titleText != null) {
+            com.ea.sims3.SdkText.drawString(this.titleText, 2, this.screenHeight + com.ea.sims3.SdkText.getLeadingSpacing() - 2, com.ea.sims3.SdkText.LEFT | com.ea.sims3.SdkText.BOTTOM);
          }
 
-         if (this.b3 != null) {
-            com.ea.sims3.SdkText.a(this.b3, this.s - 2, this.r + com.ea.sims3.SdkText.b() - 2, com.ea.sims3.SdkText.g | com.ea.sims3.SdkText.b);
+         if (this.bodyText != null) {
+            com.ea.sims3.SdkText.drawString(this.bodyText, this.screenWidth - 2, this.screenHeight + com.ea.sims3.SdkText.getLeadingSpacing() - 2, com.ea.sims3.SdkText.RIGHT | com.ea.sims3.SdkText.BOTTOM);
          }
       }
    }
 
-   public final void a(Object[] var1) {
+   public final void setFonts(Object[] var1) {
       if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
          if (var1 != null) {
             for (int var2 = 0; var2 < var1.length; var2++) {
                if (var1[var2] == null) {
-                  com.ea.sims3.SdkText.a("SDKMoreGamessetFonts:: invalid parameter. The fonts must NOT be null.", 4);
+                  com.ea.sims3.SdkText.log("SDKMoreGamessetFonts:: invalid parameter. The fonts must NOT be null.", 4);
                } else if ((!(var1[var2] instanceof Object[]) || !com.ea.sims3.SdkFeatures.isRectangleFontEnabled() && !com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled())
                   && (!(var1[var2] instanceof Font) || !com.ea.sims3.SdkFeatures.isSystemFontEnabled())) {
-                  com.ea.sims3.SdkText.a(
+                  com.ea.sims3.SdkText.log(
                      "SDKMoreGamessetFonts:: invalid parameter. One of the objects in the fonts array (index " + var2 + ") does not appear to be a font", 3
                   );
                }
             }
          } else {
-            com.ea.sims3.SdkText.a("SDKMoreGamessetFonts:: invalid parameter. The font array is NULL.", 4);
+            com.ea.sims3.SdkText.log("SDKMoreGamessetFonts:: invalid parameter. The font array is NULL.", 4);
          }
       }
 
-      this.a6 = var1;
+      this.fonts = var1;
    }
 
-   public final byte a(int var1) {
+   public final byte processKey(int var1) {
       if (!com.ea.sims3.SdkFeatures.isMoreGamesEnabled()) {
-         if (this.a7) {
-            this.c = this.c | this.a3(var1);
+         if (this.available) {
+            this.keyBits = this.keyBits | this.softKeyMask(var1);
          }
 
          return 0;
       } else {
-         if (this.a7) {
-            this.c = this.c | this.a3(var1);
+         if (this.available) {
+            this.keyBits = this.keyBits | this.softKeyMask(var1);
          } else {
             byte var3;
-            if ((var3 = b(var1)) == -1) {
-               this.a2 = 0;
-               this.a3 = 0;
-            } else if (this.a3 == 0) {
-               this.a2 = (short)(this.a2 << 4);
-               this.a2 = (short)(this.a2 | var3 + 1);
-               if (this.a2 == -26472) {
-                  this.b2 = 3;
-                  this.a3 = 1;
+            if ((var3 = decodeKey(var1)) == -1) {
+               this.keySequence = 0;
+               this.keyStep = 0;
+            } else if (this.keyStep == 0) {
+               this.keySequence = (short)(this.keySequence << 4);
+               this.keySequence = (short)(this.keySequence | var3 + 1);
+               if (this.keySequence == -26472) {
+                  this.keyRemainder = 3;
+                  this.keyStep = 1;
                } else {
-                  if (this.a2 == -26461) {
-                     a[4] = 1;
-                     b = true;
-                     this.a2 = 0;
+                  if (this.keySequence == -26461) {
+                     keyState[4] = 1;
+                     dataLoaded = true;
+                     this.keySequence = 0;
                      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                        com.ea.sims3.SdkText.a("SDKMoreGamesprocessKey::Activated cheat type=4", 1);
+                        com.ea.sims3.SdkText.log("SDKMoreGamesprocessKey::Activated cheat type=4", 1);
                      }
 
                      return 1;
                   }
 
-                  if (this.a2 == -26475) {
-                     this.b2 = 0;
-                     this.a3 = 1;
-                  } else if (this.a2 == -26473) {
-                     this.b2 = 1;
-                     this.a3 = 1;
-                  } else if (this.a2 == -26476) {
-                     this.b2 = 2;
-                     this.a3 = 1;
+                  if (this.keySequence == -26475) {
+                     this.keyRemainder = 0;
+                     this.keyStep = 1;
+                  } else if (this.keySequence == -26473) {
+                     this.keyRemainder = 1;
+                     this.keyStep = 1;
+                  } else if (this.keySequence == -26476) {
+                     this.keyRemainder = 2;
+                     this.keyStep = 1;
                   }
                }
-            } else if (this.a3 == 1) {
+            } else if (this.keyStep == 1) {
                boolean var2 = false;
-               if (this.b2 == 0) {
+               if (this.keyRemainder == 0) {
                   var2 = var3 < 0 || var3 > 3;
-               } else if (this.b2 == 2 || this.b2 == 1) {
+               } else if (this.keyRemainder == 2 || this.keyRemainder == 1) {
                   var2 = var3 < 0 || var3 > 2;
                }
 
                if (!var2) {
-                  a[this.b2] = var3;
-                  b = true;
+                  keyState[this.keyRemainder] = var3;
+                  dataLoaded = true;
                   if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                     com.ea.sims3.SdkText.a("SDKMoreGamesprocessKey::Activated cheat type=" + this.b2 + ", value=" + var3, 1);
+                     com.ea.sims3.SdkText.log("SDKMoreGamesprocessKey::Activated cheat type=" + this.keyRemainder + ", value=" + var3, 1);
                   }
                }
 
-               this.a3 = 0;
-               this.a2 = 0;
+               this.keyStep = 0;
+               this.keySequence = 0;
                return 1;
             }
          }
@@ -370,22 +370,22 @@ public abstract class SdkMoreGames {
       }
    }
 
-   public final void a3(byte[] var1) {
+   public final void setProductData(byte[] var1) {
       if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && var1[0] != 0) {
-         com.ea.sims3.SdkText.a("SDKMoreGamessetProductData::Binary format version for the moregames data is incorrect. expected=0, actual=" + var1[0], 4);
+         com.ea.sims3.SdkText.log("SDKMoreGamessetProductData::Binary format version for the moregames data is incorrect. expected=0, actual=" + var1[0], 4);
       }
 
       int var2 = 1;
       var2++;
       byte var3 = var1[1];
-      this.a10 = new String[var3];
-      this.a11 = new short[var3];
-      this.b4 = new short[var3];
-      this.c3 = new short[var3];
+      this.categoryUris = new String[var3];
+      this.productNameIds = new short[var3];
+      this.productDescIds = new short[var3];
+      this.productPriceIds = new short[var3];
 
       for (int var4 = 0; var4 < var3; var4++) {
          byte var5 = var1[var2++];
-         this.a10[var4] = new String(var1, var2, var5);
+         this.categoryUris[var4] = new String(var1, var2, var5);
          var2 += var5;
       }
 
@@ -393,169 +393,169 @@ public abstract class SdkMoreGames {
       int var11 = var3 << 2;
 
       for (int var6 = 0; var6 < var3; var6++) {
-         this.a11[var6] = com.ea.sims3.SdkText.a2(var1, var2);
-         this.b4[var6] = com.ea.sims3.SdkText.a2(var1, var2 + var10);
-         this.c3[var6] = com.ea.sims3.SdkText.a2(var1, var2 + var11);
+         this.productNameIds[var6] = com.ea.sims3.SdkText.readShort(var1, var2);
+         this.productDescIds[var6] = com.ea.sims3.SdkText.readShort(var1, var2 + var10);
+         this.productPriceIds[var6] = com.ea.sims3.SdkText.readShort(var1, var2 + var11);
          var2 += 2;
       }
 
       var2 += var11;
 
-      for (int var12 = 0; var12 < this.a13.length; var12++) {
-         this.g2[var12] = com.ea.sims3.SdkText.a2(var1, var2);
+      for (int var12 = 0; var12 < this.texts.length; var12++) {
+         this.textIds[var12] = com.ea.sims3.SdkText.readShort(var1, var2);
          var2 += 2;
       }
    }
 
-   public final boolean a11() {
-      if (this.a12 == null || com.ea.sims3.SdkFeatures.isMoreGamesEnabled() && b) {
-         this.d2();
+   public final boolean isAvailable() {
+      if (this.productIndexes == null || com.ea.sims3.SdkFeatures.isMoreGamesEnabled() && dataLoaded) {
+         this.loadProducts();
       }
 
-      return this.g != 0;
+      return this.screen != 0;
    }
 
-   public final void b(Graphics var1) {
-      var1.setClip(0, 0, this.s, this.r);
+   public final void drawOverlay(Graphics var1) {
+      var1.setClip(0, 0, this.screenWidth, this.screenHeight);
       var1.setColor(16777215);
-      var1.fillRect(0, 0, this.s, this.r);
+      var1.fillRect(0, 0, this.screenWidth, this.screenHeight);
    }
 
-   public final void a4(String var1) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && this.a5 == null) {
-         com.ea.sims3.SdkText.a("SDKMoreGamesplatformRequestImpl::called without setting the midlet first", 4);
+   public final void openBuyUri(String var1) {
+      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && this.midlet == null) {
+         com.ea.sims3.SdkText.log("SDKMoreGamesplatformRequestImpl::called without setting the midlet first", 4);
       }
 
       try {
-         this.a5.platformRequest(var1);
-         this.a5.notifyDestroyed();
-         this.a5.notifyDestroyed();
+         this.midlet.platformRequest(var1);
+         this.midlet.notifyDestroyed();
+         this.midlet.notifyDestroyed();
       } catch (Exception var2) {
-         this.a5.notifyDestroyed();
+         this.midlet.notifyDestroyed();
          if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-            com.ea.sims3.SdkText.a("SDKMoreGamesplatformRequestImpl::'" + var2.getMessage() + "' received while doing native platformRequest", 4);
+            com.ea.sims3.SdkText.log("SDKMoreGamesplatformRequestImpl::'" + var2.getMessage() + "' received while doing native platformRequest", 4);
          }
       }
    }
 
-   private void c2() {
-      this.j = (this.s << 2) / 5;
-      int var1 = this.r;
-      this.q = 0;
-      if (this.c2) {
-         com.ea.sims3.SdkText.a(this.a6[3]);
-         this.q = com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b();
-         var1 -= this.q;
+   private void parseProductData() {
+      this.titleY = (this.screenWidth << 2) / 5;
+      int var1 = this.screenHeight;
+      this.buttonHeight = 0;
+      if (this.dirty) {
+         com.ea.sims3.SdkText.setFont(this.fonts[3]);
+         this.buttonHeight = com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing();
+         var1 -= this.buttonHeight;
       }
 
       var1 -= 2;
-      if (this.e2) {
+      if (this.layoutValid) {
          var1 -= 5;
-         if (this.f == 1) {
-            com.ea.sims3.SdkText.a(this.a6[2]);
+         if (this.animationFrame == 1) {
+            com.ea.sims3.SdkText.setFont(this.fonts[2]);
          } else {
-            com.ea.sims3.SdkText.a(this.a6[1]);
+            com.ea.sims3.SdkText.setFont(this.fonts[1]);
          }
 
-         var1 -= com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b();
-         this.p = var1;
+         var1 -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing();
+         this.buttonWidth = var1;
          int var2;
-         if ((var2 = com.ea.sims3.SdkText.a(this.e4) + 6 + com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b() + 6) > this.j) {
-            this.j = var2;
+         if ((var2 = com.ea.sims3.SdkText.stringWidth(this.productPrice) + 6 + com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() + 6) > this.titleY) {
+            this.titleY = var2;
          }
       }
 
-      if (this.d2) {
+      if (this.productsLoaded) {
          var1 -= 5;
-         if (this.f == 0) {
-            com.ea.sims3.SdkText.a(this.a6[2]);
+         if (this.animationFrame == 0) {
+            com.ea.sims3.SdkText.setFont(this.fonts[2]);
          } else {
-            com.ea.sims3.SdkText.a(this.a6[1]);
+            com.ea.sims3.SdkText.setFont(this.fonts[1]);
          }
 
-         var1 -= com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b();
-         this.o = var1;
+         var1 -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing();
+         this.buttonY = var1;
          int var13;
-         if ((var13 = com.ea.sims3.SdkText.a(this.a13[10]) + 6 + com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b() + 6) > this.j) {
-            this.j = var13;
+         if ((var13 = com.ea.sims3.SdkText.stringWidth(this.texts[10]) + 6 + com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() + 6) > this.titleY) {
+            this.titleY = var13;
          }
       }
 
-      if (this.e2 && this.d2) {
+      if (this.layoutValid && this.productsLoaded) {
          var1 -= 2;
-         this.o = var1;
+         this.buttonY = var1;
       }
 
       var1 -= 2;
-      if (this.a8 != null) {
-         com.ea.sims3.SdkText.a(this.a6[0]);
-         this.f3 = com.ea.sims3.SdkText.a(this.c5, null, this.s - 2, (short)124);
-         int var9 = var1 - (this.f3[0] * com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b());
-         this.n = var9;
-         var1 = var9 - this.a8.getHeight();
-         this.l = var1;
-         this.m = this.l + (this.a8.getHeight() >> 1);
+      if (this.productImage != null) {
+         com.ea.sims3.SdkText.setFont(this.fonts[0]);
+         this.wrappedFooter = com.ea.sims3.SdkText.wrapText(this.productName, null, this.screenWidth - 2, (short)124);
+         int var9 = var1 - (this.wrappedFooter[0] * com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing());
+         this.buttonX = var9;
+         var1 = var9 - this.productImage.getHeight();
+         this.bodyX = var1;
+         this.bodyY = this.bodyX + (this.productImage.getHeight() >> 1);
       } else {
-         com.ea.sims3.SdkText.a(this.a6[0]);
-         this.f3 = com.ea.sims3.SdkText.a(this.c5, null, this.s - 7, (short)124);
-         int var11 = var1 - this.f3[0] * com.ea.sims3.SdkText.c();
-         this.n = var11;
-         var1 = var11 - com.ea.sims3.SdkText.c();
-         this.l = var1;
-         this.m = this.l + (com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b() >> 1);
+         com.ea.sims3.SdkText.setFont(this.fonts[0]);
+         this.wrappedFooter = com.ea.sims3.SdkText.wrapText(this.productName, null, this.screenWidth - 7, (short)124);
+         int var11 = var1 - this.wrappedFooter[0] * com.ea.sims3.SdkText.getLineHeight();
+         this.buttonX = var11;
+         var1 = var11 - com.ea.sims3.SdkText.getLineHeight();
+         this.bodyX = var1;
+         this.bodyY = this.bodyX + (com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() >> 1);
       }
 
       var1--;
-      com.ea.sims3.SdkText.a(this.a6[4]);
-      this.i = com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b() + 1 + 1;
-      if (var1 >= this.i) {
-         this.f2 = true;
-         var1 -= this.i;
+      com.ea.sims3.SdkText.setFont(this.fonts[4]);
+      this.titleX = com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() + 1 + 1;
+      if (var1 >= this.titleX) {
+         this.textDirty = true;
+         var1 -= this.titleX;
       } else {
-         this.f2 = false;
+         this.textDirty = false;
       }
 
       if (var1 > 0) {
          int var14 = var1 * 3 / 10;
          int var3 = var1 >> 2;
          int var4 = var1 >> 2;
-         this.l -= var1 - var14;
-         this.m -= var1 - var14;
-         this.n -= var1 - var14 - var3;
-         this.o -= var1 - var14 - var3 - var4;
-         this.p -= var1 - var14 - var3 - var4;
+         this.bodyX -= var1 - var14;
+         this.bodyY -= var1 - var14;
+         this.buttonX -= var1 - var14 - var3;
+         this.buttonY -= var1 - var14 - var3 - var4;
+         this.buttonWidth -= var1 - var14 - var3 - var4;
       }
    }
 
-   private void d2() {
-      this.a5 = com.ea.sims3.SdkText.a14;
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && this.a5 == null) {
-         com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::called before the midlet is set. Aborting...", 4);
+   private void loadProducts() {
+      this.midlet = com.ea.sims3.SdkText.midlet;
+      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && this.midlet == null) {
+         com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::called before the midlet is set. Aborting...", 4);
       }
 
       String var1;
-      if ((var1 = this.a2("MG_Impl")) == null) {
-         this.g = 0;
+      if ((var1 = this.resolveUrl("MG_Impl")) == null) {
+         this.screen = 0;
       } else {
          if (!(var1 = var1.toLowerCase()).equals("static")) {
             if (var1.equals("wapstatic")) {
             }
 
             if (var1.equals("wap")) {
-               this.g = 2;
+               this.screen = 2;
             } else {
                if (!var1.equals("wapstatic")) {
-                  this.g = 0;
+                  this.screen = 0;
                   return;
                }
 
-               this.g = 3;
+               this.screen = 3;
             }
          } else {
-            this.g = 1;
+            this.screen = 1;
          }
 
-         if ((var1 = this.a2("MG_PRODUCTS")) != null && var1.length() != 0) {
+         if ((var1 = this.resolveUrl("MG_PRODUCTS")) != null && var1.length() != 0) {
             int var2 = 0;
             int var3 = -1;
 
@@ -574,8 +574,8 @@ public abstract class SdkMoreGames {
                } else {
                   boolean var6 = false;
 
-                  for (int var7 = 0; var7 < this.a10.length; var7++) {
-                     if (this.a10[var7].equals(var5)) {
+                  for (int var7 = 0; var7 < this.categoryUris.length; var7++) {
+                     if (this.categoryUris[var7].equals(var5)) {
                         var6 = true;
                         break;
                      }
@@ -589,22 +589,22 @@ public abstract class SdkMoreGames {
 
             if (var2 == 0) {
                if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                  com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::Found no valid advertised items in the JAD (MG_PRODUCTS property). More Games will be disabled.", 3);
+                  com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::Found no valid advertised items in the JAD (MG_PRODUCTS property). More Games will be disabled.", 3);
                }
 
-               this.g = 0;
+               this.screen = 0;
             }
 
             if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-               com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::Found " + var2 + " advertised items", 1);
+               com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::Found " + var2 + " advertised items", 1);
             }
 
-            this.a12 = new int[var2];
-            this.b5 = new String[var2];
-            this.c4 = new String[var2];
+            this.productIndexes = new int[var2];
+            this.productBuyUris = new String[var2];
+            this.productCategoryUris = new String[var2];
             var3 = -1;
 
-            for (int var11 = 0; var11 < this.a12.length; var11++) {
+            for (int var11 = 0; var11 < this.productIndexes.length; var11++) {
                int var12 = var1.indexOf(44, var3 + 1);
                Object var13 = null;
                if (var12 == -1) {
@@ -615,44 +615,44 @@ public abstract class SdkMoreGames {
 
                var3 = var12;
                if (var13.equals("LOG")) {
-                  this.a12[var11] = -1;
-                  this.b5[var11] = null;
-                  this.c4[var11] = this.a2("MG_CATURI_LOG");
-                  if (this.c4[var11] != null) {
-                     this.c4[var11] = this.c4[var11].trim();
+                  this.productIndexes[var11] = -1;
+                  this.productBuyUris[var11] = null;
+                  this.productCategoryUris[var11] = this.resolveUrl("MG_CATURI_LOG");
+                  if (this.productCategoryUris[var11] != null) {
+                     this.productCategoryUris[var11] = this.productCategoryUris[var11].trim();
                   }
 
                   if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                     com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::Found Generic Category. CATURI=" + this.c4[var11], 1);
+                     com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::Found Generic Category. CATURI=" + this.productCategoryUris[var11], 1);
                   }
                } else {
-                  this.a12[var11] = -2;
-                  this.b5[var11] = null;
-                  this.c4[var11] = null;
+                  this.productIndexes[var11] = -2;
+                  this.productBuyUris[var11] = null;
+                  this.productCategoryUris[var11] = null;
 
-                  for (int var15 = 0; var15 < this.a10.length; var15++) {
-                     if (this.a10[var15].equals(var13)) {
-                        this.a12[var11] = var15;
-                        this.b5[var11] = this.a2("MG_BUYURI_" + var13);
-                        this.c4[var11] = this.a2("MG_CATURI_" + var13);
-                        if (this.b5[var11] != null) {
-                           this.b5[var11] = this.b5[var11].trim();
+                  for (int var15 = 0; var15 < this.categoryUris.length; var15++) {
+                     if (this.categoryUris[var15].equals(var13)) {
+                        this.productIndexes[var11] = var15;
+                        this.productBuyUris[var11] = this.resolveUrl("MG_BUYURI_" + var13);
+                        this.productCategoryUris[var11] = this.resolveUrl("MG_CATURI_" + var13);
+                        if (this.productBuyUris[var11] != null) {
+                           this.productBuyUris[var11] = this.productBuyUris[var11].trim();
                         }
 
-                        if (this.c4[var11] != null) {
-                           this.c4[var11] = this.c4[var11].trim();
+                        if (this.productCategoryUris[var11] != null) {
+                           this.productCategoryUris[var11] = this.productCategoryUris[var11].trim();
                         }
 
                         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                           com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::Found Game " + var13 + ". CATURI=" + this.c4[var11] + " BUYURI=" + this.b5[var11], 1);
+                           com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::Found Game " + var13 + ". CATURI=" + this.productCategoryUris[var11] + " BUYURI=" + this.productBuyUris[var11], 1);
                         }
                         break;
                      }
                   }
 
-                  if (this.a12[var11] == -2) {
+                  if (this.productIndexes[var11] == -2) {
                      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-                        com.ea.sims3.SdkText.a(
+                        com.ea.sims3.SdkText.log(
                            "SDKMoreGamesinitialize::Game '" + var13 + "' mentioned in the JAD (MG_PRODUCTS property) does not exist. Ignoring...", 3
                         );
                      }
@@ -663,29 +663,29 @@ public abstract class SdkMoreGames {
             }
          } else {
             if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
-               com.ea.sims3.SdkText.a("SDKMoreGamesinitialize::MG_PRODUCTS property in the JAD file is not set or could not be read. More Games will be disabled.", 3);
+               com.ea.sims3.SdkText.log("SDKMoreGamesinitialize::MG_PRODUCTS property in the JAD file is not set or could not be read. More Games will be disabled.", 3);
             }
 
-            this.g = 0;
+            this.screen = 0;
          }
       }
    }
 
-   private String a2(String var1) {
+   private String resolveUrl(String var1) {
       if (!com.ea.sims3.SdkFeatures.isMoreGamesEnabled()) {
-         return this.a5.getAppProperty(var1);
+         return this.midlet.getAppProperty(var1);
       } else {
-         if (b) {
+         if (dataLoaded) {
             if (var1.startsWith("MG_CATURI_")) {
-               if (a[1] == 2) {
+               if (keyState[1] == 2) {
                   return null;
                }
-            } else if (var1.startsWith("MG_BUYURI_") && a[2] == 2) {
+            } else if (var1.startsWith("MG_BUYURI_") && keyState[2] == 2) {
                return null;
             }
 
             if (var1.equals("MG_Impl")) {
-               switch (a[0]) {
+               switch (keyState[0]) {
                   case 0:
                      return "off";
                   case 1:
@@ -699,20 +699,20 @@ public abstract class SdkMoreGames {
 
             if (var1.equals("MG_PRODUCTS")) {
                String var3;
-               if ((var3 = this.a5.getAppProperty(var1)) == null) {
+               if ((var3 = this.midlet.getAppProperty(var1)) == null) {
                   return null;
                }
 
-               if (a[3] == 0) {
+               if (keyState[3] == 0) {
                   return "";
                }
 
                String var4 = var3.trim();
-               if (a[3] != -1) {
+               if (keyState[3] != -1) {
                   int var5 = -1;
                   int var2 = 0;
 
-                  while (var2 < a[3] && (var5 = var4.indexOf(44, var5 + 1)) != -1) {
+                  while (var2 < keyState[3] && (var5 = var4.indexOf(44, var5 + 1)) != -1) {
                      var2++;
                   }
 
@@ -721,7 +721,7 @@ public abstract class SdkMoreGames {
                   }
                }
 
-               if (a[4] != -1) {
+               if (keyState[4] != -1) {
                   int var6;
                   if ((var6 = var4.indexOf(44, 0)) == -1) {
                      return var4;
@@ -734,15 +734,15 @@ public abstract class SdkMoreGames {
             }
          }
 
-         return this.a5.getAppProperty(var1);
+         return this.midlet.getAppProperty(var1);
       }
    }
 
-   private static byte b(int var0) {
+   private static byte decodeKey(int var0) {
       return var0 >= 48 && var0 <= 57 ? (byte)(var0 - 48) : -1;
    }
 
-   private int a3(int var1) {
+   private int softKeyMask(int var1) {
       if (var1 == com.ea.sims3.SdkConfig.softKey1()) {
          return 1;
       } else if (var1 == com.ea.sims3.SdkConfig.softKey2()) {
@@ -759,7 +759,7 @@ public abstract class SdkMoreGames {
          return com.ea.sims3.SdkConfig.isDebugEnabled() ? 32 : 64;
       } else {
          byte var2;
-         if ((var2 = b(var1)) != -1) {
+         if ((var2 = decodeKey(var1)) != -1) {
             if (var2 == 5) {
                return 16;
             }
@@ -785,81 +785,81 @@ public abstract class SdkMoreGames {
       }
    }
 
-   private void a12(int var1) {
+   private void selectProduct(int var1) {
       label71: {
-         this.e = this.a12[var1];
-         if (this.e != -1) {
-            this.a8 = this.getImage(this.a10[this.e]);
-            this.c5 = com.ea.sims3.SdkText.a(this.c3[this.e], null);
-            this.e4 = com.ea.sims3.SdkText.a(this.b4[this.e], null);
-            this.d4 = com.ea.sims3.SdkText.a(this.a11[this.e], null);
-            switch (this.g) {
+         this.currentProduct = this.productIndexes[var1];
+         if (this.currentProduct != -1) {
+            this.productImage = this.getImage(this.categoryUris[this.currentProduct]);
+            this.productName = com.ea.sims3.SdkText.getString(this.productPriceIds[this.currentProduct], null);
+            this.productPrice = com.ea.sims3.SdkText.getString(this.productDescIds[this.currentProduct], null);
+            this.productDescription = com.ea.sims3.SdkText.getString(this.productNameIds[this.currentProduct], null);
+            switch (this.screen) {
                case 1:
-                  this.d2 = false;
+                  this.productsLoaded = false;
                   break;
                case 2:
-                  this.d2 = this.b5[var1] != null && this.b5[var1].compareTo("") != 0;
-                  this.e2 = this.c4[var1] != null && this.c4[var1].compareTo("") != 0;
-                  if (this.d2) {
-                     this.f = 0;
-                  } else if (this.e2) {
-                     this.f = 1;
+                  this.productsLoaded = this.productBuyUris[var1] != null && this.productBuyUris[var1].compareTo("") != 0;
+                  this.layoutValid = this.productCategoryUris[var1] != null && this.productCategoryUris[var1].compareTo("") != 0;
+                  if (this.productsLoaded) {
+                     this.animationFrame = 0;
+                  } else if (this.layoutValid) {
+                     this.animationFrame = 1;
                   } else {
-                     this.f = 2;
+                     this.animationFrame = 2;
                   }
                   break label71;
                case 3:
-                  this.e2 = true;
-                  if (this.b5[var1] != null && this.b5[var1].compareTo("") != 0) {
-                     this.d2 = true;
-                     this.f = 0;
+                  this.layoutValid = true;
+                  if (this.productBuyUris[var1] != null && this.productBuyUris[var1].compareTo("") != 0) {
+                     this.productsLoaded = true;
+                     this.animationFrame = 0;
                   } else {
-                     this.d2 = false;
-                     this.f = 1;
+                     this.productsLoaded = false;
+                     this.animationFrame = 1;
                   }
                default:
                   break label71;
             }
          } else {
-            this.a8 = this.getImage("LOG");
-            this.c5 = this.a13[1];
-            this.e4 = this.a13[2];
-            this.d4 = this.a13[3];
-            this.d2 = false;
-            if (this.g == 2 && (this.c4[var1] == null || this.c4[var1].compareTo("") == 0)) {
-               this.e2 = false;
-               this.f = 2;
+            this.productImage = this.getImage("LOG");
+            this.productName = this.texts[1];
+            this.productPrice = this.texts[2];
+            this.productDescription = this.texts[3];
+            this.productsLoaded = false;
+            if (this.screen == 2 && (this.productCategoryUris[var1] == null || this.productCategoryUris[var1].compareTo("") == 0)) {
+               this.layoutValid = false;
+               this.animationFrame = 2;
                break label71;
             }
          }
 
-         this.e2 = true;
-         this.f = 1;
+         this.layoutValid = true;
+         this.animationFrame = 1;
       }
 
       if (com.ea.sims3.SdkConfig.isDebugEnabled()) {
-         if (this.f != 2) {
-            this.b3 = this.a13[5];
+         if (this.animationFrame != 2) {
+            this.bodyText = this.texts[5];
          } else {
-            this.b3 = null;
+            this.bodyText = null;
          }
 
-         this.a4 = this.a13[6];
+         this.titleText = this.texts[6];
       } else {
-         if (this.f != 2) {
-            this.a4 = this.a13[5];
+         if (this.animationFrame != 2) {
+            this.titleText = this.texts[5];
          } else {
-            this.a4 = null;
+            this.titleText = null;
          }
 
-         this.b3 = this.a13[6];
+         this.bodyText = this.texts[6];
       }
 
-      this.c2();
+      this.parseProductData();
    }
 
-   private void a(Graphics var1, int var2, int var3) {
-      var2 += this.k >> 1;
+   private void drawTitle(Graphics var1, int var2, int var3) {
+      var2 += this.lineSpacing >> 1;
       var1.setColor(19855);
 
       for (int var4 = 0; var4 <= 8; var4++) {
@@ -872,8 +872,8 @@ public abstract class SdkMoreGames {
       var1.drawLine(var2 + 8, var3 - 8, var2 + 8, var3 + 8);
    }
 
-   private void b(Graphics var1, int var2, int var3) {
-      var2 -= this.k >> 1;
+   private void drawBody(Graphics var1, int var2, int var3) {
+      var2 -= this.lineSpacing >> 1;
       var1.setColor(19855);
 
       for (int var4 = 0; var4 <= 8; var4++) {
@@ -886,20 +886,20 @@ public abstract class SdkMoreGames {
       var1.drawLine(var2 - 8, var3 - 8, var2 - 8, var3 + 8);
    }
 
-   private void a(Graphics var1, int var2, int var3, SdkString var4, boolean var5) {
+   private void drawText(Graphics var1, int var2, int var3, SdkString var4, boolean var5) {
       int var6 = 0;
       if (var5) {
-         com.ea.sims3.SdkText.a(this.a6[2]);
-         if (this.a6[2] == this.a6[1]) {
+         com.ea.sims3.SdkText.setFont(this.fonts[2]);
+         if (this.fonts[2] == this.fonts[1]) {
             var6 = 1;
          }
       } else {
-         com.ea.sims3.SdkText.a(this.a6[1]);
+         com.ea.sims3.SdkText.setFont(this.fonts[1]);
       }
 
-      int var5b = com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b();  // var5 is the boolean parameter above
+      int var5b = com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing();  // var5 is the boolean parameter above
       int var7 = var5b + 3 + 2;
-      int var8 = this.s - var3 >> 1;
+      int var8 = this.screenWidth - var3 >> 1;
       var1.setColor(0);
       var1.fillRect(var8, var2, var3, var7);
       var1.setColor(19855);
@@ -918,6 +918,6 @@ public abstract class SdkMoreGames {
          }
       }
 
-      com.ea.sims3.SdkText.a(var4, this.s >> 1, var2 + 2, com.ea.sims3.SdkText.a | com.ea.sims3.SdkText.d);
+      com.ea.sims3.SdkText.drawString(var4, this.screenWidth >> 1, var2 + 2, com.ea.sims3.SdkText.TOP | com.ea.sims3.SdkText.HCENTER);
    }
 }

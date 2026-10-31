@@ -103,11 +103,11 @@ public final class Animator {
    }
 
    public final int frameDuration() {
-      return SpriteRenderer.e(this.animId, this.frame);
+      return SpriteRenderer.countSpecialParts(this.animId, this.frame);
    }
 
    public final boolean matchesFrame(int[] var1, int var2) {
-      return SpriteRenderer.a2(var1, this.animId, this.frame, var2);
+      return SpriteRenderer.hitTest(var1, this.animId, this.frame, var2);
    }
 
    public final boolean isRunning() {

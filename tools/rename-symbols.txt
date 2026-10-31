@@ -347,3 +347,327 @@ V Tile drawCells(Graphics,int,int,int,int,int,int) var4 left
 V Tile drawCells(Graphics,int,int,int,int,int,int) var5 top
 V Tile drawCells(Graphics,int,int,int,int,int,int) var6 width
 V Tile drawCells(Graphics,int,int,int,int,int,int) var7 height
+
+# ---------------------------------------------------------------- SdkString
+F SdkString a loggerPrefix
+F SdkString a2 data
+F SdkString a3 offset
+F SdkString a4 length
+F SdkString a5 flags
+M SdkString a(byte[],int,byte[],int,short,int,int) convertChars
+M SdkString a11() isMutable
+M SdkString a2(SdkString) append
+M SdkString a(String) append
+M SdkString a(int,char) setCharAt
+M SdkString a2(int) charAt
+M SdkString a11(int) charCodeAt
+M SdkString a(SdkString[]) format
+M SdkString c(SdkString) concat
+M SdkString a2() copy
+M SdkString b() capacity
+M SdkString a() encoding
+M SdkString b(String) format
+M SdkString b(SdkString) format
+M SdkString a12(int) setLength
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var0 source
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var1 sourceOffset
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var2 target
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var3 targetOffset
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var4 count
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var5 sourceEncoding
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var6 targetEncoding
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var7 byteCount
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var9 i
+V SdkString convertChars(byte[],int,byte[],int,short,int,int) var10 ch
+V SdkString append(SdkString) var1 other
+V SdkString append(SdkString) var2 ourEncoding
+V SdkString append(SdkString) var3 otherEncoding
+V SdkString append(SdkString) var4 usedBytes
+V SdkString append(SdkString) var5 addBytes
+V SdkString append(String) var1 text
+V SdkString append(String) var2 start
+V SdkString append(String) var3 i
+V SdkString setCharAt(int,char) var1 index
+V SdkString setCharAt(int,char) var2 value
+V SdkString setCharAt(int,char) var3 encoding
+V SdkString setCharAt(int,char) var5 code
+V SdkString charAt(int) var1 index
+V SdkString charAt(int) var2 code
+V SdkString charCodeAt(int) var1 index
+V SdkString format(SdkString[]) var1 args
+V SdkString format(SdkString[]) var2 encoding
+V SdkString format(SdkString[]) var3 result
+V SdkString format(SdkString[]) var4 written
+V SdkString format(SdkString[]) var5 i
+V SdkString format(SdkString[]) var6 argEncoding
+V SdkString concat(SdkString) var1 other
+V SdkString concat(SdkString) var2 ourEncoding
+V SdkString concat(SdkString) var3 otherEncoding
+V SdkString concat(SdkString) var4 result
+V SdkString concat(SdkString) var5 written
+V SdkString toString() var1 text
+V SdkString toString() var2 i
+V SdkString setLength(int) var1 newLength
+V SdkString SdkString(String) var1 text
+V SdkString SdkString(String) var2 i
+V SdkString SdkString(int,int) var1 capacity
+V SdkString SdkString(int,int) var2 encoding
+
+# ---------------------------------------------------------------- SpriteRenderer
+F SpriteRenderer a palette
+F SpriteRenderer a2 spriteRects
+F SpriteRenderer a3 recolorIndex
+F SpriteRenderer a4 tiles
+F SpriteRenderer b frameDurations
+F SpriteRenderer c framePartOffsets
+F SpriteRenderer d parts
+M SpriteRenderer a(ResourceLoader) loadPalette
+M SpriteRenderer a(Graphics,int) setColor
+M SpriteRenderer b(ResourceLoader) loadSpriteRects
+M SpriteRenderer c(ResourceLoader) loadFrameData
+M SpriteRenderer b2(int) partKind
+M SpriteRenderer c(int) partSize
+M SpriteRenderer f(int,int) partOffset
+M SpriteRenderer g(int,int) nextPartOffset
+M SpriteRenderer a(ResourceLoader,int) loadTile
+M SpriteRenderer a(ResourceLoader,int,int[],int[],int) loadTileRecolored
+M SpriteRenderer a5(int,int) unloadTile
+M SpriteRenderer b2(Graphics,int,int,int,int) drawFrameNormal
+M SpriteRenderer c2(Graphics,int,int,int,int) drawFrameMirrored
+M SpriteRenderer a(Graphics,int,int,int,int,int,int,int[]) drawParts
+M SpriteRenderer b(Graphics,int,int,int,int,int,int,int[]) drawPartsMirrored
+M SpriteRenderer c(Graphics,int,int,int,int,int,int,int[]) drawPartsClipped
+M SpriteRenderer a(Graphics,int,int,short[],int) drawPart
+M SpriteRenderer b(Graphics,int,int,short[],int) drawPartMirrored
+M SpriteRenderer a(short[],int) partX
+M SpriteRenderer b(short[],int) partY
+M SpriteRenderer c(short[],int) partWidth
+M SpriteRenderer d(short[],int) partHeight
+M SpriteRenderer a2(int,int) frameMinX
+M SpriteRenderer b(int,int) frameMinY
+M SpriteRenderer c(int,int) frameWidth
+M SpriteRenderer d(int,int) frameHeight
+M SpriteRenderer e(int,int) countSpecialParts
+M SpriteRenderer a2(int[],int,int,int) hitTest
+M SpriteRenderer b(int[],int,int,int) hitTestMirrored
+M SpriteRenderer a12(int) setRecolorIndex
+V SpriteRenderer loadPalette(ResourceLoader) var0 loader
+V SpriteRenderer loadPalette(ResourceLoader) var1 in
+V SpriteRenderer loadPalette(ResourceLoader) var3 ignored
+V SpriteRenderer setColor(Graphics,int) var0 g
+V SpriteRenderer setColor(Graphics,int) var1 colorIndex
+V SpriteRenderer setColor(Graphics,int) var2 offset
+V SpriteRenderer setColor(Graphics,int) var3 colors
+V SpriteRenderer loadSpriteRects(ResourceLoader) var0 loader
+V SpriteRenderer loadSpriteRects(ResourceLoader) var1 rects
+V SpriteRenderer loadSpriteRects(ResourceLoader) var2 in
+V SpriteRenderer loadSpriteRects(ResourceLoader) var3 i
+V SpriteRenderer loadSpriteRects(ResourceLoader) var4 rect
+V SpriteRenderer loadSpriteRects(ResourceLoader) var5 ignored
+V SpriteRenderer loadTile(ResourceLoader,int) var0 loader
+V SpriteRenderer loadTile(ResourceLoader,int) var1 spriteId
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var0 loader
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var1 spriteId
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var2 fromColors
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var3 toColors
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var4 recolorSet
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var5 slot
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var6 slots
+V SpriteRenderer loadTileRecolored(ResourceLoader,int,int[],int[],int) var7 image
+V SpriteRenderer unloadTile(int,int) var0 spriteId
+V SpriteRenderer unloadTile(int,int) var1 recolorSet
+V SpriteRenderer unloadTile(int,int) var2 slot
+V SpriteRenderer drawFrame(Graphics,int,int,int,int) var0 g
+V SpriteRenderer drawFrame(Graphics,int,int,int,int) var1 spriteId
+V SpriteRenderer drawFrame(Graphics,int,int,int,int) var2 frame
+V SpriteRenderer drawFrame(Graphics,int,int,int,int) var3 x
+V SpriteRenderer drawFrame(Graphics,int,int,int,int) var4 y
+V SpriteRenderer drawPart(Graphics,int,int,short[],int) var0 g
+V SpriteRenderer drawPart(Graphics,int,int,short[],int) var1 x
+V SpriteRenderer drawPart(Graphics,int,int,short[],int) var2 y
+V SpriteRenderer drawPart(Graphics,int,int,short[],int) var3 parts
+V SpriteRenderer drawPart(Graphics,int,int,short[],int) var4 offset
+V SpriteRenderer frameCount(int) var0 spriteId
+V SpriteRenderer frameDuration(int,int) var0 spriteId
+V SpriteRenderer frameDuration(int,int) var1 frame
+V SpriteRenderer partX(short[],int) var0 parts
+V SpriteRenderer partX(short[],int) var1 offset
+V SpriteRenderer frameMinX(int,int) var0 spriteId
+V SpriteRenderer frameMinX(int,int) var1 frame
+V SpriteRenderer frameMinY(int,int) var0 spriteId
+V SpriteRenderer frameMinY(int,int) var1 frame
+V SpriteRenderer frameWidth(int,int) var0 spriteId
+V SpriteRenderer frameWidth(int,int) var1 frame
+V SpriteRenderer frameHeight(int,int) var0 spriteId
+V SpriteRenderer frameHeight(int,int) var1 frame
+V SpriteRenderer countSpecialParts(int,int) var0 spriteId
+V SpriteRenderer countSpecialParts(int,int) var1 frame
+V SpriteRenderer setRecolorIndex(int) var0 index
+
+# ---------------------------------------------------------------- SdkText
+F SdkText a TOP
+F SdkText b BOTTOM
+F SdkText c BASELINE
+F SdkText d HCENTER
+F SdkText e VCENTER
+F SdkText f LEFT
+F SdkText g RIGHT
+F SdkText a2 logPrefix
+F SdkText a3 font
+F SdkText b2 fontImage
+F SdkText h usesTransform
+F SdkText a4 fontHeader
+F SdkText a5 headerStringOffsets
+F SdkText b3 languageChunkGroups
+F SdkText c2 chunkStringCounts
+F SdkText b4 glyphData
+F SdkText a6 colorTable
+F SdkText d2 glyphIndexTable
+F SdkText e2 glyphOffsetTable
+F SdkText a7 strings
+F SdkText a8 chunkStringOffsets
+F SdkText c3 chunkGroupOfId
+F SdkText d3 chunkFlags
+F SdkText a9 chunkConfig
+F SdkText b5 storageChunkOffsets
+F SdkText f2 chunkStringCount
+F SdkText g2 chunkDataSize
+F SdkText h2 chunkOffsetCount
+F SdkText e3 chunkOwners
+F SdkText f3 languageEncodings
+F SdkText i numFontGlyphs
+F SdkText a10 languageCodes
+F SdkText g3 fontDifferentiators
+F SdkText b6 currentLanguage
+F SdkText b7 penPosition
+F SdkText c4 glyphBounds
+F SdkText h3 tempShort
+F SdkText a11 graphics
+F SdkText a13 changingLanguage
+F SdkText a14 midlet
+F SdkText j textColor
+F SdkText b8 logBuffer
+M SdkText a(Object,byte[],int) createFont
+M SdkText a(Image,byte[]) createFont
+M SdkText a(InputStream,long) skip
+M SdkText a(Object) setFont
+M SdkText a12(int) setSpaceSpacing
+M SdkText a() getSpaceSpacing
+M SdkText b() getLeadingSpacing
+M SdkText c() getLineHeight
+M SdkText a(SdkString,int,int,int) drawString
+M SdkText a(SdkString,int,int,int,int,int) drawSubString
+M SdkText a(SdkString,short[],int,int,int,int,int) drawWrappedString
+M SdkText a(short) glyphHeight
+M SdkText a(short,int) glyphIndex
+M SdkText a(SdkString,short[],int,short) wrapText
+M SdkText a(SdkString,int,int,short[],int,short) wrapTextImpl
+M SdkText a(SdkString) stringWidth
+M SdkText a(SdkString,int,int) substringWidth
+M SdkText b8(int) isChunkLoaded
+M SdkText a3(int) loadStringsChunk
+M SdkText b7(int) freeStringsChunk
+M SdkText a(byte[]) loadTextHeader
+M SdkText a(int,int,SdkString) getHeaderString
+M SdkText a(int,SdkString) getString
+M SdkText d() getCurrentLanguage
+M SdkText a13(int) setCurrentLanguage
+M SdkText a(MIDlet) setMidlet
+M SdkText b2(int) chooseLanguage
+M SdkText c(int) getFontDifferentiator
+M SdkText a(Graphics) setGraphics
+M SdkText a(String,int) log
+M SdkText a2(byte[],int) readShort
+M SdkText a2(short) toCharset
+M SdkText b(short) fromCharset
+M SdkText a(String[]) detectLanguage
+M SdkText a10() flushLog
+M SdkText a(Image,int,int,int,int,int,int,int,int) drawGlyph
+M SdkText a(short[],int,int,int) glyphWidth
+M SdkText a2(byte) loadFontChunk
+M SdkText b4() loadChunksForLanguage
+M SdkText a4(byte[]) parseFontChunk
+M SdkText a(InputStream,byte[],int,int) readFully
+
+# ---------------------------------------------------------------- SdkMoreGames
+F SdkMoreGames a keyState
+F SdkMoreGames b dataLoaded
+F SdkMoreGames a2 keySequence
+F SdkMoreGames a3 keyStep
+F SdkMoreGames b2 keyRemainder
+F SdkMoreGames c keyBits
+F SdkMoreGames c2 dirty
+F SdkMoreGames a4 titleText
+F SdkMoreGames b3 bodyText
+F SdkMoreGames a5 midlet
+F SdkMoreGames a6 fonts
+F SdkMoreGames a7 available
+F SdkMoreGames a8 productImage
+F SdkMoreGames d selectedIndex
+F SdkMoreGames e currentProduct
+F SdkMoreGames a9 buyUri
+F SdkMoreGames f animationFrame
+F SdkMoreGames d2 productsLoaded
+F SdkMoreGames e2 layoutValid
+F SdkMoreGames a10 categoryUris
+F SdkMoreGames a11 productNameIds
+F SdkMoreGames b4 productDescIds
+F SdkMoreGames c3 productPriceIds
+F SdkMoreGames a12 productIndexes
+F SdkMoreGames b5 productBuyUris
+F SdkMoreGames c4 productCategoryUris
+F SdkMoreGames g screen
+F SdkMoreGames h state
+F SdkMoreGames f2 textDirty
+F SdkMoreGames d3 wrappedTitle
+F SdkMoreGames e3 wrappedBody
+F SdkMoreGames f3 wrappedFooter
+F SdkMoreGames c5 productName
+F SdkMoreGames d4 productDescription
+F SdkMoreGames e4 productPrice
+F SdkMoreGames i titleX
+F SdkMoreGames j titleY
+F SdkMoreGames k lineSpacing
+F SdkMoreGames l bodyX
+F SdkMoreGames m bodyY
+F SdkMoreGames n buttonX
+F SdkMoreGames o buttonY
+F SdkMoreGames p buttonWidth
+F SdkMoreGames q buttonHeight
+F SdkMoreGames g2 textIds
+F SdkMoreGames a13 texts
+F SdkMoreGames r screenHeight
+F SdkMoreGames s screenWidth
+M SdkMoreGames a4(int,int) setScreenSize
+M SdkMoreGames a10() reset
+M SdkMoreGames b4() handleKeys
+M SdkMoreGames a(Graphics) draw
+M SdkMoreGames a(Object[]) setFonts
+M SdkMoreGames a(int) processKey
+M SdkMoreGames a3(byte[]) setProductData
+M SdkMoreGames a11() isAvailable
+M SdkMoreGames b(Graphics) drawOverlay
+M SdkMoreGames a4(String) openBuyUri
+M SdkMoreGames c2() parseProductData
+M SdkMoreGames d2() loadProducts
+M SdkMoreGames a2(String) resolveUrl
+M SdkMoreGames b(int) decodeKey
+M SdkMoreGames a3(int) softKeyMask
+M SdkMoreGames a12(int) selectProduct
+M SdkMoreGames a(Graphics,int,int) drawTitle
+M SdkMoreGames b(Graphics,int,int) drawBody
+M SdkMoreGames a(Graphics,int,int,SdkString,boolean) drawText
+V SdkMoreGames SdkMoreGames(int,int) var1 width
+V SdkMoreGames SdkMoreGames(int,int) var2 height
+V SdkMoreGames setScreenSize(int,int) var1 width
+V SdkMoreGames setScreenSize(int,int) var2 height
+V SdkMoreGames setScreenSize(int,int) var3 changed
+V SdkMoreGames handleKeys() var0 ignored
+V SdkMoreGames draw(Graphics) var1 g
+V SdkMoreGames processKey(int) var1 keyCode
+V SdkMoreGames processKey(int) var3 digit
+V SdkMoreGames selectProduct(int) var1 index
+V SdkMoreGames softKeyMask(int) var1 keyCode
+V SdkMoreGames reset() var1 i
+V SdkMoreGames loadProducts() var1 i
+V SdkMoreGames setProductData(byte[]) var1 data

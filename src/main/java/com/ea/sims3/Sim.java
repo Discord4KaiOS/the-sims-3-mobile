@@ -172,7 +172,7 @@ public final class Sim extends Entity {
                com.ea.sims3.SpriteRenderer.drawFrame(var1, 33, 0, var5, var6);
             }
 
-            com.ea.sims3.SpriteRenderer.a12(this.f2);
+            com.ea.sims3.SpriteRenderer.setRecolorIndex(this.f2);
             var7 = this.a6(0);
             if (!super.a2.b5()) {
                int var8 = var7.animId;
@@ -189,7 +189,7 @@ public final class Sim extends Entity {
                this.a4().b(var1);
             }
 
-            com.ea.sims3.SpriteRenderer.a12(0);
+            com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
          }
 
          Animator var17 = this.a6(2);
@@ -226,9 +226,9 @@ public final class Sim extends Entity {
          }
 
          int var10 = this.a6(0).frame;
-         com.ea.sims3.SpriteRenderer.a12(this.f2);
+         com.ea.sims3.SpriteRenderer.setRecolorIndex(this.f2);
          this.a2(var1, var4, var10, var7, var8);
-         com.ea.sims3.SpriteRenderer.a12(0);
+         com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
       }
    }
 
@@ -241,7 +241,7 @@ public final class Sim extends Entity {
          var8 = com.ea.sims3.Entity.a;
       }
 
-      boolean var10 = com.ea.sims3.SpriteRenderer.a(var1, var2, var3, var4, var5, var6, var7, var8);
+      boolean var10 = com.ea.sims3.SpriteRenderer.drawParts(var1, var2, var3, var4, var5, var6, var7, var8);
       if (var9 && var10) {
          super.a2.a(var1, var8[0], var8[1]);
       }

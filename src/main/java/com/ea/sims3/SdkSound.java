@@ -27,7 +27,7 @@ public final class SdkSound implements PlayerListener {
 
    public final void setLoopCount(int count) {
       if (SdkFeatures.isLoggingEnabled() && count < 1 && count != -1) {
-         SdkText.a("SDKSound::setCurrentLoop::count: " + count + " will result in undefined behavior", 4);
+         SdkText.log("SDKSound::setCurrentLoop::count: " + count + " will result in undefined behavior", 4);
       }
 
       this.loopCount = count;

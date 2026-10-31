@@ -312,7 +312,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
             if (var1 != null) {
                int var23 = var5 + 1;
                int var26 = var7 - 3;
-               SpriteRenderer.a(var1, var9);
+               SpriteRenderer.setColor(var1, var9);
                var1.fillRect(var23, var6, var26, 1);
             }
 
@@ -323,9 +323,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
             int var22 = var6 + 3;
             int var14 = var4.getHeight() - 15 - 3 - var22;
             if (var1 != null) {
-               SpriteRenderer.a(var1, 77);
+               SpriteRenderer.setColor(var1, 77);
                var1.fillRect(0, var6, var19, 3);
-               SpriteRenderer.a(var1, 76);
+               SpriteRenderer.setColor(var1, 76);
                var1.fillRect(0, var22, var19, var14);
                var6 = var22;
                var10 = var8 - var14;
@@ -342,10 +342,10 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
                int var18 = this.i + 2;
                int var21 = var4.getWidth();
                int var25 = var6 - 2;
-               SpriteRenderer.a(var1, 77);
+               SpriteRenderer.setColor(var1, 77);
                var1.fillRect(0, var25, var21, 1);
                var1.fillRect(0, var25 + var18 - 1, var4.getWidth(), 1);
-               SpriteRenderer.a(var1, 1);
+               SpriteRenderer.setColor(var1, 1);
                var1.fillRect(0, var25 + 1, var21, var18 - 2);
                int var29 = var5 + var7 - 25 + 3;
                int var31 = var5 + var7 + 3;
@@ -455,19 +455,19 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       int var10 = var1.getClipY();
       int var11 = var1.getClipWidth();
       int var12 = var1.getClipHeight();
-      int var13 = SpriteRenderer.c(582, 0);
-      int var14 = SpriteRenderer.d(582, 0);
+      int var13 = SpriteRenderer.frameWidth(582, 0);
+      int var14 = SpriteRenderer.frameHeight(582, 0);
       SpriteRenderer.drawFrame(var1, 582, 0, var2, var3);
       SpriteRenderer.drawFrame(var1, 582, 2, var2 + var4 - var13, var3);
       var1.setClip(var2 + var13, var10, var4 - (var13 << 1), var12);
       SpriteRenderer.drawFrame(var1, 582, 1, var2 + var13, var3);
       var1.setClip(var9, var10, var11, var12);
       if (var7 != 4) {
-         SpriteRenderer.a(var1, 0);
+         SpriteRenderer.setColor(var1, 0);
          var1.fillRect(var2, var3 + var14, 1, var5 - var14);
          var1.fillRect(var2 + var4 - 1, var3 + var14, 1, var5 - var14);
          var1.fillRect(var2, var3 + var5 - 1, var4, 1);
-         SpriteRenderer.a(var1, 76);
+         SpriteRenderer.setColor(var1, 76);
          var1.fillRect(var2 + 1, var3 + var14, var4 - 2, var5 - var14 - 1);
       }
 
@@ -507,7 +507,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
 
          if (var20 != -1) {
             int[] var22 = this.a2;
-            SpriteRenderer.b(this.a2, var20, 0, 0);
+            SpriteRenderer.hitTestMirrored(this.a2, var20, 0, 0);
             var1.setClip(var2 + var22[0], var3 + var22[1], var22[2], var22[3]);
             SpriteRenderer.drawFrame(var1, var20, 0, var2, var3);
             var1.setClip(var2 + var4 - var22[2] + var22[0], var3 + var22[1], var22[2], var22[3]);
@@ -518,7 +518,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public static void f(Graphics var0, int var1, int var2, int var3, int var4) {
-      SpriteRenderer.a(var0, 77);
+      SpriteRenderer.setColor(var0, 77);
       var0.fillRect(var1, var2, var3, 6);
       var0.fillRect(var1, var2 + var4 - 6, var3, 6);
       var0.fillRect(var1, var2 + 6, 6, var4 - 12);
@@ -530,8 +530,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       int var8 = var0.getClipY();
       int var9 = var0.getClipWidth();
       int var10 = var0.getClipHeight();
-      int var11 = SpriteRenderer.c(var5, 0);
-      int var12 = SpriteRenderer.d(var5, 0);
+      int var11 = SpriteRenderer.frameWidth(var5, 0);
+      int var12 = SpriteRenderer.frameHeight(var5, 0);
       int var13 = var1 + var11;
       int var14 = var1 + var3 - var11;
       int var15 = var3 - (var11 << 1);
@@ -550,7 +550,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       SpriteRenderer.drawFrame(var0, var5, 5, var13, var17);
       var0.setClip(var7, var8, var9, var10);
       if (var6 != -1) {
-         SpriteRenderer.a(var0, var6);
+         SpriteRenderer.setColor(var0, var6);
          var0.fillRect(var13, var16, var15, var18);
       }
    }
@@ -585,12 +585,12 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public static void c(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.a(var0, var5);
+      SpriteRenderer.setColor(var0, var5);
       var0.drawRect(var1, var2, var3 - 1, var4 - 1);
-      SpriteRenderer.a(var0, 73);
+      SpriteRenderer.setColor(var0, 73);
       var0.fillRect(var1 + 1, var2 + 1, var3 - 2, 1);
       var0.fillRect(var1 + 1, var2 + 2, 1, var4 - 3);
-      SpriteRenderer.a(var0, 74);
+      SpriteRenderer.setColor(var0, 74);
       var0.fillRect(var1 + 2, var2 + 2, var3 - 3, var4 - 3);
    }
 
@@ -662,9 +662,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       Neighborhood var8 = this.canvas.a23;
       int var9 = this.canvas.a23.i(var4, 0) == 0 ? (var5 ? 595 : 594) : (var5 ? 593 : 592);
       int var10 = var8.i(var4, 2);
-      SpriteRenderer.a12(var6);
+      SpriteRenderer.setRecolorIndex(var6);
       SpriteRenderer.drawFrame(var1, var9, var10, var2, var3 + 0);
-      SpriteRenderer.a12(0);
+      SpriteRenderer.setRecolorIndex(0);
    }
 
    public static void d(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
@@ -792,7 +792,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public static void a2(Graphics var0, int var1, int var2, int var3) {
-      SpriteRenderer.a(var0, 75);
+      SpriteRenderer.setColor(var0, 75);
       var0.fillRect(var1, var2, var3, 1);
    }
 
@@ -807,18 +807,18 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    private static void a(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.a(var0, var5);
+      SpriteRenderer.setColor(var0, var5);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1);
    }
 
    private static void f(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.a(var0, var5);
+      SpriteRenderer.setColor(var0, var5);
       var0.fillRect(var1 + 1, var2, var3 - 2, 1);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1);
    }
 
    private static void g(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.a(var0, var5);
+      SpriteRenderer.setColor(var0, var5);
       var0.fillRect(var1, var2 + 1, var3, var4 - 1 - 1);
       var0.fillRect(var1 + 1, var2 + var4 - 1, var3 - 2, 1);
    }
@@ -884,12 +884,12 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       GameCanvas var7 = this.canvas;
       Neighborhood var8 = this.canvas.a23;
       int var9 = var2 + 3;
-      int var10 = SpriteRenderer.d(565, 0);
+      int var10 = SpriteRenderer.frameHeight(565, 0);
       int var11 = 13 - (var10 >> 1);
       int var12;
       int var13 = (var12 = var2 + 3 + var10 + 3) + 3;
       int var14 = var2 + var4 - var13 - 3;
-      SpriteRenderer.a(var1, 75);
+      SpriteRenderer.setColor(var1, 75);
       var1.fillRect(var12, var3, 1, var5);
       int var15 = var3;
       int var16 = 0;
@@ -998,7 +998,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
                short var22 = var8.f2(var21);
                var7.a2(var22, 1, var13, var19, 20);
             } else {
-               SpriteRenderer.a(var1, 0);
+               SpriteRenderer.setColor(var1, 0);
                var1.fillRect(var13, var19 + var15, var4 - var16, 1);
             }
 
@@ -1096,9 +1096,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
             var22 = 76;
          }
 
-         SpriteRenderer.a(var1, 77);
+         SpriteRenderer.setColor(var1, 77);
          var1.drawRect(var19, var20, var15, var18);
-         SpriteRenderer.a(var1, var22);
+         SpriteRenderer.setColor(var1, var22);
          d(var1, var19 + 1, var20 + 1, var15 - 1, var18 - 1, var14 - 1);
          var19 += var14;
          var20 += var14;
@@ -1110,9 +1110,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       int var36 = var19 + 3;
       int var23 = var15 - 6 + (var35 ? -9 : 1);
       int var24 = var36 + (var23 >> 1);
-      SpriteRenderer.a(var1, 76);
+      SpriteRenderer.setColor(var1, 76);
       var1.fillRect(var19, var20, var15, var18);
-      SpriteRenderer.a(var1, 77);
+      SpriteRenderer.setColor(var1, 77);
       var1.drawRect(var19, var20, var15, var18);
       if ((var3 & 16) == 0) {
          var1.fillRect(var19, var20 + var17, var15, 1);
@@ -1139,10 +1139,10 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
          if (var9 == var39 && var29 != 274 && var29 != 275) {
             var28 = 0;
             if ((var3 & 32) != 0) {
-               SpriteRenderer.a(var1, 1);
+               SpriteRenderer.setColor(var1, 1);
                var1.fillRect(var36, var37, var23, 15);
             } else if (var16) {
-               SpriteRenderer.a(var1, 77);
+               SpriteRenderer.setColor(var1, 77);
                var1.fillRect(var36, var37, var23, 15);
             } else {
                l(var1, var36, var37, var23, 15);
@@ -1177,17 +1177,17 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public static void l(Graphics var0, int var1, int var2, int var3, int var4) {
-      SpriteRenderer.a(var0, 62);
+      SpriteRenderer.setColor(var0, 62);
       var0.fillRect(var1, var2, var3, 1);
-      SpriteRenderer.a(var0, 63);
+      SpriteRenderer.setColor(var0, 63);
       var0.fillRect(var1, var2 + 1, var3, var4 - 3);
-      SpriteRenderer.a(var0, 64);
+      SpriteRenderer.setColor(var0, 64);
       var0.fillRect(var1, var2 + var4 - 2, var3, 1);
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7, boolean var8) {
       var2 += 3;
-      int var9 = SpriteRenderer.d(599, 0);
+      int var9 = SpriteRenderer.frameHeight(599, 0);
       int var10 = var3 + var9 + 1 + 2;
       int var11 = var4 - (var9 + 1 + 2 << 1);
       int var12;
@@ -1219,9 +1219,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
 
       a2(var1, var2, var15, var16, var14);
       if (var8) {
-         SpriteRenderer.a(var1, 77);
+         SpriteRenderer.setColor(var1, 77);
          int var19 = var2 - 2;
-         int var20 = SpriteRenderer.c(602, 0) + 4;
+         int var20 = SpriteRenderer.frameWidth(602, 0) + 4;
          var1.fillRect(var19, var3, var20, 1);
          var1.fillRect(var19, var3 + var4 - 1, var20, 1);
          var1.fillRect(var19 + var20, var3, 1, var4);
@@ -1229,8 +1229,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    private static void a2(Graphics var0, int var1, int var2, int var3, int var4) {
-      int var5 = SpriteRenderer.d(601, var4);
-      int var6 = SpriteRenderer.d(600, var4);
+      int var5 = SpriteRenderer.frameHeight(601, var4);
+      int var6 = SpriteRenderer.frameHeight(600, var4);
       int var7 = var0.getClipX();
       int var8 = var0.getClipY();
       int var9 = var0.getClipWidth();
@@ -1246,7 +1246,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public static int b() {
-      return SpriteRenderer.c(602, 0) + 6;
+      return SpriteRenderer.frameWidth(602, 0) + 6;
    }
 
    public static int a(int var0, int var1, int var2, int var3) {

@@ -173,7 +173,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    private GameCanvas(MonkeyApp var1) {
-      com.ea.sims3.SdkText.a((MIDlet)var1);
+      com.ea.sims3.SdkText.setMidlet((MIDlet)var1);
       if (this.getWidth() > this.getHeight()) {
          a4 = 1;
          b2 = 1;
@@ -195,9 +195,9 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       this.s = -1;
       this.v2();
       this.a8 = new Random();
-      com.ea.sims3.SpriteRenderer.b(this.a6);
-      com.ea.sims3.SpriteRenderer.c(this.a6);
-      com.ea.sims3.SpriteRenderer.a(this.a6);
+      com.ea.sims3.SpriteRenderer.loadSpriteRects(this.a6);
+      com.ea.sims3.SpriteRenderer.loadFrameData(this.a6);
+      com.ea.sims3.SpriteRenderer.loadPalette(this.a6);
       this.a20 = new Animator();
       this.b7 = new Animator();
       this.F();
@@ -205,10 +205,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       SdkString var2 = null;
 
       for (int var3 = 0; var3 < 2; var3++) {
-         (var2 = new SdkString(8, 0)).a12(8);
+         (var2 = new SdkString(8, 0)).setLength(8);
 
          for (int var4 = 0; var4 != 8; var4++) {
-            var2.a(var4, ' ');
+            var2.setCharAt(var4, ' ');
          }
 
          this.g4[var3] = var2;
@@ -244,7 +244,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       this.b2(1, var1);
-      this.a5.a4(this.getWidth(), this.getHeight());
+      this.a5.setScreenSize(this.getWidth(), this.getHeight());
       this.a3 = false;
    }
 
@@ -298,7 +298,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       try {
          this.repaint();
          if (this.a5 != null) {
-            this.a5.a4(this.getWidth(), this.getHeight());
+            this.a5.setScreenSize(this.getWidth(), this.getHeight());
          }
 
          if (this.a2 != null) {
@@ -466,7 +466,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final synchronized void paint(Graphics var1) {
       try {
          Graphics var2 = var1;
-         com.ea.sims3.SdkText.a(var1);
+         com.ea.sims3.SdkText.setGraphics(var1);
 
          try {
             if (this.a2 != null && this.k) {
@@ -541,7 +541,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void keyPressed(int var1) {
       if (this.c) {
-         this.a5.a(var1);
+         this.a5.processKey(var1);
       } else {
          int var2;
          if ((var2 = this.d(var1)) != 0 && this.v < this.a11.length) {
@@ -628,10 +628,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    private void x() {
       a13 = new byte[2600];
       byte[] var1 = this.a5("/hdr");
-      this.f = com.ea.sims3.SdkText.a(var1);
+      this.f = com.ea.sims3.SdkText.loadTextHeader(var1);
       int var2 = 0;
       int var14;
-      int var3 = var14 = com.ea.sims3.SdkText.b2(var2 = 0 + this.i2);
+      int var3 = var14 = com.ea.sims3.SdkText.chooseLanguage(var2 = 0 + this.i2);
       if (var14 < 0) {
          var3 = -1;
          var14 = 0;
@@ -640,7 +640,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       Object[] var4 = new Object[5];
       Image[] var5 = new Image[5];
       this.a12 = var4;
-      String var6 = "/" + com.ea.sims3.SdkText.c(var14);
+      String var6 = "/" + com.ea.sims3.SdkText.getFontDifferentiator(var14);
 
       try {
          var5[0] = Image.createImage(var6 + "font_sims_white_outline.png");
@@ -652,15 +652,15 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       byte[] var7 = this.a5(var6 + "font_sims_white_outline.rff");
-      var4[0] = com.ea.sims3.SdkText.a(var5[0], var7);
+      var4[0] = com.ea.sims3.SdkText.createFont(var5[0], var7);
       var7 = this.a5(var6 + "font_sims_black.rff");
-      var4[1] = com.ea.sims3.SdkText.a(var5[1], var7);
+      var4[1] = com.ea.sims3.SdkText.createFont(var5[1], var7);
       var7 = this.a5(var6 + "font_sims_white_smallcaps.rff");
-      var4[2] = com.ea.sims3.SdkText.a(var5[2], var7);
+      var4[2] = com.ea.sims3.SdkText.createFont(var5[2], var7);
       var7 = this.a5(var6 + "font_the.rff");
-      var4[3] = com.ea.sims3.SdkText.a(var5[3], var7);
+      var4[3] = com.ea.sims3.SdkText.createFont(var5[3], var7);
       var7 = this.a5(var6 + "font_thesmall.rff");
-      var4[4] = com.ea.sims3.SdkText.a(var5[4], var7);
+      var4[4] = com.ea.sims3.SdkText.createFont(var5[4], var7);
       a13 = null;
       m2();
       this.d3(var14);
@@ -671,14 +671,14 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       var8[2] = var4[0];
       var8[3] = var4[1];
       var8[4] = var4[0];
-      this.a5.a(var8);
+      this.a5.setFonts(var8);
 
       try {
          InputStream var9 = this.a6.openStream(52);
          byte[] var10 = new byte[com.ea.sims3.ResourceLoader.getSize(52)];
          var9.read(var10);
          var9.close();
-         this.a5.a3(var10);
+         this.a5.setProductData(var10);
          m2();
       } catch (IOException var11) {
       }
@@ -686,10 +686,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void d3(int var1) {
       this.i2 = var1;
-      com.ea.sims3.SdkText.a13(var1);
-      com.ea.sims3.SdkText.a3(2);
+      com.ea.sims3.SdkText.setCurrentLanguage(var1);
+      com.ea.sims3.SdkText.loadStringsChunk(2);
       if (this.a9() != null) {
-         com.ea.sims3.SdkText.a3(1);
+         com.ea.sims3.SdkText.loadStringsChunk(1);
       }
 
       a2(this.c4, -1);
@@ -725,32 +725,32 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void a2(int var1, int var2, int var3, int var4, int var5) {
       if (var1 != -1) {
          SdkString var6 = this.a4(var1);
-         com.ea.sims3.SdkText.a(this.a12[var2]);
+         com.ea.sims3.SdkText.setFont(this.a12[var2]);
          this.a(var6, var2, var3, var4, var5);
       }
    }
 
    public final void a(SdkString var1, int var2, int var3, int var4, int var5) {
       if (var1 != null) {
-         com.ea.sims3.SdkText.a(this.a12[var2]);
-         com.ea.sims3.SdkText.a12(5);
+         com.ea.sims3.SdkText.setFont(this.a12[var2]);
+         com.ea.sims3.SdkText.setSpaceSpacing(5);
          if ((var5 & 2) != 0) {
-            var4 -= com.ea.sims3.SdkText.c() - com.ea.sims3.SdkText.b() >> 1;
+            var4 -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() >> 1;
             var5 &= -3;
          }
 
-         com.ea.sims3.SdkText.a(var1, var3, var4, var5);
+         com.ea.sims3.SdkText.drawString(var1, var3, var4, var5);
       }
    }
 
    public final int a3(int var1) {
-      com.ea.sims3.SdkText.a(this.a12[var1]);
-      return com.ea.sims3.SdkText.a();
+      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+      return com.ea.sims3.SdkText.getSpaceSpacing();
    }
 
    public final int b2(int var1) {
-      com.ea.sims3.SdkText.a(this.a12[var1]);
-      return com.ea.sims3.SdkText.c();
+      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+      return com.ea.sims3.SdkText.getLineHeight();
    }
 
    public final SdkString a4(int var1) {
@@ -759,18 +759,18 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       } else {
          SdkString var2 = this.a14[this.w];
          this.w = (this.w + 1) % 10;
-         return var1 <= 3 ? com.ea.sims3.SdkText.a(com.ea.sims3.SdkText.d(), var1, var2) : com.ea.sims3.SdkText.a(var1, var2);
+         return var1 <= 3 ? com.ea.sims3.SdkText.getHeaderString(com.ea.sims3.SdkText.getCurrentLanguage(), var1, var2) : com.ea.sims3.SdkText.getString(var1, var2);
       }
    }
 
    public final int a2(int var1, int var2) {
-      com.ea.sims3.SdkText.a(this.a12[var2]);
-      return com.ea.sims3.SdkText.a(this.a4(var1));
+      com.ea.sims3.SdkText.setFont(this.a12[var2]);
+      return com.ea.sims3.SdkText.stringWidth(this.a4(var1));
    }
 
    public final int a(SdkString var1, int var2) {
-      com.ea.sims3.SdkText.a(this.a12[var2]);
-      return com.ea.sims3.SdkText.a(var1);
+      com.ea.sims3.SdkText.setFont(this.a12[var2]);
+      return com.ea.sims3.SdkText.stringWidth(var1);
    }
 
    public static SdkString a(String var0) {
@@ -779,7 +779,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void a4(int var1, int var2, int var3) {
       SdkString var4 = this.a4(var2);
-      this.b3[var1 - -12] = var4.b(this.a4(var3));
+      this.b3[var1 - -12] = var4.format(this.a4(var3));
    }
 
    public final void a2(int var1, int var2, int var3, int var4) {
@@ -787,12 +787,12 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       SdkString[] var6;
       (var6 = c3)[0] = this.a4(var3);
       var6[1] = this.a4(var4);
-      this.b3[var1 - -12] = var5.a(var6);
+      this.b3[var1 - -12] = var5.format(var6);
    }
 
    public final void a2(int var1, int var2, SdkString var3) {
       SdkString var4 = this.a4(var2);
-      this.b3[var1 - -12] = var4.b(var3);
+      this.b3[var1 - -12] = var4.format(var3);
    }
 
    public final void a(int var1, int var2, SdkString var3, SdkString var4) {
@@ -800,7 +800,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       SdkString[] var6 = c3;
       c3[0] = var3;
       var6[1] = var4;
-      this.b3[var1 - -12] = var5.a(var6);
+      this.b3[var1 - -12] = var5.format(var6);
    }
 
    public final void a(int var1, int var2, SdkString var3, SdkString var4, SdkString var5) {
@@ -809,7 +809,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       c3[0] = var3;
       var7[1] = var4;
       var7[2] = var5;
-      this.b3[var1 - -12] = var6.a(var7);
+      this.b3[var1 - -12] = var6.format(var7);
    }
 
    public final void a2(int var1, SdkString var2) {
@@ -823,28 +823,28 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       this.a15 = this.d3[this.x];
-      this.a15.a12(0);
+      this.a15.setLength(0);
       return this.a15;
    }
 
    public final void e3(int var1) {
-      this.a15.a2(this.a4(var1));
+      this.a15.append(this.a4(var1));
    }
 
    public final void a3(SdkString var1) {
-      this.a15.a2(var1);
+      this.a15.append(var1);
    }
 
    public final void f3(int var1) {
       SdkString var2 = this.a15;
-      int var3 = this.a15.a4;
+      int var3 = this.a15.length;
       if (var1 == 0) {
-         var2.a12(var3 + 1);
-         var2.a(var3, '0');
+         var2.setLength(var3 + 1);
+         var2.setCharAt(var3, '0');
       } else {
          if (var1 < 0) {
-            var2.a12(var3 + 1);
-            var2.a(var3++, '-');
+            var2.setLength(var3 + 1);
+            var2.setCharAt(var3++, '-');
             var1 = -var1;
          }
 
@@ -854,8 +854,8 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          for (boolean var6 = false; var4 > 0; var4 /= 10) {
             if ((var5 = var1 / var4) != 0 || var6) {
                var6 = true;
-               var2.a12(var3 + 1);
-               var2.a(var3++, (char)(48 + var5));
+               var2.setLength(var3 + 1);
+               var2.setCharAt(var3++, (char)(48 + var5));
             }
 
             var1 -= var5 * var4;
@@ -865,14 +865,14 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    private void u2(int var1) {
       SdkString var2 = this.a15;
-      int var3 = this.a15.a4;
+      int var3 = this.a15.length;
       if (var1 == 0) {
-         var2.a12(var3 + 1);
-         var2.a(var3, '0');
+         var2.setLength(var3 + 1);
+         var2.setCharAt(var3, '0');
       } else {
          if (var1 < 0) {
-            var2.a12(var3 + 1);
-            var2.a(var3++, '-');
+            var2.setLength(var3 + 1);
+            var2.setCharAt(var3++, '-');
             var1 = -var1;
          }
 
@@ -882,11 +882,11 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          for (boolean var6 = false; var4 > 0; var4 /= 10) {
             if ((var5 = var1 / var4) != 0 || var6) {
                var6 = true;
-               var2.a12(var3 + 1);
-               var2.a(var3++, (char)(48 + var5));
+               var2.setLength(var3 + 1);
+               var2.setCharAt(var3++, (char)(48 + var5));
                if (var4 == 1000000000 || var4 == 1000000 || var4 == 1000) {
-                  var2.a2(this.a4(31));
-                  var3 = var2.a4;
+                  var2.append(this.a4(31));
+                  var3 = var2.length;
                }
             }
 
@@ -900,12 +900,12 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       SdkString var3 = this.a15;
       SdkString var4 = this.a2();
       this.u2(Math.abs(var1));
-      SdkString var5 = this.a4(30).b(var4);
+      SdkString var5 = this.a4(30).format(var4);
       if (var1 < 0) {
-         var3.a("-");
+         var3.append("-");
       }
 
-      var3.a2(var5);
+      var3.append(var5);
       this.a15 = var3;
       this.x = var2;
    }
@@ -915,7 +915,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       int var3 = var1 - var2 * 60;
       int var4 = var2;
       SdkString var5 = this.a15;
-      int var6 = this.a15.a4;
+      int var6 = this.a15.length;
       char var7 = '0';
       if (var2 >= 20) {
          var7 = '2';
@@ -925,16 +925,16 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          var4 = var2 - 10;
       }
 
-      var5.a12(var6 + 1);
-      var5.a(var6++, var7);
-      var5.a12(var6 + 1);
-      var5.a(var6++, (char)(48 + var4));
-      var5.a12(var6 + 1);
-      var5.a(var6++, ':');
+      var5.setLength(var6 + 1);
+      var5.setCharAt(var6++, var7);
+      var5.setLength(var6 + 1);
+      var5.setCharAt(var6++, (char)(48 + var4));
+      var5.setLength(var6 + 1);
+      var5.setCharAt(var6++, ':');
       int var8 = var3 / 10;
-      var5.a12(var6 + 2);
-      var5.a(var6++, (char)(48 + var8));
-      var5.a(var6, (char)(48 + (var3 - var8 * 10)));
+      var5.setLength(var6 + 2);
+      var5.setCharAt(var6++, (char)(48 + var8));
+      var5.setCharAt(var6, (char)(48 + (var3 - var8 * 10)));
    }
 
    private void y() {
@@ -951,17 +951,17 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final int a(int var1, int var2, int var3) {
-      com.ea.sims3.SdkText.a(this.a12[var2]);
+      com.ea.sims3.SdkText.setFont(this.a12[var2]);
       if (var1 == -1) {
          return 0;
       } else {
-         this.b5 = this.a4(var1).a2();
+         this.b5 = this.a4(var1).copy();
          if (var1 == 89) {
             String var4 = this.a.getAppProperty("MIDlet-Version");
-            this.b5 = this.b5.b(var4);
+            this.b5 = this.b5.format(var4);
          }
 
-         com.ea.sims3.SdkText.a(this.b5, this.b4, var3, (short)124);
+         com.ea.sims3.SdkText.wrapText(this.b5, this.b4, var3, (short)124);
          return this.b4[0];
       }
    }
@@ -971,16 +971,16 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final void b2(int var1, int var2, int var3, int var4) {
-      com.ea.sims3.SdkText.a(this.a12[var1]);
-      com.ea.sims3.SdkText.a12(5);
-      com.ea.sims3.SdkText.a(this.b5, this.b4, 1, this.b4[0], var2, var3, var4);
+      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+      com.ea.sims3.SdkText.setSpaceSpacing(5);
+      com.ea.sims3.SdkText.drawWrappedString(this.b5, this.b4, 1, this.b4[0], var2, var3, var4);
    }
 
    public final void a(int var1, int var2, int var3, int var4, int var5, int var6) {
-      com.ea.sims3.SdkText.a(this.a12[var1]);
-      com.ea.sims3.SdkText.a12(5);
+      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+      com.ea.sims3.SdkText.setSpaceSpacing(5);
       if ((var4 & 2) != 0) {
-         int var7 = com.ea.sims3.SdkText.c() + com.ea.sims3.SdkText.b();
+         int var7 = com.ea.sims3.SdkText.getLineHeight() + com.ea.sims3.SdkText.getLeadingSpacing();
          int var8;
          int var9 = (var8 = var6 * var7) >> 1;
          var3 -= var9;
@@ -988,17 +988,17 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       var6 = Math.min(this.b4[0] - var5, var6);
-      com.ea.sims3.SdkText.a(this.b5, this.b4, var5 + 1, var6, var2, var3, var4);
+      com.ea.sims3.SdkText.drawWrappedString(this.b5, this.b4, var5 + 1, var6, var2, var3, var4);
    }
 
    private int a(int var1, int var2, int var3, int var4) {
-      com.ea.sims3.SdkText.a(this.a12[var3]);
+      com.ea.sims3.SdkText.setFont(this.a12[var3]);
       this.c4[var1] = (short)var2;
       if (var2 == -1) {
          return 0;
       } else {
-         this.e2[var1] = this.a4(var2).a2();
-         com.ea.sims3.SdkText.a(this.e2[var1], this.a16[var1], var4, (short)124);
+         this.e2[var1] = this.a4(var2).copy();
+         com.ea.sims3.SdkText.wrapText(this.e2[var1], this.a16[var1], var4, (short)124);
          return this.a16[var1][0];
       }
    }
@@ -1009,9 +1009,9 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          this.c4[var1] = (short)var2;
       }
 
-      com.ea.sims3.SdkText.a(this.a12[var3]);
-      com.ea.sims3.SdkText.a12(5);
-      com.ea.sims3.SdkText.a(this.e2[var1], this.a16[var1], 1, this.a16[var1][0], var5, var6, var7);
+      com.ea.sims3.SdkText.setFont(this.a12[var3]);
+      com.ea.sims3.SdkText.setSpaceSpacing(5);
+      com.ea.sims3.SdkText.drawWrappedString(this.e2[var1], this.a16[var1], 1, this.a16[var1][0], var5, var6, var7);
    }
 
    public final void a2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
@@ -1140,7 +1140,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void b(int var1, int var2, int var3, int var4, int var5, int var6) {
       if (this.c5[var1] != var2) {
-         this.b(var1, var3, com.ea.sims3.SdkText.a(var2, null));
+         this.b(var1, var3, com.ea.sims3.SdkText.getString(var2, null));
          this.c5[var1] = var2;
          this.e3[var1] = 1500;
       }
@@ -1155,8 +1155,8 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
       var6 = var6 & -10 | 4;
       SdkString var9;
-      (var9 = this.a2()).a12(1);
-      short var10 = var7.a4;
+      (var9 = this.a2()).setLength(1);
+      short var10 = var7.length;
       int var11;
       if ((var11 = this.f3[var1] << 1) > var8 + 20) {
          this.e3[var1] = 1500;
@@ -1169,7 +1169,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       int var14 = 0;
 
       for (int var15 = 0; var15 < var10; var15++) {
-         var9.a(0, var7.a2(var15));
+         var9.setCharAt(0, var7.charAt(var15));
          if (var14 >= var12 && var14 <= var13) {
             int var16 = com.ea.sims3.FixedMath.div(var14 - var12 << 16, 1310720);
             int var18 = com.ea.sims3.FixedMath.cos(com.ea.sims3.FixedMath.mul(411775, var16) - 205887) * 6;
@@ -1423,7 +1423,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void a(Graphics var1, int var2) {
       int var3 = this.getHeight();
       int var4 = this.getWidth();
-      int var5 = com.ea.sims3.SpriteRenderer.c(674, 0);
+      int var5 = com.ea.sims3.SpriteRenderer.frameWidth(674, 0);
 
       for (int var6 = 0; var6 < var4; var6 += var5) {
          com.ea.sims3.SpriteRenderer.drawFrame(var1, 674, 0, var6, var3 + var2);
@@ -1557,7 +1557,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          if ((this.g2[(var8 << 1) + 1] & var1) != 0) {
             int var9 = 1;
 
-            while (!com.ea.sims3.SpriteRenderer.a(var6, this.g2[var8 << 1], var2, var3, var4) && var9 < 2) {
+            while (!com.ea.sims3.SpriteRenderer.loadTileRecolored(var6, this.g2[var8 << 1], var2, var3, var4) && var9 < 2) {
                var9++;
                m2();
             }
@@ -1593,10 +1593,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int var5 = var3[var4 << 1];
             if (var2 == -1) {
                for (int var6 = 0; var6 < 4; var6++) {
-                  com.ea.sims3.SpriteRenderer.a5(var5, var6);
+                  com.ea.sims3.SpriteRenderer.unloadTile(var5, var6);
                }
             } else {
-               com.ea.sims3.SpriteRenderer.a5(var5, var2);
+               com.ea.sims3.SpriteRenderer.unloadTile(var5, var2);
             }
          }
       }
@@ -1968,13 +1968,13 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
                   if ((var9 = var3.readChar()) == ' ') {
                      var8 = true;
                   } else if (!var8) {
-                     var10.a12(var11 + 1);
-                     var10.a(var11, var9);
+                     var10.setLength(var11 + 1);
+                     var10.setCharAt(var11, var9);
                   }
                }
 
                if (!var8) {
-                  var10.a12(8);
+                  var10.setLength(8);
                }
 
                this.a21[var7] = var3.readBoolean();
@@ -2028,8 +2028,8 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
             for (int var7 = 0; var7 != 8; var7++) {
                char var8 = ' ';
-               if (var7 < var6.a4) {
-                  var8 = var6.a2(var7);
+               if (var7 < var6.length) {
+                  var8 = var6.charAt(var7);
                }
 
                var4.writeChar(var8);
@@ -2161,44 +2161,44 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final int e() {
-      return this.g4[this.j].a4;
+      return this.g4[this.j].length;
    }
 
    public final void q2() {
       SdkString var1;
-      (var1 = this.g4[this.j]).a12(0);
+      (var1 = this.g4[this.j]).setLength(0);
    }
 
    public final void a(int var1, char var2) {
-      this.g4[this.j].a(var1, var2);
+      this.g4[this.j].setCharAt(var1, var2);
    }
 
    public final void b(int var1, char var2) {
       SdkString var3;
-      int var4 = (var3 = this.g4[this.j]).a4;
-      var3.a12(var3.a4 + 1);
+      int var4 = (var3 = this.g4[this.j]).length;
+      var3.setLength(var3.length + 1);
 
       while (var1 < var4) {
-         char var5 = var3.a2(var4 - 1);
-         var3.a(var4, var5);
+         char var5 = var3.charAt(var4 - 1);
+         var3.setCharAt(var4, var5);
          var4--;
       }
 
-      var3.a(var1, var2);
+      var3.setCharAt(var1, var2);
    }
 
    public final void k2(int var1) {
       SdkString var2;
-      int var3 = (var2 = this.g4[this.j]).a4 - 1;
+      int var3 = (var2 = this.g4[this.j]).length - 1;
 
       while (var1 != var3) {
-         char var4 = var2.a2(var1 + 1);
-         var2.a(var1, var4);
+         char var4 = var2.charAt(var1 + 1);
+         var2.setCharAt(var1, var4);
          var1++;
       }
 
-      var2.a(var1, ' ');
-      var2.a12(var3);
+      var2.setCharAt(var1, ' ');
+      var2.setLength(var3);
    }
 
    public final void l2(int var1) {
@@ -2354,7 +2354,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final void c(Graphics var1) {
-      com.ea.sims3.SpriteRenderer.a(var1, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
       var1.fillRect(0, 0, this.getWidth(), this.getHeight());
       this.a2.b(var1, 0, 0, 0, this.getWidth(), this.getHeight());
       if (this.D != -1) {

@@ -237,7 +237,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
 
       if (var6 != -1) {
-         if (SpriteRenderer.a2(var1, var6, var7, 0)) {
+         if (SpriteRenderer.hitTest(var1, var6, var7, 0)) {
             var3 = var1[0];
             var4 = var1[1];
          } else if (this.a13(16384)) {
@@ -1447,7 +1447,7 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                   Animator var16;
                   if ((var16 = this.a6(2 + var15)) != null) {
                      int var17 = var14 - var15;
-                     SpriteRenderer.a2(var3, var13, var17, 0);
+                     SpriteRenderer.hitTest(var3, var13, var17, 0);
                      int var18 = var20 + var3[0];
                      int var19 = var11 + var3[1];
                      var16.draw(var1, var18, var19);

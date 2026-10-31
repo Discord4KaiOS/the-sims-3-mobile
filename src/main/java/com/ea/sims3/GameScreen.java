@@ -330,17 +330,17 @@ public final class GameScreen extends BaseScreen implements Runnable {
                int[] var5 = var10.a15(0);
                boolean var4 = false;
                int[] var6 = var10.a15(1);
-               com.ea.sims3.SpriteRenderer.a(var7, 38, var5, var6, 0);
-               com.ea.sims3.SpriteRenderer.a(var7, 35, var5, var6, 0);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 38, var5, var6, 0);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 35, var5, var6, 0);
                var6 = var10.a15(2);
-               com.ea.sims3.SpriteRenderer.a(var7, 38, var5, var6, 1);
-               com.ea.sims3.SpriteRenderer.a(var7, 35, var5, var6, 1);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 38, var5, var6, 1);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 35, var5, var6, 1);
                var6 = var10.a15(3);
-               com.ea.sims3.SpriteRenderer.a(var7, 38, var5, var6, 2);
-               com.ea.sims3.SpriteRenderer.a(var7, 35, var5, var6, 2);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 38, var5, var6, 2);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 35, var5, var6, 2);
                var6 = var10.a15(4);
-               com.ea.sims3.SpriteRenderer.a(var7, 38, var5, var6, 3);
-               com.ea.sims3.SpriteRenderer.a(var7, 35, var5, var6, 3);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 38, var5, var6, 3);
+               com.ea.sims3.SpriteRenderer.loadTileRecolored(var7, 35, var5, var6, 3);
                this.v2();
                this.w++;
                return;
@@ -434,7 +434,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       com.ea.sims3.GameCanvas.m2();
       if (var1.a2(var5, this.d2, this.e3, var3)) {
          int var6 = this.a3(var4);
-         com.ea.sims3.SpriteRenderer.a(var1.a6, var6, this.d2, this.e3, var3);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var1.a6, var6, this.d2, this.e3, var3);
          this.a7(var4).f2 = var3;
          this.z = -1;
          this.y = var3 + 1;
@@ -478,7 +478,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    public final void a10() {
       GameCanvas var1 = super.canvas;
       Lot var2 = this.a18;
-      this.r = com.ea.sims3.SpriteRenderer.d(587, 0) + com.ea.sims3.SpriteRenderer.d(586, 0);
+      this.r = com.ea.sims3.SpriteRenderer.frameHeight(587, 0) + com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
       this.s = 0;
       this.t = 0;
       this.u = var1.getWidth() - this.s;
@@ -517,7 +517,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.o = 0;
       this.p = -1;
       this.e2 = false;
-      this.r = com.ea.sims3.SpriteRenderer.d(587, 0) + com.ea.sims3.SpriteRenderer.d(586, 0);
+      this.r = com.ea.sims3.SpriteRenderer.frameHeight(587, 0) + com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
       this.s = 0;
       this.t = 0;
       this.u = var2.getWidth() - this.s;
@@ -766,7 +766,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var4 = var2.getWidth() >> 1;
       int var5 = var2.getHeight();
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 635, 0, var4, var5);
-      com.ea.sims3.SpriteRenderer.a2(var3, 635, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTest(var3, 635, 0, 0);
       int var6 = var4 + var3[0];
       int var7 = var5 + var3[1];
       SdkString var8 = var2.a2();
@@ -1551,14 +1551,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       if (a5 == 7) {
-         int var8 = com.ea.sims3.SpriteRenderer.c(596, 0);
-         int var9 = com.ea.sims3.SpriteRenderer.d(596, 0);
+         int var8 = com.ea.sims3.SpriteRenderer.frameWidth(596, 0);
+         int var9 = com.ea.sims3.SpriteRenderer.frameHeight(596, 0);
          int var10 = var2.getWidth() - (var8 + 9);
          int var11 = var9 + 3 - 1;
          this.b(var1, 3, var10, var11, 114);
       } else {
-         int var7 = com.ea.sims3.SpriteRenderer.c(4, 0);
-         int var25 = com.ea.sims3.SpriteRenderer.c(5, 0);
+         int var7 = com.ea.sims3.SpriteRenderer.frameWidth(4, 0);
+         int var25 = com.ea.sims3.SpriteRenderer.frameWidth(5, 0);
          int var12 = this.s + 5 + (var25 >> 1);
          int var13 = var6 + 3 + (var25 >> 1);
          int var14 = var12;
@@ -1597,10 +1597,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
       SdkString var26 = var2.a2();
       var2.h2(var24);
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 596, 0, var5, var6);
-      com.ea.sims3.SpriteRenderer.a2(var4, 596, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTest(var4, 596, 0, 0);
       int var27 = var5 + var4[0];
       int var28 = var6 + var4[1];
-      com.ea.sims3.SpriteRenderer.a2(var4, 596, 0, 1);
+      com.ea.sims3.SpriteRenderer.hitTest(var4, 596, 0, 1);
       int var29 = var5 + var4[0];
       int var30 = var6 + var4[1];
       var2.a(var26, 2, var27 + 1, var28 + 1, 24);
@@ -1620,7 +1620,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       this.c4.play(var33, 4);
-      com.ea.sims3.SpriteRenderer.a2(var4, 596, 0, var32);
+      com.ea.sims3.SpriteRenderer.hitTest(var4, 596, 0, var32);
       com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.c4, var5 + var4[0], var6 + var4[1]);
    }
 
@@ -1648,7 +1648,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          this.j(var1);
       }
 
-      com.ea.sims3.SpriteRenderer.b(var4, 587, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(var4, 587, 0, 0);
       int var7 = var5 + var4[0];
       int var8 = var6 + var4[1];
 
@@ -1660,7 +1660,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          }
       }
 
-      com.ea.sims3.SpriteRenderer.b(var4, 587, 0, 1);
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(var4, 587, 0, 1);
       var7 = var5 + var4[0] + -8;
       var8 = var6 + var4[1] + (var4[3] >> 1);
       int var16 = var4[2];
@@ -1691,7 +1691,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 586, 0, var3, var4);
       boolean var5 = this.ar < 0;
       int var6 = Math.abs(this.ar >> 16);
-      int var9 = com.ea.sims3.SpriteRenderer.c(584, 0) * var6 / 100;
+      int var9 = com.ea.sims3.SpriteRenderer.frameWidth(584, 0) * var6 / 100;
       int var10 = var3 + (var5 ? -var9 : 0);
       int var11 = var1.getClipX();
       int var12 = var1.getClipY();
@@ -1916,10 +1916,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void j(Graphics var1) {
       GameCanvas var2 = super.canvas;
-      int var3 = com.ea.sims3.SpriteRenderer.d(670, 0);
+      int var3 = com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
       int var4 = var2.getHeight() - 15 - this.r - var3;
       int[] var5 = this.c3;
-      com.ea.sims3.SpriteRenderer.a2(this.c3, 670, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTest(this.c3, 670, 0, 0);
       int var6 = 0 + var5[0];
       int var7 = var4 + var5[1];
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 670, 0, 0, var4);
@@ -2003,9 +2003,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
                int var10 = 2 + var8 + 2;
                int var11 = Math.max(0, var4 + -5 - var9);
                int var12 = var5 + -5 - var10;
-               com.ea.sims3.SpriteRenderer.a(var1, 77);
+               com.ea.sims3.SpriteRenderer.setColor(var1, 77);
                var1.drawRect(var11, var12, var9, var10);
-               com.ea.sims3.SpriteRenderer.a(var1, 76);
+               com.ea.sims3.SpriteRenderer.setColor(var1, 76);
                var1.fillRect(var11 + 1, var12 + 1, var9 - 1, var10 - 1);
                var2.a2(var6, 1, var11 + 3 + (var7 >> 1), var12 + 2, 17);
             }
@@ -2759,7 +2759,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int var7 = (var6[0] != -1 ? 1 : 0) + (var6[2] != -1 ? 1 : 0);
          int var8 = this.s + 3;
          int var9 = var5.getWidth() >> 1;
-         int var10 = com.ea.sims3.SpriteRenderer.d(670, 0);
+         int var10 = com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
          int var12 = var5.getHeight() - 15 - this.r - 18 * (var7 + 1);
          if (this.b6 != -1) {
             var12 -= var10;
@@ -2788,16 +2788,16 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
             int var17 = var12 - 14 - 4 - (var21 != -1 ? 12 : 0);
             int var18 = var9 - 4;
-            com.ea.sims3.SpriteRenderer.a(var1, 76);
+            com.ea.sims3.SpriteRenderer.setColor(var1, 76);
             var1.fillRect(var8, var17, var9, 14);
-            com.ea.sims3.SpriteRenderer.a(var1, 77);
+            com.ea.sims3.SpriteRenderer.setColor(var1, 77);
             var1.drawRect(var8, var17, var9, 14);
             var5.a2(var2.R(var3), 0, var8 + (var9 >> 1), var17 + 0, 17);
             if (var21 != -1) {
                int var19 = var17 + 14;
-               com.ea.sims3.SpriteRenderer.a(var1, 76);
+               com.ea.sims3.SpriteRenderer.setColor(var1, 76);
                var1.fillRect(var8, var19, var9, 12);
-               com.ea.sims3.SpriteRenderer.a(var1, 77);
+               com.ea.sims3.SpriteRenderer.setColor(var1, 77);
                var1.drawRect(var8, var19, var9, 12);
                var5.a2(var1, var21, 1, var8 + 2, var19 + 2, var18, 17);
             }
@@ -3096,7 +3096,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void p(Graphics var1) {
       GameCanvas var2 = super.canvas;
-      int var3 = com.ea.sims3.SpriteRenderer.d(581, 0);
+      int var3 = com.ea.sims3.SpriteRenderer.frameHeight(581, 0);
       int var4 = this.s + (this.u >> 1);
       int var5 = this.t + (var3 >> 1);
       int var6 = this.t + this.v - var3;
@@ -3110,7 +3110,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       var2.e3(29);
       var2.e3(var10);
       var2.a(var11, 1, var4, var6, 3);
-      int var12 = com.ea.sims3.SpriteRenderer.d(559, 0);
+      int var12 = com.ea.sims3.SpriteRenderer.frameHeight(559, 0);
       int var13 = var6 - (var12 >> 1);
       int var14 = var2.getWidth() - 3;
       super.leftArrowAnim.draw(var1, 3, var13);
@@ -3121,7 +3121,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       GameCanvas var4 = super.canvas;
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 653, 0, var2, var3);
       int[] var5 = this.c3;
-      com.ea.sims3.SpriteRenderer.a2(this.c3, 653, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTest(this.c3, 653, 0, 0);
       SdkString var6 = var4.a2();
       var4.f3(this.g3[2] + 1);
       var4.a(var6, 0, var2 + var5[0], var3 + var5[1], 17);
@@ -3373,10 +3373,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
             var10 = var8.i(var11, 2);
          }
 
-         int var12 = com.ea.sims3.SpriteRenderer.a2(var10, 0);
-         int var13 = com.ea.sims3.SpriteRenderer.b(var10, 0);
-         int var14 = com.ea.sims3.SpriteRenderer.c(var10, 0);
-         int var15 = com.ea.sims3.SpriteRenderer.d(var10, 0);
+         int var12 = com.ea.sims3.SpriteRenderer.frameMinX(var10, 0);
+         int var13 = com.ea.sims3.SpriteRenderer.frameMinY(var10, 0);
+         int var14 = com.ea.sims3.SpriteRenderer.frameWidth(var10, 0);
+         int var15 = com.ea.sims3.SpriteRenderer.frameHeight(var10, 0);
          int var16 = var5 + (var4 >> 1) - var12 - (var14 >> 1);
          int var17 = var6 + (var7 >> 1) - var13 - (var15 >> 1);
          com.ea.sims3.SpriteRenderer.drawFrame(var1, var10, 0, var16, var17);
@@ -3939,11 +3939,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var5 = var4 - 0 >> 10;
       int var7;
       int var8 = (var7 = var3 - 2) * var5 / 320;
-      int var9 = com.ea.sims3.SpriteRenderer.d(657, 0);
+      int var9 = com.ea.sims3.SpriteRenderer.frameHeight(657, 0);
       int var10 = var1 + 1;
       int var11 = var2 + 1;
       int var12 = var9 + 2;
-      com.ea.sims3.SpriteRenderer.a(var0, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var0, 77);
       var0.drawRect(var1, var2, var3 - 1, var12 - 1);
       int var13 = var0.getClipX();
       int var14 = var0.getClipY();
@@ -3952,7 +3952,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       var0.setClip(var10, var14, var7, var16);
       com.ea.sims3.SpriteRenderer.drawFrame(var0, 657, 0, var10, var11);
       var0.setClip(var13, var14, var15, var16);
-      com.ea.sims3.SpriteRenderer.a(var0, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var0, 77);
 
       for (int var17 = 1; var17 < 5; var17++) {
          int var18 = var1 + var3 * var17 / 5;
@@ -3961,7 +3961,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       var0.setClip(var10, var14, var8, var16);
       com.ea.sims3.SpriteRenderer.drawFrame(var0, 658, 0, var10, var11);
-      com.ea.sims3.SpriteRenderer.a(var0, 76);
+      com.ea.sims3.SpriteRenderer.setColor(var0, 76);
 
       for (int var19 = 1; var19 < 5; var19++) {
          int var20 = var1 + var3 * var19 / 5;
@@ -3978,7 +3978,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    public final int a(Graphics var1, int var2, int var3, int var4) {
       if (var1 != null) {
          int var5 = var2 + 10;
-         int var6 = com.ea.sims3.SpriteRenderer.d(565, 0);
+         int var6 = com.ea.sims3.SpriteRenderer.frameHeight(565, 0);
          int var7 = 13 - (var6 >> 1);
          int var8 = var4 - 30;
          int var9 = var2 + var4 - var8;
@@ -4094,7 +4094,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var12 = (var11 = var2 + 3 + 16 + 3) + 3;
       int var13;
       int var14 = (var13 = var2 + var4 - 3) - 25;
-      com.ea.sims3.SpriteRenderer.a(var1, 75);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 75);
       var1.fillRect(var11, var3, 1, var5);
       var1.fillRect(var14, var3, 1, var5);
       int var15 = var3;
@@ -4142,7 +4142,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void w(Graphics var1) {
       GameCanvas var2 = super.canvas;
       Lot var3 = this.a18;
-      com.ea.sims3.SpriteRenderer.a(var1, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
       var1.fillRect(0, 0, var2.getWidth(), var2.getHeight());
       int var4 = this.d(var1, 4, var2.getWidth() - 8, 122);
       int var5 = var3.D(this.ae);
@@ -4159,7 +4159,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       GameCanvas var2 = super.canvas;
       Neighborhood var3 = this.a17;
       int var4 = this.a();
-      com.ea.sims3.SpriteRenderer.a(var1, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
       var1.fillRect(0, 0, var2.getWidth(), var2.getHeight());
       int var5 = this.d(var1, 4, var2.getWidth() - 8, 116);
       this.setValue(1, var3.R(var4));
@@ -4218,8 +4218,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var11 = var0.getClipWidth();
       int var12 = var0.getClipHeight();
       int var13 = com.ea.sims3.FixedMath.mul(var3, var4);
-      int var14 = com.ea.sims3.SpriteRenderer.c(var5, var8);
-      int var15 = com.ea.sims3.SpriteRenderer.c(var6, var8);
+      int var14 = com.ea.sims3.SpriteRenderer.frameWidth(var5, var8);
+      int var15 = com.ea.sims3.SpriteRenderer.frameWidth(var6, var8);
       int var16 = Math.min(var3 - var15 - var14, var13 - var14);
       var0.setClip(var1, var10, var13, var12);
       com.ea.sims3.SpriteRenderer.drawFrame(var0, var5, var8, var1, var2);
@@ -5212,7 +5212,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var5 = this.s + 8;
       int var6 = var2.getHeight() - 15 - this.r;
       if (this.b6 != -1) {
-         var6 -= com.ea.sims3.SpriteRenderer.d(670, 0);
+         var6 -= com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
       }
 
       for (int var7 = 0; var7 < 6; var7++) {
@@ -5221,7 +5221,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int var9 = var3.B(var8);
             int var10 = var3.C(var8);
             int var11 = var2.a2(var9, 1);
-            com.ea.sims3.SpriteRenderer.a(var1, 76);
+            com.ea.sims3.SpriteRenderer.setColor(var1, 76);
             var1.fillRect(var4, var6 - 12, var11 + var5 - var4 + 4, 12);
             ((var10 & 1) == 0 ? this.e4 : this.d3).draw(var1, var4, var6 + -1);
             var2.a2(var9, 1, var5, var6 + 1, 36);
@@ -5399,22 +5399,22 @@ public final class GameScreen extends BaseScreen implements Runnable {
             var10 = 67108864;
       }
 
-      com.ea.sims3.SpriteRenderer.a(var5, 14);
-      com.ea.sims3.SpriteRenderer.a(var5, 13);
+      com.ea.sims3.SpriteRenderer.loadTile(var5, 14);
+      com.ea.sims3.SpriteRenderer.loadTile(var5, 13);
       if (var10 == 33554432) {
          var9.a2(0, var7, var8);
-         com.ea.sims3.SpriteRenderer.a(var5, 7, var7, var8, 0);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var5, 7, var7, var8, 0);
          int var13 = var6.t(this.ag);
          var9.a2(var13, var7, var8);
-         com.ea.sims3.SpriteRenderer.a(var5, 8, var7, var8, 0);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var5, 8, var7, var8, 0);
       } else if (var10 == 1048576) {
          var9.a2(0, var7, var8);
-         com.ea.sims3.SpriteRenderer.a(var5, 11, var7, var8, 0);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var5, 11, var7, var8, 0);
          var9.a2(var3, var7, var8);
-         com.ea.sims3.SpriteRenderer.a(var5, 12, var7, var8, this.a7(var3).f2);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var5, 12, var7, var8, this.a7(var3).f2);
       } else if (var10 == 8388608) {
          var9.a2(0, var7, var8);
-         com.ea.sims3.SpriteRenderer.a(var5, 16, var7, var8, 0);
+         com.ea.sims3.SpriteRenderer.loadTileRecolored(var5, 16, var7, var8, 0);
       } else {
          super.canvas.j2(var10);
       }
@@ -5622,27 +5622,27 @@ public final class GameScreen extends BaseScreen implements Runnable {
       com.ea.sims3.SpriteRenderer.drawFrame(var1, var2, 0, var10, var11);
       int[] var12 = super.a2;
       if (var3 != null) {
-         com.ea.sims3.SpriteRenderer.a2(var12, var2, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(var12, var2, 0, 0);
          var5.a(var3, 1, var10 + var12[0], var11 + 1 + var12[1] - 13, 17);
       }
 
       if (var4 != null) {
-         com.ea.sims3.SpriteRenderer.a2(var12, var2, 0, 1);
+         com.ea.sims3.SpriteRenderer.hitTest(var12, var2, 0, 1);
          var5.a(var4, 1, var10 + var12[0], var11 + 1 + var12[1] + 13, 17);
       }
 
       if (var8 == 8) {
-         com.ea.sims3.SpriteRenderer.a2(var12, var2, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(var12, var2, 0, 0);
          this.a(var1, var10 + var12[0], var11 + var12[1], 0, true, 0);
       } else if (var8 == 5) {
          int var13 = this.a18.c();
-         com.ea.sims3.SpriteRenderer.a2(var12, var13, 0, 1);
+         com.ea.sims3.SpriteRenderer.hitTest(var12, var13, 0, 1);
          com.ea.sims3.SpriteRenderer.drawFrame(var1, var13, 0, var10 - var12[0], var11 - var12[1]);
       }
 
       if (this.ax == 3) {
          if (this.az != -1) {
-            int var16 = com.ea.sims3.SpriteRenderer.d(var2, 0);
+            int var16 = com.ea.sims3.SpriteRenderer.frameHeight(var2, 0);
             int var14;
             int var15 = (var14 = var11 - (var16 >> 1)) >> 1;
             if (var8 != 3 && var8 != 7) {
@@ -5653,7 +5653,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          }
 
          if (this.aA != -1) {
-            int var17 = var7 - 15 - (var11 + (com.ea.sims3.SpriteRenderer.d(var2, 0) >> 1));
+            int var17 = var7 - 15 - (var11 + (com.ea.sims3.SpriteRenderer.frameHeight(var2, 0) >> 1));
             int var18 = var7 - 15 - (var17 >> 1);
             var5.a(0, this.aA, 0, super.g, var10, var18, 3);
          }
@@ -5667,7 +5667,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var7 = (var6 = var4.getWidth()) / 3 >> 1;
       int var8 = var6 - var7;
       int var9 = var6 * 15 / 100;
-      int var10 = Math.max(com.ea.sims3.SpriteRenderer.d(var2, 0), com.ea.sims3.SpriteRenderer.d(var3, 0));
+      int var10 = Math.max(com.ea.sims3.SpriteRenderer.frameHeight(var2, 0), com.ea.sims3.SpriteRenderer.frameHeight(var3, 0));
       int var11 = var5 + var10;
       int var12 = -(this.aC * 850 % 5898240);
       int var13 = var2;
@@ -5734,11 +5734,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       int var9 = var3.i(0, 2) + 1;
       int var10 = var3.i(var4, 2) + 1;
-      com.ea.sims3.SpriteRenderer.a12(0);
-      com.ea.sims3.SpriteRenderer.a(var1, var5, 0, var2.a(), var2.b(), var6, var9, null);
-      com.ea.sims3.SpriteRenderer.a12(this.a7(var4).f2);
-      com.ea.sims3.SpriteRenderer.a(var1, var7, 0, var2.a(), var2.b(), var8, var10, null);
-      com.ea.sims3.SpriteRenderer.a12(0);
+      com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
+      com.ea.sims3.SpriteRenderer.drawParts(var1, var5, 0, var2.a(), var2.b(), var6, var9, null);
+      com.ea.sims3.SpriteRenderer.setRecolorIndex(this.a7(var4).f2);
+      com.ea.sims3.SpriteRenderer.drawParts(var1, var7, 0, var2.a(), var2.b(), var8, var10, null);
+      com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
    }
 
    private void J(Graphics var1) {
@@ -5752,7 +5752,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var10 = var5.d;
       int var11 = var3.a2(var7, var8) + var3.a2(var9, var10) >> 1;
       int var12 = var3.b(var7, var8) + var3.b(var9, var10) >> 1;
-      com.ea.sims3.SpriteRenderer.a2(var6, 67, 0, 2);
+      com.ea.sims3.SpriteRenderer.hitTest(var6, 67, 0, 2);
       var11 += var6[0] << 16;
       var12 -= var6[1] << 17;
       this.a18.a(var1, var4, var5, var11, var12);
@@ -6023,7 +6023,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void L(Graphics var1) {
       GameCanvas var2 = super.canvas;
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 568, 0, 0, 34);
-      int var3 = com.ea.sims3.SpriteRenderer.d(586, 0);
+      int var3 = com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
       int var4 = var2.getHeight() - 15 - 34 - var3;
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 569, 0, 0, var4);
       this.aG = 34;
@@ -6034,7 +6034,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var7 = var1.getClipWidth();
       int var8 = var1.getClipHeight();
       int var9 = var2.getWidth() >> 1;
-      int var10 = com.ea.sims3.SpriteRenderer.d(634, 0);
+      int var10 = com.ea.sims3.SpriteRenderer.frameHeight(634, 0);
       int var11 = 17 - var10;
       int var12 = var2.getWidth() - 40;
       int var13 = var9 - (var12 >> 1);
@@ -6053,7 +6053,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void M(Graphics var1) {
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 568, 0, 0, 14);
-      int var2 = com.ea.sims3.SpriteRenderer.d(586, 0);
+      int var2 = com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
       int var3 = super.canvas.getHeight() - 15 - 64 - var2;
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 569, 0, 0, var3);
       this.aG = 14;
@@ -6179,8 +6179,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var8 = var0.getClipWidth();
       int var9 = var0.getClipHeight();
       var0.setClip(var1, var2, var3, var4);
-      int var10 = com.ea.sims3.SpriteRenderer.c(var5, 0);
-      int var11 = com.ea.sims3.SpriteRenderer.d(var5, 0);
+      int var10 = com.ea.sims3.SpriteRenderer.frameWidth(var5, 0);
+      int var11 = com.ea.sims3.SpriteRenderer.frameHeight(var5, 0);
 
       for (int var12 = 0; var12 < var4; var12 += var11) {
          for (int var13 = 0; var13 < var3; var13 += var10) {
@@ -6244,11 +6244,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var4 = var1.getClipWidth();
       int var5 = var1.getClipHeight();
       int var6 = this.s + (this.u >> 1);
-      int var7 = com.ea.sims3.SpriteRenderer.c(610, 0);
-      int var8 = com.ea.sims3.SpriteRenderer.d(611, 0);
+      int var7 = com.ea.sims3.SpriteRenderer.frameWidth(610, 0);
+      int var8 = com.ea.sims3.SpriteRenderer.frameHeight(611, 0);
       int var9 = var6 - (var7 * this.aK >> 1) + (var7 >> 1);
       int var10 = this.aG + this.aH + var8 >> 1;
-      int var11 = com.ea.sims3.SpriteRenderer.d(612, 0);
+      int var11 = com.ea.sims3.SpriteRenderer.frameHeight(612, 0);
       int[] var12 = this.c3;
       int var13 = var9;
 
@@ -6276,7 +6276,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          var1.setClip(var2, var3, var4, var5);
          com.ea.sims3.SpriteRenderer.drawFrame(var1, 615, 0, var13, var10);
          if (var18 > 0 && var18 < 6553600) {
-            com.ea.sims3.SpriteRenderer.a2(var12, 611, 0, 0);
+            com.ea.sims3.SpriteRenderer.hitTest(var12, 611, 0, 0);
             com.ea.sims3.SpriteRenderer.drawFrame(var1, 608, this.b12[var14], var13 + var12[0], var10 + var12[1]);
          }
 
@@ -6304,8 +6304,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.P2(5);
          } else {
             int var2 = this.s + (this.u >> 1);
-            int var3 = com.ea.sims3.SpriteRenderer.c(610, 0);
-            int var4 = com.ea.sims3.SpriteRenderer.d(611, 0);
+            int var3 = com.ea.sims3.SpriteRenderer.frameWidth(610, 0);
+            int var4 = com.ea.sims3.SpriteRenderer.frameHeight(611, 0);
             int var5 = var2 - (var3 * this.aK >> 1) + (var3 >> 1);
             int var6 = this.aG + this.aH + var4 >> 1;
             int[] var7 = this.c3;
@@ -6340,7 +6340,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
                this.j4[var9] = com.ea.sims3.BaseScreen.a(this.j4[var9], var10, var1, 8);
                if (var10 > 6553600 || this.j4[var9] < 65536) {
-                  com.ea.sims3.SpriteRenderer.a2(var7, 611, 0, 0);
+                  com.ea.sims3.SpriteRenderer.hitTest(var7, 611, 0, 0);
                   this.aO = this.b(609, var8 + var7[0], var6 + var7[1], 16);
                   super.canvas.n2();
                   this.P2(6);
@@ -6449,7 +6449,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int var3 = this.aH + 18;
          com.ea.sims3.SpriteRenderer.drawFrame(var1, 622, 0, var2, var3);
          int[] var4 = this.c3;
-         com.ea.sims3.SpriteRenderer.b(this.c3, 622, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTestMirrored(this.c3, 622, 0, 0);
          int var5 = var3 + var4[1] + var4[3];
          int var6 = var2 + var4[0];
          int var7 = var4[2];
@@ -6650,7 +6650,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.aX = 65536;
       this.a21 = new short[var3][5];
       int var5;
-      int var6 = (var5 = com.ea.sims3.SpriteRenderer.c(630, 0) / c10[0]) << 2;
+      int var6 = (var5 = com.ea.sims3.SpriteRenderer.frameWidth(630, 0) / c10[0]) << 2;
 
       for (int var7 = 0; var7 < var3; var7++) {
          byte[] var8 = this.a20[var7];
@@ -6681,7 +6681,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void P(Graphics var1) {
       int var3;
       int var4;
-      int var5 = (var4 = (var3 = com.ea.sims3.SpriteRenderer.c(630, 0) / c10[0]) << 2) * this.aY;
+      int var5 = (var4 = (var3 = com.ea.sims3.SpriteRenderer.frameWidth(630, 0) / c10[0]) << 2) * this.aY;
       int var6;
       int var7 = (var6 = this.aG + this.aH - var5 >> 1) + var4;
       int var8;
@@ -6913,11 +6913,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.aJ = var5;
       this.k3 = this.b11[1];
       this.k3.play(605, 20);
-      int var6 = com.ea.sims3.SpriteRenderer.c(603, 0);
+      int var6 = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
       int var7 = 4 * var6;
       int var8 = 4 * var6;
-      int var9 = com.ea.sims3.SpriteRenderer.c(606, 0);
-      int var10 = com.ea.sims3.SpriteRenderer.d(606, 0);
+      int var9 = com.ea.sims3.SpriteRenderer.frameWidth(606, 0);
+      int var10 = com.ea.sims3.SpriteRenderer.frameHeight(606, 0);
       int var11 = var9;
       int var12 = var10;
       int var13 = var7 - var9;
@@ -6942,7 +6942,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    private void Q(Graphics var1) {
-      int var2 = com.ea.sims3.SpriteRenderer.c(603, 0);
+      int var2 = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
       int var3 = 4 * var2;
       int var4 = 4 * var2;
       f(var1, this.s + 15, this.aG + 5, this.u - 30, this.aH - this.aG - 10, 603);
@@ -7024,7 +7024,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                this.bj = this.bj - (this.be >> 1);
             }
 
-            int var19 = com.ea.sims3.SpriteRenderer.c(603, 0);
+            int var19 = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
             int var4 = 4 * var19;
             int var20 = 4 * var19;
             int var21 = this.bb + this.bi >> 3;

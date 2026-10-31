@@ -6,58 +6,58 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public final class SpriteRenderer implements SpriteIndex {
-   private static byte[] a;
-   private static short[][] a2;
-   private static int a3;
-   private static Image[][] a4 = new Image[4][72];
-   private static short[][] b;
-   private static short[][] c;
-   private static short[][] d;
+   private static byte[] palette;
+   private static short[][] spriteRects;
+   private static int recolorIndex;
+   private static Image[][] tiles = new Image[4][72];
+   private static short[][] frameDurations;
+   private static short[][] framePartOffsets;
+   private static short[][] parts;
 
    private SpriteRenderer() {
    }
 
-   public static final boolean a(ResourceLoader var0) {
-      DataInputStream var1 = new DataInputStream(var0.openStream(4));
-      a = new byte[ResourceLoader.getSize(4)];
+   public static final boolean loadPalette(ResourceLoader loader) {
+      DataInputStream in = new DataInputStream(loader.openStream(4));
+      palette = new byte[ResourceLoader.getSize(4)];
 
       try {
-         var1.read(a);
-         var1.close();
+         in.read(palette);
+         in.close();
          return true;
-      } catch (Throwable var3) {
+      } catch (Throwable ignored) {
          return false;
       }
    }
 
-   public static final void a(Graphics var0, int var1) {
-      int var2 = var1 * 3;
-      byte[] var3 = a;
-      var0.setColor(var3[var2] & 255, var3[var2 + 1] & 255, var3[var2 + 2] & 255);
+   public static final void setColor(Graphics g, int colorIndex) {
+      int offset = colorIndex * 3;
+      byte[] colors = palette;
+      g.setColor(colors[offset] & 255, colors[offset + 1] & 255, colors[offset + 2] & 255);
    }
 
-   public static final boolean b(ResourceLoader var0) {
+   public static final boolean loadSpriteRects(ResourceLoader loader) {
       try {
-         short[][] var1 = new short[1418][5];
-         DataInputStream var2 = new DataInputStream(var0.openStream(31));
+         short[][] rects = new short[1418][5];
+         DataInputStream in = new DataInputStream(loader.openStream(31));
 
-         for (int var3 = 0; var3 < 1418; var3++) {
-            short[] var4;
-            (var4 = var1[var3])[0] = (short)var2.readUnsignedByte();
-            var4[1] = var2.readShort();
-            var4[2] = var2.readShort();
-            var4[3] = var2.readShort();
-            var4[4] = var2.readShort();
+         for (int i = 0; i < 1418; i++) {
+            short[] rect;
+            (rect = rects[i])[0] = (short)in.readUnsignedByte();
+            rect[1] = in.readShort();
+            rect[2] = in.readShort();
+            rect[3] = in.readShort();
+            rect[4] = in.readShort();
          }
 
-         a2 = var1;
+         spriteRects = rects;
          return true;
-      } catch (Throwable var5) {
+      } catch (Throwable ignored) {
          return false;
       }
    }
 
-   public static final boolean c(ResourceLoader var0) {
+   public static final boolean loadFrameData(ResourceLoader var0) {
       boolean var1 = false;
 
       try {
@@ -76,13 +76,13 @@ public final class SpriteRenderer implements SpriteIndex {
 
                for (int var10 = 0; var10 < var9; var10++) {
                   int var11;
-                  int var12 = b2(var11 = var2.readUnsignedByte());
+                  int var12 = partKind(var11 = var2.readUnsignedByte());
 
                   for (int var13 = 0; var13 < var12; var13++) {
                      var2.readByte();
                   }
 
-                  var6 += c(var11);
+                  var6 += partSize(var11);
                }
             }
 
@@ -91,9 +91,9 @@ public final class SpriteRenderer implements SpriteIndex {
             var5[var16] = new short[var6];
          }
 
-         b = var3;
-         c = var4;
-         d = var5;
+         frameDurations = var3;
+         framePartOffsets = var4;
+         parts = var5;
          var2.close();
          var2 = new DataInputStream(var0.openStream(3));
 
@@ -141,7 +141,7 @@ public final class SpriteRenderer implements SpriteIndex {
                   }
 
                   var20[var19] = (short)var14;
-                  var19 += c(var14);
+                  var19 += partSize(var14);
                }
             }
          }
@@ -153,7 +153,7 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int b2(int var0) {
+   private static final int partKind(int var0) {
       switch (var0) {
          case 0:
          case 11:
@@ -176,7 +176,7 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int c(int var0) {
+   private static final int partSize(int var0) {
       switch (var0) {
          case 0:
          case 11:
@@ -199,40 +199,40 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int f(int var0, int var1) {
-      return c[var0][var1];
+   private static final int partOffset(int var0, int var1) {
+      return framePartOffsets[var0][var1];
    }
 
-   private static final int g(int var0, int var1) {
-      short[] var2 = c[var0];
-      return var1 < var2.length - 1 ? var2[var1 + 1] : d[var0].length;
+   private static final int nextPartOffset(int var0, int var1) {
+      short[] var2 = framePartOffsets[var0];
+      return var1 < var2.length - 1 ? var2[var1 + 1] : parts[var0].length;
    }
 
-   public static final boolean a(ResourceLoader var0, int var1) {
-      return a(var0, var1, null, null, 0);
+   public static final boolean loadTile(ResourceLoader loader, int spriteId) {
+      return loadTileRecolored(loader, spriteId, null, null, 0);
    }
 
-   public static final boolean a(ResourceLoader var0, int var1, int[] var2, int[] var3, int var4) {
-      int var5 = 0;
+   public static final boolean loadTileRecolored(ResourceLoader loader, int spriteId, int[] fromColors, int[] toColors, int recolorSet) {
+      int slot = 0;
 
-      while (var5 < 72 && var1 != SpriteIndex.a[var5]) {
-         var5++;
+      while (slot < 72 && spriteId != SpriteIndex.a[slot]) {
+         slot++;
       }
 
-      if (72 == var5) {
+      if (72 == slot) {
          return false;
       } else {
-         Image[] var6;
-         if ((var6 = a4[var4])[var5] == null) {
-            Image var7;
-            if (var2 != null) {
-               var7 = var0.loadImageRecolored(var1, var2, var3);
+         Image[] slots;
+         if ((slots = tiles[recolorSet])[slot] == null) {
+            Image image;
+            if (fromColors != null) {
+               image = loader.loadImageRecolored(spriteId, fromColors, toColors);
             } else {
-               var7 = ResourceLoader.loadImage(var1);
+               image = ResourceLoader.loadImage(spriteId);
             }
 
-            var6[var5] = var7;
-            if (var7 == null) {
+            slots[slot] = image;
+            if (image == null) {
                return false;
             }
          }
@@ -241,38 +241,38 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   public static final boolean a5(int var0, int var1) {
-      int var2 = 0;
+   public static final boolean unloadTile(int spriteId, int recolorSet) {
+      int slot = 0;
 
-      while (var2 < 72 && var0 != SpriteIndex.a[var2]) {
-         var2++;
+      while (slot < 72 && spriteId != SpriteIndex.a[slot]) {
+         slot++;
       }
 
-      if (72 == var2) {
+      if (72 == slot) {
          return false;
       } else {
-         a4[var1][var2] = null;
+         tiles[recolorSet][slot] = null;
          return true;
       }
    }
 
-   public static final void drawFrame(Graphics var0, int var1, int var2, int var3, int var4) {
-      if (var1 >= 0) {
-         if ((var1 & 16384) != 0) {
-            var1 &= -16385;
-            c2(var0, var1, var2, var3, var4);
+   public static final void drawFrame(Graphics g, int spriteId, int frame, int x, int y) {
+      if (spriteId >= 0) {
+         if ((spriteId & 16384) != 0) {
+            spriteId &= -16385;
+            drawFrameMirrored(g, spriteId, frame, x, y);
          } else {
-            b2(var0, var1, var2, var3, var4);
+            drawFrameNormal(g, spriteId, frame, x, y);
          }
       }
    }
 
-   private static final void b2(Graphics var0, int var1, int var2, int var3, int var4) {
-      Image[] var5 = a4[a3];
-      short[][] var6 = a2;
-      short[] var7 = d[var1];
-      int var8 = f(var1, var2);
-      int var9 = g(var1, var2);
+   private static final void drawFrameNormal(Graphics var0, int var1, int var2, int var3, int var4) {
+      Image[] var5 = tiles[recolorIndex];
+      short[][] var6 = spriteRects;
+      short[] var7 = parts[var1];
+      int var8 = partOffset(var1, var2);
+      int var9 = nextPartOffset(var1, var2);
 
       while (var8 < var9) {
          short var10;
@@ -287,19 +287,19 @@ public final class SpriteRenderer implements SpriteIndex {
                var0.drawRegion(var13, var11[1], var11[2], var11[3], var11[4], var16, var14, var15, 20);
             }
          } else if (var10 != 2 && var10 != 7) {
-            a(var0, var3, var4, var7, var8);
+            drawPart(var0, var3, var4, var7, var8);
          }
 
-         var8 += c(var10);
+         var8 += partSize(var10);
       }
    }
 
-   private static final void c2(Graphics var0, int var1, int var2, int var3, int var4) {
-      Image[] var5 = a4[a3];
-      short[][] var6 = a2;
-      short[] var7 = d[var1];
-      int var8 = f(var1, var2);
-      int var9 = g(var1, var2);
+   private static final void drawFrameMirrored(Graphics var0, int var1, int var2, int var3, int var4) {
+      Image[] var5 = tiles[recolorIndex];
+      short[][] var6 = spriteRects;
+      short[] var7 = parts[var1];
+      int var8 = partOffset(var1, var2);
+      int var9 = nextPartOffset(var1, var2);
 
       while (var8 < var9) {
          short var10;
@@ -314,37 +314,37 @@ public final class SpriteRenderer implements SpriteIndex {
                var0.drawRegion(var13, var11[1], var11[2], var11[3], var11[4], var16, var14, var15, 20);
             }
          } else if (var10 != 2 && var10 != 7) {
-            b(var0, var3, var4, var7, var8);
+            drawPartMirrored(var0, var3, var4, var7, var8);
          }
 
-         var8 += c(var10);
+         var8 += partSize(var10);
       }
    }
 
-   public static final boolean a(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
+   public static final boolean drawParts(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
       if (var1 < 0) {
          return false;
       } else if ((var1 & 16384) != 0) {
          var1 &= -16385;
-         return c(var0, var1, var2, var3, var4, var5, var6, var7);
+         return drawPartsClipped(var0, var1, var2, var3, var4, var5, var6, var7);
       } else {
-         return b(var0, var1, var2, var3, var4, var5, var6, var7);
+         return drawPartsMirrored(var0, var1, var2, var3, var4, var5, var6, var7);
       }
    }
 
-   private static final boolean b(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
-      Image[] var8 = a4[a3];
-      short[][] var9 = a2;
+   private static final boolean drawPartsMirrored(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
+      Image[] var8 = tiles[recolorIndex];
+      short[][] var9 = spriteRects;
       boolean var10 = false;
-      short[] var11 = d[var1];
-      int var12 = f(var1, var2);
-      int var13 = g(var1, var2);
-      short[] var14 = var5 >= 0 ? d[var5] : null;
+      short[] var11 = parts[var1];
+      int var12 = partOffset(var1, var2);
+      int var13 = nextPartOffset(var1, var2);
+      short[] var14 = var5 >= 0 ? parts[var5] : null;
 
       while (var12 < var13) {
          short var15;
          if ((var15 = var11[var12 + 0]) != 0 && var15 != 11) {
-            a(var0, var3, var4, var11, var12);
+            drawPart(var0, var3, var4, var11, var12);
          } else {
             short var16 = var11[var12 + 3];
             short[] var17 = var9[var16];
@@ -361,23 +361,23 @@ public final class SpriteRenderer implements SpriteIndex {
                int var38 = frameCount(var5);
 
                for (int var23 = 0; var23 < var38; var23++) {
-                  int var24 = f(var5, var23);
+                  int var24 = partOffset(var5, var23);
                   int var25 = var14[var24 + 3] & '\uffff';
                   if (var16 == var25) {
-                     int var26 = g(var5, var23);
+                     int var26 = nextPartOffset(var5, var23);
                      short var27 = var14[var24 + 1];
                      short var28 = var14[var24 + 2];
                      int var29 = 0;
 
                      do {
-                        if ((var24 += c(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
+                        if ((var24 += partSize(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
                            var29++;
                         }
                      } while (var29 < var6 && var24 < var26);
 
                      if (var7 != null) {
                         var10 = true;
-                        int var30 = var26 - c(7);
+                        int var30 = var26 - partSize(7);
                         var7[0] = var18 + var14[var30 + 1] - var27;
                         var7[1] = var19 + var14[var30 + 2] - var28;
                      }
@@ -410,25 +410,25 @@ public final class SpriteRenderer implements SpriteIndex {
             }
          }
 
-         var12 += c(var15);
+         var12 += partSize(var15);
       }
 
       return var10;
    }
 
-   private static final boolean c(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
-      Image[] var8 = a4[a3];
-      short[][] var9 = a2;
+   private static final boolean drawPartsClipped(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
+      Image[] var8 = tiles[recolorIndex];
+      short[][] var9 = spriteRects;
       boolean var10 = false;
-      short[] var11 = d[var1];
-      int var12 = f(var1, var2);
-      int var13 = g(var1, var2);
-      short[] var14 = var5 >= 0 ? d[var5] : null;
+      short[] var11 = parts[var1];
+      int var12 = partOffset(var1, var2);
+      int var13 = nextPartOffset(var1, var2);
+      short[] var14 = var5 >= 0 ? parts[var5] : null;
 
       while (var12 < var13) {
          short var15;
          if ((var15 = var11[var12 + 0]) != 0 && var15 != 11) {
-            b(var0, var3, var4, var11, var12);
+            drawPartMirrored(var0, var3, var4, var11, var12);
          } else {
             short var16 = var11[var12 + 3];
             short[] var17 = var9[var16];
@@ -445,23 +445,23 @@ public final class SpriteRenderer implements SpriteIndex {
                int var38 = frameCount(var5);
 
                for (int var23 = 0; var23 < var38; var23++) {
-                  int var24 = f(var5, var23);
+                  int var24 = partOffset(var5, var23);
                   int var25 = var14[var24 + 3] & '\uffff';
                   if (var16 == var25) {
-                     int var26 = g(var5, var23);
+                     int var26 = nextPartOffset(var5, var23);
                      short var27 = var14[var24 + 1];
                      short var28 = var14[var24 + 2];
                      int var29 = 0;
 
                      do {
-                        if ((var24 += c(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
+                        if ((var24 += partSize(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
                            var29++;
                         }
                      } while (var29 < var6 && var24 < var26);
 
                      if (var7 != null) {
                         var10 = true;
-                        int var30 = var26 - c(7);
+                        int var30 = var26 - partSize(7);
                         var7[0] = var18 + var14[var30 + 1] - var27;
                         var7[1] = var19 + var14[var30 + 2] - var28;
                      }
@@ -494,35 +494,35 @@ public final class SpriteRenderer implements SpriteIndex {
             }
          }
 
-         var12 += c(var15);
+         var12 += partSize(var15);
       }
 
       return var10;
    }
 
-   private static final void a(Graphics var0, int var1, int var2, short[] var3, int var4) {
+   private static final void drawPart(Graphics g, int x, int y, short[] parts, int offset) {
       short var5;
-      switch (var5 = var3[var4 + 0]) {
+      switch (var5 = parts[offset + 0]) {
          case 3:
          case 4:
          case 5:
          case 6:
-            int var10 = var1 + var3[var4 + 1];
-            int var11 = var2 + var3[var4 + 2];
-            short var12 = var3[var4 + 3];
-            short var13 = var3[var4 + 4];
+            int var10 = x + parts[offset + 1];
+            int var11 = y + parts[offset + 2];
+            short var12 = parts[offset + 3];
+            short var13 = parts[offset + 4];
             switch (var5) {
                case 3:
-                  var0.drawRect(var10, var11, var12 - 1, var13 - 1);
+                  g.drawRect(var10, var11, var12 - 1, var13 - 1);
                   break;
                case 4:
-                  var0.fillRect(var10, var11, var12, var13);
+                  g.fillRect(var10, var11, var12, var13);
                   break;
                case 5:
-                  var0.drawArc(var10, var11, var12 - 1, var13 - 1, 0, 360);
+                  g.drawArc(var10, var11, var12 - 1, var13 - 1, 0, 360);
                   break;
                case 6:
-                  var0.fillArc(var10, var11, var12, var13, 0, 360);
+                  g.fillArc(var10, var11, var12, var13, 0, 360);
                default:
                   return;
             }
@@ -531,18 +531,18 @@ public final class SpriteRenderer implements SpriteIndex {
          default:
             break;
          case 8:
-            int var6 = var1 + var3[var4 + 1];
-            int var7 = var2 + var3[var4 + 2];
-            int var8 = var1 + var3[var4 + 3];
-            int var9 = var2 + var3[var4 + 4];
-            var0.drawLine(var6, var7, var8, var9);
+            int var6 = x + parts[offset + 1];
+            int var7 = y + parts[offset + 2];
+            int var8 = x + parts[offset + 3];
+            int var9 = y + parts[offset + 4];
+            g.drawLine(var6, var7, var8, var9);
             return;
          case 10:
-            a(var0, var3[var4 + 1]);
+            setColor(g, parts[offset + 1]);
       }
    }
 
-   private static final void b(Graphics var0, int var1, int var2, short[] var3, int var4) {
+   private static final void drawPartMirrored(Graphics var0, int var1, int var2, short[] var3, int var4) {
       short var5;
       switch (var5 = var3[var4 + 0]) {
          case 3:
@@ -580,22 +580,22 @@ public final class SpriteRenderer implements SpriteIndex {
             var0.drawLine(var6, var7, var8, var9);
             return;
          case 10:
-            a(var0, var3[var4 + 1]);
+            setColor(var0, var3[var4 + 1]);
       }
    }
 
-   public static final int frameCount(int var0) {
-      var0 &= -16385;
-      return b[var0].length;
+   public static final int frameCount(int spriteId) {
+      spriteId &= -16385;
+      return frameDurations[spriteId].length;
    }
 
-   public static final short frameDuration(int var0, int var1) {
-      var0 &= -16385;
-      return b[var0][var1];
+   public static final short frameDuration(int spriteId, int frame) {
+      spriteId &= -16385;
+      return frameDurations[spriteId][frame];
    }
 
-   private static final int a(short[] var0, int var1) {
-      switch (var0[var1 + 0]) {
+   private static final int partX(short[] parts, int offset) {
+      switch (parts[offset + 0]) {
          case 0:
          case 1:
          case 2:
@@ -606,10 +606,10 @@ public final class SpriteRenderer implements SpriteIndex {
          case 7:
          case 9:
          case 11:
-            return var0[var1 + 1];
+            return parts[offset + 1];
          case 8:
-            short var2 = var0[var1 + 1];
-            short var3 = var0[var1 + 3];
+            short var2 = parts[offset + 1];
+            short var3 = parts[offset + 3];
             if (var2 < var3) {
                return var2;
             }
@@ -621,7 +621,7 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int b(short[] var0, int var1) {
+   private static final int partY(short[] var0, int var1) {
       switch (var0[var1 + 0]) {
          case 0:
          case 1:
@@ -648,13 +648,13 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int c(short[] var0, int var1) {
+   private static final int partWidth(short[] var0, int var1) {
       switch (var0[var1 + 0]) {
          case 0:
          case 11:
             short var2;
             var2 = (short)((var2 = var0[var1 + 3]) & 65535);
-            return a2[var2][3];
+            return spriteRects[var2][3];
          case 1:
          case 2:
          case 3:
@@ -673,13 +673,13 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int d(short[] var0, int var1) {
+   private static final int partHeight(short[] var0, int var1) {
       switch (var0[var1 + 0]) {
          case 0:
          case 11:
             short var2;
             var2 = (short)((var2 = var0[var1 + 3]) & 65535);
-            return a2[var2][4];
+            return spriteRects[var2][4];
          case 1:
          case 2:
          case 3:
@@ -698,59 +698,59 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   public static final int a2(int var0, int var1) {
-      var0 &= -16385;
+   public static final int frameMinX(int spriteId, int frame) {
+      spriteId &= -16385;
       int var2 = Integer.MAX_VALUE;
-      short[] var3 = d[var0];
-      int var4 = f(var0, var1);
-      int var5 = g(var0, var1);
+      short[] var3 = parts[spriteId];
+      int var4 = partOffset(spriteId, frame);
+      int var5 = nextPartOffset(spriteId, frame);
       if (var4 == var5) {
          return 0;
       } else {
          while (var4 < var5) {
             short var6;
             int var7;
-            if ((var6 = var3[var4 + 0]) != 10 && (var7 = a(var3, var4)) < var2) {
+            if ((var6 = var3[var4 + 0]) != 10 && (var7 = partX(var3, var4)) < var2) {
                var2 = var7;
             }
 
-            var4 += c(var6);
+            var4 += partSize(var6);
          }
 
          return var2;
       }
    }
 
-   public static final int b(int var0, int var1) {
-      var0 &= -16385;
+   public static final int frameMinY(int spriteId, int frame) {
+      spriteId &= -16385;
       int var2 = Integer.MAX_VALUE;
-      short[] var3 = d[var0];
-      int var4 = f(var0, var1);
-      int var5 = g(var0, var1);
+      short[] var3 = parts[spriteId];
+      int var4 = partOffset(spriteId, frame);
+      int var5 = nextPartOffset(spriteId, frame);
       if (var4 == var5) {
          return 0;
       } else {
          while (var4 < var5) {
             short var6;
             int var7;
-            if ((var6 = var3[var4 + 0]) != 10 && (var7 = b(var3, var4)) < var2) {
+            if ((var6 = var3[var4 + 0]) != 10 && (var7 = partY(var3, var4)) < var2) {
                var2 = var7;
             }
 
-            var4 += c(var6);
+            var4 += partSize(var6);
          }
 
          return var2;
       }
    }
 
-   public static final int c(int var0, int var1) {
-      var0 &= -16385;
+   public static final int frameWidth(int spriteId, int frame) {
+      spriteId &= -16385;
       int var2 = Integer.MAX_VALUE;
       int var3 = Integer.MIN_VALUE;
-      short[] var4 = d[var0];
-      int var5 = f(var0, var1);
-      int var6 = g(var0, var1);
+      short[] var4 = parts[spriteId];
+      int var5 = partOffset(spriteId, frame);
+      int var6 = nextPartOffset(spriteId, frame);
       if (var5 == var6) {
          return 0;
       } else {
@@ -758,7 +758,7 @@ public final class SpriteRenderer implements SpriteIndex {
             short var7;
             if ((var7 = var4[var5 + 0]) != 10) {
                int var8;
-               int var9 = (var8 = a(var4, var5)) + c(var4, var5);
+               int var9 = (var8 = partX(var4, var5)) + partWidth(var4, var5);
                if (var8 < var2) {
                   var2 = var8;
                }
@@ -768,20 +768,20 @@ public final class SpriteRenderer implements SpriteIndex {
                }
             }
 
-            var5 += c(var7);
+            var5 += partSize(var7);
          }
 
          return var3 - var2;
       }
    }
 
-   public static final int d(int var0, int var1) {
-      var0 &= -16385;
+   public static final int frameHeight(int spriteId, int frame) {
+      spriteId &= -16385;
       int var2 = Integer.MAX_VALUE;
       int var3 = Integer.MIN_VALUE;
-      short[] var4 = d[var0];
-      int var5 = f(var0, var1);
-      int var6 = g(var0, var1);
+      short[] var4 = parts[spriteId];
+      int var5 = partOffset(spriteId, frame);
+      int var6 = nextPartOffset(spriteId, frame);
       if (var5 == var6) {
          return 0;
       } else {
@@ -789,7 +789,7 @@ public final class SpriteRenderer implements SpriteIndex {
             short var7;
             if ((var7 = var4[var5 + 0]) != 10) {
                int var8;
-               int var9 = (var8 = b(var4, var5)) + d(var4, var5);
+               int var9 = (var8 = partY(var4, var5)) + partHeight(var4, var5);
                if (var8 < var2) {
                   var2 = var8;
                }
@@ -799,19 +799,19 @@ public final class SpriteRenderer implements SpriteIndex {
                }
             }
 
-            var5 += c(var7);
+            var5 += partSize(var7);
          }
 
          return var3 - var2;
       }
    }
 
-   public static final int e(int var0, int var1) {
-      var0 &= -16385;
+   public static final int countSpecialParts(int spriteId, int frame) {
+      spriteId &= -16385;
       int var2 = 0;
-      short[] var3 = d[var0];
-      int var4 = f(var0, var1);
-      int var5 = g(var0, var1);
+      short[] var3 = parts[spriteId];
+      int var4 = partOffset(spriteId, frame);
+      int var5 = nextPartOffset(spriteId, frame);
 
       while (var4 < var5) {
          short var6;
@@ -819,13 +819,13 @@ public final class SpriteRenderer implements SpriteIndex {
             var2++;
          }
 
-         var4 += c(var6);
+         var4 += partSize(var6);
       }
 
       return var2;
    }
 
-   public static final boolean a2(int[] var0, int var1, int var2, int var3) {
+   public static final boolean hitTest(int[] var0, int var1, int var2, int var3) {
       boolean var4 = false;
       if ((var1 & 16384) != 0) {
          var1 &= -16385;
@@ -833,9 +833,9 @@ public final class SpriteRenderer implements SpriteIndex {
       }
 
       int var5 = 0;
-      short[] var6 = d[var1];
-      int var7 = f(var1, var2);
-      int var8 = g(var1, var2);
+      short[] var6 = parts[var1];
+      int var7 = partOffset(var1, var2);
+      int var8 = nextPartOffset(var1, var2);
 
       while (var7 < var8) {
          short var9;
@@ -853,7 +853,7 @@ public final class SpriteRenderer implements SpriteIndex {
             var5++;
          }
 
-         var7 += c(var9);
+         var7 += partSize(var9);
       }
 
       var0[0] = 0;
@@ -863,37 +863,37 @@ public final class SpriteRenderer implements SpriteIndex {
 
    public static final Image getTileImage(int var0, int var1, int var2) {
       var0 &= -16385;
-      short[] var3 = d[var0];
-      int var4 = f(var0, var1);
-      int var5 = g(var0, var1);
+      short[] var3 = parts[var0];
+      int var4 = partOffset(var0, var1);
+      int var5 = nextPartOffset(var0, var1);
 
       while (var4 < var5) {
          short var6;
          if ((var6 = var3[var4 + 0]) == 0 || var6 == 11) {
             if (var2 == 0) {
                short var7 = var3[var4 + 3];
-               short var8 = a2[var7][0];
-               return a4[a3][var8];
+               short var8 = spriteRects[var7][0];
+               return tiles[recolorIndex][var8];
             }
 
             var2--;
          }
 
-         var4 += c(var6);
+         var4 += partSize(var6);
       }
 
       return null;
    }
 
-   public static final boolean b(int[] var0, int var1, int var2, int var3) {
+   public static final boolean hitTestMirrored(int[] var0, int var1, int var2, int var3) {
       if ((var1 & 16384) != 0) {
          var1 &= -16385;
       }
 
       int var5 = 0;
-      short[] var6 = d[var1];
-      int var7 = f(var1, var2);
-      int var8 = g(var1, var2);
+      short[] var6 = parts[var1];
+      int var7 = partOffset(var1, var2);
+      int var8 = nextPartOffset(var1, var2);
 
       while (var7 < var8) {
          short var9;
@@ -909,7 +909,7 @@ public final class SpriteRenderer implements SpriteIndex {
             var5++;
          }
 
-         var7 += c(var9);
+         var7 += partSize(var9);
       }
 
       var0[0] = 0;
@@ -923,7 +923,7 @@ public final class SpriteRenderer implements SpriteIndex {
       drawFrame(var0, var1.animId, var1.frame, var2, var3);
    }
 
-   public static final void a12(int var0) {
-      a3 = var0;
+   public static final void setRecolorIndex(int index) {
+      recolorIndex = index;
    }
 }

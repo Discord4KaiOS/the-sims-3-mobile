@@ -133,7 +133,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                this.b5 = var2;
                this.d3(-1);
                this.d2();
-               com.ea.sims3.SdkText.a3(1);
+               com.ea.sims3.SdkText.loadStringsChunk(1);
                this.o++;
                var1.o2();
                return;
@@ -161,7 +161,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       super.canvas.c2(3076, -1);
       super.canvas.a12(-1);
       com.ea.sims3.SdkSound.muteAll();
-      com.ea.sims3.SdkText.b7(1);
+      com.ea.sims3.SdkText.freeStringsChunk(1);
    }
 
    public final void render(Graphics var1) {
@@ -207,7 +207,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                var2.b(var1);
                return;
             case 9:
-               var2.a5.a(var1);
+               var2.a5.draw(var1);
                return;
             case 10:
                this.j(var1);
@@ -454,7 +454,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          case 7:
             var2.a12(10);
             this.q = 18;
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 82);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 82);
             var2.c2(2, 0);
             var2.a4(0, 16);
             return;
@@ -463,14 +463,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             var2.a4(4, 0);
             return;
          case 9:
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 48);
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 47);
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 46);
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 45);
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 44);
-            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 43);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 48);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 47);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 46);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 45);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 44);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 43);
             var2.c = true;
-            var2.a5.a10();
+            var2.a5.reset();
             return;
          case 10:
             this.d4.play(681, 20);
@@ -556,7 +556,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       com.ea.sims3.GameCanvas.c2(var2, 59);
       com.ea.sims3.GameCanvas.c2(var2, 60);
       com.ea.sims3.GameCanvas.c2(var2, 61);
-      if (super.canvas.a5.a11()) {
+      if (super.canvas.a5.isAvailable()) {
          com.ea.sims3.GameCanvas.c2(var2, 63);
       }
 
@@ -572,13 +572,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          default:
             return;
          case 51:
-            com.ea.sims3.SpriteRenderer.a5(82, 0);
-            com.ea.sims3.SpriteRenderer.a5(48, 0);
-            com.ea.sims3.SpriteRenderer.a5(47, 0);
-            com.ea.sims3.SpriteRenderer.a5(46, 0);
-            com.ea.sims3.SpriteRenderer.a5(45, 0);
-            com.ea.sims3.SpriteRenderer.a5(44, 0);
-            com.ea.sims3.SpriteRenderer.a5(43, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(82, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(48, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(47, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(46, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(45, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(44, 0);
+            com.ea.sims3.SpriteRenderer.unloadTile(43, 0);
             var2.l2(0);
             this.onTick(14);
             return;
@@ -598,8 +598,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void e2() {
       PromoImages var1 = super.canvas.a5;
-      if (super.canvas.a5.a7) {
-         var1.b4();
+      if (super.canvas.a5.available) {
+         var1.handleKeys();
       } else {
          super.canvas.c = false;
          this.onTick(7);
@@ -617,7 +617,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
          for (int var4 = 0; var4 < var1; var4++) {
             com.ea.sims3.GameCanvas.c2(var2, var4);
-            var3[var4] = com.ea.sims3.SdkText.a(var4, 0, null);
+            var3[var4] = com.ea.sims3.SdkText.getHeaderString(var4, 0, null);
          }
 
          int var5 = super.canvas.i2;
@@ -646,7 +646,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       } else {
          if (this.matchesInput(var1, var2, 524288, 32768)) {
             if (var3.k2 == 5) {
-               com.ea.sims3.SdkText.a13(var3.i2);
+               com.ea.sims3.SdkText.setCurrentLanguage(var3.i2);
                var3.r2(0);
                return;
             }
@@ -654,7 +654,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             super.canvas.b3(this.c4, var1);
             short var5;
             if ((var5 = this.c4[2]) != var4) {
-               com.ea.sims3.SdkText.a13(var5);
+               com.ea.sims3.SdkText.setCurrentLanguage(var5);
             }
          }
       }
@@ -827,7 +827,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void c(Graphics var1, int var2) {
       GameCanvas var3 = super.canvas;
-      com.ea.sims3.SpriteRenderer.a(var1, var2);
+      com.ea.sims3.SpriteRenderer.setColor(var1, var2);
       var1.fillRect(0, 0, var3.getWidth(), var3.getHeight());
    }
 
@@ -876,7 +876,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
       int var14 = Math.min(0, var7 - var4);
       if (this.q >= 8) {
-         int var10 = -com.ea.sims3.SpriteRenderer.d(var3, 1);
+         int var10 = -com.ea.sims3.SpriteRenderer.frameHeight(var3, 1);
          int var12 = var5;
          if (this.q == 8) {
             var12 = b(var10, var5, var6, 4);
@@ -896,7 +896,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          }
 
          int[] var15 = super.a2;
-         com.ea.sims3.SpriteRenderer.a2(super.a2, var3, 3, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var3, 3, 0);
          this.a4(var11 + var14 + var15[0], var5 + var15[1], 3);
       }
 
@@ -909,7 +909,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
       if (this.q == 13 && this.r % 750 < 375) {
          int[] var9 = super.a2;
-         com.ea.sims3.SpriteRenderer.a2(super.a2, var3, 7, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var3, 7, 0);
          var2.a2(34, 0, var4 + var9[0], var5 + var9[1], 3);
       }
    }
@@ -1014,12 +1014,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int var14;
          int var15 = var14 = var10 + 9;
          if (this.q == 15) {
-            var15 = b(-com.ea.sims3.SpriteRenderer.d(557, 9), var14, var11, 3);
+            var15 = b(-com.ea.sims3.SpriteRenderer.frameHeight(557, 9), var14, var11, 3);
          }
 
          com.ea.sims3.SpriteRenderer.drawFrame(var1, 557, 9, var13, var15);
          int[] var16 = super.a2;
-         com.ea.sims3.SpriteRenderer.a2(super.a2, 557, 9, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(super.a2, 557, 9, 0);
          this.a4(var13 + var16[0], var15 + var16[1], 4);
       }
 
@@ -1090,7 +1090,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var7 = this.c5.animId;
       if (var4) {
          int[] var8 = super.a2;
-         com.ea.sims3.SpriteRenderer.a2(super.a2, var7, 0, 1);
+         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var7, 0, 1);
          var2 -= var8[0];
          var3 -= var8[1];
       }
@@ -1234,9 +1234,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          var1 += var2;
       }
 
-      int var4 = var3.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.d(697, 0) << 1);
+      int var4 = var3.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.frameHeight(697, 0) << 1);
       int var6 = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int var7 = com.ea.sims3.SpriteRenderer.d(688, 0);
+      int var7 = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
       int var8 = (var4 >> 1) + 2 - var7 * var1 - (var7 >> 1);
       int var9 = var4 - 2 - var7 * var6;
       var8 = com.ea.sims3.FixedMath.clamp(var8, var9, 2);
@@ -1379,10 +1379,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
 
       int[] var14 = super.a2;
-      com.ea.sims3.SpriteRenderer.b(super.a2, 689, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.a2, 689, 0, 0);
       int var6 = var14[2];
       int var7 = this.G - this.F + 1;
-      int var8 = com.ea.sims3.SpriteRenderer.d(683, 0);
+      int var8 = com.ea.sims3.SpriteRenderer.frameHeight(683, 0);
       int var9 = Math.min(var7 * var8, var6);
       int var10 = var6 - var9;
       int var11 = (var9 >> 1) + 0 - var8 * var1 - (var8 >> 1) + var10;
@@ -1400,7 +1400,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var8 = 0;
 
       for (int var10 = 0; var10 < var6; var10++) {
-         com.ea.sims3.SpriteRenderer.a(var0, var1[var10]);
+         com.ea.sims3.SpriteRenderer.setColor(var0, var1[var10]);
          int var9 = (var10 + 1) * var7 + 32768 >> 16;
          var0.fillRect(var2, var3 + var8, var4, var9 - var8);
          var8 = var9;
@@ -1424,9 +1424,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var4 = var2.getHeight() - 15;
       c2(var1, 0, 0, var3, var4);
       int[] var5 = super.a2;
-      int var8 = com.ea.sims3.SpriteRenderer.d(697, 0);
+      int var8 = com.ea.sims3.SpriteRenderer.frameHeight(697, 0);
       int var9;
-      int var14 = (var9 = com.ea.sims3.SpriteRenderer.c(697, 0)) + 4;
+      int var14 = (var9 = com.ea.sims3.SpriteRenderer.frameWidth(697, 0)) + 4;
       int var15 = 0 + var8;
       int var16 = var9 - 4;
       int var17 = var4 - (var8 << 1);
@@ -1437,13 +1437,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var22 = var1.getClipY();
       int var23 = var1.getClipWidth();
       int var24 = var1.getClipHeight();
-      com.ea.sims3.SpriteRenderer.a(var1, 60);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 60);
       var1.fillRect(2, 0, 1, var4);
       var1.fillRect(2 + var14 - 1, 0, 1, var4);
-      com.ea.sims3.SpriteRenderer.a(var1, 77);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
       var1.fillRect(3, 0, 1, var4);
       var1.fillRect(2 + var14 - 2, 0, 1, var4);
-      com.ea.sims3.SpriteRenderer.a(var1, 76);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 76);
       var1.fillRect(4, var8, 2, var17);
       var1.fillRect(2 + var14 - 2 - 2, var8, 2, var17);
       a(var1, e3, 6, var15, var16, var17);
@@ -1451,14 +1451,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 696, 0, 4, var4);
       int var25 = 6 + (var16 >> 1);
       int var26 = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int var27 = com.ea.sims3.SpriteRenderer.d(688, 0);
+      int var27 = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
       if (this.u > 0) {
-         com.ea.sims3.SpriteRenderer.a2(var5, 697, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(var5, 697, 0, 0);
          this.d4.draw(var1, 4 + var5[0], 0 + var5[1]);
       }
 
       if (this.u < var26 - 1) {
-         com.ea.sims3.SpriteRenderer.a2(var5, 696, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTest(var5, 696, 0, 0);
          this.e2.draw(var1, 4 + var5[0], var4 + var5[1]);
       }
 
@@ -1498,13 +1498,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       if (this.B != 196) {
          var47 = var25 + com.ea.sims3.FixedMath.mul(var4 - var19 - var25, 12179);
          com.ea.sims3.SpriteRenderer.drawFrame(var1, var27, 0, var18, var47);
-         com.ea.sims3.SpriteRenderer.b(var5, var27, 0, 0);
+         com.ea.sims3.SpriteRenderer.hitTestMirrored(var5, var27, 0, 0);
          int var49 = var18 + var5[0];
          int var50 = var47 + var5[1];
          int var32 = var5[2];
          int var33 = var5[3];
          int var34 = var50 + (var33 >> 1);
-         int var35 = com.ea.sims3.SpriteRenderer.c(683, 0);
+         int var35 = com.ea.sims3.SpriteRenderer.frameWidth(683, 0);
          var1.setClip(var49, var50, var32, var33);
          boolean var36 = this.y != -1;
          int var37 = var49 + (this.z >> 16) + (var36 ? 0 : var35 >> 1);
@@ -1526,12 +1526,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
          var1.setClip(var21, var22, var23, var24);
          if (this.E > this.F || var44 == 723) {
-            com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 0);
+            com.ea.sims3.SpriteRenderer.hitTest(var5, var27, 0, 0);
             super.leftArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
 
          if (this.E < this.G || var44 == 723) {
-            com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 1);
+            com.ea.sims3.SpriteRenderer.hitTest(var5, var27, 0, 1);
             super.rightArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
       }
@@ -1543,7 +1543,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var6 = var5 ? 683 : 682;
       com.ea.sims3.SpriteRenderer.drawFrame(var1, var6, 0, var2, var3);
       int[] var7 = super.a2;
-      com.ea.sims3.SpriteRenderer.b(super.a2, 682, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.a2, 682, 0, 0);
       int var8 = var2 + var7[0];
       int var9 = var3 + var7[1];
       int var10 = var7[2];
@@ -1747,7 +1747,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void k2() {
       this.d5 = false;
-      this.H = super.canvas.b2().a4;
+      this.H = super.canvas.b2().length;
       this.I = 0;
       this.J = -1;
       this.K = 0;
@@ -1877,14 +1877,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int var17 = 5;
          int var18 = var13;
          if (var11 != null) {
-            var18 = var13 + com.ea.sims3.SdkText.a(var11, 0, var16);
+            var18 = var13 + com.ea.sims3.SdkText.substringWidth(var11, 0, var16);
             if (var16 != var2.e()) {
-               var17 = com.ea.sims3.SdkText.a(var11, var16, 1);
+               var17 = com.ea.sims3.SdkText.substringWidth(var11, var16, 1);
             }
          }
 
          int var19 = var14 + var15;
-         com.ea.sims3.SpriteRenderer.a(var1, 0);
+         com.ea.sims3.SpriteRenderer.setColor(var1, 0);
          var1.fillRect(var18, var19, var17, 1);
       }
 
@@ -1892,7 +1892,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       var12 = var10 + (var5 - var10 - var8 >> 1);
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 709, 0, var21, var12);
       int[] var26 = super.a2;
-      com.ea.sims3.SpriteRenderer.a2(super.a2, 709, 0, 0);
+      com.ea.sims3.SpriteRenderer.hitTest(super.a2, 709, 0, 0);
       var14 = var21 + var26[0];
       var15 = var12 + var26[1];
       this.c(var1, var14, var15);
@@ -1971,7 +1971,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int var6 = 3 + var5 - (a3(var5) >> 1);
       int var7 = var3 - 3 - 64 - 3 - 3;
       int var8 = a5 == 14 ? 77 : 43;
-      com.ea.sims3.SpriteRenderer.a(var1, var8);
+      com.ea.sims3.SpriteRenderer.setColor(var1, var8);
       var1.fillRect(0, 0, var3, var4);
       var8 = var1.getClipX();
       int var9 = var1.getClipY();
@@ -1980,7 +1980,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       var1.setClip(var8, 3, var10, var5);
       c2(var1, 3, 3, 64, var5);
       var1.setClip(var8, var9, var10, var11);
-      com.ea.sims3.SpriteRenderer.a(var1, 0);
+      com.ea.sims3.SpriteRenderer.setColor(var1, 0);
       var1.drawRect(3, 3, 63, var5 - 1);
       if (!this.e4 && var2.e3()) {
          this.a(var1, 35, var6, false);
