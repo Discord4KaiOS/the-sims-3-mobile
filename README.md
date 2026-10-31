@@ -187,14 +187,32 @@ for the mapping):
 
 ### Member names
 
-Classes, plus the members whose meaning could be established with confidence,
-were renamed by [tools/Rename.java](./tools/Rename.java), which resolves every
-occurrence through javac, so a rename can never hit an unrelated identifier.
-The mapping lives in [tools/rename-symbols.txt](./tools/rename-symbols.txt).
+Classes, plus the members and locals whose meaning could be established, were
+renamed by [tools/Rename.java](./tools/Rename.java), which resolves every
+occurrence through javac (so a rename can never hit an unrelated identifier,
+overrides follow their base method, and constructors survive `super(...)`).
+The mapping is cumulative and idempotent:
+[tools/rename-symbols.txt](./tools/rename-symbols.txt).
 
-Members that are still called `a`, `a2`, `b7`, … are the ones whose purpose is
-not obvious from the code; they are the natural next step for another pass.
-Locals are left as Vineflower's `varN`.
+```
+# apply/extend the mapping at any time
+javac -d /tmp/ren tools/Rename.java
+java -cp /tmp/ren Rename tools/rename-symbols.txt src/main/java
+```
+
+Fully named: `Animator`, `FixedMath`, `FrameTimer`, `ScreenFade`,
+`ResourceLoader`, `Tile`, `SdkString`, `SdkSound`, `SdkConfig`, `SdkFeatures`,
+`SdkText`, `SdkMoreGames`, `PromoImages`, `SpriteRenderer`, and the core API of
+`BaseScreen` and `Entity`.
+
+Still carrying obfuscated member names: `Sim`, `Lot`, `Neighborhood`,
+`TitleScreen`, `GameCanvas`, `GameScreen` (plus most locals inside them). Those
+are the largest classes and each method has to be read before it can be named;
+the mapping file above is where the next batch goes.
+
+One naming trap worth knowing: subclass fields shadow inherited ones, so a
+rename can silently change which field a `this.x` refers to. Position fields are
+therefore `posX`/`posY` and not `x`/`y`.
 
 ## Legal
 
