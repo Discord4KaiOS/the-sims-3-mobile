@@ -1,0 +1,9 @@
+# original archive and local build output
+the_sims_3_mobile.jar
+build/
+.gradle/
+work/
+
+# game assets are property of Electronic Arts and are not redistributed
+src/main/resources/*
+!src/main/resources/.gitkeep
