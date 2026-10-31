@@ -76,10 +76,7 @@ public final class ObfuscationReport {
             "x1", "y1", "x2", "y2", "x3", "y3"));
 
     private static boolean obfuscated(String name) {
-        if (name.startsWith("var") && name.length() > 3 && name.substring(3).chars().allMatch(Character::isDigit)) {
-            return true;
-        }
-        if (name.startsWith("arg") && name.length() > 3 && name.substring(3).chars().allMatch(Character::isDigit)) {
+        if (name.matches("(var|arg)\\d+[a-z]?")) {
             return true;
         }
         if (ALLOWED.contains(name)) {
