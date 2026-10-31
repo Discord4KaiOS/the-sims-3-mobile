@@ -23,14 +23,14 @@ public final class SdkString {
 
       int byteCount = targetEncoding == 0 ? count << 1 : count;
       if (sourceEncoding != targetEncoding && (sourceEncoding != 1 || targetEncoding == 0)) {
-         for (int i = sourceOffset; i < sourceOffset + count; i++) {
-            short ch;
-            if ((ch = (short)(source[i] & 255)) > 127) {
-               ch = SdkText.fromCharset(ch);
+         for (int index = sourceOffset; index < sourceOffset + count; index++) {
+            short charCode;
+            if ((charCode = (short)(source[index] & 255)) > 127) {
+               charCode = SdkText.fromCharset(charCode);
             }
 
-            target[targetOffset++] = (byte)(ch >> 8);
-            target[targetOffset++] = (byte)ch;
+            target[targetOffset++] = (byte)(charCode >> 8);
+            target[targetOffset++] = (byte)charCode;
          }
       } else {
          System.arraycopy(source, sourceOffset, target, targetOffset, byteCount);
@@ -42,23 +42,23 @@ public final class SdkString {
    public SdkString() {
    }
 
-   public SdkString(String var1) {
+   public SdkString(String text) {
       this.flags = 1;
       this.offset = 0;
-      this.length = (short)var1.length();
+      this.length = (short)text.length();
       this.data = new byte[this.length];
 
-      for (int var2 = 0; var2 < this.length; var2++) {
-         this.data[var2] = (byte)var1.charAt(var2);
-         if (var1.charAt(var2) > 127 && SdkFeatures.isLoggingEnabled()) {
+      for (int index = 0; index < this.length; index++) {
+         this.data[index] = (byte)text.charAt(index);
+         if (text.charAt(index) > 127 && SdkFeatures.isLoggingEnabled()) {
             SdkText.log(
                loggerPrefix
                   + "constructor::char: "
-                  + var1.charAt(var2)
+                  + text.charAt(index)
                   + " at index: "
-                  + var2
+                  + index
                   + " of String: "
-                  + var1
+                  + text
                   + " is above ASCII range, it's representation is undefined!",
                3
             );
@@ -66,13 +66,13 @@ public final class SdkString {
       }
    }
 
-   public SdkString(int var1, int var2) {
+   public SdkString(int capacity, int encoding) {
       if (SdkFeatures.isLoggingEnabled()) {
-         SdkText.log(loggerPrefix + "constructor::creating an empty SDKString for use as a buffer w/ capacity: " + var1 + " ,encoding: " + var2, 1);
+         SdkText.log(loggerPrefix + "constructor::creating an empty SDKString for use as a buffer w/ capacity: " + capacity + " ,encoding: " + encoding, 1);
       }
 
-      this.flags = (byte)(var2 | -128);
-      this.data = new byte[var2 == 0 ? var1 << 1 : var1];
+      this.flags = (byte)(encoding | -128);
+      this.data = new byte[encoding == 0 ? capacity << 1 : capacity];
       this.offset = 0;
       this.length = 0;
    }
@@ -147,8 +147,8 @@ public final class SdkString {
          short start = this.length;
          this.length = (short)(this.length + text.length());
 
-         for (int i = 0; i < text.length(); i++) {
-            this.setCharAt(start + i, text.charAt(i));
+         for (int index = 0; index < text.length(); index++) {
+            this.setCharAt(start + index, text.charAt(index));
          }
 
          return this;
@@ -204,74 +204,74 @@ public final class SdkString {
       result.offset = 0;
       int written = 0;
 
-      for (int i = 0; i < args.length; i++) {
-         if (args[i] != null) {
-            written += args[i].length - 2;
+      for (int templateIndex = 0; templateIndex < args.length; templateIndex++) {
+         if (args[templateIndex] != null) {
+            written += args[templateIndex].length - 2;
             byte argEncoding;
-            if ((argEncoding = (byte)(args[i].flags & 127)) != result.flags && argEncoding != 1) {
+            if ((argEncoding = (byte)(args[templateIndex].flags & 127)) != result.flags && argEncoding != 1) {
                result.flags = 0;
             }
          }
       }
 
-      int var13 = result.flags == 0 ? 1 : 0;
+      int lengthShift = result.flags == 0 ? 1 : 0;
       if (written < 0) {
          written = 0;
       }
 
-      result.data = new byte[written + this.length << var13];
-      int var14 = 0;
+      result.data = new byte[written + this.length << lengthShift];
+      int outOffset = 0;
       written = 0;
-      int var7 = encoding == 0 ? 1 : 0;
+      int sourceLengthShift = encoding == 0 ? 1 : 0;
 
-      for (int var9 = 0; var9 < this.length; var9++) {
-         if (this.charAt(var9) == '\\') {
-            short var8 = (short)(var9 - written);
-            if (var14 + (var8 << var13) > result.data.length) {
-               byte[] var10 = new byte[var14 + (var8 << var13)];
-               System.arraycopy(result.data, 0, var10, 0, var14);
-               result.data = var10;
+      for (int sourceIndex = 0; sourceIndex < this.length; sourceIndex++) {
+         if (this.charAt(sourceIndex) == '\\') {
+            short chunkLength = (short)(sourceIndex - written);
+            if (outOffset + (chunkLength << lengthShift) > result.data.length) {
+               byte[] grownChunk = new byte[outOffset + (chunkLength << lengthShift)];
+               System.arraycopy(result.data, 0, grownChunk, 0, outOffset);
+               result.data = grownChunk;
             }
 
-            var14 += convertChars(this.data, this.offset + (written << var7), result.data, var14, var8, encoding, result.flags);
-            written = var9++;
-            if (var9 < this.length) {
-               var8 = this.charCodeAt(var9);
-               if (this.charAt(var9) == '\\') {
-                  written = var9;
-               } else if (var8 >= 48 && var8 <= 90) {
-                  int var20 = var8 - 48;
-                  if (SdkFeatures.isLoggingEnabled() && (var20 < 0 || var20 >= args.length || args[var20] == null)) {
-                     SdkText.log(loggerPrefix + "replace::replacement string missing: SDKString repl[" + var20 + "]; it is" + " needed to replace: " + this.toString(), 4);
+            outOffset += convertChars(this.data, this.offset + (written << sourceLengthShift), result.data, outOffset, chunkLength, encoding, result.flags);
+            written = sourceIndex++;
+            if (sourceIndex < this.length) {
+               chunkLength = this.charCodeAt(sourceIndex);
+               if (this.charAt(sourceIndex) == '\\') {
+                  written = sourceIndex;
+               } else if (chunkLength >= 48 && chunkLength <= 90) {
+                  int argIndex = chunkLength - 48;
+                  if (SdkFeatures.isLoggingEnabled() && (argIndex < 0 || argIndex >= args.length || args[argIndex] == null)) {
+                     SdkText.log(loggerPrefix + "replace::replacement string missing: SDKString repl[" + argIndex + "]; it is" + " needed to replace: " + this.toString(), 4);
                   }
 
-                  if (var14 + (args[var20].length << var13) > result.data.length) {
-                     byte[] var12 = new byte[var14 + (args[var20].length << var13)];
-                     System.arraycopy(result.data, 0, var12, 0, var14);
-                     result.data = var12;
+                  if (outOffset + (args[argIndex].length << lengthShift) > result.data.length) {
+                     byte[] grownArg = new byte[outOffset + (args[argIndex].length << lengthShift)];
+                     System.arraycopy(result.data, 0, grownArg, 0, outOffset);
+                     result.data = grownArg;
                   }
 
-                  var14 += convertChars(args[var20].data, args[var20].offset, result.data, var14, args[var20].length, (byte)(args[var20].flags & 127), result.flags);
-                  written = var9 + 1;
+                  outOffset += convertChars(args[argIndex].data, args[argIndex].offset, result.data, outOffset, args[argIndex].length, (byte)(args[argIndex].flags & 127), result.flags);
+                  written = sourceIndex + 1;
                }
             }
          }
       }
 
-      short var17 = (short)(this.length - written);
-      if (var14 + (var17 << var13) > result.data.length) {
-         byte[] var18 = new byte[var14 + (var17 << var13)];
-         System.arraycopy(result.data, 0, var18, 0, var14);
-         result.data = var18;
+      short tailLength = (short)(this.length - written);
+      if (outOffset + (tailLength << lengthShift) > result.data.length) {
+         byte[] grownTail = new byte[outOffset + (tailLength << lengthShift)];
+         System.arraycopy(result.data, 0, grownTail, 0, outOffset);
+         result.data = grownTail;
       }
 
-      if ((var14 = var14 + convertChars(this.data, this.offset + (written << var7), result.data, var14, var17, encoding, result.flags)) < result.data.length) {
-         byte[] var19 = new byte[var14];
-         System.arraycopy(result.data, 0, var19, 0, var14);
-         result.data = var19;
+      if ((outOffset = outOffset + convertChars(this.data, this.offset + (written << sourceLengthShift), result.data, outOffset, tailLength, encoding, result.flags)) < result.data.length) {
+         byte[] trimmed = new byte[outOffset];
+         System.arraycopy(result.data, 0, trimmed, 0, outOffset);
+         result.data = trimmed;
       }
 
-      result.length = (short)(var14 >> var13);
+      result.length = (short)(outOffset >> lengthShift);
       return result;
    }
 
@@ -300,8 +300,8 @@ public final class SdkString {
    public final String toString() {
       StringBuffer text = new StringBuffer();
 
-      for (int i = 0; i < this.length; i++) {
-         text.append(this.charAt(i));
+      for (int index = 0; index < this.length; index++) {
+         text.append(this.charAt(index));
       }
 
       return text.toString();
@@ -319,12 +319,12 @@ public final class SdkString {
       return this.flags & 127;
    }
 
-   public final SdkString format(String var1) {
-      return this.format(new SdkString[]{new SdkString(var1)});
+   public final SdkString format(String template) {
+      return this.format(new SdkString[]{new SdkString(template)});
    }
 
-   public final SdkString format(SdkString var1) {
-      return this.format(new SdkString[]{var1});
+   public final SdkString format(SdkString template) {
+      return this.format(new SdkString[]{template});
    }
 
    public final void setLength(int newLength) {

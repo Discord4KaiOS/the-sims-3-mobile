@@ -167,7 +167,7 @@ for the mapping):
 | `GameScreen` | in-game screen (the lot, Sims, cheats, day/hour advance) |
 | `TitleScreen` | loading screen and title screen |
 | `BaseScreen` | base class for the screens: panels, frames, soft keys |
-| `Neighborhood` | card based screen logic and world data |
+| `Neighborhood` | world state: clock, money, lots, residents, needs, interactions, cards, achievements, save file |
 | `Lot` | tile/room data of the lot plus the sprite drawing for it |
 | `Sim` | a Sim: motives, interaction routing, animation state |
 | `Entity` | base class for anything placed in the lot |
@@ -187,32 +187,62 @@ for the mapping):
 
 ### Member names
 
-Classes, plus the members and locals whose meaning could be established, were
-renamed by [tools/Rename.java](./tools/Rename.java), which resolves every
-occurrence through javac (so a rename can never hit an unrelated identifier,
-overrides follow their base method, and constructors survive `super(...)`).
-The mapping is cumulative and idempotent:
-[tools/rename-symbols.txt](./tools/rename-symbols.txt).
+The whole codebase is de-obfuscated: every class, field, method, parameter,
+local, catch parameter and loop variable now carries a name that describes what
+it does (`updateNeeds`, `drawNineSlice`, `findPath`, `pathHeuristic`,
+`spawnFound`...). `tools/ObfuscationReport.java` is the checker:
+
+```
+javac -d /tmp/ren tools/ObfuscationReport.java
+java -cp /tmp/ren ObfuscationReport summary  src/main/java   # what is left per class
+java -cp /tmp/ren ObfuscationReport class    src/main/java GameScreen
+java -cp /tmp/ren ObfuscationReport shadows  src/main/java   # fields hiding inherited fields
+```
+
+`summary` currently reports `TOTAL 0 0 0 0` and `shadows` reports
+`hidden fields: 0`.
+
+The names themselves live in [tools/rename-symbols.txt](./tools/rename-symbols.txt)
+and are applied by [tools/Rename.java](./tools/Rename.java), which resolves
+every occurrence through javac, so a rename can never hit an unrelated
+identifier, overrides follow their base method, and constructors survive
+`super(...)`. The mapping is cumulative and replaying it from the original
+sources reproduces the current tree.
 
 ```
 # apply/extend the mapping at any time
 javac -d /tmp/ren tools/Rename.java
-java -cp /tmp/ren Rename tools/rename-symbols.txt src/main/java
+java -cp /tmp/ren Rename tools/rename-symbols.txt src/main/java decl
+java -cp /tmp/ren Rename tools/rename-symbols.txt src/main/java vars
 ```
 
-Fully named: `Animator`, `FixedMath`, `FrameTimer`, `ScreenFade`,
-`ResourceLoader`, `Tile`, `SdkString`, `SdkSound`, `SdkConfig`, `SdkFeatures`,
-`SdkText`, `SdkMoreGames`, `PromoImages`, `SpriteRenderer`, and the core API of
-`BaseScreen` and `Entity`.
+Two phases are needed because a rename can be chained (`a2` -> `init` ->
+`place`) and because a variable entry is keyed by the method name that applies
+at that point. [tools/normalize-renames.py](./tools/normalize-renames.py)
+rewrites variable keys to the final method names, and
+[tools/merge-renames.sh](./tools/merge-renames.sh) merges mapping files
+produced in parallel and runs both phases to a fixed point.
 
-Still carrying obfuscated member names: `Sim`, `Lot`, `Neighborhood`,
-`TitleScreen`, `GameCanvas`, `GameScreen` (plus most locals inside them). Those
-are the largest classes and each method has to be read before it can be named;
-the mapping file above is where the next batch goes.
+Three traps are worth knowing, and all three are checked:
 
-One naming trap worth knowing: subclass fields shadow inherited ones, so a
-rename can silently change which field a `this.x` refers to. Position fields are
-therefore `posX`/`posY` and not `x`/`y`.
+* subclass fields shadow inherited ones, so a rename can silently change which
+  field a `this.x` refers to. Position fields are therefore `posX`/`posY` and
+  not `x`/`y`, and `ObfuscationReport shadows` must stay at zero.
+* an override must keep the name of the method it overrides, otherwise call
+  sites that dispatch through the supertype silently stop reaching it.
+  `Rename.java` warns (`WARN override mismatch`) when a mapping would break
+  that.
+* the decompiler reused local slots, so a single local can hold two unrelated
+  values; such a local is named after the value it carries in the section of
+  the method that matters.
+
+How the result was verified: the sources were recompiled and the bytecode of
+all 68 classes compared against the pre-rename build with member names
+normalised away. Every class but `Alert` (where the shim was fixed to stop
+shadowing `Displayable.title`) is instruction-for-instruction identical, so the
+renaming pass changed names only. The game was then played through the title,
+save-select, main-menu and scrolling screens with the same harness used before
+the rename pass.
 
 ## Legal
 

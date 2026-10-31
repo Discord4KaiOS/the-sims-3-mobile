@@ -3,47 +3,47 @@ package com.ea.sims3;
 import javax.microedition.lcdui.Graphics;
 
 public final class TitleScreen extends BaseScreen implements Runnable {
-   public static int a5 = 0;
-   private int b4 = 0;
-   private int c3 = 0;
-   private int m2 = -1;
-   private int n;
-   private short[] b5;
-   private int o;
-   private Thread a6;
-   private int p;
-   private short[] c4;
-   private SdkString[] a7;
-   private int q;
-   private int r;
-   private int s;
-   private Animator c5;
-   private int t;
-   private static final short[] d2 = new short[]{723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735};
-   private int[] c6 = new int[32];
-   private int[] d3 = new int[32];
-   private Animator d4;
-   private Animator e2;
-   private int u;
-   private int v;
-   private int w;
-   private int x;
-   private int y;
-   private int z;
-   private int A;
-   private int B;
-   private int C;
-   private int D;
-   private int E;
-   private int F;
-   private int G;
-   private boolean a8;
-   private boolean b6;
-   private boolean c7;
-   private static final int[] e3 = new int[]{11, 12, 13, 14, 15, 14, 13, 12, 11};
-   private static final int[] f2 = new int[]{16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
-   private static final int[] g2 = new int[]{31, 32, 33, 34, 35, 36, 37, 38, 39};
-   private static final char[][] a9 = new char[][]{
+   public static int state = 0;
+   private int pendingState = 0;
+   private int pendingAction = 0;
+   private int pendingParam = -1;
+   private int languageIndex;
+   private short[] mainMenuItems;
+   private int loadStep;
+   private Thread loaderThread;
+   private int loaderState;
+   private short[] languageMenuItems;
+   private SdkString[] languageNames;
+   private int introStep;
+   private int introElapsed;
+   private int introDuration;
+   private Animator simAnimator;
+   private int simFrameId;
+   private static final short[] optionIds = new short[]{723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735};
+   private int[] recolorFrom = new int[32];
+   private int[] recolorTo = new int[32];
+   private Animator upArrowAnimator;
+   private Animator downArrowAnimator;
+   private int optionIndex;
+   private int optionScroll;
+   private int optionScrollTarget;
+   private int optionSlot;
+   private int variantSlot;
+   private int variantScroll;
+   private int variantScrollTarget;
+   private int optionIconId;
+   private int optionFrameSelected;
+   private int optionFrameNormal;
+   private int optionValue;
+   private int optionMin;
+   private int optionMax;
+   private boolean longSleeves;
+   private boolean longPants;
+   private boolean hairHasAccent;
+   private static final int[] scrollBarGradient = new int[]{11, 12, 13, 14, 15, 14, 13, 12, 11};
+   private static final int[] panelGradientTop = new int[]{16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30};
+   private static final int[] panelGradientBottom = new int[]{31, 32, 33, 34, 35, 36, 37, 38, 39};
+   private static final char[][] KEY_CHARS = new char[][]{
       {'1'},
       {'A', 'B', 'C', '2'},
       {'D', 'E', 'F', '3'},
@@ -55,263 +55,263 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       {'W', 'X', 'Y', 'Z', '9'},
       {'0'}
    };
-   private boolean d5;
-   private int H;
-   private int I;
-   private int J;
-   private int K;
-   private int L;
-   private int M;
-   private boolean e4;
+   private boolean multiTapActive;
+   private int nameCursor;
+   private int keyRepeatTimer;
+   private int repeatKey;
+   private int keyCharIndex;
+   private int hintWidth;
+   private int hintScrollX;
+   private boolean newSimSelected;
 
-   public TitleScreen(GameCanvas var1) {
-      super(var1);
-      var1.g = 197379;
-      this.d4 = new Animator();
-      this.e2 = new Animator();
-      this.c5 = new Animator();
-      this.c5.setRunning(false);
+   public TitleScreen(GameCanvas canvas) {
+      super(canvas);
+      canvas.fadeSpeed = 197379;
+      this.upArrowAnimator = new Animator();
+      this.downArrowAnimator = new Animator();
+      this.simAnimator = new Animator();
+      this.simAnimator.setRunning(false);
    }
 
-   public final void setLanguage(int var1) {
+   public final void setLanguage(int languageIndex) {
       this.initLayout();
-      super.canvas.u2();
-      this.f2();
-      if (var1 == -1) {
-         var1 = 7;
+      super.canvas.clearNewFlags();
+      this.buildLanguageMenu();
+      if (languageIndex == -1) {
+         languageIndex = 7;
       }
 
-      this.n = var1;
-      if (var1 != 4 && var1 != 5) {
+      this.languageIndex = languageIndex;
+      if (languageIndex != 4 && languageIndex != 5) {
          this.onTick(1);
       } else {
-         this.n = 6;
-         this.onTick(var1);
+         this.languageIndex = 6;
+         this.onTick(languageIndex);
       }
 
-      this.o = 0;
+      this.loadStep = 0;
    }
 
-   private void e3(int var1) {
-      super.canvas.q2(var1);
-      if (this.a6 == null) {
-         this.a6 = new Thread(this);
-         this.p = 0;
-         this.a6.start();
+   private void startLoading(int loadingTipDelta) {
+      super.canvas.updateLoadingTip(loadingTipDelta);
+      if (this.loaderThread == null) {
+         this.loaderThread = new Thread(this);
+         this.loaderState = 0;
+         this.loaderThread.start();
       } else {
-         this.p = 0;
+         this.loaderState = 0;
       }
    }
 
    public final void run() {
-      while (this.p != 2) {
-         if (this.p != 0) {
+      while (this.loaderState != 2) {
+         if (this.loaderState != 0) {
             try {
                synchronized (this) {
                   this.wait(1000L);
                }
-            } catch (InterruptedException var4) {
+            } catch (InterruptedException ignored) {
             }
          } else {
-            this.p = 1;
+            this.loaderState = 1;
 
             try {
-               this.a10();
-            } catch (Exception var5) {
+               this.loadNextStep();
+            } catch (Exception ignored2) {
             }
          }
       }
    }
 
-   private void a10() {
-      GameCanvas var1 = super.canvas;
-      if (!super.canvas.a11()) {
-         new StringBuffer().append("updateLoadingState: ").append(this.o).toString();
-         switch (this.o) {
+   private void loadNextStep() {
+      GameCanvas canvas = super.canvas;
+      if (!super.canvas.isFading()) {
+         new StringBuffer().append("updateLoadingState: ").append(this.loadStep).toString();
+         switch (this.loadStep) {
             case 0:
-               short[] var2 = new short[15];
-               this.b5 = var2;
-               this.d3(-1);
-               this.d2();
+               short[] items = new short[15];
+               this.mainMenuItems = items;
+               this.buildMainMenu(-1);
+               this.playClickSound();
                com.ea.sims3.SdkText.loadStringsChunk(1);
-               this.o++;
-               var1.o2();
+               this.loadStep++;
+               canvas.resetTileLoad();
                return;
             case 1:
-               if (var1.a13(4)) {
-                  this.o++;
+               if (canvas.loadTilesFor(4)) {
+                  this.loadStep++;
                   return;
                }
                break;
             case 2:
-               this.onTick(this.n);
-               this.p = 2;
+               this.onTick(this.languageIndex);
+               this.loaderState = 2;
          }
       }
    }
 
-   private void d2() {
-      super.canvas.a7.play(10);
+   private void playClickSound() {
+      super.canvas.sound.play(10);
    }
 
    public final void stop() {
    }
 
    public final void pause() {
-      super.canvas.c2(3076, -1);
-      super.canvas.a12(-1);
+      super.canvas.unloadTiles(3076, -1);
+      super.canvas.setSoundLoop(-1);
       com.ea.sims3.SdkSound.muteAll();
       com.ea.sims3.SdkText.freeStringsChunk(1);
    }
 
-   public final void render(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      int var3 = super.canvas.k2;
-      if (super.canvas.k2 != -1) {
-         if (var3 == 5) {
-            if (a5 == 4) {
-               this.c(var1, 77);
+   public final void render(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      int menuMode = super.canvas.menuMode;
+      if (super.canvas.menuMode != -1) {
+         if (menuMode == 5) {
+            if (state == 4) {
+               this.fillScreen(gfx, 77);
             } else {
-               this.h(var1);
+               this.drawIntroLogo(gfx);
             }
 
-            this.d(var1);
+            this.drawLanguageMenu(gfx);
          } else {
-            this.h(var1);
-            var2.d(var1);
-            var2.b(var1);
+            this.drawIntroLogo(gfx);
+            canvas.drawMenu(gfx);
+            canvas.drawBottomBar(gfx);
          }
       } else {
-         switch (a5) {
+         switch (state) {
             case 1:
-               var2.c(var1);
+               canvas.drawLoadingScreen(gfx);
                return;
             case 4:
-               this.c(var1, 77);
-               this.d(var1);
+               this.fillScreen(gfx, 77);
+               this.drawLanguageMenu(gfx);
                return;
             case 5:
-               this.c(var1, 77);
-               this.b(var1);
-               var2.b(var1);
+               this.fillScreen(gfx, 77);
+               this.drawPageOne(gfx);
+               canvas.drawBottomBar(gfx);
                return;
             case 6:
-               this.e(var1);
+               this.drawIntro(gfx);
                return;
             case 7:
-               this.h(var1);
-               this.i(var1);
+               this.drawIntroLogo(gfx);
+               this.drawMainMenuBox(gfx);
                return;
             case 8:
-               this.b(var1, 3);
-               var2.b(var1);
+               this.drawHeader(gfx, 3);
+               canvas.drawBottomBar(gfx);
                return;
             case 9:
-               var2.a5.draw(var1);
+               canvas.promoImages.draw(gfx);
                return;
             case 10:
-               this.j(var1);
+               this.drawAppearanceScreen(gfx);
                return;
             case 11:
-               this.k(var1);
+               this.drawPersonaScreen(gfx);
                return;
             case 12:
-               this.l(var1);
+               this.drawTraitScreen(gfx);
                return;
             case 13:
-               this.m(var1);
+               this.drawNameEntryScreen(gfx);
                return;
             case 14:
             case 15:
-               this.n(var1);
+               this.drawProfileScreen(gfx);
                return;
             case 16:
-               this.n(var1);
-               var2.a(var1);
-               this.b(var1);
-               var2.b(var1);
+               this.drawProfileScreen(gfx);
+               canvas.drawDialogOverlay(gfx);
+               this.drawPageOne(gfx);
+               canvas.drawBottomBar(gfx);
                return;
             case 17:
-               this.j(var1);
-               var2.a(var1);
-               this.b(var1);
-               var2.b(var1);
+               this.drawAppearanceScreen(gfx);
+               canvas.drawDialogOverlay(gfx);
+               this.drawPageOne(gfx);
+               canvas.drawBottomBar(gfx);
                return;
             case 18:
-               this.m(var1);
-               var2.a(var1);
-               this.b(var1);
-               var2.b(var1);
+               this.drawNameEntryScreen(gfx);
+               canvas.drawDialogOverlay(gfx);
+               this.drawPageOne(gfx);
+               canvas.drawBottomBar(gfx);
                return;
             case 19:
-               this.h(var1);
-               this.i(var1);
-               var2.a(var1);
-               this.b(var1);
-               var2.b(var1);
+               this.drawIntroLogo(gfx);
+               this.drawMainMenuBox(gfx);
+               canvas.drawDialogOverlay(gfx);
+               this.drawPageOne(gfx);
+               canvas.drawBottomBar(gfx);
             case 2:
             case 3:
          }
       }
    }
 
-   public final void update(int var1, int var2) {
-      if (a5 != 1) {
-         GameCanvas var3 = super.canvas;
-         if (super.canvas.e4 && this.b4 != 0) {
-            this.onTick(this.b4);
-            var3.k2();
-            this.b4 = 0;
-         } else if (!var3.a11()) {
-            int var4 = var3.k2;
-            if (var3.k2 != -1) {
-               if (var4 == 5) {
-                  this.c2(var1, var2);
+   public final void update(int keyCode, int action) {
+      if (state != 1) {
+         GameCanvas canvas = super.canvas;
+         if (super.canvas.fadeFinished && this.pendingState != 0) {
+            this.onTick(this.pendingState);
+            canvas.fadeFromBlack();
+            this.pendingState = 0;
+         } else if (!canvas.isFading()) {
+            int menuMode = canvas.menuMode;
+            if (canvas.menuMode != -1) {
+               if (menuMode == 5) {
+                  this.languageMenuKeyPressed(keyCode, action);
                } else {
-                  var3.d2(var1, var2);
+                  canvas.menuKeyPressed(keyCode, action);
                }
 
-               if (var3.k2 == -1) {
-                  this.onTick(a5);
+               if (canvas.menuMode == -1) {
+                  this.onTick(state);
                }
             } else {
-               switch (a5) {
+               switch (state) {
                   case 4:
-                     this.c2(var1, var2);
+                     this.languageMenuKeyPressed(keyCode, action);
                      return;
                   case 5:
-                     if (this.matchesInput(var1, var2, 4128, 256)) {
-                        var3.a7.setEnabled(true);
-                        this.f3(1);
+                     if (this.matchesInput(keyCode, action, 4128, 256)) {
+                        canvas.sound.setEnabled(true);
+                        this.fadeToState(1);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 512)) {
-                        var3.a7.setEnabled(false);
-                        this.f3(1);
+                     if (this.matchesInput(keyCode, action, 0, 512)) {
+                        canvas.sound.setEnabled(false);
+                        this.fadeToState(1);
                         return;
                      }
                      break;
                   case 6:
-                     this.d2(var1, var2);
+                     this.introKeyPressed(keyCode, action);
                      return;
                   case 7:
-                     if (this.matchesInput(var1, var2, 4128, 16)) {
-                        int var5 = 5 + this.b5[2];
-                        this.g2(this.b5[var5]);
+                     if (this.matchesInput(keyCode, action, 4128, 16)) {
+                        int selectedIndex = 5 + this.mainMenuItems[2];
+                        this.personaKeyPressed(this.mainMenuItems[selectedIndex]);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 4)) {
+                     if (this.matchesInput(keyCode, action, 0, 4)) {
                         this.onTick(19);
                         return;
                      }
 
-                     var3.b3(this.b5, var1);
+                     canvas.navigateLeftRight(this.mainMenuItems, keyCode);
                      return;
                   case 8:
-                     this.a5(var1, var2);
-                     if (this.matchesInput(var1, var2, 0, 4)) {
+                     this.scrollList(keyCode, action);
+                     if (this.matchesInput(keyCode, action, 0, 4)) {
                         this.onTick(7);
                         return;
                      }
@@ -319,65 +319,65 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                   default:
                      break;
                   case 10:
-                     this.e2(var1, var2);
+                     this.optionKeyPressed(keyCode, action);
                      return;
                   case 11:
-                     this.g2(var1, var2);
+                     this.appearanceKeyPressed(keyCode, action);
                      return;
                   case 12:
-                     this.h2(var1, var2);
+                     this.traitKeyPressed(keyCode, action);
                      return;
                   case 13:
-                     this.i2(var1, var2);
+                     this.nameEntryKeyPressed(keyCode, action);
                      return;
                   case 14:
                   case 15:
-                     this.j2(var1, var2);
+                     this.profileSlotKeyPressed(keyCode, action);
                      return;
                   case 16:
-                     if (this.matchesInput(var1, var2, 4128, 256)) {
-                        var3.m2(var3.j);
-                        var3.c3();
+                     if (this.matchesInput(keyCode, action, 4128, 256)) {
+                        canvas.clearProfile(canvas.profileSlot);
+                        canvas.saveSettings();
                         this.onTick(14);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 512)) {
+                     if (this.matchesInput(keyCode, action, 0, 512)) {
                         this.onTick(15);
                         return;
                      }
                      break;
                   case 17:
-                     if (this.matchesInput(var1, var2, 4128, 256)) {
+                     if (this.matchesInput(keyCode, action, 4128, 256)) {
                         this.onTick(14);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 516)) {
+                     if (this.matchesInput(keyCode, action, 0, 516)) {
                         this.onTick(10);
                         return;
                      }
                      break;
                   case 18:
-                     if (this.matchesInput(var1, var2, 4128, 256)) {
-                        var3.r2();
-                        var3.s2();
-                        this.b2(2, -1);
+                     if (this.matchesInput(keyCode, action, 4128, 256)) {
+                        canvas.commitProfile();
+                        canvas.reloadGameData();
+                        this.requestScreen(2, -1);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 516)) {
+                     if (this.matchesInput(keyCode, action, 0, 516)) {
                         this.onTick(13);
                         return;
                      }
                      break;
                   case 19:
-                     if (this.matchesInput(var1, var2, 4128, 256)) {
+                     if (this.matchesInput(keyCode, action, 4128, 256)) {
                         this.onTick(3);
                         return;
                      }
 
-                     if (this.matchesInput(var1, var2, 0, 516)) {
+                     if (this.matchesInput(keyCode, action, 0, 516)) {
                         this.onTick(7);
                      }
                }
@@ -386,187 +386,187 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
    }
 
-   public final void keyPressed(int var1) {
-      if (a5 == 1) {
-         this.e3(var1);
+   public final void keyPressed(int keyCode) {
+      if (state == 1) {
+         this.startLoading(keyCode);
       } else {
-         switch (a5) {
+         switch (state) {
             case 6:
-               this.k2(var1);
+               this.advanceIntro(keyCode);
                return;
             case 7:
                return;
             case 8:
                return;
             case 9:
-               this.e2();
+               this.promoKeyPressed();
                return;
             case 10:
-               this.a2(var1, false);
-               this.l2(var1);
+               this.advanceSimAnimator(keyCode, false);
+               this.updateScrollAnimators(keyCode);
                return;
             case 11:
-               this.a2(var1, true);
+               this.advanceSimAnimator(keyCode, true);
                return;
             case 12:
-               this.a2(var1, true);
-               this.n2(var1);
+               this.advanceSimAnimator(keyCode, true);
+               this.updateNameEntryMarquees(keyCode);
                return;
             case 13:
-               this.p2(var1);
+               this.updateNameEntry(keyCode);
                return;
             case 14:
-               this.a2(var1, false);
+               this.advanceSimAnimator(keyCode, false);
             case 15:
          }
       }
    }
 
-   public final void onTick(int var1) {
-      GameCanvas var2 = super.canvas;
-      int var3 = a5;
-      a5 = var1;
-      var2.g2();
-      var2.h2();
-      switch (var1) {
+   public final void onTick(int newState) {
+      GameCanvas canvas = super.canvas;
+      int previousState = state;
+      state = newState;
+      canvas.clearActions();
+      canvas.releaseSoftKeys();
+      switch (newState) {
          case 1:
-            var2.a4(0, 0);
+            canvas.setSoftKeys(0, 0);
             return;
          case 2:
-            var2.b2(this.c3, this.m2);
+            canvas.setPendingScreen(this.pendingAction, this.pendingParam);
             return;
          case 3:
-            var2.d2();
+            canvas.muteSound();
             return;
          case 4:
-            var2.a4(0, 16384);
+            canvas.setSoftKeys(0, 16384);
             return;
          case 5:
-            var2.a4(512, 256);
-            this.l2(78, 79);
+            canvas.setSoftKeys(512, 256);
+            this.showInfoPanel(78, 79);
             return;
          case 6:
-            var2.a12(10);
-            var2.j2(2);
-            var2.a4(0, 0);
-            this.g2();
+            canvas.setSoundLoop(10);
+            canvas.loadTilesBlocking(2);
+            canvas.setSoftKeys(0, 0);
+            this.restartIntro();
             return;
          case 7:
-            var2.a12(10);
-            this.q = 18;
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 82);
-            var2.c2(2, 0);
-            var2.a4(0, 16);
+            canvas.setSoundLoop(10);
+            this.introStep = 18;
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 82);
+            canvas.unloadTiles(2, 0);
+            canvas.setSoftKeys(0, 16);
             return;
          case 8:
-            this.q2();
-            var2.a4(4, 0);
+            this.resetList();
+            canvas.setSoftKeys(4, 0);
             return;
          case 9:
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 48);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 47);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 46);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 45);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 44);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.a6, 43);
-            var2.c = true;
-            var2.a5.reset();
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 48);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 47);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 46);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 45);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 44);
+            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 43);
+            canvas.promoActive = true;
+            canvas.promoImages.reset();
             return;
          case 10:
-            this.d4.play(681, 20);
-            this.e2.play(679, 20);
-            if (var3 != 11 && var3 != 17) {
-               this.f2(0, 0);
-            } else if (var3 == 11) {
-               this.b(false);
+            this.upArrowAnimator.play(681, 20);
+            this.downArrowAnimator.play(679, 20);
+            if (previousState != 11 && previousState != 17) {
+               this.setSimOption(0, 0);
+            } else if (previousState == 11) {
+               this.setSimFrames(false);
             }
 
-            var2.a4(4, 2);
+            canvas.setSoftKeys(4, 2);
             return;
          case 11:
-            this.i2();
-            this.b(true);
-            var2.a(736, 1, super.h);
-            var2.a4(4, var2.a23.a11 != -1 ? 2 : 0);
+            this.layoutPersonaList();
+            this.setSimFrames(true);
+            canvas.setWrappedString(736, 1, super.panelHeight);
+            canvas.setSoftKeys(4, canvas.neighborhood.selectedResident != -1 ? 2 : 0);
             return;
          case 12:
-            this.j2();
-            this.b(true);
-            var2.a(744, 1, super.h);
-            int var4 = var2.a23.s();
-            boolean var5 = 5 == var4;
-            var2.a4(4, var5 ? 2 : 0);
+            this.layoutTraitList();
+            this.setSimFrames(true);
+            canvas.setWrappedString(744, 1, super.panelHeight);
+            int count = canvas.neighborhood.simKnownFreeSlot();
+            boolean twoSlots = 5 == count;
+            canvas.setSoftKeys(4, twoSlots ? 2 : 0);
             return;
          case 13:
-            if (var3 != 18) {
-               this.k2();
+            if (previousState != 18) {
+               this.resetNameEntry();
             }
 
-            var2.a4(4, var2.e() != 0 ? 2 : 0);
+            canvas.setSoftKeys(4, canvas.profileNameLength() != 0 ? 2 : 0);
             return;
          case 14:
-            this.e4 = false;
-            this.a(false);
-            var2.a4(4, 16);
+            this.newSimSelected = false;
+            this.applySimAppearance(false);
+            canvas.setSoftKeys(4, 16);
             return;
          case 15:
-            this.e4 = false;
-            if (var2.j != 0) {
-               var2.l2(0);
-               this.a(false);
+            this.newSimSelected = false;
+            if (canvas.profileSlot != 0) {
+               canvas.selectProfile(0);
+               this.applySimAppearance(false);
             }
 
-            var2.a4(64, var2.e3() ? 32 : 0);
+            canvas.setSoftKeys(64, canvas.isProfileUsed() ? 32 : 0);
             return;
          case 16:
-            var2.a4(512, 256);
-            this.l2(55, 54);
+            canvas.setSoftKeys(512, 256);
+            this.showInfoPanel(55, 54);
             return;
          case 17:
-            this.l2(57, 56);
-            var2.a4(512, 256);
+            this.showInfoPanel(57, 56);
+            canvas.setSoftKeys(512, 256);
             return;
          case 18:
-            this.l2(58, 52);
-            var2.a4(512, 256);
+            this.showInfoPanel(58, 52);
+            canvas.setSoftKeys(512, 256);
             return;
          case 19:
-            this.l2(68, 42);
-            var2.a4(512, 256);
+            this.showInfoPanel(68, 42);
+            canvas.setSoftKeys(512, 256);
       }
    }
 
-   private void f3(int var1) {
-      this.b4 = var1;
-      if (!super.canvas.b5()) {
-         super.canvas.j2();
+   private void fadeToState(int nextState) {
+      this.pendingState = nextState;
+      if (!super.canvas.isFadingFromWhite()) {
+         super.canvas.fadeFromWhite();
       }
    }
 
-   private void b2(int var1, int var2) {
-      this.c3 = var1;
-      this.m2 = var2;
-      this.f3(2);
+   private void requestScreen(int action, int param) {
+      this.pendingAction = action;
+      this.pendingParam = param;
+      this.fadeToState(2);
    }
 
-   public final void d3(int var1) {
-      short[] var2 = this.b5;
-      com.ea.sims3.GameCanvas.a(this.b5, 50, super.canvas.a22);
-      com.ea.sims3.GameCanvas.c2(var2, 51);
-      com.ea.sims3.GameCanvas.c2(var2, 59);
-      com.ea.sims3.GameCanvas.c2(var2, 60);
-      com.ea.sims3.GameCanvas.c2(var2, 61);
-      if (super.canvas.a5.isAvailable()) {
-         com.ea.sims3.GameCanvas.c2(var2, 63);
+   public final void buildMainMenu(int selectedId) {
+      short[] items = this.mainMenuItems;
+      com.ea.sims3.GameCanvas.initListWith(this.mainMenuItems, 50, super.canvas.menuRowSpacing);
+      com.ea.sims3.GameCanvas.addToList(items, 51);
+      com.ea.sims3.GameCanvas.addToList(items, 59);
+      com.ea.sims3.GameCanvas.addToList(items, 60);
+      com.ea.sims3.GameCanvas.addToList(items, 61);
+      if (super.canvas.promoImages.isAvailable()) {
+         com.ea.sims3.GameCanvas.addToList(items, 63);
       }
 
-      com.ea.sims3.GameCanvas.c2(var2, 42);
-      com.ea.sims3.GameCanvas.d2(var2, var1);
+      com.ea.sims3.GameCanvas.addToList(items, 42);
+      com.ea.sims3.GameCanvas.selectListValue(items, selectedId);
    }
 
-   private void g2(int var1) {
-      GameCanvas var2 = super.canvas;
-      switch (var1) {
+   private void personaKeyPressed(int menuId) {
+      GameCanvas canvas = super.canvas;
+      switch (menuId) {
          case 42:
             this.onTick(19);
          default:
@@ -579,1147 +579,1147 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             com.ea.sims3.SpriteRenderer.unloadTile(45, 0);
             com.ea.sims3.SpriteRenderer.unloadTile(44, 0);
             com.ea.sims3.SpriteRenderer.unloadTile(43, 0);
-            var2.l2(0);
+            canvas.selectProfile(0);
             this.onTick(14);
             return;
          case 59:
             this.onTick(8);
             return;
          case 60:
-            var2.r2(0);
+            canvas.setMenuMode(0);
             return;
          case 61:
-            var2.r2(3);
+            canvas.setMenuMode(3);
             return;
          case 63:
             this.onTick(9);
       }
    }
 
-   private void e2() {
-      PromoImages var1 = super.canvas.a5;
-      if (super.canvas.a5.available) {
-         var1.handleKeys();
+   private void promoKeyPressed() {
+      PromoImages promo = super.canvas.promoImages;
+      if (super.canvas.promoImages.available) {
+         promo.handleKeys();
       } else {
-         super.canvas.c = false;
+         super.canvas.promoActive = false;
          this.onTick(7);
       }
    }
 
-   private void f2() {
-      if (this.c4 == null) {
-         int var1 = super.canvas.f;
-         short[] var2 = new short[5 + var1];
-         this.c4 = var2;
-         com.ea.sims3.GameCanvas.a(var2, 3, super.canvas.a22);
-         SdkString[] var3 = new SdkString[var1 + 1];
-         this.a7 = var3;
+   private void buildLanguageMenu() {
+      if (this.languageMenuItems == null) {
+         int headerCount = super.canvas.headerCount;
+         short[] items = new short[5 + headerCount];
+         this.languageMenuItems = items;
+         com.ea.sims3.GameCanvas.initListWith(items, 3, super.canvas.menuRowSpacing);
+         SdkString[] names = new SdkString[headerCount + 1];
+         this.languageNames = names;
 
-         for (int var4 = 0; var4 < var1; var4++) {
-            com.ea.sims3.GameCanvas.c2(var2, var4);
-            var3[var4] = com.ea.sims3.SdkText.getHeaderString(var4, 0, null);
+         for (int headerIndex = 0; headerIndex < headerCount; headerIndex++) {
+            com.ea.sims3.GameCanvas.addToList(items, headerIndex);
+            names[headerIndex] = com.ea.sims3.SdkText.getHeaderString(headerIndex, 0, null);
          }
 
-         int var5 = super.canvas.i2;
-         if (super.canvas.i2 != -1) {
-            var2[2] = (short)var5;
+         int languageIndex = super.canvas.language;
+         if (super.canvas.language != -1) {
+            items[2] = (short)languageIndex;
          }
       }
    }
 
-   private void d(Graphics var1) {
-      this.a(var1, this.c4, 1, this.a7);
-      super.canvas.b(var1);
+   private void drawLanguageMenu(Graphics gfx) {
+      this.drawTwoColumnList(gfx, this.languageMenuItems, 1, this.languageNames);
+      super.canvas.drawBottomBar(gfx);
    }
 
-   private void c2(int var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      short var4 = this.c4[2];
-      if (this.matchesInput(var1, var2, 4128, 16384)) {
-         var3.d3(var4);
-         var3.c3();
-         if (var3.k2 == 5) {
-            var3.r2(0);
+   private void languageMenuKeyPressed(int keyCode, int action) {
+      GameCanvas canvas = super.canvas;
+      short previousId = this.languageMenuItems[2];
+      if (this.matchesInput(keyCode, action, 4128, 16384)) {
+         canvas.setLanguage(previousId);
+         canvas.saveSettings();
+         if (canvas.menuMode == 5) {
+            canvas.setMenuMode(0);
          } else {
-            this.f3(5);
+            this.fadeToState(5);
          }
       } else {
-         if (this.matchesInput(var1, var2, 524288, 32768)) {
-            if (var3.k2 == 5) {
-               com.ea.sims3.SdkText.setCurrentLanguage(var3.i2);
-               var3.r2(0);
+         if (this.matchesInput(keyCode, action, 524288, 32768)) {
+            if (canvas.menuMode == 5) {
+               com.ea.sims3.SdkText.setCurrentLanguage(canvas.language);
+               canvas.setMenuMode(0);
                return;
             }
          } else {
-            super.canvas.b3(this.c4, var1);
-            short var5;
-            if ((var5 = this.c4[2]) != var4) {
-               com.ea.sims3.SdkText.setCurrentLanguage(var5);
+            super.canvas.navigateLeftRight(this.languageMenuItems, keyCode);
+            short selectedId;
+            if ((selectedId = this.languageMenuItems[2]) != previousId) {
+               com.ea.sims3.SdkText.setCurrentLanguage(selectedId);
             }
          }
       }
    }
 
-   private void g2() {
-      super.canvas.l2();
-      this.h2(0);
+   private void restartIntro() {
+      super.canvas.clearFade();
+      this.setIntroStep(0);
    }
 
-   private void h2(int var1) {
-      int var2 = 0;
-      switch (var1) {
+   private void setIntroStep(int introStepIndex) {
+      int waitMs = 0;
+      switch (introStepIndex) {
          case 0:
-            var2 = 500;
+            waitMs = 500;
             break;
          case 1:
-            var2 = 1000;
+            waitMs = 1000;
             break;
          case 2:
-            var2 = 2000;
+            waitMs = 2000;
             break;
          case 3:
-            var2 = 600;
+            waitMs = 600;
             break;
          case 4:
-            var2 = 500;
+            waitMs = 500;
             break;
          case 5:
-            var2 = 600;
+            waitMs = 600;
             break;
          case 6:
-            var2 = 300;
+            waitMs = 300;
             break;
          case 7:
-            var2 = 750;
+            waitMs = 750;
             break;
          case 8:
-            var2 = 700;
+            waitMs = 700;
             break;
          case 9:
-            var2 = 600;
+            waitMs = 600;
             break;
          case 10:
-            var2 = 600;
+            waitMs = 600;
             break;
          case 11:
-            var2 = 300;
+            waitMs = 300;
             break;
          case 12:
-            var2 = 750;
+            waitMs = 750;
             break;
          case 13:
-            var2 = 750;
+            waitMs = 750;
             break;
          case 14:
-            var2 = 500;
+            waitMs = 500;
             break;
          case 15:
-            var2 = 750;
+            waitMs = 750;
             break;
          case 16:
-            var2 = this.b5[0] * 200;
+            waitMs = this.mainMenuItems[0] * 200;
             break;
          case 17:
-            var2 = 500;
+            waitMs = 500;
             break;
          case 18:
             this.onTick(7);
       }
 
-      this.q = var1;
-      this.r = 0;
-      this.s = var2;
+      this.introStep = introStepIndex;
+      this.introElapsed = 0;
+      this.introDuration = waitMs;
    }
 
-   private void k2(int var1) {
-      this.r += var1;
-      if (this.r >= this.s) {
-         if (this.q == 13) {
-            this.r %= 750;
+   private void advanceIntro(int deltaMs) {
+      this.introElapsed += deltaMs;
+      if (this.introElapsed >= this.introDuration) {
+         if (this.introStep == 13) {
+            this.introElapsed %= 750;
             return;
          }
 
-         this.h2(this.q + 1);
+         this.setIntroStep(this.introStep + 1);
       }
    }
 
-   private void d2(int var1, int var2) {
-      if (this.q == 13 && this.matchesInput(var1, var2, 4128, 0)) {
-         this.h2(this.q + 1);
+   private void introKeyPressed(int keyCode, int action) {
+      if (this.introStep == 13 && this.matchesInput(keyCode, action, 4128, 0)) {
+         this.setIntroStep(this.introStep + 1);
       }
    }
 
-   private void e(Graphics var1) {
-      switch (this.q) {
+   private void drawIntro(Graphics gfx) {
+      switch (this.introStep) {
          case 0:
-            this.c(var1, 0);
+            this.fillScreen(gfx, 0);
             return;
          case 1:
-            this.f(var1);
-            this.a(var1, this.s - this.r, this.s);
+            this.drawIntroBackground(gfx);
+            this.drawFadeIn(gfx, this.introDuration - this.introElapsed, this.introDuration);
             return;
          case 2:
-            this.f(var1);
+            this.drawIntroBackground(gfx);
             return;
          case 3:
-            this.f(var1);
-            this.a(var1, this.r, this.s);
+            this.drawIntroBackground(gfx);
+            this.drawFadeIn(gfx, this.introElapsed, this.introDuration);
             return;
          case 4:
-            this.c(var1, 0);
+            this.fillScreen(gfx, 0);
             return;
          case 5:
-            this.e(var1, this.r, this.s);
+            this.fillFadeBlack(gfx, this.introElapsed, this.introDuration);
             return;
          case 6:
-            this.c(var1, 1);
+            this.fillScreen(gfx, 1);
             return;
          case 7:
-            this.c(var1, 1);
-            this.g(var1);
-            this.d(var1, this.s - this.r, this.s);
+            this.fillScreen(gfx, 1);
+            this.drawIntroSim(gfx);
+            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
             return;
          case 8:
          case 9:
          case 10:
          case 11:
-            this.c(var1, 1);
-            this.g(var1);
+            this.fillScreen(gfx, 1);
+            this.drawIntroSim(gfx);
             return;
          case 12:
          case 13:
-            this.g(var1);
+            this.drawIntroSim(gfx);
             return;
          case 14:
-            this.g(var1);
-            this.i(var1);
+            this.drawIntroSim(gfx);
+            this.drawMainMenuBox(gfx);
             return;
          case 15:
          case 16:
          case 17:
-            this.h(var1);
-            this.i(var1);
+            this.drawIntroLogo(gfx);
+            this.drawMainMenuBox(gfx);
          case 18:
       }
    }
 
-   private void a(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.canvas;
-      int var5 = 255 - Math.min(var2 * 255 / var3, 255);
-      int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
-      var4.b2(var1, 66, var6, 0, 0, var4.getWidth(), var4.getHeight());
+   private void drawFadeIn(Graphics gfx, int elapsed, int duration) {
+      GameCanvas canvas = super.canvas;
+      int alpha = 255 - Math.min(elapsed * 255 / duration, 255);
+      int color = 0xFF000000 | alpha << 16 | alpha << 8 | alpha << 0;
+      canvas.drawFadeRect(gfx, 66, color, 0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
-   private void d(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.canvas;
-      int var5 = Math.min(var2 * 255 / var3, 255);
-      int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
-      var4.b2(var1, 65, var6, 0, 0, var4.getWidth(), var4.getHeight());
+   private void drawFadeBands(Graphics gfx, int elapsed, int duration) {
+      GameCanvas canvas = super.canvas;
+      int alpha = Math.min(elapsed * 255 / duration, 255);
+      int color = 0xFF000000 | alpha << 16 | alpha << 8 | alpha << 0;
+      canvas.drawFadeRect(gfx, 65, color, 0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
-   private void e(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.canvas;
-      int var5 = Math.min(var2 * 255 / var3, 255);
-      int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
-      var1.setColor(var6);
-      var1.fillRect(0, 0, var4.getWidth(), var4.getHeight());
+   private void fillFadeBlack(Graphics gfx, int elapsed, int duration) {
+      GameCanvas canvas = super.canvas;
+      int alpha = Math.min(elapsed * 255 / duration, 255);
+      int color = 0xFF000000 | alpha << 16 | alpha << 8 | alpha << 0;
+      gfx.setColor(color);
+      gfx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
-   private void c(Graphics var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      com.ea.sims3.SpriteRenderer.setColor(var1, var2);
-      var1.fillRect(0, 0, var3.getWidth(), var3.getHeight());
+   private void fillScreen(Graphics gfx, int colorIndex) {
+      GameCanvas canvas = super.canvas;
+      com.ea.sims3.SpriteRenderer.setColor(gfx, colorIndex);
+      gfx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
-   private void f(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      this.c(var1, 60);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, 556, 0, var2.a(), var2.b());
+   private void drawIntroBackground(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      this.fillScreen(gfx, 60);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 556, 0, canvas.halfWidth(), canvas.halfHeight());
    }
 
-   private void g(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      short var3 = 0;
-      if (com.ea.sims3.GameCanvas.b2 == 1) {
-         var3 = 558;
+   private void drawIntroSim(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      short frameId = 0;
+      if (com.ea.sims3.GameCanvas.currentLandscape == 1) {
+         frameId = 558;
       } else {
-         var3 = 557;
+         frameId = 557;
       }
 
-      int var4 = var2.a();
-      int var5 = var2.b();
-      int var6 = 0;
-      if (this.s != 0) {
-         var6 = com.ea.sims3.FixedMath.div(this.r, this.s);
+      int centerX = canvas.halfWidth();
+      int centerY = canvas.halfHeight();
+      int progress = 0;
+      if (this.introDuration != 0) {
+         progress = com.ea.sims3.FixedMath.div(this.introElapsed, this.introDuration);
       }
 
-      if (this.q >= 12) {
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 8, var4, var5);
-         if (this.q == 12) {
-            this.d(var1, this.s - this.r, this.s);
+      if (this.introStep >= 12) {
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
+         if (this.introStep == 12) {
+            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
          }
       }
 
-      if (this.q >= 11) {
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 6, var4, var5);
-         if (this.q == 11) {
-            this.d(var1, this.s - this.r, this.s);
+      if (this.introStep >= 11) {
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 6, centerX, centerY);
+         if (this.introStep == 11) {
+            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
          }
       }
 
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 0, var4, var5);
-      int var7 = var4;
-      if (this.q == 10) {
-         int var8 = var2.getWidth();
-         var7 = b(var8, var4, var6, 3);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
+      int simX = centerX;
+      if (this.introStep == 10) {
+         int width = canvas.getWidth();
+         simX = easeValue(width, centerX, progress, 3);
       }
 
-      int var14 = Math.min(0, var7 - var4);
-      if (this.q >= 8) {
-         int var10 = -com.ea.sims3.SpriteRenderer.frameHeight(var3, 1);
-         int var12 = var5;
-         if (this.q == 8) {
-            var12 = b(var10, var5, var6, 4);
+      int shiftX = Math.min(0, simX - centerX);
+      if (this.introStep >= 8) {
+         int doorTop = -com.ea.sims3.SpriteRenderer.frameHeight(frameId, 1);
+         int doorY = centerY;
+         if (this.introStep == 8) {
+            doorY = easeValue(doorTop, centerY, progress, 4);
          }
 
-         if (var12 >= var5) {
-            com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 2, var4, var5);
+         if (doorY >= centerY) {
+            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 2, centerX, centerY);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 1, var4 + var14, var12);
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 1, centerX + shiftX, doorY);
       }
 
-      if (this.q >= 9) {
-         int var11 = var4;
-         if (this.q == 9) {
-            var11 = b(0, var4, var6, 3);
+      if (this.introStep >= 9) {
+         int headX = centerX;
+         if (this.introStep == 9) {
+            headX = easeValue(0, centerX, progress, 3);
          }
 
-         int[] var15 = super.a2;
-         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var3, 3, 0);
-         this.a4(var11 + var14 + var15[0], var5 + var15[1], 3);
+         int[] hitRect = super.hitRect;
+         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, frameId, 3, 0);
+         this.drawSampleLetter(headX + shiftX + hitRect[0], centerY + hitRect[1], 3);
       }
 
-      if (this.q >= 10) {
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 4, var7, var5);
-         if (var7 <= var4) {
-            com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 5, var7, var5);
+      if (this.introStep >= 10) {
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 4, simX, centerY);
+         if (simX <= centerX) {
+            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 5, simX, centerY);
          }
       }
 
-      if (this.q == 13 && this.r % 750 < 375) {
-         int[] var9 = super.a2;
-         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var3, 7, 0);
-         var2.a2(34, 0, var4 + var9[0], var5 + var9[1], 3);
+      if (this.introStep == 13 && this.introElapsed % 750 < 375) {
+         int[] pressRect = super.hitRect;
+         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, frameId, 7, 0);
+         canvas.drawStringById(34, 0, centerX + pressRect[0], centerY + pressRect[1], 3);
       }
    }
 
-   private void a4(int var1, int var2, int var3) {
-      GameCanvas var4 = super.canvas;
-      SdkString var5 = super.canvas.a4(25);
-      var4.a(var5, var3, var1, var2, 3);
+   private void drawSampleLetter(int xPos, int yPos, int fontIndex) {
+      GameCanvas canvas = super.canvas;
+      SdkString letter = super.canvas.getString(25);
+      canvas.drawString(letter, fontIndex, xPos, yPos, 3);
    }
 
-   private static int b(int var0, int var1, int var2, int var3) {
-      int var4 = var1 - var0;
-      switch (var3) {
+   private static int easeValue(int from, int target, int progress, int kind) {
+      int range = target - from;
+      switch (kind) {
          case 0:
          default:
-            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
+            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
          case 1:
-            var2 = com.ea.sims3.FixedMath.smoothStep(0, 65536, var2);
-            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
+            progress = com.ea.sims3.FixedMath.smoothStep(0, 65536, progress);
+            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
          case 2:
-            var2 = com.ea.sims3.FixedMath.smoothStep(0, 65536, 32768 + (var2 >> 1));
-            return var0 + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(var2, var4), 0, var4);
+            progress = com.ea.sims3.FixedMath.smoothStep(0, 65536, 32768 + (progress >> 1));
+            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
          case 3:
-            if (var2 < 58982) {
-               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 58982, var2), 68812);
+            if (progress < 58982) {
+               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 58982, progress), 68812);
             } else {
-               int var16 = 65536 - com.ea.sims3.FixedMath.div(var2 - 58982, 6554);
-               var2 = 65536 + com.ea.sims3.FixedMath.mul(3276, var16);
+               int overshootOne = 65536 - com.ea.sims3.FixedMath.div(progress - 58982, 6554);
+               progress = 65536 + com.ea.sims3.FixedMath.mul(3276, overshootOne);
             }
 
-            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
+            return from + com.ea.sims3.FixedMath.mul(progress, range);
          case 4:
-            if (var2 < 55705) {
-               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 55705, var2), 68812);
+            if (progress < 55705) {
+               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 55705, progress), 68812);
             } else {
-               int var15 = 65536 - com.ea.sims3.FixedMath.div(var2 - 55705, 9831);
-               var2 = 65536 + com.ea.sims3.FixedMath.mul(3276, var15);
+               int overshootTwo = 65536 - com.ea.sims3.FixedMath.div(progress - 55705, 9831);
+               progress = 65536 + com.ea.sims3.FixedMath.mul(3276, overshootTwo);
             }
 
-            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
+            return from + com.ea.sims3.FixedMath.mul(progress, range);
          case 5:
-            if (var2 < 49152) {
-               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 49152, var2), 98304);
+            if (progress < 49152) {
+               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 49152, progress), 98304);
             } else {
-               int var14 = 65536 - com.ea.sims3.FixedMath.div(var2 - 49152, 16384);
-               var2 = 65536 + com.ea.sims3.FixedMath.mul(32768, var14);
+               int overshootThree = 65536 - com.ea.sims3.FixedMath.div(progress - 49152, 16384);
+               progress = 65536 + com.ea.sims3.FixedMath.mul(32768, overshootThree);
             }
 
-            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
+            return from + com.ea.sims3.FixedMath.mul(progress, range);
          case 6:
-            if (var2 < 32768) {
-               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul(var2, 102944), 32768)), 72089);
+            if (progress < 32768) {
+               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul(progress, 102944), 32768)), 72089);
             } else {
-               int var5;
-               int var6 = com.ea.sims3.FixedMath.mul(var5 = com.ea.sims3.FixedMath.div(var2 - 32768, 32768), 617662);
-               int var7 = 6554 - com.ea.sims3.FixedMath.mul(6554, var5);
-               var2 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(var6), var7) + 65536;
+               int fraction;
+               int angle = com.ea.sims3.FixedMath.mul(fraction = com.ea.sims3.FixedMath.div(progress - 32768, 32768), 617662);
+               int amplitude = 6554 - com.ea.sims3.FixedMath.mul(6554, fraction);
+               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(angle), amplitude) + 65536;
             }
 
-            return var0 + com.ea.sims3.FixedMath.mul(var2, var4);
+            return from + com.ea.sims3.FixedMath.mul(progress, range);
       }
    }
 
-   private void h(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      short var3 = 0;
-      if (com.ea.sims3.GameCanvas.b2 == 1) {
-         var3 = 558;
+   private void drawIntroLogo(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      short frameId = 0;
+      if (com.ea.sims3.GameCanvas.currentLandscape == 1) {
+         frameId = 558;
       } else {
-         var3 = 557;
+         frameId = 557;
       }
 
-      int var4 = var2.a();
-      int var5 = var2.b();
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, var3, 8, var4, var5);
+      int centerX = canvas.halfWidth();
+      int centerY = canvas.halfHeight();
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
    }
 
-   private void i(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      short[] var3 = this.b5;
-      short var4 = this.b5[0];
-      short var5 = var3[2];
-      int var7 = var4 * 22 - 2 + 14 + 19 + 5;
-      int var8 = var2.getWidth() * 140 / 176;
-      int var9 = var2.getWidth() - var8 >> 1;
-      int var10 = (var2.getHeight() - var7 >> 1) + 2;
-      int var11 = 0;
-      if (this.s != 0) {
-         var11 = com.ea.sims3.FixedMath.div(this.r, this.s);
+   private void drawMainMenuBox(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      short[] items = this.mainMenuItems;
+      short count = this.mainMenuItems[0];
+      short selectedIndex = items[2];
+      int boxHeight = count * 22 - 2 + 14 + 19 + 5;
+      int boxWidth = canvas.getWidth() * 140 / 176;
+      int boxX = canvas.getWidth() - boxWidth >> 1;
+      int boxY = (canvas.getHeight() - boxHeight >> 1) + 2;
+      int progress = 0;
+      if (this.introDuration != 0) {
+         progress = com.ea.sims3.FixedMath.div(this.introElapsed, this.introDuration);
       }
 
-      int var12 = var10;
-      int var13 = var7;
-      if (this.q == 14) {
-         var13 = b(27, var7, var11, 0);
-         var12 = (var2.getHeight() - var13 >> 1) + 2;
+      int drawX = boxY;
+      int drawY = boxHeight;
+      if (this.introStep == 14) {
+         drawY = easeValue(27, boxHeight, progress, 0);
+         drawX = (canvas.getHeight() - drawY >> 1) + 2;
       }
 
-      this.a2(var1, var9, var12, var8, var13, -1, 4);
-      if (this.q >= 15) {
-         var13 = var2.getWidth() >> 1;
-         int var14;
-         int var15 = var14 = var10 + 9;
-         if (this.q == 15) {
-            var15 = b(-com.ea.sims3.SpriteRenderer.frameHeight(557, 9), var14, var11, 3);
+      this.drawDialogFrame(gfx, boxX, drawX, boxWidth, drawY, -1, 4);
+      if (this.introStep >= 15) {
+         drawY = canvas.getWidth() >> 1;
+         int titleHeight;
+         int titleY = titleHeight = boxY + 9;
+         if (this.introStep == 15) {
+            titleY = easeValue(-com.ea.sims3.SpriteRenderer.frameHeight(557, 9), titleHeight, progress, 3);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, 557, 9, var13, var15);
-         int[] var16 = super.a2;
-         com.ea.sims3.SpriteRenderer.hitTest(super.a2, 557, 9, 0);
-         this.a4(var13 + var16[0], var15 + var16[1], 4);
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 557, 9, drawY, titleY);
+         int[] buttonRect = super.hitRect;
+         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, 557, 9, 0);
+         this.drawSampleLetter(drawY + buttonRect[0], titleY + buttonRect[1], 4);
       }
 
-      if (this.q >= 16) {
-         var12 = var8 - 14;
-         var13 = var9 + 7;
-         int var24 = var4;
-         if (this.q == 16) {
-            var24 = this.r / 200;
-            var11 = com.ea.sims3.FixedMath.div(this.r % 200, 200);
+      if (this.introStep >= 16) {
+         drawX = boxWidth - 14;
+         drawY = boxX + 7;
+         int animIndex = count;
+         if (this.introStep == 16) {
+            animIndex = this.introElapsed / 200;
+            progress = com.ea.sims3.FixedMath.div(this.introElapsed % 200, 200);
          }
 
-         int var25 = var10 + 22 + 7;
+         int rowY = boxY + 22 + 7;
 
-         for (int var17 = 0; var17 < var4; var17++) {
-            short var18 = var3[5 + var17];
-            int var19 = var25;
-            if (var17 == var24) {
-               var19 = var25 + b(-3, 0, var11, 5);
-            } else if (var17 > var24) {
+         for (int row = 0; row < count; row++) {
+            short itemId = items[5 + row];
+            int itemY = rowY;
+            if (row == animIndex) {
+               itemY = rowY + easeValue(-3, 0, progress, 5);
+            } else if (row > animIndex) {
                break;
             }
 
-            this.a(var1, var13, var19, var12, 20, var17 == var5, var18);
-            var25 += 22;
+            this.drawButton(gfx, drawY, itemY, drawX, 20, row == selectedIndex, itemId);
+            rowY += 22;
          }
       }
 
-      if (this.q >= 17) {
-         var12 = 0;
-         if (this.q == 17) {
-            var12 = 15 - b(0, 15, var11, 0);
+      if (this.introStep >= 17) {
+         drawX = 0;
+         if (this.introStep == 17) {
+            drawX = 15 - easeValue(0, 15, progress, 0);
          }
 
-         var2.a(var1, var12);
+         canvas.drawBottomBar(gfx, drawX);
       }
    }
 
-   private void h2() {
-      GameCanvas var1 = super.canvas;
-      Neighborhood var2 = super.canvas.a23;
-      var1.p2();
-      var1.q2();
-      this.a8 = var2.i(0, 6) != 0;
-      this.b6 = var2.i(0, 8) != 0;
-      this.c7 = this.a13(var2.i(0, 2));
-      this.H = 0;
+   private void resetForNewSim() {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      canvas.resetGameData();
+      canvas.clearProfileName();
+      this.longSleeves = neighborhood.simAttribute(0, 6) != 0;
+      this.longPants = neighborhood.simAttribute(0, 8) != 0;
+      this.hairHasAccent = this.hairStyleHasAccent(neighborhood.simAttribute(0, 2));
+      this.nameCursor = 0;
       this.onTick(10);
-      this.a(false);
+      this.applySimAppearance(false);
    }
 
-   private void a(boolean var1) {
-      this.b(var1);
-      GameCanvas var2 = super.canvas;
-      Lot var3 = super.canvas.a24;
-      Neighborhood var4 = var2.a23;
-      int[] var5 = this.c6;
-      int[] var6 = this.d3;
-      var3.a2(0, var5, var6);
-      int var7 = var4.i(0, 0) == 0 ? 2048 : 1024;
-      var2.c2(3072, -1);
-      var2.a(var7, var5, var6, 0);
+   private void applySimAppearance(boolean immediate) {
+      this.setSimFrames(immediate);
+      GameCanvas canvas = super.canvas;
+      Lot lot = super.canvas.lot;
+      Neighborhood neighborhood = canvas.neighborhood;
+      int[] recolorFrom = this.recolorFrom;
+      int[] recolorTo = this.recolorTo;
+      lot.buildPaletteFor(0, recolorFrom, recolorTo);
+      int tileMask = neighborhood.simAttribute(0, 0) == 0 ? 2048 : 1024;
+      canvas.unloadTiles(3072, -1);
+      canvas.loadTiles(tileMask, recolorFrom, recolorTo, 0);
    }
 
-   private void a(Graphics var1, int var2, int var3, boolean var4) {
-      GameCanvas var5 = super.canvas;
-      Neighborhood var6 = super.canvas.a23;
-      int var7 = this.c5.animId;
-      if (var4) {
-         int[] var8 = super.a2;
-         com.ea.sims3.SpriteRenderer.hitTest(super.a2, var7, 0, 1);
-         var2 -= var8[0];
-         var3 -= var8[1];
+   private void drawSimPreview(Graphics gfx, int xPos, int yPos, boolean offsetByFrame) {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      int animId = this.simAnimator.animId;
+      if (offsetByFrame) {
+         int[] hitRect = super.hitRect;
+         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, animId, 0, 1);
+         xPos -= hitRect[0];
+         yPos -= hitRect[1];
       }
 
-      this.c5.draw(var1, var2, var3);
-      int[] var11 = super.a2;
-      this.c5.matchesFrame(var11, 0);
-      int var9 = var6.i(0, 2);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, this.t, var9, var2 + var11[0], var3 + var11[1]);
-      if (var6.i(0, 8) != 0) {
-         int var10 = var7 == 703 ? 704 : (var7 == 706 ? 707 : 17091);
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var10, 0, var2, var3);
+      this.simAnimator.draw(gfx, xPos, yPos);
+      int[] frameRect = super.hitRect;
+      this.simAnimator.matchesFrame(frameRect, 0);
+      int hairStyle = neighborhood.simAttribute(0, 2);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, this.simFrameId, hairStyle, xPos + frameRect[0], yPos + frameRect[1]);
+      if (neighborhood.simAttribute(0, 8) != 0) {
+         int accentFrameId = animId == 703 ? 704 : (animId == 706 ? 707 : 17091);
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, accentFrameId, 0, xPos, yPos);
       }
    }
 
-   private void b(boolean var1) {
-      Neighborhood var2 = super.canvas.a23;
-      short var3;
-      short var4;
-      if (super.canvas.a23.i(0, 0) == 0) {
-         if (var1) {
-            var3 = 706;
-            var4 = 708;
+   private void setSimFrames(boolean greeting) {
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      short animId;
+      short frameId;
+      if (super.canvas.neighborhood.simAttribute(0, 0) == 0) {
+         if (greeting) {
+            animId = 706;
+            frameId = 708;
          } else {
-            var3 = 17090;
-            var4 = 17092;
+            animId = 17090;
+            frameId = 17092;
          }
       } else {
-         var3 = 703;
-         var4 = 705;
+         animId = 703;
+         frameId = 705;
       }
 
-      this.c5.play(var3, 4);
-      this.t = var4;
+      this.simAnimator.play(animId, 4);
+      this.simFrameId = frameId;
    }
 
-   private void a2(int var1, boolean var2) {
-      if (!this.c5.isRunning()) {
-         this.b(var2);
+   private void advanceSimAnimator(int deltaMs, boolean greeting) {
+      if (!this.simAnimator.isRunning()) {
+         this.setSimFrames(greeting);
       }
 
-      this.c5.advance(var1);
+      this.simAnimator.advance(deltaMs);
    }
 
-   private void l2(int var1) {
-      this.d4.advance(var1);
-      if (!this.d4.isRunning()) {
-         this.d4.play(681, 20);
+   private void updateScrollAnimators(int deltaMs) {
+      this.upArrowAnimator.advance(deltaMs);
+      if (!this.upArrowAnimator.isRunning()) {
+         this.upArrowAnimator.play(681, 20);
       }
 
-      this.e2.advance(var1);
-      if (!this.e2.isRunning()) {
-         this.e2.play(679, 20);
+      this.downArrowAnimator.advance(deltaMs);
+      if (!this.downArrowAnimator.isRunning()) {
+         this.downArrowAnimator.play(679, 20);
       }
 
-      this.advanceArrows(var1);
-      this.v = com.ea.sims3.BaseScreen.a(this.v, this.w, var1, 8);
-      this.z = com.ea.sims3.BaseScreen.a(this.z, this.A, var1, 8);
-      if (Math.abs(this.v - this.w) < 32768) {
-         this.v = this.w;
+      this.advanceArrows(deltaMs);
+      this.optionScroll = com.ea.sims3.BaseScreen.approach(this.optionScroll, this.optionScrollTarget, deltaMs, 8);
+      this.variantScroll = com.ea.sims3.BaseScreen.approach(this.variantScroll, this.variantScrollTarget, deltaMs, 8);
+      if (Math.abs(this.optionScroll - this.optionScrollTarget) < 32768) {
+         this.optionScroll = this.optionScrollTarget;
       }
 
-      if (Math.abs(this.z - this.A) < 32768) {
-         this.z = this.A;
+      if (Math.abs(this.variantScroll - this.variantScrollTarget) < 32768) {
+         this.variantScroll = this.variantScrollTarget;
       }
    }
 
-   private void e2(int var1, int var2) {
-      if (this.matchesInput(var1, var2, 0, 4)) {
+   private void optionKeyPressed(int keyCode, int action) {
+      if (this.matchesInput(keyCode, action, 0, 4)) {
          this.onTick(17);
-      } else if (this.matchesInput(var1, var2, 0, 2)) {
-         this.f3(11);
-      } else if (this.matchesInput(var1, var2, 8196, 0) && this.u > 0) {
-         this.d4.play(680, 16);
-         this.f2(this.u - 1, -1);
-      } else if (this.matchesInput(var1, var2, 16640, 0) && this.u < d2.length - 1) {
-         this.e2.play(678, 16);
-         this.f2(this.u + 1, 1);
+      } else if (this.matchesInput(keyCode, action, 0, 2)) {
+         this.fadeToState(11);
+      } else if (this.matchesInput(keyCode, action, 8196, 0) && this.optionIndex > 0) {
+         this.upArrowAnimator.play(680, 16);
+         this.setSimOption(this.optionIndex - 1, -1);
+      } else if (this.matchesInput(keyCode, action, 16640, 0) && this.optionIndex < optionIds.length - 1) {
+         this.downArrowAnimator.play(678, 16);
+         this.setSimOption(this.optionIndex + 1, 1);
       } else {
-         if (d2[this.u] == 723) {
-            if (this.matchesInput(var1, var2, 32784, 0)) {
-               this.m2(this.E - 1);
+         if (optionIds[this.optionIndex] == 723) {
+            if (this.matchesInput(keyCode, action, 32784, 0)) {
+               this.selectVariant(this.optionValue - 1);
                this.showLeftArrow();
                return;
             }
 
-            if (this.matchesInput(var1, var2, 65600, 0)) {
-               this.m2(this.E + 1);
+            if (this.matchesInput(keyCode, action, 65600, 0)) {
+               this.selectVariant(this.optionValue + 1);
                this.showRightArrow();
                return;
             }
          } else {
-            if (this.matchesInput(var1, var2, 32784, 0) && this.E > this.F) {
-               this.b(this.E - 1, false);
+            if (this.matchesInput(keyCode, action, 32784, 0) && this.optionValue > this.optionMin) {
+               this.setOptionValue(this.optionValue - 1, false);
                this.showLeftArrow();
-               this.a(false);
+               this.applySimAppearance(false);
                return;
             }
 
-            if (this.matchesInput(var1, var2, 65600, 0) && this.E < this.G) {
-               this.b(this.E + 1, false);
+            if (this.matchesInput(keyCode, action, 65600, 0) && this.optionValue < this.optionMax) {
+               this.setOptionValue(this.optionValue + 1, false);
                this.showRightArrow();
-               this.a(false);
+               this.applySimAppearance(false);
             }
          }
       }
    }
 
-   private void m2(int var1) {
-      Neighborhood var2 = super.canvas.a23;
-      int var3 = super.canvas.a23.c6;
-      if (var1 < 0) {
-         var1 = var3 - 1;
-      } else if (var1 >= var3) {
-         var1 = 0;
+   private void selectVariant(int variant) {
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      int variantCount = super.canvas.neighborhood.portraitCount;
+      if (variant < 0) {
+         variant = variantCount - 1;
+      } else if (variant >= variantCount) {
+         variant = 0;
       }
 
-      this.E = var1;
-      byte[] var4 = var2.a14(var1);
+      this.optionValue = variant;
+      byte[] values = neighborhood.portraitData(variant);
 
-      for (int var5 = 0; var5 < 10; var5++) {
-         var2.i2(var5, var4[var5]);
+      for (int index = 0; index < 10; index++) {
+         neighborhood.setAttribute(index, values[index]);
       }
 
-      this.a8 = var4[10] == 0;
-      this.b6 = var4[11] == 0;
-      this.a(false);
+      this.longSleeves = values[10] == 0;
+      this.longPants = values[11] == 0;
+      this.applySimAppearance(false);
    }
 
-   private void f2(int var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      if (!this.a8 && d2[var1] == 731) {
-         var1 += var2;
+   private void setSimOption(int index, int step) {
+      GameCanvas canvas = super.canvas;
+      if (!this.longSleeves && optionIds[index] == 731) {
+         index += step;
       }
 
-      if (!this.b6 && d2[var1] == 734) {
-         var1 += var2;
+      if (!this.longPants && optionIds[index] == 734) {
+         index += step;
       }
 
-      if (!this.c7 && d2[var1] == 728) {
-         var1 += var2;
+      if (!this.hairHasAccent && optionIds[index] == 728) {
+         index += step;
       }
 
-      int var4 = var3.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.frameHeight(697, 0) << 1);
-      int var6 = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int var7 = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
-      int var8 = (var4 >> 1) + 2 - var7 * var1 - (var7 >> 1);
-      int var9 = var4 - 2 - var7 * var6;
-      var8 = com.ea.sims3.FixedMath.clamp(var8, var9, 2);
-      this.w = var8 << 16;
-      if (var2 == 0) {
-         this.v = var8 << 16;
+      int listHeight = canvas.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.frameHeight(697, 0) << 1);
+      int frameCount = com.ea.sims3.SpriteRenderer.frameCount(687);
+      int frameHeight = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
+      int scrollY = (listHeight >> 1) + 2 - frameHeight * index - (frameHeight >> 1);
+      int minScroll = listHeight - 2 - frameHeight * frameCount;
+      scrollY = com.ea.sims3.FixedMath.clamp(scrollY, minScroll, 2);
+      this.optionScrollTarget = scrollY << 16;
+      if (step == 0) {
+         this.optionScroll = scrollY << 16;
       }
 
-      this.u = var1;
-      short var5 = 196;
-      short var10 = 196;
-      byte var11 = -1;
-      byte var13 = -1;
-      byte var14 = 0;
-      switch (d2[var1]) {
+      this.optionIndex = index;
+      short iconId = 196;
+      short selectedIconId = 196;
+      byte slotIndex = -1;
+      byte variantSlot = -1;
+      byte minValue = 0;
+      switch (optionIds[index]) {
          case 723:
          default:
             break;
          case 724:
-            var10 = 691;
-            var5 = 690;
-            var11 = 0;
+            selectedIconId = 691;
+            iconId = 690;
+            slotIndex = 0;
             break;
          case 725:
-            var13 = 0;
-            var11 = 1;
+            variantSlot = 0;
+            slotIndex = 1;
             break;
          case 726:
-            if (var3.a23.i(0, 0) == 1) {
-               var5 = 692;
-               var10 = 693;
+            if (canvas.neighborhood.simAttribute(0, 0) == 1) {
+               iconId = 692;
+               selectedIconId = 693;
             } else {
-               var5 = 694;
-               var10 = 695;
+               iconId = 694;
+               selectedIconId = 695;
             }
 
-            var11 = 2;
+            slotIndex = 2;
             break;
          case 727:
-            var13 = 1;
-            var11 = 3;
+            variantSlot = 1;
+            slotIndex = 3;
             break;
          case 728:
-            var13 = 2;
-            var11 = 4;
+            variantSlot = 2;
+            slotIndex = 4;
             break;
          case 729:
-            var13 = 3;
-            var11 = 5;
+            variantSlot = 3;
+            slotIndex = 5;
             break;
          case 730:
-            var5 = 700;
-            var10 = 701;
-            this.E = this.a8 ? 0 : 1;
+            iconId = 700;
+            selectedIconId = 701;
+            this.optionValue = this.longSleeves ? 0 : 1;
             break;
          case 731:
-            var13 = 4;
-            var11 = 6;
-            var14 = 1;
+            variantSlot = 4;
+            slotIndex = 6;
+            minValue = 1;
             break;
          case 732:
-            var13 = 5;
-            var11 = 7;
+            variantSlot = 5;
+            slotIndex = 7;
             break;
          case 733:
-            var5 = 698;
-            var10 = 699;
-            this.E = this.b6 ? 0 : 1;
+            iconId = 698;
+            selectedIconId = 699;
+            this.optionValue = this.longPants ? 0 : 1;
             break;
          case 734:
-            var13 = 6;
-            var11 = 8;
-            var14 = 1;
+            variantSlot = 6;
+            slotIndex = 8;
+            minValue = 1;
             break;
          case 735:
-            var13 = 7;
-            var11 = 9;
+            variantSlot = 7;
+            slotIndex = 9;
       }
 
-      this.x = var11;
-      this.y = var13;
-      this.B = 689;
-      this.C = var5;
-      this.D = var10;
-      this.F = var14;
-      if (var13 != -1) {
-         this.G = var3.a24.a14(var13).length - 1;
+      this.optionSlot = slotIndex;
+      this.variantSlot = variantSlot;
+      this.optionIconId = 689;
+      this.optionFrameSelected = iconId;
+      this.optionFrameNormal = selectedIconId;
+      this.optionMin = minValue;
+      if (variantSlot != -1) {
+         this.optionMax = canvas.lot.tableRowAt(variantSlot).length - 1;
       } else {
-         this.G = com.ea.sims3.SpriteRenderer.frameCount(var5) - 1;
+         this.optionMax = com.ea.sims3.SpriteRenderer.frameCount(iconId) - 1;
       }
 
-      if (var11 != -1) {
-         this.b(var3.a23.i(0, var11), true);
+      if (slotIndex != -1) {
+         this.setOptionValue(canvas.neighborhood.simAttribute(0, slotIndex), true);
       } else {
-         this.b(this.E, true);
+         this.setOptionValue(this.optionValue, true);
       }
    }
 
-   private boolean a13(int var1) {
-      int var2 = 1 << var1;
-      if (super.canvas.a23.i(0, 0) == 0) {
-         var2 <<= 16;
+   private boolean hairStyleHasAccent(int hairStyle) {
+      int mask = 1 << hairStyle;
+      if (super.canvas.neighborhood.simAttribute(0, 0) == 0) {
+         mask <<= 16;
       }
 
-      return (var2 & 786445) != 0;
+      return (mask & 786445) != 0;
    }
 
-   private void b(int var1, boolean var2) {
-      Neighborhood var3 = super.canvas.a23;
-      this.E = var1;
-      if (this.x != -1) {
-         var3.i2(this.x, var1);
+   private void setOptionValue(int value, boolean immediate) {
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      this.optionValue = value;
+      if (this.optionSlot != -1) {
+         neighborhood.setAttribute(this.optionSlot, value);
       }
 
-      short var4;
-      if ((var4 = d2[this.u]) == 730) {
-         int var5;
-         if (var1 == 0) {
-            this.a8 = true;
-            var5 = var3.i(0, 5) + 1;
+      short optionId;
+      if ((optionId = optionIds[this.optionIndex]) == 730) {
+         int count;
+         if (value == 0) {
+            this.longSleeves = true;
+            count = neighborhood.simAttribute(0, 5) + 1;
          } else {
-            this.a8 = false;
-            var5 = 0;
+            this.longSleeves = false;
+            count = 0;
          }
 
-         var3.i2(6, var5);
-      } else if (var4 == 733) {
-         int var13;
-         if (var1 == 0) {
-            this.b6 = true;
-            var13 = var3.i(0, 7) + 1;
+         neighborhood.setAttribute(6, count);
+      } else if (optionId == 733) {
+         int sleeveCount;
+         if (value == 0) {
+            this.longPants = true;
+            sleeveCount = neighborhood.simAttribute(0, 7) + 1;
          } else {
-            this.b6 = false;
-            var13 = 0;
+            this.longPants = false;
+            sleeveCount = 0;
          }
 
-         var3.i2(8, var13);
-      } else if (var4 == 724 || var4 == 726) {
-         this.c7 = this.a13(var3.i(0, 2));
+         neighborhood.setAttribute(8, sleeveCount);
+      } else if (optionId == 724 || optionId == 726) {
+         this.hairHasAccent = this.hairStyleHasAccent(neighborhood.simAttribute(0, 2));
       }
 
-      int[] var14 = super.a2;
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.a2, 689, 0, 0);
-      int var6 = var14[2];
-      int var7 = this.G - this.F + 1;
-      int var8 = com.ea.sims3.SpriteRenderer.frameHeight(683, 0);
-      int var9 = Math.min(var7 * var8, var6);
-      int var10 = var6 - var9;
-      int var11 = (var9 >> 1) + 0 - var8 * var1 - (var8 >> 1) + var10;
-      int var12 = var9 - 0 - var8 * var7 + (var10 >> 1);
-      var11 = com.ea.sims3.FixedMath.clamp(var11, var12, 0);
-      this.A = var11 << 16;
-      if (var2) {
-         this.z = var11 << 16;
+      int[] hitRect = super.hitRect;
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.hitRect, 689, 0, 0);
+      int listHeight = hitRect[2];
+      int rowCount = this.optionMax - this.optionMin + 1;
+      int rowHeight = com.ea.sims3.SpriteRenderer.frameHeight(683, 0);
+      int visibleRows = Math.min(rowCount * rowHeight, listHeight);
+      int maxOffset = listHeight - visibleRows;
+      int targetOffset = (visibleRows >> 1) + 0 - rowHeight * value - (rowHeight >> 1) + maxOffset;
+      int minOffset = visibleRows - 0 - rowHeight * rowCount + (maxOffset >> 1);
+      targetOffset = com.ea.sims3.FixedMath.clamp(targetOffset, minOffset, 0);
+      this.variantScrollTarget = targetOffset << 16;
+      if (immediate) {
+         this.variantScroll = targetOffset << 16;
       }
    }
 
-   private static final void a(Graphics var0, int[] var1, int var2, int var3, int var4, int var5) {
-      int var6 = var1.length;
-      int var7 = (var5 << 16) / var6;
-      int var8 = 0;
+   private static final void drawVerticalGradient(Graphics gfx, int[] colors, int xPos, int yPos, int width, int height) {
+      int count = colors.length;
+      int bandHeight = (height << 16) / count;
+      int offsetY = 0;
 
-      for (int var10 = 0; var10 < var6; var10++) {
-         com.ea.sims3.SpriteRenderer.setColor(var0, var1[var10]);
-         int var9 = (var10 + 1) * var7 + 32768 >> 16;
-         var0.fillRect(var2, var3 + var8, var4, var9 - var8);
-         var8 = var9;
+      for (int band = 0; band < count; band++) {
+         com.ea.sims3.SpriteRenderer.setColor(gfx, colors[band]);
+         int nextOffset = (band + 1) * bandHeight + 32768 >> 16;
+         gfx.fillRect(xPos, yPos + offsetY, width, nextOffset - offsetY);
+         offsetY = nextOffset;
       }
    }
 
-   private static final void c2(Graphics var0, int var1, int var2, int var3, int var4) {
-      int var5 = a3(var4);
-      int var6 = var4 - var5;
-      a(var0, f2, var1, var2, var3, var4);
-      a(var0, g2, var1, var2 + var6, var3, var5);
+   private static final void drawPanelGradient(Graphics gfx, int xPos, int yPos, int width, int height) {
+      int topHeight = panelGradientHeight(height);
+      int bottomHeight = height - topHeight;
+      drawVerticalGradient(gfx, panelGradientTop, xPos, yPos, width, height);
+      drawVerticalGradient(gfx, panelGradientBottom, xPos, yPos + bottomHeight, width, topHeight);
    }
 
-   private static final int a3(int var0) {
-      return com.ea.sims3.FixedMath.mul(17902, var0);
+   private static final int panelGradientHeight(int height) {
+      return com.ea.sims3.FixedMath.mul(17902, height);
    }
 
-   private void j(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      int var3 = super.canvas.getWidth();
-      int var4 = var2.getHeight() - 15;
-      c2(var1, 0, 0, var3, var4);
-      int[] var5 = super.a2;
-      int var8 = com.ea.sims3.SpriteRenderer.frameHeight(697, 0);
-      int var9;
-      int var14 = (var9 = com.ea.sims3.SpriteRenderer.frameWidth(697, 0)) + 4;
-      int var15 = 0 + var8;
-      int var16 = var9 - 4;
-      int var17 = var4 - (var8 << 1);
-      int var18 = var3 + 2 + var14 >> 1;
-      int var19 = a3(var4);
-      int var20 = var4 - (var19 >> 1);
-      int var21 = var1.getClipX();
-      int var22 = var1.getClipY();
-      int var23 = var1.getClipWidth();
-      int var24 = var1.getClipHeight();
-      com.ea.sims3.SpriteRenderer.setColor(var1, 60);
-      var1.fillRect(2, 0, 1, var4);
-      var1.fillRect(2 + var14 - 1, 0, 1, var4);
-      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
-      var1.fillRect(3, 0, 1, var4);
-      var1.fillRect(2 + var14 - 2, 0, 1, var4);
-      com.ea.sims3.SpriteRenderer.setColor(var1, 76);
-      var1.fillRect(4, var8, 2, var17);
-      var1.fillRect(2 + var14 - 2 - 2, var8, 2, var17);
-      a(var1, e3, 6, var15, var16, var17);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, 697, 0, 4, 0);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, 696, 0, 4, var4);
-      int var25 = 6 + (var16 >> 1);
-      int var26 = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int var27 = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
-      if (this.u > 0) {
-         com.ea.sims3.SpriteRenderer.hitTest(var5, 697, 0, 0);
-         this.d4.draw(var1, 4 + var5[0], 0 + var5[1]);
+   private void drawAppearanceScreen(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      int width = super.canvas.getWidth();
+      int height = canvas.getHeight() - 15;
+      drawPanelGradient(gfx, 0, 0, width, height);
+      int[] hitRect = super.hitRect;
+      int panelFrameHeight = com.ea.sims3.SpriteRenderer.frameHeight(697, 0);
+      int panelFrameWidth;
+      int panelWidth = (panelFrameWidth = com.ea.sims3.SpriteRenderer.frameWidth(697, 0)) + 4;
+      int listTop = 0 + panelFrameHeight;
+      int listWidth = panelFrameWidth - 4;
+      int listHeight = height - (panelFrameHeight << 1);
+      int panelCenterX = width + 2 + panelWidth >> 1;
+      int panelHeight = panelGradientHeight(height);
+      int panelY = height - (panelHeight >> 1);
+      int clipX = gfx.getClipX();
+      int clipY = gfx.getClipY();
+      int clipWidth = gfx.getClipWidth();
+      int clipHeight = gfx.getClipHeight();
+      com.ea.sims3.SpriteRenderer.setColor(gfx, 60);
+      gfx.fillRect(2, 0, 1, height);
+      gfx.fillRect(2 + panelWidth - 1, 0, 1, height);
+      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      gfx.fillRect(3, 0, 1, height);
+      gfx.fillRect(2 + panelWidth - 2, 0, 1, height);
+      com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+      gfx.fillRect(4, panelFrameHeight, 2, listHeight);
+      gfx.fillRect(2 + panelWidth - 2 - 2, panelFrameHeight, 2, listHeight);
+      drawVerticalGradient(gfx, scrollBarGradient, 6, listTop, listWidth, listHeight);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 697, 0, 4, 0);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 696, 0, 4, height);
+      int gradientTop = 6 + (listWidth >> 1);
+      int optionCount = com.ea.sims3.SpriteRenderer.frameCount(687);
+      int rowHeight = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
+      if (this.optionIndex > 0) {
+         com.ea.sims3.SpriteRenderer.hitTest(hitRect, 697, 0, 0);
+         this.upArrowAnimator.draw(gfx, 4 + hitRect[0], 0 + hitRect[1]);
       }
 
-      if (this.u < var26 - 1) {
-         com.ea.sims3.SpriteRenderer.hitTest(var5, 696, 0, 0);
-         this.e2.draw(var1, 4 + var5[0], var4 + var5[1]);
+      if (this.optionIndex < optionCount - 1) {
+         com.ea.sims3.SpriteRenderer.hitTest(hitRect, 696, 0, 0);
+         this.downArrowAnimator.draw(gfx, 4 + hitRect[0], height + hitRect[1]);
       }
 
-      var1.setClip(6, var15, var16, var17);
-      int var28 = var15 + (this.v >> 16);
+      gfx.setClip(6, listTop, listWidth, listHeight);
+      int rowY = listTop + (this.optionScroll >> 16);
 
-      for (int var29 = 0; var29 < var26; var29++) {
-         int var30 = var29 == this.u ? 688 : 687;
-         int var31 = var29;
-         if (d2[var29] == 731 && !this.a8) {
-            var30 = 686;
-            var31 = 0;
+      for (int optionRow = 0; optionRow < optionCount; optionRow++) {
+         int rowFrameId = optionRow == this.optionIndex ? 688 : 687;
+         int rowFrameIndex = optionRow;
+         if (optionIds[optionRow] == 731 && !this.longSleeves) {
+            rowFrameId = 686;
+            rowFrameIndex = 0;
          }
 
-         if (d2[var29] == 734 && !this.b6) {
-            var30 = 685;
-            var31 = 0;
+         if (optionIds[optionRow] == 734 && !this.longPants) {
+            rowFrameId = 685;
+            rowFrameIndex = 0;
          }
 
-         if (d2[var29] == 728 && !this.c7) {
-            var30 = 684;
-            var31 = 0;
+         if (optionIds[optionRow] == 728 && !this.hairHasAccent) {
+            rowFrameId = 684;
+            rowFrameIndex = 0;
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var30, var31, var25, var28);
-         var28 += var27;
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, rowFrameId, rowFrameIndex, gradientTop, rowY);
+         rowY += rowHeight;
       }
 
-      var1.setClip(var21, var22, var23, var24);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, 702, 0, var18, var20);
-      this.a(var1, var18, var20, false);
-      short var44 = d2[this.u];
-      var28 = var2.getWidth() - var14 - 2 - 8;
-      int var47 = 2 + var14 + 4;
-      var25 = this.c(var1, var47, var28, 719, var44);
-      var27 = this.B;
-      if (this.B != 196) {
-         var47 = var25 + com.ea.sims3.FixedMath.mul(var4 - var19 - var25, 12179);
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, var27, 0, var18, var47);
-         com.ea.sims3.SpriteRenderer.hitTestMirrored(var5, var27, 0, 0);
-         int var49 = var18 + var5[0];
-         int var50 = var47 + var5[1];
-         int var32 = var5[2];
-         int var33 = var5[3];
-         int var34 = var50 + (var33 >> 1);
-         int var35 = com.ea.sims3.SpriteRenderer.frameWidth(683, 0);
-         var1.setClip(var49, var50, var32, var33);
-         boolean var36 = this.y != -1;
-         int var37 = var49 + (this.z >> 16) + (var36 ? 0 : var35 >> 1);
+      gfx.setClip(clipX, clipY, clipWidth, clipHeight);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 702, 0, panelCenterX, panelY);
+      this.drawSimPreview(gfx, panelCenterX, panelY, false);
+      short optionId = optionIds[this.optionIndex];
+      rowY = canvas.getWidth() - panelWidth - 2 - 8;
+      int swatchX = 2 + panelWidth + 4;
+      gradientTop = this.drawIconPanel(gfx, swatchX, rowY, 719, optionId);
+      rowHeight = this.optionIconId;
+      if (this.optionIconId != 196) {
+         swatchX = gradientTop + com.ea.sims3.FixedMath.mul(height - panelHeight - gradientTop, 12179);
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, rowHeight, 0, panelCenterX, swatchX);
+         com.ea.sims3.SpriteRenderer.hitTestMirrored(hitRect, rowHeight, 0, 0);
+         int iconX = panelCenterX + hitRect[0];
+         int iconY = swatchX + hitRect[1];
+         int iconWidth = hitRect[2];
+         int iconHeight = hitRect[3];
+         int iconCenterY = iconY + (iconHeight >> 1);
+         int cellWidth = com.ea.sims3.SpriteRenderer.frameWidth(683, 0);
+         gfx.setClip(iconX, iconY, iconWidth, iconHeight);
+         boolean hasVariants = this.variantSlot != -1;
+         int cellX = iconX + (this.variantScroll >> 16) + (hasVariants ? 0 : cellWidth >> 1);
 
-         for (int var38 = this.F; var38 <= this.G; var38++) {
-            if (var36) {
-               Lot var39 = var2.a24;
-               int var40 = this.y;
-               byte[] var41 = var39.a14(var40);
-               int[] var42 = var39.a15(var41[var38]);
-               this.a(var1, var37, var34, var42, var38 == this.E);
+         for (int variantIndex = this.optionMin; variantIndex <= this.optionMax; variantIndex++) {
+            if (hasVariants) {
+               Lot lot = canvas.lot;
+               int variantSlot = this.variantSlot;
+               byte[] variantValues = lot.tableRowAt(variantSlot);
+               int[] colors = lot.paletteAt(variantValues[variantIndex]);
+               this.drawVariantCell(gfx, cellX, iconCenterY, colors, variantIndex == this.optionValue);
             } else {
-               int var51 = var38 == this.E ? this.C : this.D;
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, var51, var38, var37, var34);
+               int cellFrameId = variantIndex == this.optionValue ? this.optionFrameSelected : this.optionFrameNormal;
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, cellFrameId, variantIndex, cellX, iconCenterY);
             }
 
-            var37 += var35;
+            cellX += cellWidth;
          }
 
-         var1.setClip(var21, var22, var23, var24);
-         if (this.E > this.F || var44 == 723) {
-            com.ea.sims3.SpriteRenderer.hitTest(var5, var27, 0, 0);
-            super.leftArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
+         gfx.setClip(clipX, clipY, clipWidth, clipHeight);
+         if (this.optionValue > this.optionMin || optionId == 723) {
+            com.ea.sims3.SpriteRenderer.hitTest(hitRect, rowHeight, 0, 0);
+            super.leftArrowAnim.draw(gfx, panelCenterX + hitRect[0], swatchX + hitRect[1]);
          }
 
-         if (this.E < this.G || var44 == 723) {
-            com.ea.sims3.SpriteRenderer.hitTest(var5, var27, 0, 1);
-            super.rightArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
+         if (this.optionValue < this.optionMax || optionId == 723) {
+            com.ea.sims3.SpriteRenderer.hitTest(hitRect, rowHeight, 0, 1);
+            super.rightArrowAnim.draw(gfx, panelCenterX + hitRect[0], swatchX + hitRect[1]);
          }
       }
 
-      var2.b(var1);
+      canvas.drawBottomBar(gfx);
    }
 
-   private void a(Graphics var1, int var2, int var3, int[] var4, boolean var5) {
-      int var6 = var5 ? 683 : 682;
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, var6, 0, var2, var3);
-      int[] var7 = super.a2;
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.a2, 682, 0, 0);
-      int var8 = var2 + var7[0];
-      int var9 = var3 + var7[1];
-      int var10 = var7[2];
-      int var11 = var7[3];
-      var1.setColor(var4[1]);
-      var1.fillRect(var8, var9, var10, var11);
-      var1.setColor(var4[3]);
-      var1.fillRect(var8 + 1, var9 + 1, var10 - 2, 3);
-      var1.setColor(var4[2]);
-      var1.fillRect(var8 + 1, var9 + 1 + 3, var10 - 2, 5);
+   private void drawVariantCell(Graphics gfx, int xPos, int yPos, int[] colors, boolean selected) {
+      int frameId = selected ? 683 : 682;
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, xPos, yPos);
+      int[] hitRect = super.hitRect;
+      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.hitRect, 682, 0, 0);
+      int cellX = xPos + hitRect[0];
+      int cellY = yPos + hitRect[1];
+      int cellWidth = hitRect[2];
+      int cellHeight = hitRect[3];
+      gfx.setColor(colors[1]);
+      gfx.fillRect(cellX, cellY, cellWidth, cellHeight);
+      gfx.setColor(colors[3]);
+      gfx.fillRect(cellX + 1, cellY + 1, cellWidth - 2, 3);
+      gfx.setColor(colors[2]);
+      gfx.fillRect(cellX + 1, cellY + 1 + 3, cellWidth - 2, 5);
    }
 
-   private void g2(int var1, int var2) {
-      this.a5(var1, var2);
-      if (this.matchesInput(var1, var2, 0, 4)) {
+   private void appearanceKeyPressed(int keyCode, int action) {
+      this.scrollList(keyCode, action);
+      if (this.matchesInput(keyCode, action, 0, 4)) {
          this.onTick(10);
-      } else if (this.matchesInput(var1, var2, 0, 2)) {
+      } else if (this.matchesInput(keyCode, action, 0, 2)) {
          this.onTick(12);
       } else {
-         if (this.matchesInput(var1, var2, 4128, 16)) {
-            int var3 = super.l;
-            super.canvas.a23.d3(var3);
-            super.canvas.a4(4, 2);
+         if (this.matchesInput(keyCode, action, 4128, 16)) {
+            int traitIndex = super.selectedIndex;
+            super.canvas.neighborhood.setSelectedResident(traitIndex);
+            super.canvas.setSoftKeys(4, 2);
          }
       }
    }
 
-   private void k(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      this.a(var1, 18);
-      int var3 = var2.getWidth();
-      int var4 = var2.getHeight() - 15;
-      this.a(var1, var3, var4, true);
-      var2.b(var1);
+   private void drawPersonaScreen(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      this.drawPanel(gfx, 18);
+      int width = canvas.getWidth();
+      int height = canvas.getHeight() - 15;
+      this.drawSimPreview(gfx, width, height, true);
+      canvas.drawBottomBar(gfx);
    }
 
-   private void i2() {
-      Neighborhood var1 = super.canvas.a23;
-      this.d(var1.j(), 15, 0);
+   private void layoutPersonaList() {
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      this.beginList(neighborhood.residentLabelCount(), 15, 0);
    }
 
-   public final void a2(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = super.canvas;
-      Neighborhood var7 = super.canvas.a23;
-      int var8 = var2 + (var4 >> 1);
-      int var9 = var3;
-      int var10 = super.k;
-      int var11 = super.l;
+   public final void drawPersonaRows(Graphics gfx, int xPos, int yPos, int width, int height) {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      int centerX = xPos + (width >> 1);
+      int rowY = yPos;
+      int startIndex = super.scrollOffset;
+      int selectedIndex = super.selectedIndex;
 
-      while (var9 < var3 + var5 && var10 < super.j) {
-         short var12 = var7.a11(var10);
-         byte var15 = -1;
-         byte var13;
-         byte var14;
-         if (var10 == var7.a11) {
-            var14 = 0;
-            var13 = 1;
-            var15 = 75;
+      while (rowY < yPos + height && startIndex < super.itemCount) {
+         short traitId = neighborhood.residentLabelText(startIndex);
+         byte frameId = -1;
+         byte rowFrame;
+         byte textFrame;
+         if (startIndex == neighborhood.selectedResident) {
+            textFrame = 0;
+            rowFrame = 1;
+            frameId = 75;
          } else {
-            var14 = 1;
-            var13 = 2;
+            textFrame = 1;
+            rowFrame = 2;
          }
 
-         if (var10 == var11) {
-            var15 = 82;
+         if (startIndex == selectedIndex) {
+            frameId = 82;
          }
 
-         if (var15 != -1) {
-            this.a(var1, var2, var9, var4, 15, var3 + var5, var15, var10);
+         if (frameId != -1) {
+            this.drawClippedRow(gfx, xPos, rowY, width, 15, yPos + height, frameId, startIndex);
          }
 
-         var6.a2(var12, var14, var8, var9 + var13, 17);
-         var9 += 15;
-         var10++;
-         com.ea.sims3.BaseScreen.a2(var1, var2, var9, var4);
+         canvas.drawStringById(traitId, textFrame, centerX, rowY + rowFrame, 17);
+         rowY += 15;
+         startIndex++;
+         com.ea.sims3.BaseScreen.drawHLine(gfx, xPos, rowY, width);
       }
    }
 
-   public final int a(Graphics var1, int var2, int var3, int var4) {
-      int var5 = 8 + 4 * super.e;
-      if (var1 != null) {
-         this.j(var1, var2, var3, var4, var5);
-         int var6 = var4 - 8 - 15;
-         int var7 = var2 + 4;
-         int var8;
-         int var9 = (var8 = var3 + 4) + super.e;
-         GameCanvas var10 = super.canvas;
-         super.canvas.a2(722, 1, var7, var8, 20);
-         int var11 = super.l;
-         short var12 = var10.a23.b6(var11);
-         var10.a(0, var12, 1, var6, var7, var9, 20);
+   public final int drawTextBox(Graphics gfx, int xPos, int yPos, int width) {
+      int height = 8 + 4 * super.textLineHeight;
+      if (gfx != null) {
+         this.drawRaisedBox(gfx, xPos, yPos, width, height);
+         int innerWidth = width - 8 - 15;
+         int textX = xPos + 4;
+         int textY;
+         int valueY = (textY = yPos + 4) + super.textLineHeight;
+         GameCanvas canvas = super.canvas;
+         super.canvas.drawStringById(722, 1, textX, textY, 20);
+         int selectedIndex = super.selectedIndex;
+         short value = canvas.neighborhood.residentInfoText(selectedIndex);
+         canvas.drawSlotText(0, value, 1, innerWidth, textX, valueY, 20);
       }
 
-      return var5;
+      return height;
    }
 
-   private void n2(int var1) {
-      super.canvas.i2(var1);
+   private void updateNameEntryMarquees(int deltaMs) {
+      super.canvas.updateMarquees(deltaMs);
    }
 
-   private void h2(int var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      Neighborhood var4 = super.canvas.a23;
-      this.a5(var1, var2);
-      if (this.matchesInput(var1, var2, 0, 4)) {
+   private void traitKeyPressed(int keyCode, int action) {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      this.scrollList(keyCode, action);
+      if (this.matchesInput(keyCode, action, 0, 4)) {
          this.onTick(11);
-      } else if (this.matchesInput(var1, var2, 0, 2)) {
+      } else if (this.matchesInput(keyCode, action, 0, 2)) {
          this.onTick(13);
       } else {
-         if (this.matchesInput(var1, var2, 4128, 16)) {
-            int var5 = super.l;
-            if (var4.j(0, var5) == -1) {
-               var4.l2(var5);
+         if (this.matchesInput(keyCode, action, 4128, 16)) {
+            int interestIndex = super.selectedIndex;
+            if (neighborhood.simKnownIndex(0, interestIndex) == -1) {
+               neighborhood.addKnown(interestIndex);
             } else {
-               var4.m2(var5);
+               neighborhood.removeKnown(interestIndex);
             }
 
-            int var6 = var3.a23.s();
-            boolean var7 = 5 == var6;
-            var3.a4(4, var7 ? 2 : 0);
+            int status = canvas.neighborhood.simKnownFreeSlot();
+            boolean available = 5 == status;
+            canvas.setSoftKeys(4, available ? 2 : 0);
          }
       }
    }
 
-   private void l(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      this.a(var1, 19);
-      int var3 = var2.getWidth();
-      int var4 = var2.getHeight() - 15;
-      this.a(var1, var3, var4, true);
-      var2.b(var1);
+   private void drawTraitScreen(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      this.drawPanel(gfx, 19);
+      int width = canvas.getWidth();
+      int height = canvas.getHeight() - 15;
+      this.drawSimPreview(gfx, width, height, true);
+      canvas.drawBottomBar(gfx);
    }
 
-   private void j2() {
-      this.d(com.ea.sims3.Neighborhood.o(), 15, 0);
+   private void layoutTraitList() {
+      this.beginList(com.ea.sims3.Neighborhood.initialScreenId(), 15, 0);
    }
 
-   public final void b2(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = super.canvas;
-      Neighborhood var7 = super.canvas.a23;
-      int var8 = var2 + (var4 >> 1);
-      int var9 = var3;
-      int var10 = super.k;
-      int var11 = super.l;
+   public final void drawTraitRows(Graphics gfx, int xPos, int yPos, int width, int height) {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      int centerX = xPos + (width >> 1);
+      int rowY = yPos;
+      int startIndex = super.scrollOffset;
+      int selectedIndex = super.selectedIndex;
 
-      while (var9 < var3 + var5 && var10 < super.j) {
-         short var12 = var7.f2(var10);
-         byte var15 = -1;
-         byte var13;
-         byte var14;
-         if (var7.j(0, var10) != -1) {
-            var14 = 0;
-            var13 = 1;
-            var15 = 75;
+      while (rowY < yPos + height && startIndex < super.itemCount) {
+         short interestId = neighborhood.itemNameText(startIndex);
+         byte frameId = -1;
+         byte rowFrame;
+         byte textFrame;
+         if (neighborhood.simKnownIndex(0, startIndex) != -1) {
+            textFrame = 0;
+            rowFrame = 1;
+            frameId = 75;
          } else {
-            var14 = 1;
-            var13 = 2;
+            textFrame = 1;
+            rowFrame = 2;
          }
 
-         if (var10 == var11) {
-            var15 = 82;
+         if (startIndex == selectedIndex) {
+            frameId = 82;
          }
 
-         if (var15 != -1) {
-            this.a(var1, var2, var9, var4, 15, var3 + var5, var15, var10);
+         if (frameId != -1) {
+            this.drawClippedRow(gfx, xPos, rowY, width, 15, yPos + height, frameId, startIndex);
          }
 
-         var6.a2(var12, var14, var8, var9 + var13, 17);
-         var9 += 15;
-         var10++;
-         com.ea.sims3.BaseScreen.a2(var1, var2, var9, var4);
+         canvas.drawStringById(interestId, textFrame, centerX, rowY + rowFrame, 17);
+         rowY += 15;
+         startIndex++;
+         com.ea.sims3.BaseScreen.drawHLine(gfx, xPos, rowY, width);
       }
    }
 
-   private static final int b2(int var0) {
-      switch (var0) {
+   private static final int keyToCharIndex(int keyCode) {
+      switch (keyCode) {
          case 1:
             return 9;
          case 2:
@@ -1745,288 +1745,288 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
    }
 
-   private void k2() {
-      this.d5 = false;
-      this.H = super.canvas.b2().length;
-      this.I = 0;
-      this.J = -1;
-      this.K = 0;
+   private void resetNameEntry() {
+      this.multiTapActive = false;
+      this.nameCursor = super.canvas.profileName().length;
+      this.keyRepeatTimer = 0;
+      this.repeatKey = -1;
+      this.keyCharIndex = 0;
    }
 
-   private void o2(int var1) {
-      GameCanvas var2 = super.canvas;
-      super.canvas.c4(1023);
-      char[] var3 = a9[var1];
-      if (this.d5 && var1 == this.J) {
-         this.I = 0;
-         this.K = (this.K + 1) % var3.length;
-         var2.a(this.H, var3[this.K]);
+   private void nameKeyPressed(int keyIndex) {
+      GameCanvas canvas = super.canvas;
+      super.canvas.clearAction(1023);
+      char[] chars = KEY_CHARS[keyIndex];
+      if (this.multiTapActive && keyIndex == this.repeatKey) {
+         this.keyRepeatTimer = 0;
+         this.keyCharIndex = (this.keyCharIndex + 1) % chars.length;
+         canvas.setProfileNameChar(this.nameCursor, chars[this.keyCharIndex]);
       } else {
-         this.l2();
-         if (var2.e() != 8) {
-            var2.b(this.H, var3[0]);
-            this.d5 = true;
-            this.I = 0;
-            this.J = var1;
-            this.K = 0;
+         this.endMultiTap();
+         if (canvas.profileNameLength() != 8) {
+            canvas.insertProfileNameChar(this.nameCursor, chars[0]);
+            this.multiTapActive = true;
+            this.keyRepeatTimer = 0;
+            this.repeatKey = keyIndex;
+            this.keyCharIndex = 0;
          }
       }
    }
 
-   private void l2() {
-      if (this.d5) {
-         this.d5 = false;
-         if (this.H < 8) {
-            this.H++;
+   private void endMultiTap() {
+      if (this.multiTapActive) {
+         this.multiTapActive = false;
+         if (this.nameCursor < 8) {
+            this.nameCursor++;
          }
 
-         this.J = -1;
+         this.repeatKey = -1;
       }
    }
 
-   private void p2(int var1) {
-      GameCanvas var2 = super.canvas;
-      this.I += var1;
-      this.M -= var1 * 1638;
-      this.L = var2.a2(957, 0);
-      if (this.M < -(this.L << 16)) {
-         this.M = var2.getWidth() << 16;
+   private void updateNameEntry(int deltaMs) {
+      GameCanvas canvas = super.canvas;
+      this.keyRepeatTimer += deltaMs;
+      this.hintScrollX -= deltaMs * 1638;
+      this.hintWidth = canvas.stringWidthById(957, 0);
+      if (this.hintScrollX < -(this.hintWidth << 16)) {
+         this.hintScrollX = canvas.getWidth() << 16;
       }
 
-      if (this.d5 && this.I >= 1250) {
-         this.l2();
+      if (this.multiTapActive && this.keyRepeatTimer >= 1250) {
+         this.endMultiTap();
       }
    }
 
-   private void i2(int var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      int var4 = super.canvas.e();
-      if (this.matchesInput(var1, var2, 1023, 0)) {
-         int var5;
-         if ((var5 = b2(var1)) != -1) {
-            this.o2(var5);
-            var3.a4(4, var3.e() != 0 ? 2 : 0);
+   private void nameEntryKeyPressed(int keyCode, int action) {
+      GameCanvas canvas = super.canvas;
+      int nameLength = super.canvas.profileNameLength();
+      if (this.matchesInput(keyCode, action, 1023, 0)) {
+         int charIndex;
+         if ((charIndex = keyToCharIndex(keyCode)) != -1) {
+            this.nameKeyPressed(charIndex);
+            canvas.setSoftKeys(4, canvas.profileNameLength() != 0 ? 2 : 0);
          }
       } else {
-         if (this.matchesInput(var1, var2, 4096, 2)) {
-            if (var3.e() != 0) {
+         if (this.matchesInput(keyCode, action, 4096, 2)) {
+            if (canvas.profileNameLength() != 0) {
                this.onTick(18);
                return;
             }
          } else {
-            if (this.matchesInput(var1, var2, 524288, 0)) {
-               this.l2();
-               if (var4 == 0) {
+            if (this.matchesInput(keyCode, action, 524288, 0)) {
+               this.endMultiTap();
+               if (nameLength == 0) {
                   this.onTick(12);
                   return;
                }
 
-               if (this.H > 0) {
-                  this.H--;
+               if (this.nameCursor > 0) {
+                  this.nameCursor--;
                }
 
-               var3.k2(this.H);
-               var3.a4(4, var3.e() != 0 ? 2 : 0);
+               canvas.deleteProfileNameChar(this.nameCursor);
+               canvas.setSoftKeys(4, canvas.profileNameLength() != 0 ? 2 : 0);
                return;
             }
 
-            if (this.matchesInput(var1, var2, 0, 4)) {
+            if (this.matchesInput(keyCode, action, 0, 4)) {
                this.onTick(12);
                return;
             }
 
-            if (this.matchesInput(var1, var2, 32768, 0)) {
-               this.l2();
-               if (this.H != 0) {
-                  this.H--;
+            if (this.matchesInput(keyCode, action, 32768, 0)) {
+               this.endMultiTap();
+               if (this.nameCursor != 0) {
+                  this.nameCursor--;
                   return;
                }
-            } else if (this.matchesInput(var1, var2, 65536, 0)) {
-               this.l2();
-               if (this.H != var4) {
-                  this.H++;
+            } else if (this.matchesInput(keyCode, action, 65536, 0)) {
+               this.endMultiTap();
+               if (this.nameCursor != nameLength) {
+                  this.nameCursor++;
                }
             }
          }
       }
    }
 
-   private void m(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      Neighborhood var3 = super.canvas.a23;
-      c2(var1, 0, 0, var2.getWidth(), var2.getHeight() - 15);
-      int var4 = var2.getWidth();
-      int var5 = var2.getHeight() - 15;
-      int var6 = var4 * 7 / 10;
-      int var7 = var4 - var6 >> 1;
-      int var8 = super.i * 6 + 6 + 22 + 5;
-      int var9 = var5 - var8 + 5;
-      int var10 = this.c(var1, var7, var6, 746, -1);
-      SdkString var11 = var2.b2();
-      int var12 = var2.a(var11, 1);
-      int var13 = var7 + (var6 - var12 >> 1);
-      int var14 = var10 - 16;
-      int var15 = var2.b2(1) - 2;
-      var2.a(var11, 1, var13, var14, 20);
-      int var16 = -1;
-      if (this.d5 || this.I / 750 % 2 == 1) {
-         var16 = this.H;
+   private void drawNameEntryScreen(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = super.canvas.neighborhood;
+      drawPanelGradient(gfx, 0, 0, canvas.getWidth(), canvas.getHeight() - 15);
+      int width = canvas.getWidth();
+      int height = canvas.getHeight() - 15;
+      int boxWidth = width * 7 / 10;
+      int boxX = width - boxWidth >> 1;
+      int boxHeight = super.rowHeight * 6 + 6 + 22 + 5;
+      int boxY = height - boxHeight + 5;
+      int boxTop = this.drawIconPanel(gfx, boxX, boxWidth, 746, -1);
+      SdkString name = canvas.profileName();
+      int nameWidth = canvas.stringWidth(name, 1);
+      int nameX = boxX + (boxWidth - nameWidth >> 1);
+      int nameY = boxTop - 16;
+      int lineHeight = canvas.lineHeight(1) - 2;
+      canvas.drawString(name, 1, nameX, nameY, 20);
+      int cursorPos = -1;
+      if (this.multiTapActive || this.keyRepeatTimer / 750 % 2 == 1) {
+         cursorPos = this.nameCursor;
       }
 
-      if (var16 != -1) {
-         int var17 = 5;
-         int var18 = var13;
-         if (var11 != null) {
-            var18 = var13 + com.ea.sims3.SdkText.substringWidth(var11, 0, var16);
-            if (var16 != var2.e()) {
-               var17 = com.ea.sims3.SdkText.substringWidth(var11, var16, 1);
+      if (cursorPos != -1) {
+         int cursorWidth = 5;
+         int cursorX = nameX;
+         if (name != null) {
+            cursorX = nameX + com.ea.sims3.SdkText.substringWidth(name, 0, cursorPos);
+            if (cursorPos != canvas.profileNameLength()) {
+               cursorWidth = com.ea.sims3.SdkText.substringWidth(name, cursorPos, 1);
             }
          }
 
-         int var19 = var14 + var15;
-         com.ea.sims3.SpriteRenderer.setColor(var1, 0);
-         var1.fillRect(var18, var19, var17, 1);
+         int cursorY = nameY + lineHeight;
+         com.ea.sims3.SpriteRenderer.setColor(gfx, 0);
+         gfx.fillRect(cursorX, cursorY, cursorWidth, 1);
       }
 
-      int var21 = var4 >> 1;
-      var12 = var10 + (var5 - var10 - var8 >> 1);
-      com.ea.sims3.SpriteRenderer.drawFrame(var1, 709, 0, var21, var12);
-      int[] var26 = super.a2;
-      com.ea.sims3.SpriteRenderer.hitTest(super.a2, 709, 0, 0);
-      var14 = var21 + var26[0];
-      var15 = var12 + var26[1];
-      this.c(var1, var14, var15);
-      short var22 = var3.a11(var3.a11);
-      this.a2(var1, var7, var9, var6, var8, var22, 1);
-      var12 = var7 + 3;
-      var13 = var9 + 22;
-      var14 = var6 - 6;
-      var15 = super.i * 5 + 6;
-      this.j(var1, var12, var13, var14, var15);
-      var16 = var12 + (var14 >> 1);
-      int var33 = var13 + 3 + 1;
+      int centerX = width >> 1;
+      nameWidth = boxTop + (height - boxTop - boxHeight >> 1);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 709, 0, centerX, nameWidth);
+      int[] hitRect = super.hitRect;
+      com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, 709, 0, 0);
+      nameY = centerX + hitRect[0];
+      lineHeight = nameWidth + hitRect[1];
+      this.drawCenteredLabel(gfx, nameY, lineHeight);
+      short traitId = neighborhood.residentLabelText(neighborhood.selectedResident);
+      this.drawDialogFrame(gfx, boxX, boxY, boxWidth, boxHeight, traitId, 1);
+      nameWidth = boxX + 3;
+      nameX = boxY + 22;
+      nameY = boxWidth - 6;
+      lineHeight = super.rowHeight * 5 + 6;
+      this.drawRaisedBox(gfx, nameWidth, nameX, nameY, lineHeight);
+      cursorPos = nameWidth + (nameY >> 1);
+      int rowY = nameX + 3 + 1;
 
-      for (int var34 = 0; var34 < 5; var34++) {
-         int var35 = var3.k(0, var34);
-         short var20 = var3.f2(var35);
-         var2.a2(var20, 1, var16, var33, 17);
-         var33 += super.i;
+      for (int row = 0; row < 5; row++) {
+         int traitSlot = neighborhood.simKnownId(0, row);
+         short traitName = neighborhood.itemNameText(traitSlot);
+         canvas.drawStringById(traitName, 1, cursorPos, rowY, 17);
+         rowY += super.rowHeight;
       }
 
-      int var23 = var2.getHeight() - 30;
-      if (com.ea.sims3.GameCanvas.b) {
-         var2.a2(957, 0, this.M >> 16, var23, 20);
+      int hintY = canvas.getHeight() - 30;
+      if (com.ea.sims3.GameCanvas.landscape) {
+         canvas.drawStringById(957, 0, this.hintScrollX >> 16, hintY, 20);
       }
 
-      var2.b(var1);
+      canvas.drawBottomBar(gfx);
    }
 
-   private void j2(int var1, int var2) {
-      GameCanvas var3 = super.canvas;
-      int var4;
-      int var5 = var4 = this.e4 ? 2 : var3.j;
-      int var6 = 2 + (a5 == 14 ? 1 : 0);
-      if (this.matchesInput(var1, var2, 0, 68)) {
-         this.onTick(a5 == 14 ? 7 : 14);
-      } else if (this.matchesInput(var1, var2, 4128, 48)) {
-         if (this.e4) {
+   private void profileSlotKeyPressed(int keyCode, int action) {
+      GameCanvas canvas = super.canvas;
+      int selected;
+      int previous = selected = this.newSimSelected ? 2 : canvas.profileSlot;
+      int slotCount = 2 + (state == 14 ? 1 : 0);
+      if (this.matchesInput(keyCode, action, 0, 68)) {
+         this.onTick(state == 14 ? 7 : 14);
+      } else if (this.matchesInput(keyCode, action, 4128, 48)) {
+         if (this.newSimSelected) {
             this.onTick(15);
-         } else if (a5 == 15) {
-            if (var3.e3()) {
+         } else if (state == 15) {
+            if (canvas.isProfileUsed()) {
                this.onTick(16);
             }
-         } else if (var3.e3()) {
-            var3.s2();
-            this.b2(2, -1);
+         } else if (canvas.isProfileUsed()) {
+            canvas.reloadGameData();
+            this.requestScreen(2, -1);
          } else {
-            this.h2();
+            this.resetForNewSim();
          }
-      } else if (this.matchesInput(var1, var2, 8196, 0)) {
-         var4 = (var4 + var6 - 1) % var6;
-      } else if (this.matchesInput(var1, var2, 16640, 0)) {
-         var4 = (var4 + 1) % var6;
+      } else if (this.matchesInput(keyCode, action, 8196, 0)) {
+         selected = (selected + slotCount - 1) % slotCount;
+      } else if (this.matchesInput(keyCode, action, 16640, 0)) {
+         selected = (selected + 1) % slotCount;
       }
 
-      if (var4 != var5) {
-         this.e4 = var4 == 2;
-         if (!this.e4) {
-            var3.l2(var4);
-            if (var3.e3()) {
-               this.a(false);
+      if (selected != previous) {
+         this.newSimSelected = selected == 2;
+         if (!this.newSimSelected) {
+            canvas.selectProfile(selected);
+            if (canvas.isProfileUsed()) {
+               this.applySimAppearance(false);
             }
          }
 
-         boolean var7 = var3.e3();
-         if (a5 == 15) {
-            var3.a4(64, var7 ? 32 : 0);
+         boolean used = canvas.isProfileUsed();
+         if (state == 15) {
+            canvas.setSoftKeys(64, used ? 32 : 0);
          }
       }
    }
 
-   private void n(Graphics var1) {
-      GameCanvas var2 = super.canvas;
-      int var3 = super.canvas.getWidth();
-      int var4;
-      int var5 = (var4 = var2.getHeight() - 15) - 6;
-      int var6 = 3 + var5 - (a3(var5) >> 1);
-      int var7 = var3 - 3 - 64 - 3 - 3;
-      int var8 = a5 == 14 ? 77 : 43;
-      com.ea.sims3.SpriteRenderer.setColor(var1, var8);
-      var1.fillRect(0, 0, var3, var4);
-      var8 = var1.getClipX();
-      int var9 = var1.getClipY();
-      int var10 = var1.getClipWidth();
-      int var11 = var1.getClipHeight();
-      var1.setClip(var8, 3, var10, var5);
-      c2(var1, 3, 3, 64, var5);
-      var1.setClip(var8, var9, var10, var11);
-      com.ea.sims3.SpriteRenderer.setColor(var1, 0);
-      var1.drawRect(3, 3, 63, var5 - 1);
-      if (!this.e4 && var2.e3()) {
-         this.a(var1, 35, var6, false);
+   private void drawProfileScreen(Graphics gfx) {
+      GameCanvas canvas = super.canvas;
+      int width = super.canvas.getWidth();
+      int height;
+      int listHeight = (height = canvas.getHeight() - 15) - 6;
+      int rowY = 3 + listHeight - (panelGradientHeight(listHeight) >> 1);
+      int panelWidth = width - 3 - 64 - 3 - 3;
+      int colorIndex = state == 14 ? 77 : 43;
+      com.ea.sims3.SpriteRenderer.setColor(gfx, colorIndex);
+      gfx.fillRect(0, 0, width, height);
+      colorIndex = gfx.getClipX();
+      int clipX = gfx.getClipY();
+      int clipY = gfx.getClipWidth();
+      int clipWidth = gfx.getClipHeight();
+      gfx.setClip(colorIndex, 3, clipY, listHeight);
+      drawPanelGradient(gfx, 3, 3, 64, listHeight);
+      gfx.setClip(colorIndex, clipX, clipY, clipWidth);
+      com.ea.sims3.SpriteRenderer.setColor(gfx, 0);
+      gfx.drawRect(3, 3, 63, listHeight - 1);
+      if (!this.newSimSelected && canvas.isProfileUsed()) {
+         this.drawSimPreview(gfx, 35, rowY, false);
       }
 
-      var9 = a5 == 14 ? 64 : 65;
-      var9 = this.d(var1, 70, var7, var9) + 3;
-      var11 = var4 - 3 - 19;
-      int var12 = (super.i << 2) + 8;
-      int var13 = var11 - 3 - var12;
-      int var16 = (var4 - var9 - 3 - 19 - 3 - var12 - 3 - 3) / 2;
-      int var17 = var9;
+      clipX = state == 14 ? 64 : 65;
+      clipX = this.drawIconRow(gfx, 70, panelWidth, clipX) + 3;
+      clipWidth = height - 3 - 19;
+      int rowHeight = (super.rowHeight << 2) + 8;
+      int statsY = clipWidth - 3 - rowHeight;
+      int rowGap = (height - clipX - 3 - 19 - 3 - rowHeight - 3 - 3) / 2;
+      int rowTop = clipX;
 
-      for (int var18 = 0; var18 < 2; var18++) {
-         boolean var19 = !this.e4 && var18 == var2.j;
-         SdkString var20 = var2.b8(var18) ? var2.b3(var18) : var2.a4(52);
-         this.a(var1, 70, var17, var7, var16, var19, var20);
-         var17 += var16 + 3;
+      for (int slot = 0; slot < 2; slot++) {
+         boolean selected = !this.newSimSelected && slot == canvas.profileSlot;
+         SdkString profileName = canvas.isProfileUsedAt(slot) ? canvas.profileNameAt(slot) : canvas.getString(52);
+         this.drawButtonLabel(gfx, 70, rowTop, panelWidth, rowGap, selected, profileName);
+         rowTop += rowGap + 3;
       }
 
-      this.k(var1, 70, var13, var7, var12);
-      if (!this.e4 && var2.e3()) {
-         Neighborhood var14 = var2.a23;
-         var16 = 70 + var7 - 4;
-         var17 = var13 + 4 + 1;
-         short var32 = var14.a11(var14.a11);
-         var2.a2(var32, 1, 74, var17, 20);
-         var17 += super.i;
-         int var33 = var14.p();
-         var2.a2(521, 1, 74, var17, 20);
-         var2.a2(var33, 1, var16, var17, 24);
-         var17 += super.i;
-         int var34 = var14.V(0);
-         int var21 = var14.q(var34);
-         var2.a2(646, 1, 74, var17, 20);
-         var2.a2(var21, 1, var16, var17, 24);
-         var17 += super.i;
-         SdkString var22 = var2.a2();
-         var2.g2(var14.e5);
-         var2.a(var22, 1, 74, var17, 20);
+      this.drawPlainBox(gfx, 70, statsY, panelWidth, rowHeight);
+      if (!this.newSimSelected && canvas.isProfileUsed()) {
+         Neighborhood neighborhood = canvas.neighborhood;
+         rowGap = 70 + panelWidth - 4;
+         rowTop = statsY + 4 + 1;
+         short simNameId = neighborhood.residentLabelText(neighborhood.selectedResident);
+         canvas.drawStringById(simNameId, 1, 74, rowTop, 20);
+         rowTop += super.rowHeight;
+         int money = neighborhood.moodTextId();
+         canvas.drawStringById(521, 1, 74, rowTop, 20);
+         canvas.drawStringById(money, 1, rowGap, rowTop, 24);
+         rowTop += super.rowHeight;
+         int careerLevel = neighborhood.simLot(0);
+         int careerId = neighborhood.lotNameText(careerLevel);
+         canvas.drawStringById(646, 1, 74, rowTop, 20);
+         canvas.drawStringById(careerId, 1, rowGap, rowTop, 24);
+         rowTop += super.rowHeight;
+         SdkString balance = canvas.beginString();
+         canvas.formatNumber(neighborhood.money);
+         canvas.drawString(balance, 1, 74, rowTop, 20);
       }
 
-      if (a5 == 14) {
-         this.a(var1, 70, var11, var7, 19, this.e4, 54);
+      if (state == 14) {
+         this.drawButton(gfx, 70, clipWidth, panelWidth, 19, this.newSimSelected, 54);
       }
 
-      var2.b(var1);
+      canvas.drawBottomBar(gfx);
    }
 }

@@ -18,36 +18,36 @@ public final class SpriteRenderer implements SpriteIndex {
    }
 
    public static final boolean loadPalette(ResourceLoader loader) {
-      DataInputStream in = new DataInputStream(loader.openStream(4));
+      DataInputStream input = new DataInputStream(loader.openStream(4));
       palette = new byte[ResourceLoader.getSize(4)];
 
       try {
-         in.read(palette);
-         in.close();
+         input.read(palette);
+         input.close();
          return true;
       } catch (Throwable ignored) {
          return false;
       }
    }
 
-   public static final void setColor(Graphics g, int colorIndex) {
+   public static final void setColor(Graphics gfx, int colorIndex) {
       int offset = colorIndex * 3;
       byte[] colors = palette;
-      g.setColor(colors[offset] & 255, colors[offset + 1] & 255, colors[offset + 2] & 255);
+      gfx.setColor(colors[offset] & 255, colors[offset + 1] & 255, colors[offset + 2] & 255);
    }
 
    public static final boolean loadSpriteRects(ResourceLoader loader) {
       try {
          short[][] rects = new short[1418][5];
-         DataInputStream in = new DataInputStream(loader.openStream(31));
+         DataInputStream input = new DataInputStream(loader.openStream(31));
 
-         for (int i = 0; i < 1418; i++) {
+         for (int rowIndex = 0; rowIndex < 1418; rowIndex++) {
             short[] rect;
-            (rect = rects[i])[0] = (short)in.readUnsignedByte();
-            rect[1] = in.readShort();
-            rect[2] = in.readShort();
-            rect[3] = in.readShort();
-            rect[4] = in.readShort();
+            (rect = rects[rowIndex])[0] = (short)input.readUnsignedByte();
+            rect[1] = input.readShort();
+            rect[2] = input.readShort();
+            rect[3] = input.readShort();
+            rect[4] = input.readShort();
          }
 
          spriteRects = rects;
@@ -57,66 +57,66 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   public static final boolean loadFrameData(ResourceLoader var0) {
-      boolean var1 = false;
+   public static final boolean loadFrameData(ResourceLoader loader) {
+      boolean loaded = false;
 
       try {
-         DataInputStream var2 = new DataInputStream(var0.openStream(3));
-         short[][] var3 = new short[710][];
-         short[][] var4 = new short[710][];
-         short[][] var5 = new short[710][];
+         DataInputStream stream = new DataInputStream(loader.openStream(3));
+         short[][] durations = new short[710][];
+         short[][] partOffsets = new short[710][];
+         short[][] partData = new short[710][];
 
-         for (int var16 = 0; var16 != 710; var16++) {
-            int var6 = 0;
-            int var7 = var2.readUnsignedByte();
+         for (int spriteId = 0; spriteId != 710; spriteId++) {
+            int partCount = 0;
+            int durationCount = stream.readUnsignedByte();
 
-            for (int var8 = 0; var8 < var7; var8++) {
-               var2.readShort();
-               int var9 = var2.readUnsignedByte();
+            for (int frameIndex = 0; frameIndex < durationCount; frameIndex++) {
+               stream.readShort();
+               int framePartCount = stream.readUnsignedByte();
 
-               for (int var10 = 0; var10 < var9; var10++) {
-                  int var11;
-                  int var12 = partKind(var11 = var2.readUnsignedByte());
+               for (int partIndex = 0; partIndex < framePartCount; partIndex++) {
+                  int kind;
+                  int fieldCount = partKind(kind = stream.readUnsignedByte());
 
-                  for (int var13 = 0; var13 < var12; var13++) {
-                     var2.readByte();
+                  for (int fieldIndex = 0; fieldIndex < fieldCount; fieldIndex++) {
+                     stream.readByte();
                   }
 
-                  var6 += partSize(var11);
+                  partCount += partSize(kind);
                }
             }
 
-            var3[var16] = new short[var7];
-            var4[var16] = new short[var7];
-            var5[var16] = new short[var6];
+            durations[spriteId] = new short[durationCount];
+            partOffsets[spriteId] = new short[durationCount];
+            partData[spriteId] = new short[partCount];
          }
 
-         frameDurations = var3;
-         framePartOffsets = var4;
-         parts = var5;
-         var2.close();
-         var2 = new DataInputStream(var0.openStream(3));
+         frameDurations = durations;
+         framePartOffsets = partOffsets;
+         parts = partData;
+         stream.close();
+         stream = new DataInputStream(loader.openStream(3));
 
-         for (int var17 = 0; var17 != 710; var17++) {
-            int var19 = 0;
-            short[] var20 = var5[var17];
-            short[] var21 = var3[var17];
-            short[] var22 = var4[var17];
-            int var23 = var2.readUnsignedByte();
+         for (int spriteId = 0; spriteId != 710; spriteId++) {
+            int offset = 0;
+            short[] framePartData = partData[spriteId];
+            short[] frameDurations = durations[spriteId];
+            short[] framePartOffsets = partOffsets[spriteId];
+            int durationCount = stream.readUnsignedByte();
 
-            for (int var24 = 0; var24 < var23; var24++) {
-               var21[var24] = var2.readShort();
-               var22[var24] = (short)var19;
-               int var25 = var2.readUnsignedByte();
+            for (int frameIndex = 0; frameIndex < durationCount; frameIndex++) {
+               frameDurations[frameIndex] = stream.readShort();
+               framePartOffsets[frameIndex] = (short)offset;
+               int framePartCount = stream.readUnsignedByte();
 
-               for (int var26 = 0; var26 < var25; var26++) {
-                  int var14;
-                  switch (var14 = var2.readUnsignedByte()) {
+               for (int partIndex = 0; partIndex < framePartCount; partIndex++) {
+                  int kind;
+                  switch (kind = stream.readUnsignedByte()) {
                      case 0:
                      case 11:
-                        var20[var19 + 3] = var2.readShort();
-                        var20[var19 + 1] = var2.readShort();
-                        var20[var19 + 2] = var2.readShort();
+                        framePartData[offset + 3] = stream.readShort();
+                        framePartData[offset + 1] = stream.readShort();
+                        framePartData[offset + 2] = stream.readShort();
                         break;
                      case 1:
                      case 2:
@@ -125,36 +125,36 @@ public final class SpriteRenderer implements SpriteIndex {
                      case 5:
                      case 6:
                      case 8:
-                        var20[var19 + 1] = var2.readShort();
-                        var20[var19 + 2] = var2.readShort();
-                        var20[var19 + 3] = var2.readShort();
-                        var20[var19 + 4] = var2.readShort();
+                        framePartData[offset + 1] = stream.readShort();
+                        framePartData[offset + 2] = stream.readShort();
+                        framePartData[offset + 3] = stream.readShort();
+                        framePartData[offset + 4] = stream.readShort();
                         break;
                      case 7:
-                        var20[var19 + 1] = var2.readShort();
-                        var20[var19 + 2] = var2.readShort();
+                        framePartData[offset + 1] = stream.readShort();
+                        framePartData[offset + 2] = stream.readShort();
                      case 9:
                      default:
                         break;
                      case 10:
-                        var20[var19 + 1] = var2.readByte();
+                        framePartData[offset + 1] = stream.readByte();
                   }
 
-                  var20[var19] = (short)var14;
-                  var19 += partSize(var14);
+                  framePartData[offset] = (short)kind;
+                  offset += partSize(kind);
                }
             }
          }
 
-         var2.close();
+         stream.close();
          return true;
-      } catch (IOException var15) {
+      } catch (IOException error) {
          return false;
       }
    }
 
-   private static final int partKind(int var0) {
-      switch (var0) {
+   private static final int partKind(int kind) {
+      switch (kind) {
          case 0:
          case 11:
             return 6;
@@ -176,8 +176,8 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int partSize(int var0) {
-      switch (var0) {
+   private static final int partSize(int kind) {
+      switch (kind) {
          case 0:
          case 11:
             return 4;
@@ -199,13 +199,13 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   private static final int partOffset(int var0, int var1) {
-      return framePartOffsets[var0][var1];
+   private static final int partOffset(int spriteId, int frame) {
+      return framePartOffsets[spriteId][frame];
    }
 
-   private static final int nextPartOffset(int var0, int var1) {
-      short[] var2 = framePartOffsets[var0];
-      return var1 < var2.length - 1 ? var2[var1 + 1] : parts[var0].length;
+   private static final int nextPartOffset(int spriteId, int frame) {
+      short[] offsets = framePartOffsets[spriteId];
+      return frame < offsets.length - 1 ? offsets[frame + 1] : parts[spriteId].length;
    }
 
    public static final boolean loadTile(ResourceLoader loader, int spriteId) {
@@ -215,7 +215,7 @@ public final class SpriteRenderer implements SpriteIndex {
    public static final boolean loadTileRecolored(ResourceLoader loader, int spriteId, int[] fromColors, int[] toColors, int recolorSet) {
       int slot = 0;
 
-      while (slot < 72 && spriteId != SpriteIndex.a[slot]) {
+      while (slot < 72 && spriteId != SpriteIndex.SPRITE_IDS[slot]) {
          slot++;
       }
 
@@ -244,7 +244,7 @@ public final class SpriteRenderer implements SpriteIndex {
    public static final boolean unloadTile(int spriteId, int recolorSet) {
       int slot = 0;
 
-      while (slot < 72 && spriteId != SpriteIndex.a[slot]) {
+      while (slot < 72 && spriteId != SpriteIndex.SPRITE_IDS[slot]) {
          slot++;
       }
 
@@ -256,152 +256,152 @@ public final class SpriteRenderer implements SpriteIndex {
       }
    }
 
-   public static final void drawFrame(Graphics g, int spriteId, int frame, int x, int y) {
+   public static final void drawFrame(Graphics gfx, int spriteId, int frame, int x, int y) {
       if (spriteId >= 0) {
          if ((spriteId & 16384) != 0) {
             spriteId &= -16385;
-            drawFrameMirrored(g, spriteId, frame, x, y);
+            drawFrameMirrored(gfx, spriteId, frame, x, y);
          } else {
-            drawFrameNormal(g, spriteId, frame, x, y);
+            drawFrameNormal(gfx, spriteId, frame, x, y);
          }
       }
    }
 
-   private static final void drawFrameNormal(Graphics var0, int var1, int var2, int var3, int var4) {
-      Image[] var5 = tiles[recolorIndex];
-      short[][] var6 = spriteRects;
-      short[] var7 = parts[var1];
-      int var8 = partOffset(var1, var2);
-      int var9 = nextPartOffset(var1, var2);
+   private static final void drawFrameNormal(Graphics gfx, int spriteId, int frame, int x, int y) {
+      Image[] tileSlots = tiles[recolorIndex];
+      short[][] rects = spriteRects;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var8 < var9) {
-         short var10;
-         if ((var10 = var7[var8 + 0]) == 0 || var10 == 11) {
-            short[] var11;
-            int var12 = (var11 = var6[var7[var8 + 3]])[0] & '\uffff';
-            Image var13;
-            if ((var13 = var5[var12]) != null) {
-               int var14 = var3 + var7[var8 + 1];
-               int var15 = var4 + var7[var8 + 2];
-               int var16 = var10 == 0 ? 0 : 2;
-               var0.drawRegion(var13, var11[1], var11[2], var11[3], var11[4], var16, var14, var15, 20);
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 0 || kind == 11) {
+            short[] rect;
+            int tileIndex = (rect = rects[partData[offset + 3]])[0] & '\uffff';
+            Image tile;
+            if ((tile = tileSlots[tileIndex]) != null) {
+               int destX = x + partData[offset + 1];
+               int destY = y + partData[offset + 2];
+               int transform = kind == 0 ? 0 : 2;
+               gfx.drawRegion(tile, rect[1], rect[2], rect[3], rect[4], transform, destX, destY, 20);
             }
-         } else if (var10 != 2 && var10 != 7) {
-            drawPart(var0, var3, var4, var7, var8);
+         } else if (kind != 2 && kind != 7) {
+            drawPart(gfx, x, y, partData, offset);
          }
 
-         var8 += partSize(var10);
+         offset += partSize(kind);
       }
    }
 
-   private static final void drawFrameMirrored(Graphics var0, int var1, int var2, int var3, int var4) {
-      Image[] var5 = tiles[recolorIndex];
-      short[][] var6 = spriteRects;
-      short[] var7 = parts[var1];
-      int var8 = partOffset(var1, var2);
-      int var9 = nextPartOffset(var1, var2);
+   private static final void drawFrameMirrored(Graphics gfx, int spriteId, int frame, int x, int y) {
+      Image[] tileSlots = tiles[recolorIndex];
+      short[][] rects = spriteRects;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var8 < var9) {
-         short var10;
-         if ((var10 = var7[var8 + 0]) == 0 || var10 == 11) {
-            short[] var11;
-            int var12 = (var11 = var6[var7[var8 + 3]])[0] & '\uffff';
-            Image var13;
-            if ((var13 = var5[var12]) != null) {
-               int var14 = var3 - var7[var8 + 1] - var11[3];
-               int var15 = var4 + var7[var8 + 2];
-               int var16 = var10 == 0 ? 2 : 0;
-               var0.drawRegion(var13, var11[1], var11[2], var11[3], var11[4], var16, var14, var15, 20);
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 0 || kind == 11) {
+            short[] rect;
+            int tileIndex = (rect = rects[partData[offset + 3]])[0] & '\uffff';
+            Image tile;
+            if ((tile = tileSlots[tileIndex]) != null) {
+               int destX = x - partData[offset + 1] - rect[3];
+               int destY = y + partData[offset + 2];
+               int transform = kind == 0 ? 2 : 0;
+               gfx.drawRegion(tile, rect[1], rect[2], rect[3], rect[4], transform, destX, destY, 20);
             }
-         } else if (var10 != 2 && var10 != 7) {
-            drawPartMirrored(var0, var3, var4, var7, var8);
+         } else if (kind != 2 && kind != 7) {
+            drawPartMirrored(gfx, x, y, partData, offset);
          }
 
-         var8 += partSize(var10);
+         offset += partSize(kind);
       }
    }
 
-   public static final boolean drawParts(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
-      if (var1 < 0) {
+   public static final boolean drawParts(Graphics gfx, int spriteId, int frame, int x, int y, int matchSpriteId, int matchLimit, int[] out) {
+      if (spriteId < 0) {
          return false;
-      } else if ((var1 & 16384) != 0) {
-         var1 &= -16385;
-         return drawPartsClipped(var0, var1, var2, var3, var4, var5, var6, var7);
+      } else if ((spriteId & 16384) != 0) {
+         spriteId &= -16385;
+         return drawPartsClipped(gfx, spriteId, frame, x, y, matchSpriteId, matchLimit, out);
       } else {
-         return drawPartsMirrored(var0, var1, var2, var3, var4, var5, var6, var7);
+         return drawPartsMirrored(gfx, spriteId, frame, x, y, matchSpriteId, matchLimit, out);
       }
    }
 
-   private static final boolean drawPartsMirrored(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
-      Image[] var8 = tiles[recolorIndex];
-      short[][] var9 = spriteRects;
-      boolean var10 = false;
-      short[] var11 = parts[var1];
-      int var12 = partOffset(var1, var2);
-      int var13 = nextPartOffset(var1, var2);
-      short[] var14 = var5 >= 0 ? parts[var5] : null;
+   private static final boolean drawPartsMirrored(Graphics gfx, int spriteId, int frame, int x, int y, int matchSpriteId, int matchLimit, int[] out) {
+      Image[] tileSlots = tiles[recolorIndex];
+      short[][] rects = spriteRects;
+      boolean found = false;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      short[] matchParts = matchSpriteId >= 0 ? parts[matchSpriteId] : null;
 
-      while (var12 < var13) {
-         short var15;
-         if ((var15 = var11[var12 + 0]) != 0 && var15 != 11) {
-            drawPart(var0, var3, var4, var11, var12);
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) != 0 && kind != 11) {
+            drawPart(gfx, x, y, partData, offset);
          } else {
-            short var16 = var11[var12 + 3];
-            short[] var17 = var9[var16];
-            int var18 = var3 + var11[var12 + 1];
-            int var19 = var4 + var11[var12 + 2];
-            int var20 = var17[0] & '\uffff';
-            Image var21;
-            if ((var21 = var8[var20]) != null) {
-               int var22 = var15 == 0 ? 0 : 2;
-               var0.drawRegion(var21, var17[1], var17[2], var17[3], var17[4], var22, var18, var19, 20);
+            short rectIndex = partData[offset + 3];
+            short[] rect = rects[rectIndex];
+            int destX = x + partData[offset + 1];
+            int destY = y + partData[offset + 2];
+            int tileIndex = rect[0] & '\uffff';
+            Image tile;
+            if ((tile = tileSlots[tileIndex]) != null) {
+               int transform = kind == 0 ? 0 : 2;
+               gfx.drawRegion(tile, rect[1], rect[2], rect[3], rect[4], transform, destX, destY, 20);
             }
 
-            if (var14 != null) {
-               int var38 = frameCount(var5);
+            if (matchParts != null) {
+               int matchFrameCount = frameCount(matchSpriteId);
 
-               for (int var23 = 0; var23 < var38; var23++) {
-                  int var24 = partOffset(var5, var23);
-                  int var25 = var14[var24 + 3] & '\uffff';
-                  if (var16 == var25) {
-                     int var26 = nextPartOffset(var5, var23);
-                     short var27 = var14[var24 + 1];
-                     short var28 = var14[var24 + 2];
-                     int var29 = 0;
+               for (int matchFrame = 0; matchFrame < matchFrameCount; matchFrame++) {
+                  int matchOffset = partOffset(matchSpriteId, matchFrame);
+                  int matchRectIndex = matchParts[matchOffset + 3] & '\uffff';
+                  if (rectIndex == matchRectIndex) {
+                     int matchNextOffset = nextPartOffset(matchSpriteId, matchFrame);
+                     short matchX = matchParts[matchOffset + 1];
+                     short matchY = matchParts[matchOffset + 2];
+                     int skipped = 0;
 
                      do {
-                        if ((var24 += partSize(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
-                           var29++;
+                        if ((matchOffset += partSize(matchParts[matchOffset + 0])) < matchNextOffset && matchParts[matchOffset + 0] == 0) {
+                           skipped++;
                         }
-                     } while (var29 < var6 && var24 < var26);
+                     } while (skipped < matchLimit && matchOffset < matchNextOffset);
 
-                     if (var7 != null) {
-                        var10 = true;
-                        int var30 = var26 - partSize(7);
-                        var7[0] = var18 + var14[var30 + 1] - var27;
-                        var7[1] = var19 + var14[var30 + 2] - var28;
+                     if (out != null) {
+                        found = true;
+                        int lastOffset = matchNextOffset - partSize(7);
+                        out[0] = destX + matchParts[lastOffset + 1] - matchX;
+                        out[1] = destY + matchParts[lastOffset + 2] - matchY;
                      }
 
-                     if (var24 < var26) {
-                        int var39 = var14[var24 + 1] - var27;
-                        int var31 = var14[var24 + 2] - var28;
-                        short[] var32;
-                        int var33 = (var32 = var9[var14[var24 + 3]])[0] & '\uffff';
-                        Image var34 = var8[var33];
-                        if (var21 != null) {
-                           byte var35;
-                           if (var15 == 11) {
-                              var35 = 2;
-                              short var36 = var32[3];
-                              short var37 = var17[3];
-                              var39 = -var39 - (var36 - var37);
+                     if (matchOffset < matchNextOffset) {
+                        int offsetX = matchParts[matchOffset + 1] - matchX;
+                        int offsetY = matchParts[matchOffset + 2] - matchY;
+                        short[] clipRect;
+                        int clipTileIndex = (clipRect = rects[matchParts[matchOffset + 3]])[0] & '\uffff';
+                        Image clipTile = tileSlots[clipTileIndex];
+                        if (tile != null) {
+                           byte clipTransform;
+                           if (kind == 11) {
+                              clipTransform = 2;
+                              short clipWidth = clipRect[3];
+                              short partWidth = rect[3];
+                              offsetX = -offsetX - (clipWidth - partWidth);
                            } else {
-                              var35 = 0;
+                              clipTransform = 0;
                            }
 
-                           var39 += var18;
-                           var31 += var19;
-                           var0.drawRegion(var34, var32[1], var32[2], var32[3], var32[4], var35, var39, var31, 20);
+                           offsetX += destX;
+                           offsetY += destY;
+                           gfx.drawRegion(clipTile, clipRect[1], clipRect[2], clipRect[3], clipRect[4], clipTransform, offsetX, offsetY, 20);
                         }
                      }
                      break;
@@ -410,82 +410,82 @@ public final class SpriteRenderer implements SpriteIndex {
             }
          }
 
-         var12 += partSize(var15);
+         offset += partSize(kind);
       }
 
-      return var10;
+      return found;
    }
 
-   private static final boolean drawPartsClipped(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6, int[] var7) {
-      Image[] var8 = tiles[recolorIndex];
-      short[][] var9 = spriteRects;
-      boolean var10 = false;
-      short[] var11 = parts[var1];
-      int var12 = partOffset(var1, var2);
-      int var13 = nextPartOffset(var1, var2);
-      short[] var14 = var5 >= 0 ? parts[var5] : null;
+   private static final boolean drawPartsClipped(Graphics gfx, int spriteId, int frame, int x, int y, int matchSpriteId, int matchLimit, int[] out) {
+      Image[] tileSlots = tiles[recolorIndex];
+      short[][] rects = spriteRects;
+      boolean found = false;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      short[] matchParts = matchSpriteId >= 0 ? parts[matchSpriteId] : null;
 
-      while (var12 < var13) {
-         short var15;
-         if ((var15 = var11[var12 + 0]) != 0 && var15 != 11) {
-            drawPartMirrored(var0, var3, var4, var11, var12);
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) != 0 && kind != 11) {
+            drawPartMirrored(gfx, x, y, partData, offset);
          } else {
-            short var16 = var11[var12 + 3];
-            short[] var17 = var9[var16];
-            int var18 = var3 - var11[var12 + 1] - var17[3];
-            int var19 = var4 + var11[var12 + 2];
-            int var20 = var17[0] & '\uffff';
-            Image var21;
-            if ((var21 = var8[var20]) != null) {
-               int var22 = var15 == 0 ? 2 : 0;
-               var0.drawRegion(var21, var17[1], var17[2], var17[3], var17[4], var22, var18, var19, 20);
+            short rectIndex = partData[offset + 3];
+            short[] rect = rects[rectIndex];
+            int destX = x - partData[offset + 1] - rect[3];
+            int destY = y + partData[offset + 2];
+            int tileIndex = rect[0] & '\uffff';
+            Image tile;
+            if ((tile = tileSlots[tileIndex]) != null) {
+               int transform = kind == 0 ? 2 : 0;
+               gfx.drawRegion(tile, rect[1], rect[2], rect[3], rect[4], transform, destX, destY, 20);
             }
 
-            if (var14 != null) {
-               int var38 = frameCount(var5);
+            if (matchParts != null) {
+               int matchFrameCount = frameCount(matchSpriteId);
 
-               for (int var23 = 0; var23 < var38; var23++) {
-                  int var24 = partOffset(var5, var23);
-                  int var25 = var14[var24 + 3] & '\uffff';
-                  if (var16 == var25) {
-                     int var26 = nextPartOffset(var5, var23);
-                     short var27 = var14[var24 + 1];
-                     short var28 = var14[var24 + 2];
-                     int var29 = 0;
+               for (int matchFrame = 0; matchFrame < matchFrameCount; matchFrame++) {
+                  int matchOffset = partOffset(matchSpriteId, matchFrame);
+                  int matchRectIndex = matchParts[matchOffset + 3] & '\uffff';
+                  if (rectIndex == matchRectIndex) {
+                     int matchNextOffset = nextPartOffset(matchSpriteId, matchFrame);
+                     short matchX = matchParts[matchOffset + 1];
+                     short matchY = matchParts[matchOffset + 2];
+                     int skipped = 0;
 
                      do {
-                        if ((var24 += partSize(var14[var24 + 0])) < var26 && var14[var24 + 0] == 0) {
-                           var29++;
+                        if ((matchOffset += partSize(matchParts[matchOffset + 0])) < matchNextOffset && matchParts[matchOffset + 0] == 0) {
+                           skipped++;
                         }
-                     } while (var29 < var6 && var24 < var26);
+                     } while (skipped < matchLimit && matchOffset < matchNextOffset);
 
-                     if (var7 != null) {
-                        var10 = true;
-                        int var30 = var26 - partSize(7);
-                        var7[0] = var18 + var14[var30 + 1] - var27;
-                        var7[1] = var19 + var14[var30 + 2] - var28;
+                     if (out != null) {
+                        found = true;
+                        int lastOffset = matchNextOffset - partSize(7);
+                        out[0] = destX + matchParts[lastOffset + 1] - matchX;
+                        out[1] = destY + matchParts[lastOffset + 2] - matchY;
                      }
 
-                     if (var24 < var26) {
-                        int var39 = var14[var24 + 1] - var27;
-                        int var31 = var14[var24 + 2] - var28;
-                        short[] var32;
-                        int var33 = (var32 = var9[var14[var24 + 3]])[0] & '\uffff';
-                        Image var34 = var8[var33];
-                        if (var21 != null) {
-                           byte var35;
-                           if (var15 == 11) {
-                              var35 = 0;
+                     if (matchOffset < matchNextOffset) {
+                        int offsetX = matchParts[matchOffset + 1] - matchX;
+                        int offsetY = matchParts[matchOffset + 2] - matchY;
+                        short[] clipRect;
+                        int clipTileIndex = (clipRect = rects[matchParts[matchOffset + 3]])[0] & '\uffff';
+                        Image clipTile = tileSlots[clipTileIndex];
+                        if (tile != null) {
+                           byte clipTransform;
+                           if (kind == 11) {
+                              clipTransform = 0;
                            } else {
-                              var35 = 2;
-                              short var36 = var32[3];
-                              short var37 = var17[3];
-                              var39 = -var39 - (var36 - var37);
+                              clipTransform = 2;
+                              short clipWidth = clipRect[3];
+                              short partWidth = rect[3];
+                              offsetX = -offsetX - (clipWidth - partWidth);
                            }
 
-                           var39 += var18;
-                           var31 += var19;
-                           var0.drawRegion(var34, var32[1], var32[2], var32[3], var32[4], var35, var39, var31, 20);
+                           offsetX += destX;
+                           offsetY += destY;
+                           gfx.drawRegion(clipTile, clipRect[1], clipRect[2], clipRect[3], clipRect[4], clipTransform, offsetX, offsetY, 20);
                         }
                      }
                      break;
@@ -494,35 +494,35 @@ public final class SpriteRenderer implements SpriteIndex {
             }
          }
 
-         var12 += partSize(var15);
+         offset += partSize(kind);
       }
 
-      return var10;
+      return found;
    }
 
-   private static final void drawPart(Graphics g, int x, int y, short[] parts, int offset) {
-      short var5;
-      switch (var5 = parts[offset + 0]) {
+   private static final void drawPart(Graphics gfx, int x, int y, short[] partData, int offset) {
+      short kind;
+      switch (kind = partData[offset + 0]) {
          case 3:
          case 4:
          case 5:
          case 6:
-            int var10 = x + parts[offset + 1];
-            int var11 = y + parts[offset + 2];
-            short var12 = parts[offset + 3];
-            short var13 = parts[offset + 4];
-            switch (var5) {
+            int destX = x + partData[offset + 1];
+            int destY = y + partData[offset + 2];
+            short width = partData[offset + 3];
+            short height = partData[offset + 4];
+            switch (kind) {
                case 3:
-                  g.drawRect(var10, var11, var12 - 1, var13 - 1);
+                  gfx.drawRect(destX, destY, width - 1, height - 1);
                   break;
                case 4:
-                  g.fillRect(var10, var11, var12, var13);
+                  gfx.fillRect(destX, destY, width, height);
                   break;
                case 5:
-                  g.drawArc(var10, var11, var12 - 1, var13 - 1, 0, 360);
+                  gfx.drawArc(destX, destY, width - 1, height - 1, 0, 360);
                   break;
                case 6:
-                  g.fillArc(var10, var11, var12, var13, 0, 360);
+                  gfx.fillArc(destX, destY, width, height, 0, 360);
                default:
                   return;
             }
@@ -531,40 +531,40 @@ public final class SpriteRenderer implements SpriteIndex {
          default:
             break;
          case 8:
-            int var6 = x + parts[offset + 1];
-            int var7 = y + parts[offset + 2];
-            int var8 = x + parts[offset + 3];
-            int var9 = y + parts[offset + 4];
-            g.drawLine(var6, var7, var8, var9);
+            int startX = x + partData[offset + 1];
+            int startY = y + partData[offset + 2];
+            int endX = x + partData[offset + 3];
+            int endY = y + partData[offset + 4];
+            gfx.drawLine(startX, startY, endX, endY);
             return;
          case 10:
-            setColor(g, parts[offset + 1]);
+            setColor(gfx, partData[offset + 1]);
       }
    }
 
-   private static final void drawPartMirrored(Graphics var0, int var1, int var2, short[] var3, int var4) {
-      short var5;
-      switch (var5 = var3[var4 + 0]) {
+   private static final void drawPartMirrored(Graphics gfx, int x, int y, short[] partData, int offset) {
+      short kind;
+      switch (kind = partData[offset + 0]) {
          case 3:
          case 4:
          case 5:
          case 6:
-            short var10 = var3[var4 + 3];
-            short var11 = var3[var4 + 4];
-            int var12 = var1 - (var3[var4 + 1] + var10);
-            int var13 = var2 + var3[var4 + 2];
-            switch (var5) {
+            short width = partData[offset + 3];
+            short height = partData[offset + 4];
+            int destX = x - (partData[offset + 1] + width);
+            int destY = y + partData[offset + 2];
+            switch (kind) {
                case 3:
-                  var0.drawRect(var12, var13, var10 - 1, var11 - 1);
+                  gfx.drawRect(destX, destY, width - 1, height - 1);
                   break;
                case 4:
-                  var0.fillRect(var12, var13, var10, var11);
+                  gfx.fillRect(destX, destY, width, height);
                   break;
                case 5:
-                  var0.drawArc(var12, var13, var10 - 1, var11 - 1, 0, 360);
+                  gfx.drawArc(destX, destY, width - 1, height - 1, 0, 360);
                   break;
                case 6:
-                  var0.fillArc(var12, var13, var10, var11, 0, 360);
+                  gfx.fillArc(destX, destY, width, height, 0, 360);
                default:
                   return;
             }
@@ -573,14 +573,14 @@ public final class SpriteRenderer implements SpriteIndex {
          default:
             break;
          case 8:
-            int var6 = var1 - var3[var4 + 1];
-            int var7 = var2 + var3[var4 + 2];
-            int var8 = var1 - var3[var4 + 3];
-            int var9 = var2 + var3[var4 + 4];
-            var0.drawLine(var6, var7, var8, var9);
+            int startX = x - partData[offset + 1];
+            int startY = y + partData[offset + 2];
+            int endX = x - partData[offset + 3];
+            int endY = y + partData[offset + 4];
+            gfx.drawLine(startX, startY, endX, endY);
             return;
          case 10:
-            setColor(var0, var3[var4 + 1]);
+            setColor(gfx, partData[offset + 1]);
       }
    }
 
@@ -608,21 +608,21 @@ public final class SpriteRenderer implements SpriteIndex {
          case 11:
             return parts[offset + 1];
          case 8:
-            short var2 = parts[offset + 1];
-            short var3 = parts[offset + 3];
-            if (var2 < var3) {
-               return var2;
+            short start = parts[offset + 1];
+            short end = parts[offset + 3];
+            if (start < end) {
+               return start;
             }
 
-            return var3;
+            return end;
          case 10:
          default:
             return 0;
       }
    }
 
-   private static final int partY(short[] var0, int var1) {
-      switch (var0[var1 + 0]) {
+   private static final int partY(short[] parts, int offset) {
+      switch (parts[offset + 0]) {
          case 0:
          case 1:
          case 2:
@@ -633,66 +633,66 @@ public final class SpriteRenderer implements SpriteIndex {
          case 7:
          case 9:
          case 11:
-            return var0[var1 + 2];
+            return parts[offset + 2];
          case 8:
-            short var2 = var0[var1 + 2];
-            short var3 = var0[var1 + 4];
-            if (var2 < var3) {
-               return var2;
+            short start = parts[offset + 2];
+            short end = parts[offset + 4];
+            if (start < end) {
+               return start;
             }
 
-            return var3;
+            return end;
          case 10:
          default:
             return 0;
       }
    }
 
-   private static final int partWidth(short[] var0, int var1) {
-      switch (var0[var1 + 0]) {
+   private static final int partWidth(short[] parts, int offset) {
+      switch (parts[offset + 0]) {
          case 0:
          case 11:
-            short var2;
-            var2 = (short)((var2 = var0[var1 + 3]) & 65535);
-            return spriteRects[var2][3];
+            short rectIndex;
+            rectIndex = (short)((rectIndex = parts[offset + 3]) & 65535);
+            return spriteRects[rectIndex][3];
          case 1:
          case 2:
          case 3:
          case 4:
          case 5:
          case 6:
-            return var0[var1 + 3];
+            return parts[offset + 3];
          case 7:
          case 10:
          default:
             return 0;
          case 8:
-            return Math.abs(var0[var1 + 1] - var0[var1 + 3]);
+            return Math.abs(parts[offset + 1] - parts[offset + 3]);
          case 9:
             return 0;
       }
    }
 
-   private static final int partHeight(short[] var0, int var1) {
-      switch (var0[var1 + 0]) {
+   private static final int partHeight(short[] parts, int offset) {
+      switch (parts[offset + 0]) {
          case 0:
          case 11:
-            short var2;
-            var2 = (short)((var2 = var0[var1 + 3]) & 65535);
-            return spriteRects[var2][4];
+            short rectIndex;
+            rectIndex = (short)((rectIndex = parts[offset + 3]) & 65535);
+            return spriteRects[rectIndex][4];
          case 1:
          case 2:
          case 3:
          case 4:
          case 5:
          case 6:
-            return var0[var1 + 4];
+            return parts[offset + 4];
          case 7:
          case 10:
          default:
             return 0;
          case 8:
-            return Math.abs(var0[var1 + 2] - var0[var1 + 4]);
+            return Math.abs(parts[offset + 2] - parts[offset + 4]);
          case 9:
             return 0;
       }
@@ -700,227 +700,227 @@ public final class SpriteRenderer implements SpriteIndex {
 
    public static final int frameMinX(int spriteId, int frame) {
       spriteId &= -16385;
-      int var2 = Integer.MAX_VALUE;
-      short[] var3 = parts[spriteId];
-      int var4 = partOffset(spriteId, frame);
-      int var5 = nextPartOffset(spriteId, frame);
-      if (var4 == var5) {
+      int min = Integer.MAX_VALUE;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      if (offset == nextOffset) {
          return 0;
       } else {
-         while (var4 < var5) {
-            short var6;
-            int var7;
-            if ((var6 = var3[var4 + 0]) != 10 && (var7 = partX(var3, var4)) < var2) {
-               var2 = var7;
+         while (offset < nextOffset) {
+            short kind;
+            int x;
+            if ((kind = partData[offset + 0]) != 10 && (x = partX(partData, offset)) < min) {
+               min = x;
             }
 
-            var4 += partSize(var6);
+            offset += partSize(kind);
          }
 
-         return var2;
+         return min;
       }
    }
 
    public static final int frameMinY(int spriteId, int frame) {
       spriteId &= -16385;
-      int var2 = Integer.MAX_VALUE;
-      short[] var3 = parts[spriteId];
-      int var4 = partOffset(spriteId, frame);
-      int var5 = nextPartOffset(spriteId, frame);
-      if (var4 == var5) {
+      int min = Integer.MAX_VALUE;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      if (offset == nextOffset) {
          return 0;
       } else {
-         while (var4 < var5) {
-            short var6;
-            int var7;
-            if ((var6 = var3[var4 + 0]) != 10 && (var7 = partY(var3, var4)) < var2) {
-               var2 = var7;
+         while (offset < nextOffset) {
+            short kind;
+            int y;
+            if ((kind = partData[offset + 0]) != 10 && (y = partY(partData, offset)) < min) {
+               min = y;
             }
 
-            var4 += partSize(var6);
+            offset += partSize(kind);
          }
 
-         return var2;
+         return min;
       }
    }
 
    public static final int frameWidth(int spriteId, int frame) {
       spriteId &= -16385;
-      int var2 = Integer.MAX_VALUE;
-      int var3 = Integer.MIN_VALUE;
-      short[] var4 = parts[spriteId];
-      int var5 = partOffset(spriteId, frame);
-      int var6 = nextPartOffset(spriteId, frame);
-      if (var5 == var6) {
+      int min = Integer.MAX_VALUE;
+      int max = Integer.MIN_VALUE;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      if (offset == nextOffset) {
          return 0;
       } else {
-         while (var5 < var6) {
-            short var7;
-            if ((var7 = var4[var5 + 0]) != 10) {
-               int var8;
-               int var9 = (var8 = partX(var4, var5)) + partWidth(var4, var5);
-               if (var8 < var2) {
-                  var2 = var8;
+         while (offset < nextOffset) {
+            short kind;
+            if ((kind = partData[offset + 0]) != 10) {
+               int x;
+               int right = (x = partX(partData, offset)) + partWidth(partData, offset);
+               if (x < min) {
+                  min = x;
                }
 
-               if (var9 > var3) {
-                  var3 = var9;
+               if (right > max) {
+                  max = right;
                }
             }
 
-            var5 += partSize(var7);
+            offset += partSize(kind);
          }
 
-         return var3 - var2;
+         return max - min;
       }
    }
 
    public static final int frameHeight(int spriteId, int frame) {
       spriteId &= -16385;
-      int var2 = Integer.MAX_VALUE;
-      int var3 = Integer.MIN_VALUE;
-      short[] var4 = parts[spriteId];
-      int var5 = partOffset(spriteId, frame);
-      int var6 = nextPartOffset(spriteId, frame);
-      if (var5 == var6) {
+      int min = Integer.MAX_VALUE;
+      int max = Integer.MIN_VALUE;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
+      if (offset == nextOffset) {
          return 0;
       } else {
-         while (var5 < var6) {
-            short var7;
-            if ((var7 = var4[var5 + 0]) != 10) {
-               int var8;
-               int var9 = (var8 = partY(var4, var5)) + partHeight(var4, var5);
-               if (var8 < var2) {
-                  var2 = var8;
+         while (offset < nextOffset) {
+            short kind;
+            if ((kind = partData[offset + 0]) != 10) {
+               int y;
+               int bottom = (y = partY(partData, offset)) + partHeight(partData, offset);
+               if (y < min) {
+                  min = y;
                }
 
-               if (var9 > var3) {
-                  var3 = var9;
+               if (bottom > max) {
+                  max = bottom;
                }
             }
 
-            var5 += partSize(var7);
+            offset += partSize(kind);
          }
 
-         return var3 - var2;
+         return max - min;
       }
    }
 
    public static final int countSpecialParts(int spriteId, int frame) {
       spriteId &= -16385;
-      int var2 = 0;
-      short[] var3 = parts[spriteId];
-      int var4 = partOffset(spriteId, frame);
-      int var5 = nextPartOffset(spriteId, frame);
+      int count = 0;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var4 < var5) {
-         short var6;
-         if ((var6 = var3[var4 + 0]) == 7) {
-            var2++;
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 7) {
+            count++;
          }
 
-         var4 += partSize(var6);
+         offset += partSize(kind);
       }
 
-      return var2;
+      return count;
    }
 
-   public static final boolean hitTest(int[] var0, int var1, int var2, int var3) {
-      boolean var4 = false;
-      if ((var1 & 16384) != 0) {
-         var1 &= -16385;
-         var4 = true;
+   public static final boolean hitTest(int[] out, int spriteId, int frame, int handleIndex) {
+      boolean mirrored = false;
+      if ((spriteId & 16384) != 0) {
+         spriteId &= -16385;
+         mirrored = true;
       }
 
-      int var5 = 0;
-      short[] var6 = parts[var1];
-      int var7 = partOffset(var1, var2);
-      int var8 = nextPartOffset(var1, var2);
+      int handleCount = 0;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var7 < var8) {
-         short var9;
-         if ((var9 = var6[var7 + 0]) == 7) {
-            if (var5 == var3) {
-               var0[0] = var6[var7 + 1];
-               var0[1] = var6[var7 + 2];
-               if (var4) {
-                  var0[0] = -var0[0];
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 7) {
+            if (handleCount == handleIndex) {
+               out[0] = partData[offset + 1];
+               out[1] = partData[offset + 2];
+               if (mirrored) {
+                  out[0] = -out[0];
                }
 
                return true;
             }
 
-            var5++;
+            handleCount++;
          }
 
-         var7 += partSize(var9);
+         offset += partSize(kind);
       }
 
-      var0[0] = 0;
-      var0[1] = 0;
+      out[0] = 0;
+      out[1] = 0;
       return false;
    }
 
-   public static final Image getTileImage(int var0, int var1, int var2) {
-      var0 &= -16385;
-      short[] var3 = parts[var0];
-      int var4 = partOffset(var0, var1);
-      int var5 = nextPartOffset(var0, var1);
+   public static final Image getTileImage(int spriteId, int frame, int imageIndex) {
+      spriteId &= -16385;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var4 < var5) {
-         short var6;
-         if ((var6 = var3[var4 + 0]) == 0 || var6 == 11) {
-            if (var2 == 0) {
-               short var7 = var3[var4 + 3];
-               short var8 = spriteRects[var7][0];
-               return tiles[recolorIndex][var8];
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 0 || kind == 11) {
+            if (imageIndex == 0) {
+               short rectIndex = partData[offset + 3];
+               short tileIndex = spriteRects[rectIndex][0];
+               return tiles[recolorIndex][tileIndex];
             }
 
-            var2--;
+            imageIndex--;
          }
 
-         var4 += partSize(var6);
+         offset += partSize(kind);
       }
 
       return null;
    }
 
-   public static final boolean hitTestMirrored(int[] var0, int var1, int var2, int var3) {
-      if ((var1 & 16384) != 0) {
-         var1 &= -16385;
+   public static final boolean hitTestMirrored(int[] out, int spriteId, int frame, int handleIndex) {
+      if ((spriteId & 16384) != 0) {
+         spriteId &= -16385;
       }
 
-      int var5 = 0;
-      short[] var6 = parts[var1];
-      int var7 = partOffset(var1, var2);
-      int var8 = nextPartOffset(var1, var2);
+      int handleCount = 0;
+      short[] partData = parts[spriteId];
+      int offset = partOffset(spriteId, frame);
+      int nextOffset = nextPartOffset(spriteId, frame);
 
-      while (var7 < var8) {
-         short var9;
-         if ((var9 = var6[var7 + 0]) == 2) {
-            if (var5 == var3) {
-               var0[0] = var6[var7 + 1];
-               var0[1] = var6[var7 + 2];
-               var0[2] = var6[var7 + 3];
-               var0[3] = var6[var7 + 4];
+      while (offset < nextOffset) {
+         short kind;
+         if ((kind = partData[offset + 0]) == 2) {
+            if (handleCount == handleIndex) {
+               out[0] = partData[offset + 1];
+               out[1] = partData[offset + 2];
+               out[2] = partData[offset + 3];
+               out[3] = partData[offset + 4];
                return true;
             }
 
-            var5++;
+            handleCount++;
          }
 
-         var7 += partSize(var9);
+         offset += partSize(kind);
       }
 
-      var0[0] = 0;
-      var0[1] = 0;
-      var0[2] = 0;
-      var0[3] = 0;
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 0;
       return false;
    }
 
-   public static final void drawAnimator(Graphics var0, Animator var1, int var2, int var3) {
-      drawFrame(var0, var1.animId, var1.frame, var2, var3);
+   public static final void drawAnimator(Graphics gfx, Animator animator, int x, int y) {
+      drawFrame(gfx, animator.animId, animator.frame, x, y);
    }
 
    public static final void setRecolorIndex(int index) {

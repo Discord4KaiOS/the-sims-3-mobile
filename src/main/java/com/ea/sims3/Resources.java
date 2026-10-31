@@ -1,7 +1,7 @@
 package com.ea.sims3;
 
 public interface Resources {
-   int[] b = new int[]{
+   int[] resourceSizes = new int[]{
       4591,
       3889,
       3237,
@@ -115,7 +115,7 @@ public interface Resources {
       225,
       2511
    };
-   String[] a = new String[]{
+   String[] resourcePaths = new String[]{
       "/a",
       "/b",
       "/c",

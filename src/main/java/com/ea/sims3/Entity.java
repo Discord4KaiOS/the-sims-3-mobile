@@ -3,328 +3,328 @@ package com.ea.sims3;
 import javax.microedition.lcdui.Graphics;
 
 public class Entity implements SpriteIndex, SoundIndex, Resources {
-   public static final int[] a = new int[10];
+   public static final int[] boundsScratch = new int[10];
    public final GameScreen screen;
    public final GameCanvas canvas;
    public int type;
-   public int b;
-   private short a5;
+   public int variant;
+   private short baseAnimId;
    private int flags;
    private int state;
-   private int h;
-   private int i;
+   private int mode;
+   private int modeTime;
    public int posX;
    public int posY;
    public int facing;
-   private byte a6;
-   private byte b2;
-   public boolean a7;
-   private short b3;
-   private int j;
-   private boolean b4;
-   private int k;
-   private int l;
-   private int m;
-   private int n;
-   private short c2;
+   private byte tileWidth;
+   private byte tileHeight;
+   public boolean reservedFlag;
+   private short stateTimer;
+   private int intervalTimer;
+   private boolean layoutDirty;
+   private int sortYFront;
+   private int sortYBack;
+   private int slotMask;
+   private int messageId;
+   private short idleAnimId;
    private Animator[] animators;
-   private short d2;
-   private int o;
-   private int p;
+   private short overlayAnimId;
+   private int offsetYFront;
+   private int offsetYBack;
    private Sim owner;
    private Sim partner;
 
    public final Neighborhood neighborhood() {
-      return this.canvas.a23;
+      return this.canvas.neighborhood;
    }
 
    public final Lot lot() {
-      return this.canvas.a24;
+      return this.canvas.lot;
    }
 
-   public Entity(GameScreen var1) {
-      this.screen = var1;
-      this.canvas = GameCanvas.a7();
+   public Entity(GameScreen gameScreen) {
+      this.screen = gameScreen;
+      this.canvas = GameCanvas.instance();
       this.animators = new Animator[1];
       this.animators[0] = new Animator();
    }
 
-   public void a2(int type, int x, int y, int facing, int value) {
+   public void place(int type, int x, int y, int facing, int value) {
       Lot lot = this.lot();
-      Neighborhood var7 = this.neighborhood();
+      Neighborhood neighborhood = this.neighborhood();
       this.moveTo(x, y);
-      this.n2(facing);
+      this.setFacing(facing);
       this.type = type;
-      this.b = value;
-      this.flags = lot.k(type);
+      this.variant = value;
+      this.flags = lot.objectFlagsAt(type);
       this.state = 0;
-      this.a5 = (short)lot.i(type);
-      this.o = 0;
-      this.p = 0;
+      this.baseAnimId = (short)lot.spriteIdAt(type);
+      this.offsetYFront = 0;
+      this.offsetYBack = 0;
       this.owner = null;
       this.partner = null;
       this.addState(128);
-      this.m = 0;
-      int var8 = lot.q(type);
-      int var9 = lot.h(type, 0);
+      this.slotMask = 0;
+      int idleAnimId = lot.subTypeAt(type);
+      int modeAnimId = lot.attachmentAt(type, 0);
       if (type == 99) {
-         var8 = lot.c();
+         idleAnimId = lot.stageMusicId();
       }
 
-      if (var8 == 196 && var9 != 0) {
-         this.setValueB(var9);
+      if (idleAnimId == 196 && modeAnimId != 0) {
+         this.setValueB(modeAnimId);
       } else {
-         this.c2 = -1;
-         this.playIdleAnimation(var8);
+         this.idleAnimId = -1;
+         this.playIdleAnimation(idleAnimId);
       }
 
       this.setValueA(-1);
-      int var10 = this.g();
-      int var11 = 0;
+      int stateBits = this.readStateBits();
+      int modeValue = 0;
       if (type == 9) {
-         var11 = 1;
+         modeValue = 1;
       } else if (type == 92) {
-         if ((var11 = var10 & 16777215) != 0 && lot.a() != 0) {
-            int var12 = var7.d6;
-            int var13;
-            if ((var13 = this.h()) != -1 && var12 - var13 > 1440) {
-               var11 = 0;
+         if ((modeValue = stateBits & 16777215) != 0 && lot.areaId() != 0) {
+            int clockNow = neighborhood.gameTime;
+            int savedTime;
+            if ((savedTime = this.readStateTime()) != -1 && clockNow - savedTime > 1440) {
+               modeValue = 0;
             }
          }
-      } else if (lot.h(type) == 16) {
-         var11 = var10 & 16777215;
+      } else if (lot.objectKindAt(type) == 16) {
+         modeValue = stateBits & 16777215;
       }
 
-      this.setModeFromState(var11);
-      if ((var10 & 16777216) != 0) {
-         this.f2();
+      this.setModeFromState(modeValue);
+      if ((stateBits & 16777216) != 0) {
+         this.turnOnPrimary();
       }
 
-      if ((var10 & 33554432) != 0) {
-         this.h2();
+      if ((stateBits & 33554432) != 0) {
+         this.turnOnSecondary();
       }
 
       if (this.hasFlag(201326592) && !this.hasState(768)) {
-         this.b3 = (short)(var10 & 16777215);
-         this.j = 0;
-         if (this.b3 == 0) {
-            this.b3 = (short)this.canvas.b(0, 100);
+         this.stateTimer = (short)(stateBits & 16777215);
+         this.intervalTimer = 0;
+         if (this.stateTimer == 0) {
+            this.stateTimer = (short)this.canvas.randomRange(0, 100);
          }
       }
 
-      if (this.a() == 10) {
-         byte var14 = 47;
+      if (this.behaviorClass() == 10) {
+         byte bubbleId = 47;
          if (type == 48) {
-            var14 = 49;
+            bubbleId = 49;
          } else if (type == 50) {
-            var14 = 51;
+            bubbleId = 51;
          } else if (type == 52) {
-            var14 = 53;
+            bubbleId = 53;
          }
 
-         this.screen.a(var14, this.posX, this.posY, this.facing, this.b).setValueC(20);
+         this.screen.createEntity(bubbleId, this.posX, this.posY, this.facing, this.variant).setValueC(20);
       }
 
-      if (this.a() == 8) {
-         this.F();
+      if (this.behaviorClass() == 8) {
+         this.notifyScreenPosition();
       }
    }
 
-   public final void a10() {
-      if (this.a() == 8) {
-         this.b3().a10();
+   public final void despawn() {
+      if (this.behaviorClass() == 8) {
+         this.occupant().despawn();
       }
 
-      this.screen.e(this);
+      this.screen.removeEntity(this);
       this.owner = null;
       this.partner = null;
    }
 
-   public final int a() {
-      return this.lot().h(this.type);
+   public final int behaviorClass() {
+      return this.lot().objectKindAt(this.type);
    }
 
-   public final int b() {
-      return this.hasFlag(64) ? this.i() : this.a5;
+   public final int typeAnimId() {
+      return this.hasFlag(64) ? this.drawOwnerNames() : this.baseAnimId;
    }
 
-   public final void moveTo(int var1, int var2) {
-      this.b4 = true;
-      this.posX = var1;
-      this.posY = var2;
+   public final void moveTo(int x, int y) {
+      this.layoutDirty = true;
+      this.posX = x;
+      this.posY = y;
    }
 
-   public final boolean hasFlag(int var1) {
-      return (this.flags & var1) != 0;
+   public final boolean hasFlag(int flag) {
+      return (this.flags & flag) != 0;
    }
 
-   public final void addFlag(int var1) {
-      this.flags |= var1;
+   public final void addFlag(int flag) {
+      this.flags |= flag;
    }
 
-   public final boolean hasState(int var1) {
-      return (this.state & var1) != 0;
+   public final boolean hasState(int flag) {
+      return (this.state & flag) != 0;
    }
 
-   public final void a2(int var1, boolean var2) {
-      if (var2) {
-         this.addState(var1);
+   public final void setState(int mask, boolean enabled) {
+      if (enabled) {
+         this.addState(mask);
       } else {
-         this.clearState(var1);
+         this.clearState(mask);
       }
    }
 
-   public final void addState(int var1) {
-      this.state |= var1;
+   public final void addState(int flag) {
+      this.state |= flag;
    }
 
-   public final void clearState(int var1) {
-      this.state &= ~var1;
+   public final void clearState(int flag) {
+      this.state &= ~flag;
    }
 
    public final void setBusy() {
       this.addState(8192);
-      if (this.a() == 8) {
-         this.b3().addState(8192);
+      if (this.behaviorClass() == 8) {
+         this.occupant().addState(8192);
       }
    }
 
    public final void clearBusy() {
       this.clearState(8192);
-      if (this.a() == 8) {
-         this.b3().clearState(8192);
+      if (this.behaviorClass() == 8) {
+         this.occupant().clearState(8192);
       }
    }
 
-   public final void a4(int var1, int var2, int var3) {
-      Entity var4 = null;
-      if (this.a() == 8) {
-         var4 = this.b3();
+   public final void relocate(int x, int y, int facing) {
+      Entity occupant = null;
+      if (this.behaviorClass() == 8) {
+         occupant = this.occupant();
       }
 
-      this.moveTo(var1, var2);
-      this.n2(var3);
-      if (var4 != null) {
-         int[] var5 = a;
-         this.c(var5);
-         var4.a4(var5[0], var5[1], var5[2]);
+      this.moveTo(x, y);
+      this.setFacing(facing);
+      if (occupant != null) {
+         int[] offset = boundsScratch;
+         this.computeDoorOffset(offset);
+         occupant.relocate(offset[0], offset[1], offset[2]);
       }
    }
 
    public final void update() {
-      if (this.b4) {
-         this.b4 = false;
-         int var2 = this.lot().d(this.posX, this.posY);
-         this.k = var2 + this.o;
-         this.l = var2 + this.p;
+      if (this.layoutDirty) {
+         this.layoutDirty = false;
+         int tileY = this.lot().toScreenY(this.posX, this.posY);
+         this.sortYFront = tileY + this.offsetYFront;
+         this.sortYBack = tileY + this.offsetYBack;
       }
    }
 
-   public int c() {
-      return this.hasFlag(16) ? this.b() : 24;
+   public int interactionAnimId() {
+      return this.hasFlag(16) ? this.typeAnimId() : 24;
    }
 
-   public final void a(int[] var1) {
-      Lot var2 = this.lot();
-      int var3 = 0;
-      int var4 = 0;
-      Animator var5;
-      int var6 = (var5 = this.animatorAt(0)).animId;
-      int var7 = var5.frame;
-      if (this.a() == 16) {
-         var6 = 270;
-         var7 = 0;
+   public final void computePosition(int[] out) {
+      Lot lot = this.lot();
+      int offsetX = 0;
+      int offsetY = 0;
+      Animator animator;
+      int animId = (animator = this.animatorAt(0)).animId;
+      int frame = animator.frame;
+      if (this.behaviorClass() == 16) {
+         animId = 270;
+         frame = 0;
       }
 
-      if (var6 != -1) {
-         if (SpriteRenderer.hitTest(var1, var6, var7, 0)) {
-            var3 = var1[0];
-            var4 = var1[1];
+      if (animId != -1) {
+         if (SpriteRenderer.hitTest(out, animId, frame, 0)) {
+            offsetX = out[0];
+            offsetY = out[1];
          } else if (this.hasFlag(16384)) {
-            var4 = 0 - (this.screen.b5() ? 7 : 38);
+            offsetY = 0 - (this.screen.isNewNeighborhood() ? 7 : 38);
          }
       }
 
-      var1[0] = var2.a2(this.posX, this.posY) + (var3 << 16);
-      var1[1] = var2.b(this.posX, this.posY) + (var4 << 16);
+      out[0] = lot.toScreenFixedX(this.posX, this.posY) + (offsetX << 16);
+      out[1] = lot.toScreenFixedY(this.posX, this.posY) + (offsetY << 16);
    }
 
-   public final void a(int[] var1, int var2) {
-      Lot var3 = this.lot();
-      int var4 = com.ea.sims3.Lot.f(this.posX);
-      int var5 = com.ea.sims3.Lot.g(this.posY);
-      int var6 = var3.b(this.type, var2, this.facing);
-      int var7 = var3.c(this.type, var2, this.facing);
-      int var8 = var4 + var6;
-      int var9 = var5 + var7;
-      var1[0] = com.ea.sims3.Lot.d(var8);
-      var1[1] = com.ea.sims3.Lot.e(var9);
+   public final void computeSlotPosition(int[] out, int slot) {
+      Lot lot = this.lot();
+      int originTileX = com.ea.sims3.Lot.toTileX(this.posX);
+      int originTileY = com.ea.sims3.Lot.toTileY(this.posY);
+      int deltaTileX = lot.framePartX(this.type, slot, this.facing);
+      int deltaTileY = lot.framePartY(this.type, slot, this.facing);
+      int tileX = originTileX + deltaTileX;
+      int tileY = originTileY + deltaTileY;
+      out[0] = com.ea.sims3.Lot.toFixedX(tileX);
+      out[1] = com.ea.sims3.Lot.toFixedY(tileY);
    }
 
-   public final int a(int var1, int var2, boolean var3, Sim var4) {
-      Lot var5 = this.lot();
-      int[] var6 = a;
-      int var7;
-      if ((var7 = var5.r(this.type)) <= 0) {
+   public final int findNearestSlot(int x, int y, boolean avoidOccupied, Sim ignoreSim) {
+      Lot lot = this.lot();
+      int[] out = boundsScratch;
+      int slotCount;
+      if ((slotCount = lot.frameCountAt(this.type)) <= 0) {
          return -1;
       } else {
-         int var8 = -1;
-         int var9 = Integer.MAX_VALUE;
+         int bestSlot = -1;
+         int bestDistance = Integer.MAX_VALUE;
 
-         for (int var10 = 0; var10 < var7; var10++) {
-            if (!var3 || this.d4(var10)) {
-               this.a(var6, var10);
-               int var11 = var6[0];
-               int var12 = var6[1];
-               if (var5.b3(var11, var12)) {
-                  if (var3 && !this.hasFlag(4194304)) {
-                     int var13 = com.ea.sims3.Lot.f(var11);
-                     int var14 = com.ea.sims3.Lot.g(var12);
-                     boolean var15 = false;
-                     Sim[] var16 = this.screen.a13();
+         for (int slot = 0; slot < slotCount; slot++) {
+            if (!avoidOccupied || this.isSlotFree(slot)) {
+               this.computeSlotPosition(out, slot);
+               int slotX = out[0];
+               int slotY = out[1];
+               if (lot.isWalkableAt(slotX, slotY)) {
+                  if (avoidOccupied && !this.hasFlag(4194304)) {
+                     int slotTileX = com.ea.sims3.Lot.toTileX(slotX);
+                     int slotTileY = com.ea.sims3.Lot.toTileY(slotY);
+                     boolean occupied = false;
+                     Sim[] sims = this.screen.getSims();
 
-                     for (int var17 = 0; var17 < var16.length && !var15; var17++) {
-                        Sim var18;
-                        if ((var18 = var16[var17]) != var4) {
-                           int var19 = com.ea.sims3.Lot.f(var18.posX);
-                           int var20 = com.ea.sims3.Lot.g(var18.posY);
-                           if (var19 == var13 && var20 == var14) {
-                              var15 = true;
+                     for (int index = 0; index < sims.length && !occupied; index++) {
+                        Sim other;
+                        if ((other = sims[index]) != ignoreSim) {
+                           int otherTileX = com.ea.sims3.Lot.toTileX(other.posX);
+                           int otherTileY = com.ea.sims3.Lot.toTileY(other.posY);
+                           if (otherTileX == slotTileX && otherTileY == slotTileY) {
+                              occupied = true;
                            }
                         }
                      }
 
-                     if (var15) {
+                     if (occupied) {
                         continue;
                      }
                   }
 
-                  int var21 = Math.abs(var1 - var11);
-                  int var22 = Math.abs(var2 - var12);
-                  int var23;
-                  if ((var23 = var21 + var22) < var9) {
-                     var9 = var23;
-                     var8 = var10;
+                  int deltaX = Math.abs(x - slotX);
+                  int deltaY = Math.abs(y - slotY);
+                  int distance;
+                  if ((distance = deltaX + deltaY) < bestDistance) {
+                     bestDistance = distance;
+                     bestSlot = slot;
                   }
                }
             }
          }
 
-         return var8;
+         return bestSlot;
       }
    }
 
-   public final boolean c5(int var1) {
+   public final boolean tryOccupySlot(int slot) {
       if (this.hasFlag(4194304)) {
          return true;
       } else {
          if (this.hasFlag(8388608)) {
-            if ((this.m & 1 << var1) == 0) {
-               this.m |= 1 << var1;
+            if ((this.slotMask & 1 << slot) == 0) {
+               this.slotMask |= 1 << slot;
                return true;
             }
-         } else if (this.m == 0) {
-            this.m = -1;
+         } else if (this.slotMask == 0) {
+            this.slotMask = -1;
             return true;
          }
 
@@ -332,159 +332,159 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final void d3(int var1) {
+   public final void releaseSlot(int slot) {
       if (this.hasFlag(8388608)) {
-         this.m &= ~(1 << var1);
+         this.slotMask &= ~(1 << slot);
       } else {
-         this.m = 0;
+         this.slotMask = 0;
       }
    }
 
-   public final boolean a11() {
-      return this.hasFlag(4194304) ? true : this.m == 0;
+   public final boolean canOccupySlot() {
+      return this.hasFlag(4194304) ? true : this.slotMask == 0;
    }
 
-   public final boolean b5() {
-      if (this.a11()) {
+   public final boolean hasFreeSlot() {
+      if (this.canOccupySlot()) {
          return true;
       } else {
-         int var1 = this.lot().r(this.type);
-         return this.m < (1 << var1) - 1;
+         int slotCount = this.lot().frameCountAt(this.type);
+         return this.slotMask < (1 << slotCount) - 1;
       }
    }
 
-   public final boolean d4(int var1) {
-      return (this.m & 1 << var1) == 0;
+   public final boolean isSlotFree(int slot) {
+      return (this.slotMask & 1 << slot) == 0;
    }
 
-   private int g() {
-      if (this.b == -1) {
+   private int readStateBits() {
+      if (this.variant == -1) {
          return 0;
       } else {
-         Lot var1 = this.lot();
-         return this.neighborhood().l(var1.a(), this.b);
+         Lot lot = this.lot();
+         return this.neighborhood().tipValue(lot.areaId(), this.variant);
       }
    }
 
-   private int h() {
-      if (this.b == -1) {
+   private int readStateTime() {
+      if (this.variant == -1) {
          return -1;
       } else {
-         Lot var1 = this.lot();
-         return this.neighborhood().m(var1.a(), this.b);
+         Lot lot = this.lot();
+         return this.neighborhood().tipTime(lot.areaId(), this.variant);
       }
    }
 
-   private void E() {
-      if (this.b != -1) {
-         Lot var1 = this.lot();
-         Neighborhood var2 = this.neighborhood();
-         int var3 = 0;
+   private void saveState() {
+      if (this.variant != -1) {
+         Lot lot = this.lot();
+         Neighborhood neighborhood = this.neighborhood();
+         int stateBits = 0;
          if (this.type == 92) {
-            var3 = this.h;
-         } else if (this.a() == 16) {
-            var3 = this.h;
+            stateBits = this.mode;
+         } else if (this.behaviorClass() == 16) {
+            stateBits = this.mode;
          }
 
          if (this.hasFlag(67108864) && this.hasState(256)) {
-            var3 |= 16777216;
+            stateBits |= 16777216;
          }
 
          if (this.hasFlag(134217728) && this.hasState(512)) {
-            var3 |= 33554432;
+            stateBits |= 33554432;
          }
 
-         if (var1.a() == 0 && this.hasFlag(201326592)) {
-            var3 |= this.b3;
+         if (lot.areaId() == 0 && this.hasFlag(201326592)) {
+            stateBits |= this.stateTimer;
          }
 
          if (this.hasState(32768)) {
-            var3 |= 134217728;
+            stateBits |= 134217728;
          }
 
          if (this.hasState(16384)) {
-            var3 |= 67108864;
+            stateBits |= 67108864;
          }
 
          if (this.hasState(65536)) {
-            var3 |= 268435456;
+            stateBits |= 268435456;
          }
 
-         var2.b2(var1.a(), this.b, var3);
+         neighborhood.pushTip(lot.areaId(), this.variant, stateBits);
       }
    }
 
-   public boolean c3() {
-      return this.a() == 16 ? !this.isAnimating() && !this.e4(1) && this.h != 1 : this.h == 0;
+   public boolean isIdleModeZero() {
+      return this.behaviorClass() == 16 ? !this.isAnimating() && !this.isAnimatorRunning(1) && this.mode != 1 : this.mode == 0;
    }
 
-   public final boolean d3() {
-      return this.a() != 16 || !this.isAnimating() && !this.e4(1) ? this.h == 1 : false;
+   public final boolean isIdleModeOne() {
+      return this.behaviorClass() != 16 || !this.isAnimating() && !this.isAnimatorRunning(1) ? this.mode == 1 : false;
    }
 
-   public final void setModeFromState(int var1) {
-      int var2;
-      if ((var2 = this.a()) == 2) {
-         this.r2(var1);
-      } else if (var2 == 3) {
-         this.t2(var1);
-      } else if (var2 == 7) {
-         this.u2(var1);
-      } else if (var2 == 8) {
-         this.setMode(var1);
-      } else if (var2 == 10) {
-         this.v2(var1);
-      } else if (var2 == 17) {
-         this.z2(var1);
-      } else if (var2 == 19) {
-         this.A2(var1);
-      } else if (var2 == 16) {
-         this.x2(var1);
+   public final void setModeFromState(int stateBits) {
+      int behaviorClass;
+      if ((behaviorClass = this.behaviorClass()) == 2) {
+         this.applyTwoStateMode(stateBits);
+      } else if (behaviorClass == 3) {
+         this.applyFourStateMode(stateBits);
+      } else if (behaviorClass == 7) {
+         this.applyOverlayMode(stateBits);
+      } else if (behaviorClass == 8) {
+         this.setMode(stateBits);
+      } else if (behaviorClass == 10) {
+         this.applyActiveMode(stateBits);
+      } else if (behaviorClass == 17) {
+         this.applySimpleTwoStateMode(stateBits);
+      } else if (behaviorClass == 19) {
+         this.applyStaticTwoStateMode(stateBits);
+      } else if (behaviorClass == 16) {
+         this.applyMultiFrameMode(stateBits);
       } else if (this.type == 92) {
-         this.B2(var1);
+         this.applyDoorMode(stateBits);
       }
 
-      this.h = var1;
-      this.i = 0;
+      this.mode = stateBits;
+      this.modeTime = 0;
       if (this.type == 92) {
-         this.E();
+         this.saveState();
       }
    }
 
-   public void advanceTime(int var1) {
-      this.i += var1;
+   public void advanceTime(int delta) {
+      this.modeTime += delta;
       if (this.hasFlag(201326592) && !this.hasState(768)) {
-         this.j += var1;
-         if (this.j > 4000) {
-            this.j -= 4000;
-            this.h2(1);
+         this.intervalTimer += delta;
+         if (this.intervalTimer > 4000) {
+            this.intervalTimer -= 4000;
+            this.advanceStateTimer(1);
          }
       }
 
       if (this.hasState(1)) {
-         var1 = this.screen.b5;
+         delta = this.screen.lastTickDuration;
       }
 
-      int var2 = this.type;
-      int var3;
-      if ((var3 = this.a()) == 3) {
-         this.s2(var1);
-      } else if (var3 == 16) {
-         this.y2(var1);
+      int type = this.type;
+      int behaviorClass;
+      if ((behaviorClass = this.behaviorClass()) == 3) {
+         this.advanceModeAnimations(delta);
+      } else if (behaviorClass == 16) {
+         this.advanceMultiFrame(delta);
       } else {
-         this.g2(var1);
+         this.advanceAnimations(delta);
          if (!this.isAnimating()) {
-            if (var3 == 7) {
+            if (behaviorClass == 7) {
                this.setModeFromState(2);
-            } else if (this.type == 92 && this.h == 2) {
+            } else if (this.type == 92 && this.mode == 2) {
                this.setModeFromState(1);
             }
          }
 
-         if (var3 == 8) {
-            this.a5(var1, 2);
-            if (!this.e4(2)) {
-               if (this.h == 2) {
+         if (behaviorClass == 8) {
+            this.advanceAnimator(delta, 2);
+            if (!this.isAnimatorRunning(2)) {
+               if (this.mode == 2) {
                   this.setModeFromState(1);
                } else {
                   this.setModeFromState(0);
@@ -493,524 +493,524 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          }
       }
 
-      if (var2 == 7) {
+      if (type == 7) {
          if (!this.isAnimating()) {
-            this.a10();
+            this.despawn();
             return;
          }
-      } else if (var2 == 8 && this.i > 1500) {
-         this.a10();
+      } else if (type == 8 && this.modeTime > 1500) {
+         this.despawn();
       }
    }
 
-   public final void g2(int var1) {
+   public final void advanceAnimations(int delta) {
       if (this.hasState(2048)) {
-         var1 = FixedMath.mul(var1 << 16, 81920) >> 16;
+         delta = FixedMath.mul(delta << 16, 81920) >> 16;
       } else if (this.hasState(4096)) {
-         var1 = FixedMath.mul(var1 << 16, 49152) >> 16;
+         delta = FixedMath.mul(delta << 16, 49152) >> 16;
       }
 
-      boolean var2 = this.a5(var1, 0);
-      if (this.a5(var1, 1)) {
-         var2 = true;
+      boolean drawn = this.advanceAnimator(delta, 0);
+      if (this.advanceAnimator(delta, 1)) {
+         drawn = true;
       }
 
-      if (this.d2 != -1 && var2) {
+      if (this.overlayAnimId != -1 && drawn) {
          this.draw();
       }
    }
 
-   public final boolean a5(int var1, int var2) {
-      Animator var3;
-      return (var3 = this.animatorAt(var2)) != null ? var3.advance(var1) : false;
+   public final boolean advanceAnimator(int delta, int index) {
+      Animator animator;
+      return (animator = this.animatorAt(index)) != null ? animator.advance(delta) : false;
    }
 
    public final void draw() {
-      int[] var1 = a;
-      Animator var2 = this.animatorAt(0);
-      Animator var3 = this.animatorAt(1);
-      byte var4 = 1;
-      Animator var5 = var2;
-      int var6 = 0;
-      int var7 = 0;
-      if (var3 != null && var3.isRunning()) {
-         var5 = var3;
-         var4 = 0;
-         if (var2.matchesFrame(var1, 1)) {
-            var6 = var1[0];
-            var7 = var1[1];
+      int[] bounds = boundsScratch;
+      Animator idleAnimator = this.animatorAt(0);
+      Animator overlayAnimator = this.animatorAt(1);
+      byte firstFrame = 1;
+      Animator animator = idleAnimator;
+      int offsetX = 0;
+      int offsetY = 0;
+      if (overlayAnimator != null && overlayAnimator.isRunning()) {
+         animator = overlayAnimator;
+         firstFrame = 0;
+         if (idleAnimator.matchesFrame(bounds, 1)) {
+            offsetX = bounds[0];
+            offsetY = bounds[1];
          } else if (this.hasState(1024)) {
-            var7 = -30;
+            offsetY = -30;
          }
       }
 
-      int var8;
-      if ((var8 = var5.frameDuration()) > var4) {
-         Lot var9 = this.lot();
-         if (this.a() == 16) {
-            int var16 = var5.frame;
-            int var18 = this.j();
-            int var20 = 2 + var18 - var16;
-            this.animatorFor(var20).play(this.d2, 16);
+      int frameCount;
+      if ((frameCount = animator.frameDuration()) > firstFrame) {
+         Lot lot = this.lot();
+         if (this.behaviorClass() == 16) {
+            int frame = animator.frame;
+            int slotCount = this.slotCount();
+            int animatorIndex = 2 + slotCount - frame;
+            this.animatorFor(animatorIndex).play(this.overlayAnimId, 16);
             return;
          }
 
-         for (int var10 = var4; var10 < var8; var10++) {
-            int var11 = this.posX;
-            int var12 = this.posY;
-            int var13 = var9.a2(var11, var12);
-            int var14 = var9.b(var11, var12);
-            var5.matchesFrame(var1, var10);
-            var13 += var1[0] + var6 << 16;
-            var14 += var1[1] + var7 << 16;
-            var11 = var9.e(var13, var14);
-            var12 = var9.f(var13, var14);
-            int var15 = -(var1[1] + var7);
+         for (int frameIndex = firstFrame; frameIndex < frameCount; frameIndex++) {
+            int tileX = this.posX;
+            int tileY = this.posY;
+            int screenX = lot.toScreenFixedX(tileX, tileY);
+            int screenY = lot.toScreenFixedY(tileX, tileY);
+            animator.matchesFrame(bounds, frameIndex);
+            screenX += bounds[0] + offsetX << 16;
+            screenY += bounds[1] + offsetY << 16;
+            tileX = lot.toWorldX(screenX, screenY);
+            tileY = lot.toWorldY(screenX, screenY);
+            int depthOffset = -(bounds[1] + offsetY);
             if (this.hasFlag(524288)) {
-               var15 += 5;
+               depthOffset += 5;
             }
 
-            this.screen.a2(var11, var12, this.d2, var15);
+            this.screen.createRoomObject(tileX, tileY, this.overlayAnimId, depthOffset);
          }
       }
    }
 
-   public boolean a(int var1, Sim var2) {
+   public boolean handleAction(int actionId, Sim sim) {
       if (this.type == 92) {
-         if (var1 == 148) {
+         if (actionId == 148) {
             this.setModeFromState(0);
          }
       } else if (this.type == 9) {
-         if (var1 == 149) {
-            if (this.b != -1) {
-               this.lot().a12(this.b);
+         if (actionId == 149) {
+            if (this.variant != -1) {
+               this.lot().removeObject(this.variant);
             }
 
-            this.a10();
+            this.despawn();
          }
-      } else if (this.a() == 10) {
-         if (var1 == 150 || var1 == 153) {
+      } else if (this.behaviorClass() == 10) {
+         if (actionId == 150 || actionId == 153) {
             this.setModeFromState(1);
-            if (var2.b == 0 && !this.neighborhood().b3(0, 1)) {
-               this.screen.a(23, var2, this);
+            if (sim.variant == 0 && !this.neighborhood().hasSimMilestone(0, 1)) {
+               this.screen.notifySimsOfAction(23, sim, this);
             }
-         } else if (var1 == 151) {
-            if (!this.screen.a5(0, this.posX, this.posY)) {
+         } else if (actionId == 151) {
+            if (!this.screen.isEntityAtTile(0, this.posX, this.posY)) {
                this.setModeFromState(0);
             }
-         } else if (var1 == 152 && var2.b == 0) {
-            this.screen.a(24, var2, this);
+         } else if (actionId == 152 && sim.variant == 0) {
+            this.screen.notifySimsOfAction(24, sim, this);
          }
-      } else if (this.a() == 22) {
-         if (var1 == 131) {
+      } else if (this.behaviorClass() == 22) {
+         if (actionId == 131) {
             this.clearState(16384);
             this.addState(32768);
-            this.E();
-         } else if (var1 == 130) {
+            this.saveState();
+         } else if (actionId == 130) {
             this.addState(16384);
             this.clearState(32768);
-            this.E();
+            this.saveState();
          }
-      } else if (this.a() == 16 && var1 == 112) {
+      } else if (this.behaviorClass() == 16 && actionId == 112) {
          this.addState(65536);
-         this.E();
+         this.saveState();
       }
 
       return false;
    }
 
-   public final void f2() {
+   public final void turnOnPrimary() {
       this.addState(256);
-      switch (this.a()) {
+      switch (this.behaviorClass()) {
          case 15:
          case 22:
-            this.k2();
+            this.markInactive();
          default:
-            this.E();
+            this.saveState();
             this.playAnimation(28, 20);
-            this.screen.a2((byte)8);
+            this.screen.showNeighborhoodIntro((byte)8);
       }
    }
 
-   public final void g2() {
+   public final void turnOffPrimary() {
       this.clearState(256);
-      this.E();
-      this.C();
+      this.saveState();
+      this.stopAnimation();
    }
 
-   public final void h2() {
+   public final void turnOnSecondary() {
       this.addState(512);
-      this.E();
+      this.saveState();
       this.playAnimation(41, 20);
-      this.screen.a2((byte)9);
+      this.screen.showNeighborhoodIntro((byte)9);
    }
 
-   public final void i2() {
+   public final void turnOffSecondary() {
       this.clearState(512);
-      this.E();
-      this.C();
+      this.saveState();
+      this.stopAnimation();
    }
 
-   public final void h2(int var1) {
-      if (this.lot().a() == 0) {
-         this.b3 = (short)(this.b3 + var1);
-         if (this.b3 > 300) {
-            this.b3 = 0;
+   public final void advanceStateTimer(int amount) {
+      if (this.lot().areaId() == 0) {
+         this.stateTimer = (short)(this.stateTimer + amount);
+         if (this.stateTimer > 300) {
+            this.stateTimer = 0;
             if (this.hasFlag(67108864)) {
-               this.f2();
+               this.turnOnPrimary();
             } else {
-               this.h2();
+               this.turnOnSecondary();
             }
          }
 
-         this.E();
+         this.saveState();
       }
    }
 
-   public final void j2() {
-      int var1;
-      if ((var1 = this.a()) == 15 || var1 == 22 || var1 == 18) {
-         this.q2(1);
+   public final void markActive() {
+      int behaviorClass;
+      if ((behaviorClass = this.behaviorClass()) == 15 || behaviorClass == 22 || behaviorClass == 18) {
+         this.playModeAnimation(1);
       }
 
-      if (var1 == 22 && !this.hasState(49152)) {
+      if (behaviorClass == 22 && !this.hasState(49152)) {
          this.addState(32768);
-      } else if (var1 == 8) {
+      } else if (behaviorClass == 8) {
          this.setModeFromState(2);
       }
 
       this.addState(64);
-      this.h2(15);
+      this.advanceStateTimer(15);
    }
 
-   public final void k2() {
-      int var1;
-      if ((var1 = this.a()) == 15 || var1 == 22 || var1 == 18) {
-         this.q2(0);
-      } else if (var1 == 8) {
+   public final void markInactive() {
+      int behaviorClass;
+      if ((behaviorClass = this.behaviorClass()) == 15 || behaviorClass == 22 || behaviorClass == 18) {
+         this.playModeAnimation(0);
+      } else if (behaviorClass == 8) {
          this.setModeFromState(3);
       }
 
       this.clearState(64);
-      this.h2(15);
+      this.advanceStateTimer(15);
    }
 
-   public final void b2(int var1, int var2) {
+   public final void setIdleAnimation(int animId, int offset) {
       this.clearState(128);
-      this.playIdleAnimation(var1);
-      if (var1 == 35 || var1 == 36) {
+      this.playIdleAnimation(animId);
+      if (animId == 35 || animId == 36) {
          this.addState(1);
       }
 
-      this.setValueC(var2);
+      this.setValueC(offset);
    }
 
-   public final void i2(int var1) {
-      this.n = var1;
+   public final void showMessage(int textId) {
+      this.messageId = textId;
       this.playIdleAnimation(196);
       this.setValueC(30);
    }
 
-   private void e2(int var1, int var2) {
-      GameCanvas var3 = this.canvas;
-      int var4 = FixedMath.smoothStep(0, 1500, this.i);
-      int var5 = -40 + FixedMath.mul(var4, -30);
-      SdkString var6 = var3.a2();
-      var3.g2(this.n);
-      var3.a(var6, 0, var1, var2 + var5, 17);
+   private void drawMessage(int x, int y) {
+      GameCanvas canvas = this.canvas;
+      int progress = FixedMath.smoothStep(0, 1500, this.modeTime);
+      int offsetY = -40 + FixedMath.mul(progress, -30);
+      SdkString text = canvas.beginString();
+      canvas.formatNumber(this.messageId);
+      canvas.drawString(text, 0, x, y + offsetY, 17);
    }
 
-   public final void l2() {
+   public final void enterModeOne() {
       this.setModeFromState(1);
    }
 
-   public final void m2() {
+   public final void enterModeZero() {
       this.setModeFromState(0);
    }
 
-   private void r2(int var1) {
-      byte var2;
-      byte var3;
-      switch (var1) {
+   private void applyTwoStateMode(int mode) {
+      byte modeAnimation;
+      byte overlayAnimation;
+      switch (mode) {
          case 0:
          default:
-            var3 = -1;
-            var2 = 0;
+            overlayAnimation = -1;
+            modeAnimation = 0;
             break;
          case 1:
-            var3 = 44;
-            var2 = 1;
+            overlayAnimation = 44;
+            modeAnimation = 1;
       }
 
-      this.setValueA(var3);
-      this.q2(var2);
+      this.setValueA(overlayAnimation);
+      this.playModeAnimation(modeAnimation);
    }
 
-   public final void n2() {
-      if (this.h == 0 || this.h == 3) {
+   public final void enterModeTwoIfIdle() {
+      if (this.mode == 0 || this.mode == 3) {
          this.setModeFromState(2);
       }
    }
 
-   public final void o2() {
-      if (this.h == 1 || this.h == 2) {
+   public final void enterModeThreeIfBusy() {
+      if (this.mode == 1 || this.mode == 2) {
          this.setModeFromState(3);
       }
    }
 
    public final boolean isModeOne() {
-      return this.h == 1;
+      return this.mode == 1;
    }
 
-   public final void b(int[] var1) {
-      Lot var2;
-      int var3 = (var2 = this.lot()).c(this.posX, this.posY);
-      int var4 = var2.d(this.posX, this.posY);
-      this.animatorAt(2).matchesFrame(var1, 0);
-      var1[0] += var3;
-      var1[1] += var4;
+   public final void computeFootprintOffset(int[] out) {
+      Lot lot;
+      int deltaX = (lot = this.lot()).toScreenX(this.posX, this.posY);
+      int deltaY = lot.toScreenY(this.posX, this.posY);
+      this.animatorAt(2).matchesFrame(out, 0);
+      out[0] += deltaX;
+      out[1] += deltaY;
    }
 
-   private void s2(int var1) {
-      this.g2(var1);
-      this.a5(var1, 2);
-      if (!this.e4(2)) {
-         if (this.h == 2) {
+   private void advanceModeAnimations(int delta) {
+      this.advanceAnimations(delta);
+      this.advanceAnimator(delta, 2);
+      if (!this.isAnimatorRunning(2)) {
+         if (this.mode == 2) {
             this.setModeFromState(1);
             return;
          }
 
-         if (this.h == 3) {
+         if (this.mode == 3) {
             this.setModeFromState(0);
          }
       }
    }
 
-   private void t2(int var1) {
-      short var2 = -1;
-      boolean var3 = true;
-      switch (var1) {
+   private void applyFourStateMode(int mode) {
+      short animId = -1;
+      boolean loopForever = true;
+      switch (mode) {
          case 0:
          default:
             break;
          case 1:
-            var2 = 158;
+            animId = 158;
             break;
          case 2:
-            var2 = 157;
-            var3 = false;
+            animId = 157;
+            loopForever = false;
             break;
          case 3:
-            var2 = 159;
-            var3 = false;
+            animId = 159;
+            loopForever = false;
       }
 
-      Animator var4 = this.animatorFor(2);
-      if (var2 != -1) {
-         int var5 = this.lot().i(var2, this.facing);
-         var4.play(var5, var3 ? 20 : 16);
+      Animator animator = this.animatorFor(2);
+      if (animId != -1) {
+         int frameId = this.lot().frameDataAt(animId, this.facing);
+         animator.play(frameId, loopForever ? 20 : 16);
       } else {
-         var4.setRunning(false);
+         animator.setRunning(false);
       }
    }
 
-   public final int d() {
-      Entity[] var1 = this.screen.a12();
-      Entity var2 = null;
+   public final int doorOffset() {
+      Entity[] entities = this.screen.getEntities();
+      Entity door = null;
 
-      for (int var3 = 0; var3 < var1.length; var3++) {
-         Entity var4;
-         if ((var4 = var1[var3]) != this && var4.a() == 4) {
-            var2 = var4;
+      for (int index = 0; index < entities.length; index++) {
+         Entity entity;
+         if ((entity = entities[index]) != this && entity.behaviorClass() == 4) {
+            door = entity;
             break;
          }
       }
 
-      if (var2 != null) {
-         return this.b < var2.b ? 512 : 1024;
+      if (door != null) {
+         return this.variant < door.variant ? 512 : 1024;
       } else {
          return 512;
       }
    }
 
-   public final boolean f3() {
-      Lot var1 = this.lot();
-      int var2 = com.ea.sims3.Lot.f(this.posX);
-      int var3 = com.ea.sims3.Lot.g(this.posY);
-      return !var1.a3(var2, var3, 1, 1, this.facing) && this.type != 41;
+   public final boolean isPassable() {
+      Lot lot = this.lot();
+      int tileX = com.ea.sims3.Lot.toTileX(this.posX);
+      int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+      return !lot.footprintFree(tileX, tileY, 1, 1, this.facing) && this.type != 41;
    }
 
-   public final Entity a3() {
-      Entity[] var1 = this.screen.a12();
+   public final Entity container() {
+      Entity[] entities = this.screen.getEntities();
 
-      for (int var2 = 0; var2 < var1.length; var2++) {
-         Entity var3;
-         if ((var3 = var1[var2]).a() == 8 && var3.b3() == this) {
-            return var3;
+      for (int index = 0; index < entities.length; index++) {
+         Entity entity;
+         if ((entity = entities[index]).behaviorClass() == 8 && entity.occupant() == this) {
+            return entity;
          }
       }
 
       return null;
    }
 
-   public final void p2() {
+   public final void setModeOne() {
       this.setModeFromState(1);
    }
 
-   public final void q2() {
+   public final void setModeZero() {
       this.setModeFromState(0);
    }
 
-   private void u2(int var1) {
-      byte var2 = 0;
-      boolean var3 = true;
-      byte var4 = -1;
-      if (var1 == 1) {
-         var2 = 1;
-         var3 = false;
-         var4 = 42;
+   private void applyOverlayMode(int mode) {
+      byte modeAnimation = 0;
+      boolean loopEnabled = true;
+      byte overlayAnimation = -1;
+      if (mode == 1) {
+         modeAnimation = 1;
+         loopEnabled = false;
+         overlayAnimation = 42;
       }
 
-      this.d2 = var4;
-      this.a2(128, var3);
-      this.q2(var2);
+      this.overlayAnimId = overlayAnimation;
+      this.setState(128, loopEnabled);
+      this.playModeAnimation(modeAnimation);
    }
 
    public final boolean isModeTwo() {
-      return this.h == 2;
+      return this.mode == 2;
    }
 
-   private void F() {
-      int[] var2 = a;
-      this.c(var2);
-      this.screen.a(41, var2[0], var2[1], var2[2], -1);
+   private void notifyScreenPosition() {
+      int[] bounds = boundsScratch;
+      this.computeDoorOffset(bounds);
+      this.screen.createEntity(41, bounds[0], bounds[1], bounds[2], -1);
    }
 
-   private void c(int[] var1) {
-      int var2 = this.posX;
-      int var3 = this.posY;
-      byte var4 = 3;
+   private void computeDoorOffset(int[] out) {
+      int x = this.posX;
+      int y = this.posY;
+      byte facing = 3;
       if (this.facing == 0) {
-         var2 += 524288;
-         var3 -= 524288;
-         var4 = 2;
+         x += 524288;
+         y -= 524288;
+         facing = 2;
       } else {
-         var2 -= 524288;
-         var3 += 524288;
+         x -= 524288;
+         y += 524288;
       }
 
-      var1[0] = var2;
-      var1[1] = var3;
-      var1[2] = var4;
+      out[0] = x;
+      out[1] = y;
+      out[2] = facing;
    }
 
-   public final Entity b3() {
-      int[] var1 = a;
-      this.c(var1);
-      return this.screen.a2(41, var1[0], var1[1]);
+   public final Entity occupant() {
+      int[] bounds = boundsScratch;
+      this.computeDoorOffset(bounds);
+      return this.screen.findNearestEntityOfType(41, bounds[0], bounds[1]);
    }
 
-   public final void setMode(int var1) {
-      this.h = var1;
-      byte var2 = -1;
-      byte var3 = 20;
-      switch (var1) {
+   public final void setMode(int mode) {
+      this.mode = mode;
+      byte modeIndex = -1;
+      byte frameTime = 20;
+      switch (mode) {
          case 0:
          default:
             break;
          case 1:
-            var2 = 1;
+            modeIndex = 1;
             break;
          case 2:
-            var2 = 2;
-            var3 = 16;
+            modeIndex = 2;
+            frameTime = 16;
             break;
          case 3:
-            var2 = 3;
-            var3 = 16;
+            modeIndex = 3;
+            frameTime = 16;
       }
 
-      if (var2 != -1) {
-         Lot var4;
-         int var5 = (var4 = this.lot()).h(this.type, var2);
-         int var6 = var4.i(var5, this.facing);
-         this.animatorFor(2).play(var6, var3);
+      if (modeIndex != -1) {
+         Lot lot;
+         int frameAnim = (lot = this.lot()).attachmentAt(this.type, modeIndex);
+         int frameId = lot.frameDataAt(frameAnim, this.facing);
+         this.animatorFor(2).play(frameId, frameTime);
       } else {
          this.animatorFor(2).setRunning(false);
       }
    }
 
-   private void v2(int var1) {
-      this.h = var1;
-      byte var2 = -1;
-      byte var3 = 0;
-      switch (var1) {
+   private void applyActiveMode(int mode) {
+      this.mode = mode;
+      byte modeIndex = -1;
+      byte offsetY = 0;
+      switch (mode) {
          case 0:
-            var2 = 0;
-            var3 = 0;
+            modeIndex = 0;
+            offsetY = 0;
             this.clearState(64);
             break;
          case 1:
-            var2 = 1;
-            var3 = -15;
+            modeIndex = 1;
+            offsetY = -15;
             this.addState(64);
       }
 
-      this.q2(var2);
-      this.a(!this.hasState(64));
-      this.setValueC(var3);
+      this.playModeAnimation(modeIndex);
+      this.updateFootprint(!this.hasState(64));
+      this.setValueC(offsetY);
    }
 
-   public final void r2() {
-      this.q2(1);
+   public final void playFirstModeAnimation() {
+      this.playModeAnimation(1);
    }
 
-   public final void s2() {
-      this.q2(0);
-      this.h2(15);
+   public final void playZeroModeAndTick() {
+      this.playModeAnimation(0);
+      this.advanceStateTimer(15);
    }
 
-   private final int i() {
-      int var1 = -1;
-      int var2 = -1;
-      int var3 = this.lot().b2(this.type);
-      Neighborhood var4;
-      int var5 = (var4 = this.neighborhood()).b6;
+   private final int drawOwnerNames() {
+      int ownerSlot = -1;
+      int partnerSlot = -1;
+      int slotType = this.lot().indexOfLotId(this.type);
+      Neighborhood neighborhood;
+      int slotCount = (neighborhood = this.neighborhood()).simCount;
 
-      for (int var6 = 0; var6 < var5; var6++) {
-         if (var4.U(var6) == var3) {
-            if (var1 == -1) {
-               var1 = var6;
-            } else if (var2 == -1) {
-               var2 = var6;
+      for (int index = 0; index < slotCount; index++) {
+         if (neighborhood.simHomeLotOf(index) == slotType) {
+            if (ownerSlot == -1) {
+               ownerSlot = index;
+            } else if (partnerSlot == -1) {
+               partnerSlot = index;
             }
          }
       }
 
-      if (var1 == -1 && var2 == -1) {
+      if (ownerSlot == -1 && partnerSlot == -1) {
          return 201;
       } else {
-         GameCanvas var9 = this.canvas;
-         SdkString var7;
-         if (var1 == 0) {
-            var7 = var9.b2();
+         GameCanvas canvas = this.canvas;
+         SdkString nameText;
+         if (ownerSlot == 0) {
+            nameText = canvas.profileName();
          } else {
-            var7 = var9.a4(var4.R(var1));
+            nameText = canvas.getString(neighborhood.simNameText(ownerSlot));
          }
 
-         if (var2 == -1) {
-            var9.a2(-10, 202, var7);
+         if (partnerSlot == -1) {
+            canvas.formatStringWith(-10, 202, nameText);
          } else {
-            SdkString var8 = var9.a4(var4.R(var2));
-            var9.a(-10, 203, var7, var8);
+            SdkString partnerText = canvas.getString(neighborhood.simNameText(partnerSlot));
+            canvas.formatStringWith2(-10, 203, nameText, partnerText);
          }
 
          return -10;
       }
    }
 
-   private static final int a3(int var0) {
-      switch (var0) {
+   private static final int upgradeTypeFor(int upgradeId) {
+      switch (upgradeId) {
          case 5:
             return 18;
          case 6:
@@ -1026,8 +1026,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private static final int a2(int var0, int var1) {
-      switch (var0) {
+   private static final int upgradeAnimFor(int type, int variant) {
+      switch (type) {
          case 18:
             return 264;
          case 19:
@@ -1035,13 +1035,13 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          case 20:
             return 266;
          case 21:
-            if (var1 == 0) {
+            if (variant == 0) {
                return 262;
             }
 
             return 263;
          case 22:
-            if (var1 == 0) {
+            if (variant == 0) {
                return 268;
             }
 
@@ -1051,8 +1051,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private static final int b2(int var0) {
-      switch (var0) {
+   private static final int upgradeVariantFor(int type) {
+      switch (type) {
          case 18:
             return 11;
          case 19:
@@ -1068,436 +1068,436 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private int j() {
-      return this.l3() ? 5 : 8;
+   private int slotCount() {
+      return this.isUpgraded() ? 5 : 8;
    }
 
-   private boolean l3() {
-      return (this.lot().k(this.type) & 65536) != 0;
+   private boolean isUpgraded() {
+      return (this.lot().objectFlagsAt(this.type) & 65536) != 0;
    }
 
-   public final void k2(int var1) {
-      Lot var2 = this.lot();
-      int var3 = a3(var1);
-      this.type = var3;
-      var2.b2(this.b, var3);
-      this.a5 = (short)var2.i(var3);
-      this.h = 2;
-      this.E();
+   public final void setUpgradedType(int upgradeId) {
+      Lot lot = this.lot();
+      int newType = upgradeTypeFor(upgradeId);
+      this.type = newType;
+      lot.setObjectId(this.variant, newType);
+      this.baseAnimId = (short)lot.spriteIdAt(newType);
+      this.mode = 2;
+      this.saveState();
       this.clearState(128);
-      if (this.l3()) {
+      if (this.isUpgraded()) {
          this.playIdleAnimation(271);
          this.playAnimation(267, 16);
-         this.setValueA(a2(var3, 0));
+         this.setValueA(upgradeAnimFor(newType, 0));
       } else {
          this.playIdleAnimation(272);
       }
    }
 
-   public final void t2() {
-      boolean var1 = false;
-      switch (this.h) {
+   public final void toggleAlternate() {
+      boolean upgraded = false;
+      switch (this.mode) {
          case 2:
          default:
-            if (this.l3()) {
-               var1 = true;
-               this.h = 1;
+            if (this.isUpgraded()) {
+               upgraded = true;
+               this.mode = 1;
                this.clearState(128);
                this.playIdleAnimation(271);
                this.playAnimation(267, 16);
-               this.setValueA(a2(this.type, 1));
+               this.setValueA(upgradeAnimFor(this.type, 1));
             } else {
-               this.h = 3;
+               this.mode = 3;
                this.clearState(128);
                this.playIdleAnimation(273);
             }
             break;
          case 3:
-            var1 = true;
-            this.h = 1;
+            upgraded = true;
+            this.mode = 1;
             this.clearState(128);
             this.playIdleAnimation(274);
             this.playAnimation(275, 16);
-            this.setValueA(a2(this.type, 0));
+            this.setValueA(upgradeAnimFor(this.type, 0));
       }
 
-      if (var1) {
-         Neighborhood var2;
-         (var2 = this.neighborhood()).e3(32);
+      if (upgraded) {
+         Neighborhood neighborhood;
+         (neighborhood = this.neighborhood()).unlockAchievement(32);
          if (this.type == 21) {
-            var2.e3(33);
+            neighborhood.unlockAchievement(33);
          } else if (this.type == 19) {
-            var2.e3(34);
+            neighborhood.unlockAchievement(34);
          } else if (this.type == 20) {
-            var2.e3(35);
+            neighborhood.unlockAchievement(35);
          }
       }
 
-      this.E();
+      this.saveState();
    }
 
-   private void G() {
+   private void playSequenceOnAll() {
       this.playAnimation(196, 16);
 
-      for (int var1 = 2; var1 <= 9; var1++) {
-         Animator var2;
-         if ((var2 = this.animatorAt(var1)) != null) {
-            var2.play(196, 16);
+      for (int index = 2; index <= 9; index++) {
+         Animator animator;
+         if ((animator = this.animatorAt(index)) != null) {
+            animator.play(196, 16);
          }
       }
    }
 
-   private void w2(int var1) {
-      int var2 = a2(this.type, var1);
-      int var3 = this.j();
-      int var4 = 2 + var3 - 1;
+   private void playChainAnimation(int variant) {
+      int frameId = upgradeAnimFor(this.type, variant);
+      int count = this.slotCount();
+      int lastIndex = 2 + count - 1;
 
-      for (int var5 = 0; var5 < var3; var5++) {
-         Animator var6;
-         (var6 = this.animatorFor(var4 - var5)).play(var2, 16);
-         var6.rewind();
+      for (int index = 0; index < count; index++) {
+         Animator animator;
+         (animator = this.animatorFor(lastIndex - index)).play(frameId, 16);
+         animator.rewind();
       }
    }
 
-   public final void u2() {
-      int var1 = b2(this.type);
-      int var2 = this.j();
+   public final void completeUpgrade() {
+      int variantId = upgradeVariantFor(this.type);
+      int slotCount = this.slotCount();
       if (this.hasState(65536)) {
-         var2 += 2;
+         slotCount += 2;
          this.clearState(65536);
       }
 
-      this.neighborhood().h2(var2);
-      this.neighborhood().b2(var1, var2);
-      this.screen.b2(var1, var2, 289, 715);
-      if (this.l3()) {
-         this.v2();
+      this.neighborhood().onRepeatAction(slotCount);
+      this.neighborhood().addItem(variantId, slotCount);
+      this.screen.showMessageDialog(variantId, slotCount, 289, 715);
+      if (this.isUpgraded()) {
+         this.transformToCompleted();
       } else {
          this.setModeFromState(3);
       }
 
-      this.G();
-      this.E();
+      this.playSequenceOnAll();
+      this.saveState();
    }
 
-   public final void v2() {
+   public final void transformToCompleted() {
       this.type = 17;
-      this.lot().b2(this.b, 17);
-      this.a5 = (short)this.lot().i(17);
-      this.h = 0;
-      this.G();
+      this.lot().setObjectId(this.variant, 17);
+      this.baseAnimId = (short)this.lot().spriteIdAt(17);
+      this.mode = 0;
+      this.playSequenceOnAll();
       this.clearState(128);
       this.playIdleAnimation(270);
-      this.E();
+      this.saveState();
    }
 
-   private void x2(int var1) {
-      this.h = var1;
-      short var2;
-      switch (var1) {
+   private void applyMultiFrameMode(int mode) {
+      this.mode = mode;
+      short animId;
+      switch (mode) {
          case 0:
          default:
-            var2 = 270;
+            animId = 270;
             break;
          case 1:
-            this.w2(1);
-            short var5 = 275;
-            var2 = 274;
-            if (this.l3()) {
-               var5 = 267;
-               var2 = 271;
+            this.playChainAnimation(1);
+            short overlayFrame = 275;
+            animId = 274;
+            if (this.isUpgraded()) {
+               overlayFrame = 267;
+               animId = 271;
             }
 
-            Animator var4;
-            (var4 = this.animatorFor(1)).play(var5, 16);
-            var4.rewind();
+            Animator overlayAnimator;
+            (overlayAnimator = this.animatorFor(1)).play(overlayFrame, 16);
+            overlayAnimator.rewind();
             break;
          case 2:
-            if (this.l3()) {
-               this.w2(0);
-               var2 = 271;
-               Animator var3;
-               (var3 = this.animatorFor(1)).play(267, 16);
-               var3.rewind();
+            if (this.isUpgraded()) {
+               this.playChainAnimation(0);
+               animId = 271;
+               Animator alternateAnimator;
+               (alternateAnimator = this.animatorFor(1)).play(267, 16);
+               alternateAnimator.rewind();
             } else {
-               var2 = 272;
+               animId = 272;
             }
             break;
          case 3:
-            var2 = 273;
+            animId = 273;
       }
 
       this.clearState(128);
-      this.playIdleAnimation(var2);
+      this.playIdleAnimation(animId);
       this.animatorAt(0).rewind();
    }
 
-   private void y2(int var1) {
-      int var2 = this.j();
+   private void advanceMultiFrame(int delta) {
+      int slotCount = this.slotCount();
 
-      for (int var3 = 0; var3 < var2; var3++) {
-         this.a5(var1, 2 + var3);
+      for (int index = 0; index < slotCount; index++) {
+         this.advanceAnimator(delta, 2 + index);
       }
 
-      this.g2(var1);
+      this.advanceAnimations(delta);
    }
 
-   public final void w() {
-      this.q2(1);
+   public final void playModeOneAnimation() {
+      this.playModeAnimation(1);
    }
 
-   public final void x() {
-      this.q2(0);
+   public final void playModeZeroAnimation() {
+      this.playModeAnimation(0);
    }
 
-   public final void y() {
+   public final void activateModeOne() {
       this.setModeFromState(1);
    }
 
-   public final void z() {
-      this.h2(15);
+   public final void resetStateTimerToIdle() {
+      this.advanceStateTimer(15);
       this.setModeFromState(0);
    }
 
-   private void z2(int var1) {
-      this.h = var1;
-      byte var2;
-      byte var3;
-      switch (var1) {
+   private void applySimpleTwoStateMode(int mode) {
+      this.mode = mode;
+      byte modeAnimation;
+      byte overlayAnimation;
+      switch (mode) {
          case 0:
          default:
-            var3 = -1;
-            var2 = 0;
+            overlayAnimation = -1;
+            modeAnimation = 0;
             break;
          case 1:
-            var3 = 42;
-            var2 = 1;
+            overlayAnimation = 42;
+            modeAnimation = 1;
       }
 
-      this.setValueA(var3);
-      this.q2(var2);
+      this.setValueA(overlayAnimation);
+      this.playModeAnimation(modeAnimation);
    }
 
-   public final void A() {
+   public final void startModeOne() {
       this.setModeFromState(1);
    }
 
-   public final void B() {
+   public final void activateModeZero() {
       this.setModeFromState(0);
    }
 
-   private void A2(int var1) {
-      this.h = var1;
-      byte var2;
-      byte var3;
-      switch (var1) {
+   private void applyStaticTwoStateMode(int mode) {
+      this.mode = mode;
+      byte modeAnimation;
+      byte overlayAnimation;
+      switch (mode) {
          case 0:
          default:
-            var3 = -1;
-            var2 = 0;
+            overlayAnimation = -1;
+            modeAnimation = 0;
             break;
          case 1:
-            var3 = 42;
-            var2 = 1;
+            overlayAnimation = 42;
+            modeAnimation = 1;
       }
 
-      this.setValueA(var3);
-      this.q2(var2);
+      this.setValueA(overlayAnimation);
+      this.playModeAnimation(modeAnimation);
    }
 
-   public final void a(Sim var1) {
-      this.screen.a(21, var1, this);
-      this.a2(var1);
-      this.n2((this.facing + 2) % 4);
+   public final void interactWith(Sim sim) {
+      this.screen.notifySimsOfAction(21, sim, this);
+      this.faceEntity(sim);
+      this.setFacing((this.facing + 2) % 4);
       this.setModeFromState(2);
    }
 
-   private void B2(int var1) {
-      boolean var2 = true;
-      byte var3;
-      switch (var1) {
+   private void applyDoorMode(int mode) {
+      boolean visible = true;
+      byte modeIndex;
+      switch (mode) {
          case 0:
          default:
-            this.C();
-            var3 = 0;
+            this.stopAnimation();
+            modeIndex = 0;
             break;
          case 1:
             this.playAnimation(41, 4);
-            var3 = 2;
+            modeIndex = 2;
             break;
          case 2:
             this.playAnimation(41, 20);
-            var3 = 1;
-            var2 = false;
+            modeIndex = 1;
+            visible = false;
       }
 
-      this.a2(128, var2);
-      this.q2(var3);
+      this.setState(128, visible);
+      this.playModeAnimation(modeIndex);
    }
 
-   public final Animator animatorAt(int var1) {
-      return var1 < this.animators.length ? this.animators[var1] : null;
+   public final Animator animatorAt(int index) {
+      return index < this.animators.length ? this.animators[index] : null;
    }
 
-   public final Animator animatorFor(int var1) {
-      if (var1 >= this.animators.length) {
-         Animator[] var2 = new Animator[var1 + 1];
-         System.arraycopy(this.animators, 0, var2, 0, this.animators.length);
-         this.animators = var2;
+   public final Animator animatorFor(int index) {
+      if (index >= this.animators.length) {
+         Animator[] grown = new Animator[index + 1];
+         System.arraycopy(this.animators, 0, grown, 0, this.animators.length);
+         this.animators = grown;
       }
 
-      if (this.animators[var1] == null) {
-         Animator var3 = new Animator();
-         this.animators[var1] = var3;
-         var3.setRunning(false);
+      if (this.animators[index] == null) {
+         Animator created = new Animator();
+         this.animators[index] = created;
+         created.setRunning(false);
       }
 
-      return this.animators[var1];
+      return this.animators[index];
    }
 
-   public final void playAnimation(int var1, int var2) {
-      this.animatorFor(1).play(var1, var2);
+   public final void playAnimation(int frameId, int frameTime) {
+      this.animatorFor(1).play(frameId, frameTime);
    }
 
-   public final void C() {
-      Animator var1;
-      if ((var1 = this.animatorAt(1)) != null) {
-         var1.setRunning(false);
+   public final void stopAnimation() {
+      Animator animator;
+      if ((animator = this.animatorAt(1)) != null) {
+         animator.setRunning(false);
       }
    }
 
-   public final void setValueA(int var1) {
-      this.d2 = (short)var1;
+   public final void setValueA(int animId) {
+      this.overlayAnimId = (short)animId;
    }
 
-   public final int e() {
+   public final int frontSortY() {
       this.update();
-      return this.k;
+      return this.sortYFront;
    }
 
-   public final int f() {
+   public final int backSortY() {
       this.update();
-      return this.l;
+      return this.sortYBack;
    }
 
-   public final void setValueC(int var1) {
-      this.o = var1;
-      this.p = var1;
-      this.b4 = true;
+   public final void setValueC(int value) {
+      this.offsetYFront = value;
+      this.offsetYBack = value;
+      this.layoutDirty = true;
    }
 
-   public final void b(Sim var1) {
+   public final void setOwner(Sim sim) {
       if (this.owner == null) {
-         this.owner = var1;
+         this.owner = sim;
       } else {
          if (this.partner == null) {
-            this.partner = var1;
+            this.partner = sim;
          }
       }
    }
 
-   public final void c(Sim var1) {
-      if (this.owner == var1) {
+   public final void clearOwner(Sim sim) {
+      if (this.owner == sim) {
          this.owner = null;
       }
 
-      if (this.partner == var1) {
+      if (this.partner == sim) {
          this.partner = null;
       }
    }
 
-   public void a(Graphics var1) {
-      Lot var2 = this.lot();
-      int[] var3 = a;
-      int var4 = var2.d();
-      int var5 = var2.e();
-      int var6 = var4 + var2.c(this.posX, this.posY);
-      int var7 = var5 + var2.d(this.posX, this.posY);
+   public void render(Graphics graphics) {
+      Lot lot = this.lot();
+      int[] bounds = boundsScratch;
+      int originX = lot.viewCenterX();
+      int originY = lot.viewCenterY();
+      int screenX = originX + lot.toScreenX(this.posX, this.posY);
+      int screenY = originY + lot.toScreenY(this.posX, this.posY);
       if (this.type == 8) {
-         this.e2(var6, var7);
+         this.drawMessage(screenX, screenY);
       } else {
-         Animator var8;
-         (var8 = this.animatorAt(0)).draw(var1, var6, var7);
-         int var9;
-         Animator var10;
-         if ((var9 = this.a()) == 8 && (var10 = this.animatorAt(2)) != null && var10.isRunning()) {
-            var10.draw(var1, var6, var7);
+         Animator idleAnimator;
+         (idleAnimator = this.animatorAt(0)).draw(graphics, screenX, screenY);
+         int behaviorClass;
+         Animator auxAnimator;
+         if ((behaviorClass = this.behaviorClass()) == 8 && (auxAnimator = this.animatorAt(2)) != null && auxAnimator.isRunning()) {
+            auxAnimator.draw(graphics, screenX, screenY);
          }
 
-         int var20 = var6;
-         int var11 = var7;
-         Animator var12;
-         if ((var12 = this.animatorAt(1)) != null && var12.isRunning()) {
-            if (var8.matchesFrame(var3, 1)) {
-               var20 = var6 + var3[0];
-               var11 = var7 + var3[1];
-            } else if (var8.matchesFrame(var3, 0)) {
-               var20 = var6 + var3[0];
-               var11 = var7 + var3[1];
+         int overlayX = screenX;
+         int overlayY = screenY;
+         Animator overlayAnimator;
+         if ((overlayAnimator = this.animatorAt(1)) != null && overlayAnimator.isRunning()) {
+            if (idleAnimator.matchesFrame(bounds, 1)) {
+               overlayX = screenX + bounds[0];
+               overlayY = screenY + bounds[1];
+            } else if (idleAnimator.matchesFrame(bounds, 0)) {
+               overlayX = screenX + bounds[0];
+               overlayY = screenY + bounds[1];
             }
 
-            var12.draw(var1, var20, var11);
+            overlayAnimator.draw(graphics, overlayX, overlayY);
          }
 
-         if (var9 == 16 && var12 != null) {
-            int var13 = var12.animId;
-            if (var12.animId != 196) {
-               int var14;
-               for (int var15 = (var14 = this.j()) - 1; var15 >= 0; var15--) {
-                  Animator var16;
-                  if ((var16 = this.animatorAt(2 + var15)) != null) {
-                     int var17 = var14 - var15;
-                     SpriteRenderer.hitTest(var3, var13, var17, 0);
-                     int var18 = var20 + var3[0];
-                     int var19 = var11 + var3[1];
-                     var16.draw(var1, var18, var19);
+         if (behaviorClass == 16 && overlayAnimator != null) {
+            int overlayAnimId = overlayAnimator.animId;
+            if (overlayAnimator.animId != 196) {
+               int slotCount;
+               for (int slot = (slotCount = this.slotCount()) - 1; slot >= 0; slot--) {
+                  Animator slotAnimator;
+                  if ((slotAnimator = this.animatorAt(2 + slot)) != null) {
+                     int frameIndex = slotCount - slot;
+                     SpriteRenderer.hitTest(bounds, overlayAnimId, frameIndex, 0);
+                     int frameX = overlayX + bounds[0];
+                     int frameY = overlayY + bounds[1];
+                     slotAnimator.draw(graphics, frameX, frameY);
                   }
                }
             }
          }
 
-         Animator var21;
-         if (var9 == 3 && (var21 = this.animatorAt(2)).isRunning()) {
-            var21.draw(var1, var6, var7);
+         Animator seatAnimator;
+         if (behaviorClass == 3 && (seatAnimator = this.animatorAt(2)).isRunning()) {
+            seatAnimator.draw(graphics, screenX, screenY);
          }
 
          if (this.hasFlag(33554432)) {
             if (this.owner != null) {
-               this.owner.b(var1);
+               this.owner.drawBody(graphics);
             }
 
             if (this.partner != null) {
-               this.partner.b(var1);
+               this.partner.drawBody(graphics);
             }
 
-            int var22 = var2.h(this.type, 1);
-            int var23 = var2.i(var22, this.facing);
-            SpriteRenderer.drawFrame(var1, var23, 0, var6, var7);
+            int animId = lot.attachmentAt(this.type, 1);
+            int frameId = lot.frameDataAt(animId, this.facing);
+            SpriteRenderer.drawFrame(graphics, frameId, 0, screenX, screenY);
          }
       }
    }
 
-   public final void a2(short[] var1) {
-      GameCanvas.b2(var1, this.a5);
-      if (!this.m3()) {
-         if (this.k3()) {
-            GameCanvas.c2(var1, 326);
+   public final void addResourceIndices(short[] out) {
+      GameCanvas.initList(out, this.baseAnimId);
+      if (!this.isBlocked()) {
+         if (this.needsFacingAdjust()) {
+            GameCanvas.addToList(out, 326);
          }
 
-         if (this.j3()) {
-            GameCanvas.c2(var1, 325);
+         if (this.hasRotatedFootprint()) {
+            GameCanvas.addToList(out, 325);
          }
 
          if (this.hasFurnitureSlots()) {
-            GameCanvas.c2(var1, 324);
+            GameCanvas.addToList(out, 324);
             return;
          }
       } else {
-         GameCanvas.c2(var1, 275);
+         GameCanvas.addToList(out, 275);
       }
    }
 
-   public final void a(boolean var1) {
+   public final void updateFootprint(boolean highlight) {
       if (this.hasFlag(524288)) {
          this.setValueC(5);
       } else if (this.hasFlag(4)) {
@@ -1505,131 +1505,131 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
             this.setValueC(5);
          }
       } else {
-         Lot var2 = this.lot();
-         int var3 = com.ea.sims3.Lot.f(this.posX);
-         int var4 = com.ea.sims3.Lot.g(this.posY);
-         int var5 = var2.o(this.type);
-         int var6 = var2.p(this.type);
+         Lot lot = this.lot();
+         int tileX = com.ea.sims3.Lot.toTileX(this.posX);
+         int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+         int width = lot.objectWidthAt(this.type);
+         int height = lot.objectHeightAt(this.type);
          if (this.facing == 1 || this.facing == 3) {
-            int var7 = var5;
-            var5 = var6;
-            var6 = var7;
+            int swap = width;
+            width = height;
+            height = swap;
          }
 
-         short var8;
-         short var9;
-         if (var1) {
-            if (this.a() == 10) {
-               var9 = 255;
-               var8 = 32;
+         short colorB;
+         short colorA;
+         if (highlight) {
+            if (this.behaviorClass() == 10) {
+               colorA = 255;
+               colorB = 32;
             } else if (this.type == 116) {
-               var9 = -129;
-               var8 = 0;
+               colorA = -129;
+               colorB = 0;
             } else {
-               var9 = 255;
-               var8 = 128;
+               colorA = 255;
+               colorB = 128;
             }
          } else {
-            var9 = -161;
-            var8 = 0;
+            colorA = -161;
+            colorB = 0;
          }
 
-         var2.a(var3 - var5 + 1, var4 - var6 + 1, var5, var6, var9, var8);
-         this.a6 = (byte)var5;
-         this.b2 = (byte)var6;
+         lot.fillCellFlags(tileX - width + 1, tileY - height + 1, width, height, colorA, colorB);
+         this.tileWidth = (byte)width;
+         this.tileHeight = (byte)height;
          if (this.hasFlag(16777216)) {
             this.setValueC(-10);
          } else if (this.hasFlag(8)) {
             this.setValueC(0);
-         } else if (this.a() == 14 || this.a() == 12) {
+         } else if (this.behaviorClass() == 14 || this.behaviorClass() == 12) {
             this.setValueC(20);
-         } else if (var5 != 0 && var6 != 0) {
-            this.o = var5 * -8 + 4;
-            this.p = var6 * -8 + 4;
+         } else if (width != 0 && height != 0) {
+            this.offsetYFront = width * -8 + 4;
+            this.offsetYBack = height * -8 + 4;
          }
 
-         this.b4 = true;
+         this.layoutDirty = true;
       }
    }
 
-   public final void n2(int var1) {
-      if (this.facing != var1) {
-         this.b4 = true;
-         this.facing = var1;
-         if (this.c2 != -1) {
-            this.setValueB(this.c2);
+   public final void setFacing(int facing) {
+      if (this.facing != facing) {
+         this.layoutDirty = true;
+         this.facing = facing;
+         if (this.idleAnimId != -1) {
+            this.setValueB(this.idleAnimId);
          }
       }
    }
 
-   public final void d2(int var1, int var2) {
-      this.n2(Math.abs(var1) > Math.abs(var2) ? (var1 < 0 ? 2 : 0) : (var2 < 0 ? 3 : 1));
+   public final void faceDirection(int dx, int dy) {
+      this.setFacing(Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 2 : 0) : (dy < 0 ? 3 : 1));
    }
 
-   public final void a2(Entity var1) {
-      int var2 = Math.max(var1.a6 - 1, 0);
-      int var3 = Math.max(var1.b2 - 1, 0);
-      int var4 = var2 << 18;
-      int var5 = var3 << 18;
-      int var6 = var1.posX - var4;
-      int var7 = var1.posY - var5;
-      this.d2(var6 - this.posX, var7 - this.posY);
+   public final void faceEntity(Entity other) {
+      int halfWidth = Math.max(other.tileWidth - 1, 0);
+      int halfHeight = Math.max(other.tileHeight - 1, 0);
+      int offsetX = halfWidth << 18;
+      int offsetY = halfHeight << 18;
+      int targetX = other.posX - offsetX;
+      int targetY = other.posY - offsetY;
+      this.faceDirection(targetX - this.posX, targetY - this.posY);
    }
 
-   public final void playIdleAnimation(int var1) {
-      this.animatorAt(0).play(var1, this.hasState(128) ? 20 : 16);
+   public final void playIdleAnimation(int frameId) {
+      this.animatorAt(0).play(frameId, this.hasState(128) ? 20 : 16);
    }
 
    public final boolean isAnimating() {
       return this.animators[0].isRunning();
    }
 
-   public final boolean e4(int var1) {
-      Animator var2;
-      return (var2 = this.animatorAt(var1)) != null && var2.isRunning();
+   public final boolean isAnimatorRunning(int index) {
+      Animator animator;
+      return (animator = this.animatorAt(index)) != null && animator.isRunning();
    }
 
-   public final void setValueB(int var1) {
-      this.c2 = (short)var1;
-      int var2 = this.lot().i(var1, this.facing);
-      this.playIdleAnimation(var2);
+   public final void setValueB(int frameId) {
+      this.idleAnimId = (short)frameId;
+      int frame = this.lot().frameDataAt(frameId, this.facing);
+      this.playIdleAnimation(frame);
    }
 
-   public final void q2(int var1) {
-      this.setValueB(this.lot().h(this.type, var1));
+   public final void playModeAnimation(int modeIndex) {
+      this.setValueB(this.lot().attachmentAt(this.type, modeIndex));
    }
 
-   private boolean m3() {
-      if (this.m != 0) {
+   private boolean isBlocked() {
+      if (this.slotMask != 0) {
          return true;
       } else {
          if (this.hasFlag(262144)) {
-            Lot var1 = this.lot();
-            int var2 = this.type;
-            int var3 = var1.o(var2);
-            int var4 = var1.p(var2);
+            Lot lot = this.lot();
+            int type = this.type;
+            int width = lot.objectWidthAt(type);
+            int height = lot.objectHeightAt(type);
             if (this.facing == 1 || this.facing == 3) {
-               int var5 = var3;
-               var3 = var4;
-               var4 = var5;
+               int swap = width;
+               width = height;
+               height = swap;
             }
 
-            int var11 = com.ea.sims3.Lot.f(this.posX);
-            int var6 = com.ea.sims3.Lot.g(this.posY);
+            int tileX = com.ea.sims3.Lot.toTileX(this.posX);
+            int tileY = com.ea.sims3.Lot.toTileY(this.posY);
 
-            for (int var7 = 0; var7 < var3; var7++) {
-               for (int var8 = 0; var8 < var4; var8++) {
-                  if (var1.a5(var11 - var7, var6 - var8)) {
+            for (int dx = 0; dx < width; dx++) {
+               for (int dy = 0; dy < height; dy++) {
+                  if (lot.hasObjectAt(tileX - dx, tileY - dy)) {
                      return true;
                   }
                }
             }
          }
 
-         Sim[] var9 = this.screen.a13();
+         Sim[] sims = this.screen.getSims();
 
-         for (int var10 = 0; var10 < var9.length; var10++) {
-            if (var9[var10].a10 == this) {
+         for (int index = 0; index < sims.length; index++) {
+            if (sims[index].interactionTarget == this) {
                return true;
             }
          }
@@ -1639,54 +1639,54 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean hasFurnitureSlots() {
-      return this.lot().n(this.type) > 0;
+      return this.lot().altIdAt(this.type) > 0;
    }
 
-   public final boolean j3() {
-      Lot var1 = this.lot();
-      this.a(false);
-      int var2 = var1.c(this.type);
-      this.screen.h2();
-      this.a(true);
-      return var2 > 1;
+   public final boolean hasRotatedFootprint() {
+      Lot lot = this.lot();
+      this.updateFootprint(false);
+      int width = lot.spawnWalkers(this.type);
+      this.screen.clearBrokenEntities();
+      this.updateFootprint(true);
+      return width > 1;
    }
 
-   public final boolean k3() {
-      return this.k() != this.facing;
+   public final boolean needsFacingAdjust() {
+      return this.freeFacing() != this.facing;
    }
 
-   private int k() {
-      Lot var1 = this.lot();
-      boolean var2;
-      if (!(var2 = this.hasFlag(524288))) {
-         this.a(false);
+   private int freeFacing() {
+      Lot lot = this.lot();
+      boolean hadFlag;
+      if (!(hadFlag = this.hasFlag(524288))) {
+         this.updateFootprint(false);
       }
 
-      int var3 = this.facing;
-      int var4 = com.ea.sims3.Lot.f(this.posX);
-      int var5 = com.ea.sims3.Lot.g(this.posY);
-      int var6 = var1.a(this.type, var4, var5);
+      int facing = this.facing;
+      int tileX = com.ea.sims3.Lot.toTileX(this.posX);
+      int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+      int blockMask = lot.directionMaskAt(this.type, tileX, tileY);
 
-      for (int var7 = 1; var7 <= 4; var7++) {
-         int var8 = (var3 + var7) % 4;
-         int var9 = com.ea.sims3.Lot.a7[var8];
-         if ((var6 & var9) != 0) {
-            var3 = var8;
+      for (int step = 1; step <= 4; step++) {
+         int direction = (facing + step) % 4;
+         int mask = com.ea.sims3.Lot.DIRECTION_MASKS[direction];
+         if ((blockMask & mask) != 0) {
+            facing = direction;
             break;
          }
       }
 
-      if (!var2) {
-         this.a(true);
+      if (!hadFlag) {
+         this.updateFootprint(true);
       }
 
-      return var3;
+      return facing;
    }
 
-   public final void D() {
-      int var1 = this.k();
-      this.a(false);
-      this.a4(this.posX, this.posY, var1);
-      this.a(true);
+   public final void refreshFacing() {
+      int facing = this.freeFacing();
+      this.updateFootprint(false);
+      this.relocate(this.posX, this.posY, facing);
+      this.updateFootprint(true);
    }
 }

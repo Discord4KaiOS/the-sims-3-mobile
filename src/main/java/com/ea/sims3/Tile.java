@@ -38,12 +38,12 @@ public final class Tile {
       return 8;
    }
 
-   public static int toWorld16(int var0) {
-      return var0 << 20;
+   public static int toWorld16(int value) {
+      return value << 20;
    }
 
-   public static int toWorld8(int var0) {
-      return var0 << 19;
+   public static int toWorld8(int value) {
+      return value << 19;
    }
 
    public final int frameCount() {
@@ -66,7 +66,7 @@ public final class Tile {
       this.worldY = 0;
    }
 
-   public Tile(int var1, Image var2) {
+   public Tile(int index, Image image) {
       this.frames = null;
       this.sheet = null;
       this.loaded = false;
@@ -76,24 +76,24 @@ public final class Tile {
       this.drawHeight = 0;
       this.worldX = 0;
       this.worldY = 0;
-      this.load(var1);
-      if (var2 != null) {
-         this.sheet = var2;
+      this.load(index);
+      if (image != null) {
+         this.sheet = image;
       }
    }
 
-   public Tile(int var1, int var2, Image var3) {
-      this.sheet = var3;
-      this.columns = var1;
-      this.rowCountValue = var2;
-      int var6;
-      byte[] var7 = new byte[var6 = var1 * var2];
+   public Tile(int columns, int rows, Image image) {
+      this.sheet = image;
+      this.columns = columns;
+      this.rowCountValue = rows;
+      int cellCount;
+      byte[] cells = new byte[cellCount = columns * rows];
 
-      for (int var8 = 0; var8 < var6; var8++) {
-         var7[var8] = 0;
+      for (int cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+         cells[cellIndex] = 0;
       }
 
-      this.cellIndices = var7;
+      this.cellIndices = cells;
       this.frames = null;
       this.loaded = true;
    }
@@ -112,15 +112,15 @@ public final class Tile {
       this.drawHeight = height;
    }
 
-   public final void draw(Graphics g) {
-      int clipX = g.getClipX();
-      int clipY = g.getClipY();
-      int clipW = g.getClipWidth();
-      int clipH = g.getClipHeight();
+   public final void draw(Graphics gfx) {
+      int clipX = gfx.getClipX();
+      int clipY = gfx.getClipY();
+      int clipW = gfx.getClipWidth();
+      int clipH = gfx.getClipHeight();
       int x = this.worldX >> 16;
       int y = this.worldY >> 16;
       if (this.backingEnabled) {
-         this.drawBacking(g, x, y);
+         this.drawBacking(gfx, x, y);
       } else {
          int dstX = clipX;
          int dstY = clipY;
@@ -142,13 +142,13 @@ public final class Tile {
             dstH = clipH - (dstY + clipH - (this.drawY + this.drawHeight));
          }
 
-         this.drawCells(g, x, y, dstX, dstY, dstW, dstH);
+         this.drawCells(gfx, x, y, dstX, dstY, dstW, dstH);
          if (this.next != null) {
-            this.next.drawCells(g, x, y, dstX, dstY, dstW, dstH);
+            this.next.drawCells(gfx, x, y, dstX, dstY, dstW, dstH);
          }
       }
 
-      g.setClip(clipX, clipY, clipW, clipH);
+      gfx.setClip(clipX, clipY, clipW, clipH);
    }
 
    private boolean load(int index) {
@@ -156,9 +156,9 @@ public final class Tile {
       if (this.loaded) {
          return false;
       } else {
-         InputStream in = GameCanvas.a7().a6.openStream(index);
+         InputStream input = GameCanvas.instance().resources.openStream(index);
          System.gc();
-         DataInputStream stream = new DataInputStream(in);
+         DataInputStream stream = new DataInputStream(input);
 
          try {
             stream.readUnsignedByte();
@@ -171,8 +171,8 @@ public final class Tile {
             System.gc();
             byte[] cells = new byte[columns * rows];
 
-            for (int i = 0; i < columns * rows; i++) {
-               cells[i] = stream.readByte();
+            for (int cellIndex = 0; cellIndex < columns * rows; cellIndex++) {
+               cells[cellIndex] = stream.readByte();
             }
 
             this.cellIndices = cells;
@@ -180,8 +180,8 @@ public final class Tile {
             if ((frameCount = stream.readUnsignedByte()) > 0) {
                short[] frames = new short[frameCount * 3];
 
-               for (int i2 = 0; i2 < frames.length; i2++) {
-                  frames[i2] = stream.readShort();
+               for (int frameIndex = 0; frameIndex < frames.length; frameIndex++) {
+                  frames[frameIndex] = stream.readShort();
                }
 
                this.frames = frames;
@@ -191,14 +191,14 @@ public final class Tile {
             if ((rowCount = stream.readUnsignedByte()) > 0) {
                short[] rowsData = new short[rowCount * 3];
 
-               for (int i3 = 0; i3 < rowsData.length; i3++) {
-                  rowsData[i3] = stream.readShort();
+               for (int rowIndex = 0; rowIndex < rowsData.length; rowIndex++) {
+                  rowsData[rowIndex] = stream.readShort();
                }
 
                this.rows = rowsData;
             }
 
-            in.close();
+            input.close();
          } catch (IOException exception) {
          }
 
@@ -208,198 +208,198 @@ public final class Tile {
       }
    }
 
-   private void drawCells(Graphics g, int x, int y, int left, int top, int width, int height) {
-      int var8 = 0;
-      int var9 = 0;
-      int var10 = 0;
-      int var11 = 0;
-      int var12 = 0;
-      int var13 = 0;
-      int var14 = x & 15;
-      int var15 = y & 7;
-      int var16 = 0;
-      if (var14 > 0) {
-         var16 = 16 - var14;
+   private void drawCells(Graphics gfx, int x, int y, int left, int top, int width, int height) {
+      int remainingWidth = 0;
+      int fullColumns = 0;
+      int lastColumnWidth = 0;
+      int remainingHeight = 0;
+      int fullRows = 0;
+      int lastRowHeight = 0;
+      int xInTile = x & 15;
+      int yInTile = y & 7;
+      int firstColumnWidth = 0;
+      if (xInTile > 0) {
+         firstColumnWidth = 16 - xInTile;
       }
 
-      int var17 = 0;
-      if (var15 > 0) {
-         var17 = 8 - var15;
+      int firstRowHeight = 0;
+      if (yInTile > 0) {
+         firstRowHeight = 8 - yInTile;
       }
 
-      if (var16 > width) {
-         var16 = width;
+      if (firstColumnWidth > width) {
+         firstColumnWidth = width;
       } else {
-         var9 = (var8 = width - var16) >> 4;
-         var10 = var8 & 15;
+         fullColumns = (remainingWidth = width - firstColumnWidth) >> 4;
+         lastColumnWidth = remainingWidth & 15;
       }
 
-      if (var17 > height) {
-         var17 = height;
+      if (firstRowHeight > height) {
+         firstRowHeight = height;
       } else {
-         var12 = (var11 = height - var17) >> 3;
-         var13 = var11 & 7;
+         fullRows = (remainingHeight = height - firstRowHeight) >> 3;
+         lastRowHeight = remainingHeight & 7;
       }
 
-      int var18;
-      int var19 = var18 = (y >> 3) * this.columns + (x >> 4);
-      int var20 = 0;
-      int var21 = 0;
-      int var22 = 0;
-      int var23 = left;
-      int var24 = top;
-      int var25 = this.cellIndices.length - 1;
-      byte[] var26 = this.cellIndices;
-      Image var27 = this.sheet;
-      if (var17 > 0) {
-         if (var16 > 0) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+      int cellIndex;
+      int rowStartIndex = cellIndex = (y >> 3) * this.columns + (x >> 4);
+      int cellValue = 0;
+      int sourceX = 0;
+      int sourceY = 0;
+      int destX = left;
+      int destY = top;
+      int lastCellIndex = this.cellIndices.length - 1;
+      byte[] cellData = this.cellIndices;
+      Image sheetImage = this.sheet;
+      if (firstRowHeight > 0) {
+         if (firstColumnWidth > 0) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21 + var14, var22 + var15, var16, var17, 0, left, top, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX + xInTile, sourceY + yInTile, firstColumnWidth, firstRowHeight, 0, left, top, 20);
                }
             }
 
-            var23 = left + var16;
+            destX = left + firstColumnWidth;
          }
 
-         for (int var29 = 0; var29 < var9; var29++) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+         for (int column = 0; column < fullColumns; column++) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21, var22 + var15, 16, var17, 0, var23, var24, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX, sourceY + yInTile, 16, firstRowHeight, 0, destX, destY, 20);
                }
             }
 
-            var23 += 16;
+            destX += 16;
          }
 
-         if (var10 > 0 && var18 >= 0) {
-            if (var18 > var25) {
+         if (lastColumnWidth > 0 && cellIndex >= 0) {
+            if (cellIndex > lastCellIndex) {
                return;
             }
 
-            if ((var20 = var26[var18] & 255) != 255) {
-               var21 = (var20 & 7) << 4;
-               var22 = var20 >> 3 << 3;
-               g.drawRegion(this.sheet, var21, var22 + var15, var10, var17, 0, var23, var24, 20);
+            if ((cellValue = cellData[cellIndex] & 255) != 255) {
+               sourceX = (cellValue & 7) << 4;
+               sourceY = cellValue >> 3 << 3;
+               gfx.drawRegion(this.sheet, sourceX, sourceY + yInTile, lastColumnWidth, firstRowHeight, 0, destX, destY, 20);
             }
          }
 
-         var24 += var17;
-         var18 = var19 += this.columns;
+         destY += firstRowHeight;
+         cellIndex = rowStartIndex += this.columns;
       }
 
-      for (int var62 = 0; var62 < var12; var62++) {
-         var23 = left;
-         if (var16 > 0) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+      for (int row = 0; row < fullRows; row++) {
+         destX = left;
+         if (firstColumnWidth > 0) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21 + var14, var22, var16, 8, 0, left, var24, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX + xInTile, sourceY, firstColumnWidth, 8, 0, left, destY, 20);
                }
             }
 
-            var23 = left + var16;
+            destX = left + firstColumnWidth;
          }
 
-         for (int var30 = 0; var30 < var9; var30++) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+         for (int column = 0; column < fullColumns; column++) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21, var22, 16, 8, 0, var23, var24, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX, sourceY, 16, 8, 0, destX, destY, 20);
                }
             }
 
-            var23 += 16;
+            destX += 16;
          }
 
-         if (var10 > 0 && var18 >= 0) {
-            if (var18 > var25) {
+         if (lastColumnWidth > 0 && cellIndex >= 0) {
+            if (cellIndex > lastCellIndex) {
                return;
             }
 
-            if ((var20 = var26[var18] & 255) != 255) {
-               var21 = (var20 & 7) << 4;
-               var22 = var20 >> 3 << 3;
-               g.drawRegion(var27, var21, var22, var10, 8, 0, var23, var24, 20);
+            if ((cellValue = cellData[cellIndex] & 255) != 255) {
+               sourceX = (cellValue & 7) << 4;
+               sourceY = cellValue >> 3 << 3;
+               gfx.drawRegion(sheetImage, sourceX, sourceY, lastColumnWidth, 8, 0, destX, destY, 20);
             }
          }
 
-         var24 += 8;
-         var18 = var19 += this.columns;
+         destY += 8;
+         cellIndex = rowStartIndex += this.columns;
       }
 
-      if (var13 > 0) {
-         var23 = left;
-         if (var16 > 0) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+      if (lastRowHeight > 0) {
+         destX = left;
+         if (firstColumnWidth > 0) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21 + var14, var22, var16, var13, 0, left, var24, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX + xInTile, sourceY, firstColumnWidth, lastRowHeight, 0, left, destY, 20);
                }
             }
 
-            var23 = left + var16;
+            destX = left + firstColumnWidth;
          }
 
-         for (int var63 = 0; var63 < var9; var63++) {
-            if (var18 >= 0) {
-               if (var18 > var25) {
+         for (int column = 0; column < fullColumns; column++) {
+            if (cellIndex >= 0) {
+               if (cellIndex > lastCellIndex) {
                   return;
                }
 
-               if ((var20 = var26[var18++] & 255) != 255) {
-                  var21 = (var20 & 7) << 4;
-                  var22 = var20 >> 3 << 3;
-                  g.drawRegion(var27, var21, var22, 16, var13, 0, var23, var24, 20);
+               if ((cellValue = cellData[cellIndex++] & 255) != 255) {
+                  sourceX = (cellValue & 7) << 4;
+                  sourceY = cellValue >> 3 << 3;
+                  gfx.drawRegion(sheetImage, sourceX, sourceY, 16, lastRowHeight, 0, destX, destY, 20);
                }
             }
 
-            var23 += 16;
+            destX += 16;
          }
 
-         if (var10 > 0 && var18 >= 0) {
-            if (var18 > var25) {
+         if (lastColumnWidth > 0 && cellIndex >= 0) {
+            if (cellIndex > lastCellIndex) {
                return;
             }
 
-            if ((var20 = var26[var18] & 255) != 255) {
-               var21 = (var20 & 7) << 4;
-               var22 = var20 >> 3 << 3;
-               g.drawRegion(var27, var21, var22, var10, var13, 0, var23, var24, 20);
+            if ((cellValue = cellData[cellIndex] & 255) != 255) {
+               sourceX = (cellValue & 7) << 4;
+               sourceY = cellValue >> 3 << 3;
+               gfx.drawRegion(sheetImage, sourceX, sourceY, lastColumnWidth, lastRowHeight, 0, destX, destY, 20);
             }
          }
       }
    }
 
-   public final void setBackingEnabled(boolean var1) {
-      if (var1 && !this.backingEnabled) {
+   public final void setBackingEnabled(boolean enabled) {
+      if (enabled && !this.backingEnabled) {
          if (this.drawWidth > 0 && this.drawHeight > 0) {
             this.backing = Image.createImage(this.drawWidth, this.drawHeight);
             this.backingGraphics = this.backing.getGraphics();
@@ -412,7 +412,7 @@ public final class Tile {
          this.wrapY = 0;
          this.backingEnabled = true;
       } else {
-         if (!var1 && this.backingEnabled) {
+         if (!enabled && this.backingEnabled) {
             this.backing = null;
             this.backingEnabled = false;
          }
@@ -423,127 +423,127 @@ public final class Tile {
       this.backingDirty = true;
    }
 
-   private void drawBacking(Graphics var1, int var2, int var3) {
-      Graphics var4 = this.backingGraphics;
-      int var5 = var2 - this.backingX;
-      int var6 = var3 - this.backingY;
-      int var7 = this.drawWidth;
-      int var8 = this.drawHeight;
-      if (!this.backingDirty && Math.abs(var5) <= var7 && Math.abs(var6) <= var8) {
-         int var9 = this.wrapX;
-         int var10 = this.wrapY;
-         int var11 = this.copyRows(var4, var2, var9, var10, var5, this.backingX, this.backingY);
+   private void drawBacking(Graphics gfx, int x, int y) {
+      Graphics backingGfx = this.backingGraphics;
+      int deltaX = x - this.backingX;
+      int deltaY = y - this.backingY;
+      int width = this.drawWidth;
+      int height = this.drawHeight;
+      if (!this.backingDirty && Math.abs(deltaX) <= width && Math.abs(deltaY) <= height) {
+         int wrapX = this.wrapX;
+         int wrapY = this.wrapY;
+         int newWrapX = this.copyRows(backingGfx, x, wrapX, wrapY, deltaX, this.backingX, this.backingY);
          if (this.next != null) {
-            this.next.copyRows(var4, var2, var9, var10, var5, this.backingX, this.backingY);
+            this.next.copyRows(backingGfx, x, wrapX, wrapY, deltaX, this.backingX, this.backingY);
          }
 
-         this.wrapX = var11;
-         int var12 = this.copyColumns(var4, var3, var10, var6, this.backingY, var2, var11);
+         this.wrapX = newWrapX;
+         int newWrapY = this.copyColumns(backingGfx, y, wrapY, deltaY, this.backingY, x, newWrapX);
          if (this.next != null) {
-            this.next.copyColumns(var4, var3, var10, var6, this.backingY, var2, var11);
+            this.next.copyColumns(backingGfx, y, wrapY, deltaY, this.backingY, x, newWrapX);
          }
 
-         this.wrapY = var12;
-         int var13 = var7 - this.wrapX;
-         int var14 = var8 - this.wrapY;
-         var4.setClip(0, 0, var7, var8);
-         if (var13 != 0 && var14 != 0) {
-            var1.drawRegion(this.backing, this.wrapX, this.wrapY, var13, var14, 0, this.drawX, this.drawY, 20);
+         this.wrapY = newWrapY;
+         int widthRemaining = width - this.wrapX;
+         int heightRemaining = height - this.wrapY;
+         backingGfx.setClip(0, 0, width, height);
+         if (widthRemaining != 0 && heightRemaining != 0) {
+            gfx.drawRegion(this.backing, this.wrapX, this.wrapY, widthRemaining, heightRemaining, 0, this.drawX, this.drawY, 20);
          }
 
-         if (this.wrapX != 0 && var14 != 0) {
-            var1.drawRegion(this.backing, 0, this.wrapY, this.wrapX, var14, 0, this.drawX + var13, this.drawY, 20);
+         if (this.wrapX != 0 && heightRemaining != 0) {
+            gfx.drawRegion(this.backing, 0, this.wrapY, this.wrapX, heightRemaining, 0, this.drawX + widthRemaining, this.drawY, 20);
          }
 
-         if (var13 != 0 && this.wrapY != 0) {
-            var1.drawRegion(this.backing, this.wrapX, 0, var13, this.wrapY, 0, this.drawX, var14 + this.drawY, 20);
+         if (widthRemaining != 0 && this.wrapY != 0) {
+            gfx.drawRegion(this.backing, this.wrapX, 0, widthRemaining, this.wrapY, 0, this.drawX, heightRemaining + this.drawY, 20);
          }
 
          if (this.wrapX != 0 && this.wrapY != 0) {
-            var1.drawRegion(this.backing, 0, 0, this.wrapX, this.wrapY, 0, this.drawX + var13, var14 + this.drawY, 20);
+            gfx.drawRegion(this.backing, 0, 0, this.wrapX, this.wrapY, 0, this.drawX + widthRemaining, heightRemaining + this.drawY, 20);
          }
       } else {
          this.backingDirty = false;
-         this.drawCells(var4, var2, var3, 0, 0, var7, var8);
+         this.drawCells(backingGfx, x, y, 0, 0, width, height);
          if (this.next != null) {
-            this.next.drawCells(var4, var2, var3, 0, 0, var7, var8);
+            this.next.drawCells(backingGfx, x, y, 0, 0, width, height);
          }
 
          this.wrapX = 0;
          this.wrapY = 0;
       }
 
-      this.backingX = var2;
-      this.backingY = var3;
+      this.backingX = x;
+      this.backingY = y;
    }
 
-   private int copyRows(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      int var8 = this.drawWidth;
-      int var9 = this.drawHeight;
-      int var10 = var3 + var5;
-      if (var5 > 0) {
-         int var11 = var2 + var8 - var5;
-         if (var10 > var8) {
-            this.drawCells(var1, var11, var7, var3, var4, var8 - var3, var9 - var4);
-            this.drawCells(var1, var11, var7 + var9 - var4, var3, 0, var8 - var3, var4);
-            var11 += var8 - var3;
-            this.drawCells(var1, var11, var7, 0, var4, var10 - var8, var9 - var4);
-            this.drawCells(var1, var11, var7 + var9 - var4, 0, 0, var10 - var8, var4);
-            var10 -= var8;
+   private int copyRows(Graphics gfx, int x, int wrapX, int wrapY, int deltaX, int backingX, int backingY) {
+      int width = this.drawWidth;
+      int height = this.drawHeight;
+      int newWrapX = wrapX + deltaX;
+      if (deltaX > 0) {
+         int destX = x + width - deltaX;
+         if (newWrapX > width) {
+            this.drawCells(gfx, destX, backingY, wrapX, wrapY, width - wrapX, height - wrapY);
+            this.drawCells(gfx, destX, backingY + height - wrapY, wrapX, 0, width - wrapX, wrapY);
+            destX += width - wrapX;
+            this.drawCells(gfx, destX, backingY, 0, wrapY, newWrapX - width, height - wrapY);
+            this.drawCells(gfx, destX, backingY + height - wrapY, 0, 0, newWrapX - width, wrapY);
+            newWrapX -= width;
          } else {
-            this.drawCells(var1, var11, var7, var3, var4, var5, var9 - var4);
-            this.drawCells(var1, var11, var7 + var9 - var4, var3, 0, var5, var4);
+            this.drawCells(gfx, destX, backingY, wrapX, wrapY, deltaX, height - wrapY);
+            this.drawCells(gfx, destX, backingY + height - wrapY, wrapX, 0, deltaX, wrapY);
          }
-      } else if (var5 < 0) {
-         if (var10 < 0) {
-            int var13 = var6 - var3;
-            this.drawCells(var1, var13, var7, 0, var4, var3, var9 - var4);
-            this.drawCells(var1, var13, var7 + var9 - var4, 0, 0, var3, var4);
-            var13 += var10;
-            this.drawCells(var1, var13, var7, var8 + var10, var4, -var10, var9 - var4);
-            this.drawCells(var1, var13, var7 + var9 - var4, var8 + var10, 0, -var10, var4);
-            var10 += var8;
+      } else if (deltaX < 0) {
+         if (newWrapX < 0) {
+            int baseX = backingX - wrapX;
+            this.drawCells(gfx, baseX, backingY, 0, wrapY, wrapX, height - wrapY);
+            this.drawCells(gfx, baseX, backingY + height - wrapY, 0, 0, wrapX, wrapY);
+            baseX += newWrapX;
+            this.drawCells(gfx, baseX, backingY, width + newWrapX, wrapY, -newWrapX, height - wrapY);
+            this.drawCells(gfx, baseX, backingY + height - wrapY, width + newWrapX, 0, -newWrapX, wrapY);
+            newWrapX += width;
          } else {
-            this.drawCells(var1, var2, var7, var10, var4, -var5, var9 - var4);
-            this.drawCells(var1, var2, var7 + var9 - var4, var10, 0, -var5, var4);
+            this.drawCells(gfx, x, backingY, newWrapX, wrapY, -deltaX, height - wrapY);
+            this.drawCells(gfx, x, backingY + height - wrapY, newWrapX, 0, -deltaX, wrapY);
          }
       }
 
-      return var10;
+      return newWrapX;
    }
 
-   private int copyColumns(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      int var8 = this.drawWidth;
-      int var9 = this.drawHeight;
-      int var10 = var3 + var4;
-      if (var4 > 0) {
-         int var11 = var2 + var9 - var4;
-         if (var10 > var9) {
-            this.drawCells(var1, var6, var11, var7, var3, var8 - var7, var9 - var3);
-            this.drawCells(var1, var6 + var8 - var7, var11, 0, var3, var7, var9 - var3);
-            var11 += var9 - var3;
-            this.drawCells(var1, var6, var11, var7, 0, var8 - var7, var10 - var9);
-            this.drawCells(var1, var6 + var8 - var7, var11, 0, 0, var7, var10 - var9);
-            var10 -= var9;
+   private int copyColumns(Graphics gfx, int x, int wrapY, int deltaY, int backingY, int backingX, int wrapX) {
+      int width = this.drawWidth;
+      int height = this.drawHeight;
+      int newWrapY = wrapY + deltaY;
+      if (deltaY > 0) {
+         int destY = x + height - deltaY;
+         if (newWrapY > height) {
+            this.drawCells(gfx, backingX, destY, wrapX, wrapY, width - wrapX, height - wrapY);
+            this.drawCells(gfx, backingX + width - wrapX, destY, 0, wrapY, wrapX, height - wrapY);
+            destY += height - wrapY;
+            this.drawCells(gfx, backingX, destY, wrapX, 0, width - wrapX, newWrapY - height);
+            this.drawCells(gfx, backingX + width - wrapX, destY, 0, 0, wrapX, newWrapY - height);
+            newWrapY -= height;
          } else {
-            this.drawCells(var1, var6, var11, var7, var3, var8 - var7, var4);
-            this.drawCells(var1, var6 + var8 - var7, var11, 0, var3, var7, var4);
+            this.drawCells(gfx, backingX, destY, wrapX, wrapY, width - wrapX, deltaY);
+            this.drawCells(gfx, backingX + width - wrapX, destY, 0, wrapY, wrapX, deltaY);
          }
-      } else if (var4 < 0) {
-         if (var10 < 0) {
-            int var13 = var5 - var3;
-            this.drawCells(var1, var6, var13, var7, 0, var8 - var7, var3);
-            this.drawCells(var1, var6 + var8 - var7, var13, 0, 0, var7, var3);
-            var13 += var10;
-            this.drawCells(var1, var6, var13, var7, var9 + var10, var8 - var7, -var10);
-            this.drawCells(var1, var6 + var8 - var7, var13, 0, var9 + var10, var7, -var10);
-            var10 += var9;
+      } else if (deltaY < 0) {
+         if (newWrapY < 0) {
+            int baseY = backingY - wrapY;
+            this.drawCells(gfx, backingX, baseY, wrapX, 0, width - wrapX, wrapY);
+            this.drawCells(gfx, backingX + width - wrapX, baseY, 0, 0, wrapX, wrapY);
+            baseY += newWrapY;
+            this.drawCells(gfx, backingX, baseY, wrapX, height + newWrapY, width - wrapX, -newWrapY);
+            this.drawCells(gfx, backingX + width - wrapX, baseY, 0, height + newWrapY, wrapX, -newWrapY);
+            newWrapY += height;
          } else {
-            this.drawCells(var1, var6, var2, var7, var10, var8 - var7, -var4);
-            this.drawCells(var1, var6 + var8 - var7, var2, 0, var10, var7, -var4);
+            this.drawCells(gfx, backingX, x, wrapX, newWrapY, width - wrapX, -deltaY);
+            this.drawCells(gfx, backingX + width - wrapX, x, 0, newWrapY, wrapX, -deltaY);
          }
       }
 
-      return var10;
+      return newWrapY;
    }
 }

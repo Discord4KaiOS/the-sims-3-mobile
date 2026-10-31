@@ -39,13 +39,22 @@ fi
 echo "new mapping entries: $(wc -l < "$staging")"
 cat "$staging" >> "$mapping"
 
+python3 "$root/tools/normalize-renames.py" "$mapping"
 javac -d "$classes" "$root/tools/Rename.java"
 
 run() {
     java -cp "$classes" Rename "$mapping" "$root/src/main/java" "$1" | grep -E '^applied|^WARN' || true
 }
 
-echo "declarations: $(run decl)"
+# Both phases can be chained (a rename introduces the name the next entry
+# expects), so each runs until it reaches a fixed point.
+for pass in 1 2 3 4 5 6; do
+    out="$(run decl)"
+    echo "declarations (pass $pass): $out"
+    case "$out" in
+        *"applied 0 edits"*) break ;;
+    esac
+done
 for pass in 1 2 3 4 5 6; do
     out="$(run vars)"
     echo "variables (pass $pass): $out"

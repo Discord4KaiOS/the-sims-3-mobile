@@ -12,8 +12,8 @@ public final class Program {
         try {
             MonkeyApp midlet = new MonkeyApp();
             midlet.startApp();
-        } catch (Throwable t) {
-            t.printStackTrace();
+        } catch (Throwable error) {
+            error.printStackTrace();
             System.exit(1);
         }
     }

@@ -18,255 +18,255 @@ import javax.microedition.rms.RecordStore;
 import javax.microedition.rms.RecordStoreNotFoundException;
 
 public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex, Resources, PlayerListener {
-   public MonkeyApp a;
-   private boolean k;
-   public BaseScreen a2;
-   public boolean a3;
-   public static boolean b = false;
-   public static int a4 = -1;
-   public static int b2 = -1;
-   public PromoImages a5 = null;
-   public boolean c = false;
-   public ResourceLoader a6 = null;
-   private int s;
-   public SdkSound a7;
-   private Random a8;
-   private boolean l;
-   private static GameCanvas a9 = null;
-   private Timer a10 = null;
-   private boolean m = false;
-   public static boolean d = false;
-   public int c2 = 0;
-   private int t;
-   private int u;
-   private int[] a11;
-   private int v;
-   public int d2;
-   public int e;
-   private Object[] a12;
-   public int f;
-   private static byte[] a13;
-   private int w;
-   private SdkString[] a14;
-   private SdkString[] b3 = new SdkString[10];
-   private static final SdkString[] c3 = new SdkString[3];
-   private SdkString a15;
-   private SdkString[] d3;
-   private int x;
-   private short[] b4;
-   private SdkString b5;
-   private short[][] a16;
-   private SdkString[] e2;
-   private short[] c4;
-   private int[] c5 = new int[2];
-   private SdkString[] f2 = new SdkString[2];
-   private int[] d4 = new int[2];
-   private int[] e3 = new int[2];
-   private int[] f3 = new int[2];
-   private ScreenFade a17 = new ScreenFade();
-   private boolean n;
-   public boolean e4;
-   private int y;
-   private int z;
-   public int g;
-   public int h;
-   private int A;
-   public boolean f4;
-   private static final int[][] a18 = new int[][]{{0, 2048, 2048, 16, 64, 128, 8}};
-   private long a19;
-   private long b6;
-   private Animator a20;
-   private Animator b7;
-   private boolean o;
-   private int[] g2;
-   private int B;
-   private boolean p;
-   public boolean g3;
-   public boolean h2;
-   public boolean i;
-   public int i2;
-   public int j;
-   private SdkString[] g4 = new SdkString[2];
-   private boolean[] a21 = new boolean[2];
-   private int C;
-   public boolean j2;
-   private long c6;
-   private long d5;
-   private long e5;
-   private long f5;
-   private long g5;
-   private long h3;
-   private long i3;
-   private long j3;
-   private int D;
-   private int E;
-   private int F;
-   public int k2;
-   private short[] d6;
-   private short[] e6;
-   private short[] f6;
-   private short[] g6;
-   private int G;
-   public short a22;
-   public Neighborhood a23;
-   public Lot a24;
-   public int l2;
-   public int m2;
-   private short[][] b8;
-   public int n2;
-   public int o2;
-   public int p2;
-   public int q;
-   public int r;
+   public MonkeyApp app;
+   private boolean running;
+   public BaseScreen screen;
+   public boolean suspended;
+   public static boolean landscape = false;
+   public static int lastLandscape = -1;
+   public static int currentLandscape = -1;
+   public PromoImages promoImages = null;
+   public boolean promoActive = false;
+   public ResourceLoader resources = null;
+   private int soundLoopId;
+   public SdkSound sound;
+   private Random random;
+   private boolean gcPending;
+   private static GameCanvas instance = null;
+   private Timer timer = null;
+   private boolean updating = false;
+   public static boolean resuming = false;
+   public int frozenFrames = 0;
+   private int actionState;
+   private int softKeyAction;
+   private int[] keyQueue;
+   private int keyQueueSize;
+   public int rightSoftKeyAction;
+   public int leftSoftKeyAction;
+   private Object[] fonts;
+   public int headerCount;
+   private static byte[] ioBuffer;
+   private int tempStringCursor;
+   private SdkString[] tempStrings;
+   private SdkString[] formattedStrings = new SdkString[10];
+   private static final SdkString[] formatArgs = new SdkString[3];
+   private SdkString buildBuffer;
+   private SdkString[] stringPool;
+   private int buildStringCursor;
+   private short[] wrappedLineOffsets;
+   private SdkString wrappedString;
+   private short[][] wrapOffsets;
+   private SdkString[] slotTexts;
+   private short[] slotStringIds;
+   private int[] marqueeStringIds = new int[2];
+   private SdkString[] marqueeTexts = new SdkString[2];
+   private int[] textWidths = new int[2];
+   private int[] marqueeTimers = new int[2];
+   private int[] scrollOffsets = new int[2];
+   private ScreenFade fade = new ScreenFade();
+   private boolean fading;
+   public boolean fadeFinished;
+   private int fadeColor;
+   private int fadeStep;
+   public int fadeSpeed;
+   public int pendingScreenAction;
+   private int pendingLanguage;
+   public boolean cheatToggled;
+   private static final int[][] cheatSequences = new int[][]{{0, 2048, 2048, 16, 64, 128, 8}};
+   private long leftSoftKeyTimer;
+   private long rightSoftKeyTimer;
+   private Animator leftSoftKeyAnimator;
+   private Animator rightSoftKeyAnimator;
+   private boolean rightSoftKeySelected;
+   private int[] tileMasks;
+   private int tileLoadCursor;
+   private boolean vibrationEnabled;
+   public boolean tutorialsEnabled;
+   public boolean autonomousEnabled;
+   public boolean savePromptsEnabled;
+   public int language;
+   public int profileSlot;
+   private SdkString[] profileNames = new SdkString[2];
+   private boolean[] profileUsed = new boolean[2];
+   private int progressFlags;
+   public boolean gameStarted;
+   private long flagsLow;
+   private long flagsHigh;
+   private long visitedFlagsLow;
+   private long visitedFlagsHigh;
+   private long newFlagsLow;
+   private long newFlagsHigh;
+   private long newVisitedFlagsLow;
+   private long newVisitedFlagsHigh;
+   private int loadingTipId;
+   private int loadingTipX;
+   private int loadingTipWidth;
+   public int menuMode;
+   private short[] optionsMenu;
+   private short[] compactOptionsMenu;
+   private short[] helpMenu;
+   private short[] currentMenu;
+   private int returnMenuMode;
+   public short menuRowSpacing;
+   public Neighborhood neighborhood;
+   public Lot lot;
+   public int houseIndex;
+   public int houseUpgrade;
+   private short[][] tileGroups;
+   public int simPosX;
+   public int simPosY;
+   public int walkTargetX;
+   public int walkTargetY;
+   public int walkTargetFrame;
 
-   public final void playerUpdate(Player var1, String var2, Object var3) {
+   public final void playerUpdate(Player player, String event, Object data) {
    }
 
-   public final void a12(int var1) {
-      if (this.s != var1 && this.s != -1) {
-         this.a7.stop();
+   public final void setSoundLoop(int soundId) {
+      if (this.soundLoopId != soundId && this.soundLoopId != -1) {
+         this.sound.stop();
       }
 
-      this.s = var1;
-      if (var1 == -1) {
-         this.a7.setLoopCount(1);
+      this.soundLoopId = soundId;
+      if (soundId == -1) {
+         this.sound.setLoopCount(1);
       } else {
-         this.a7.setLoopCount(-1);
-         this.a7.pendingSound = var1;
+         this.sound.setLoopCount(-1);
+         this.sound.pendingSound = soundId;
       }
    }
 
-   private void v2() {
-      SdkSound var1 = this.a7;
-      this.a7.play(11);
-      var1.play(10);
-      var1.play(2);
-      var1.play(3);
-      var1.play(0);
-      var1.play(1);
-      var1.play(4);
-      var1.play(5);
-      var1.play(6);
-      var1.play(7);
-      var1.play(8);
-      var1.play(9);
-      var1.play(14);
-      var1.play(15);
-      var1.play(12);
-      var1.play(13);
+   private void preloadSounds() {
+      SdkSound soundRef = this.sound;
+      this.sound.play(11);
+      soundRef.play(10);
+      soundRef.play(2);
+      soundRef.play(3);
+      soundRef.play(0);
+      soundRef.play(1);
+      soundRef.play(4);
+      soundRef.play(5);
+      soundRef.play(6);
+      soundRef.play(7);
+      soundRef.play(8);
+      soundRef.play(9);
+      soundRef.play(14);
+      soundRef.play(15);
+      soundRef.play(12);
+      soundRef.play(13);
    }
 
-   public final int a() {
+   public final int halfWidth() {
       return this.getWidth() >> 1;
    }
 
-   public final int b() {
+   public final int halfHeight() {
       return this.getHeight() >> 1;
    }
 
-   public static void a(MonkeyApp var0) {
-      a9 = new GameCanvas(var0);
+   public static void create(MonkeyApp app) {
+      instance = new GameCanvas(app);
    }
 
-   public static GameCanvas a7() {
-      return a9;
+   public static GameCanvas instance() {
+      return instance;
    }
 
-   private GameCanvas(MonkeyApp var1) {
-      com.ea.sims3.SdkText.setMidlet((MIDlet)var1);
+   private GameCanvas(MonkeyApp app) {
+      com.ea.sims3.SdkText.setMidlet((MIDlet)app);
       if (this.getWidth() > this.getHeight()) {
-         a4 = 1;
-         b2 = 1;
+         lastLandscape = 1;
+         currentLandscape = 1;
       } else {
-         a4 = 0;
-         b2 = 0;
+         lastLandscape = 0;
+         currentLandscape = 0;
       }
 
-      this.a = var1;
-      this.k = false;
-      this.a11 = new int[8];
-      this.v = 0;
-      this.l = false;
-      this.a6 = new ResourceLoader();
-      this.a7 = new SdkSound();
-      this.a7.setEnabled(false);
-      this.a7.currentLoop = 1;
-      this.a7.resources = this.a6;
-      this.s = -1;
-      this.v2();
-      this.a8 = new Random();
-      com.ea.sims3.SpriteRenderer.loadSpriteRects(this.a6);
-      com.ea.sims3.SpriteRenderer.loadFrameData(this.a6);
-      com.ea.sims3.SpriteRenderer.loadPalette(this.a6);
-      this.a20 = new Animator();
-      this.b7 = new Animator();
-      this.F();
-      this.a5 = new PromoImages(this.getWidth(), this.getHeight());
-      SdkString var2 = null;
+      this.app = app;
+      this.running = false;
+      this.keyQueue = new int[8];
+      this.keyQueueSize = 0;
+      this.gcPending = false;
+      this.resources = new ResourceLoader();
+      this.sound = new SdkSound();
+      this.sound.setEnabled(false);
+      this.sound.currentLoop = 1;
+      this.sound.resources = this.resources;
+      this.soundLoopId = -1;
+      this.preloadSounds();
+      this.random = new Random();
+      com.ea.sims3.SpriteRenderer.loadSpriteRects(this.resources);
+      com.ea.sims3.SpriteRenderer.loadFrameData(this.resources);
+      com.ea.sims3.SpriteRenderer.loadPalette(this.resources);
+      this.leftSoftKeyAnimator = new Animator();
+      this.rightSoftKeyAnimator = new Animator();
+      this.initWorld();
+      this.promoImages = new PromoImages(this.getWidth(), this.getHeight());
+      SdkString blankName = null;
 
-      for (int var3 = 0; var3 < 2; var3++) {
-         (var2 = new SdkString(8, 0)).setLength(8);
+      for (int slot = 0; slot < 2; slot++) {
+         (blankName = new SdkString(8, 0)).setLength(8);
 
-         for (int var4 = 0; var4 != 8; var4++) {
-            var2.setCharAt(var4, ' ');
+         for (int charIndex = 0; charIndex != 8; charIndex++) {
+            blankName.setCharAt(charIndex, ' ');
          }
 
-         this.g4[var3] = var2;
+         this.profileNames[slot] = blankName;
       }
 
-      this.A();
-      this.y();
-      this.x();
-      if (this.a14 == null) {
-         this.a14 = new SdkString[10];
+      this.loadSettings();
+      this.initTextSlots();
+      this.loadFonts();
+      if (this.tempStrings == null) {
+         this.tempStrings = new SdkString[10];
 
-         for (int var6 = 0; var6 < 10; var6++) {
-            this.a14[var6] = new SdkString();
+         for (int stringIndex = 0; stringIndex < 10; stringIndex++) {
+            this.tempStrings[stringIndex] = new SdkString();
          }
       }
 
-      this.d3 = new SdkString[25];
+      this.stringPool = new SdkString[25];
 
-      for (int var7 = 0; var7 < 25; var7++) {
-         this.d3[var7] = new SdkString(100, 0);
+      for (int poolIndex = 0; poolIndex < 25; poolIndex++) {
+         this.stringPool[poolIndex] = new SdkString(100, 0);
       }
 
-      this.j2(1);
-      this.p2();
-      this.B();
+      this.loadTilesBlocking(1);
+      this.resetGameData();
+      this.loadGameData();
    }
 
-   public final synchronized void a10() {
-      this.E();
-      byte var1 = 5;
-      if (this.i2 == -1) {
-         var1 = 4;
+   public final synchronized void startGame() {
+      this.buildMenus();
+      byte languageIndex = 5;
+      if (this.language == -1) {
+         languageIndex = 4;
       }
 
-      this.b2(1, var1);
-      this.a5.setScreenSize(this.getWidth(), this.getHeight());
-      this.a3 = false;
+      this.setPendingScreen(1, languageIndex);
+      this.promoImages.setScreenSize(this.getWidth(), this.getHeight());
+      this.suspended = false;
    }
 
-   public final void b4() {
-      this.k = false;
-      if (this.a2 != null) {
-         this.a2.pause();
+   public final void shutdown() {
+      this.running = false;
+      if (this.screen != null) {
+         this.screen.pause();
       }
 
-      this.c3();
-      this.a(true);
+      this.saveSettings();
+      this.setGcPending(true);
 
-      for (int var1 = 0; var1 < com.ea.sims3.SoundIndex.b.length; var1++) {
-         this.a7.stopAll();
+      for (int index = 0; index < com.ea.sims3.SoundIndex.SOUND_IDS.length; index++) {
+         this.sound.stopAll();
       }
    }
 
    public final void showNotify() {
-      if (!com.ea.sims3.GameScreen.a10) {
-         if (this.a3) {
-            this.f2();
-            this.c2();
+      if (!com.ea.sims3.GameScreen.updateBlocked) {
+         if (this.suspended) {
+            this.resumeGame();
+            this.startTimer();
          }
       }
    }
@@ -274,220 +274,220 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void hideNotify() {
       try {
          Thread.sleep(1000L);
-      } catch (Exception var2) {
+      } catch (Exception ignored) {
       }
 
-      if (!com.ea.sims3.GameScreen.a10) {
-         this.e2();
+      if (!com.ea.sims3.GameScreen.updateBlocked) {
+         this.suspendGame();
       }
    }
 
-   public final void c2() {
-      this.k = true;
-      if (this.a10 != null) {
-         this.a10.cancel();
-         this.a10 = null;
-         m2();
+   public final void startTimer() {
+      this.running = true;
+      if (this.timer != null) {
+         this.timer.cancel();
+         this.timer = null;
+         gcYield();
       }
 
-      this.a10 = new Timer();
-      this.a10.schedule(new FrameTimer(this), 0L, 15L);
+      this.timer = new Timer();
+      this.timer.schedule(new FrameTimer(this), 0L, 15L);
    }
 
-   private void w() {
+   private void tick() {
       try {
          this.repaint();
-         if (this.a5 != null) {
-            this.a5.setScreenSize(this.getWidth(), this.getHeight());
+         if (this.promoImages != null) {
+            this.promoImages.setScreenSize(this.getWidth(), this.getHeight());
          }
 
-         if (this.a2 != null) {
-            if (this.a2 instanceof GameScreen) {
-               GameScreen var1 = (GameScreen)this.a2;
-               if (com.ea.sims3.GameScreen.a5 != 1) {
-                  var1.a10();
+         if (this.screen != null) {
+            if (this.screen instanceof GameScreen) {
+               GameScreen game = (GameScreen)this.screen;
+               if (com.ea.sims3.GameScreen.screenState != 1) {
+                  game.layoutViewport();
                   return;
                }
-            } else if (this.a2 instanceof TitleScreen) {
-               Object var3 = null;
-               if (com.ea.sims3.TitleScreen.a5 == 5) {
-                  this.a2.onTick(5);
+            } else if (this.screen instanceof TitleScreen) {
+               Object unused = null;
+               if (com.ea.sims3.TitleScreen.state == 5) {
+                  this.screen.onTick(5);
                }
 
-               if (com.ea.sims3.TitleScreen.a5 == 11) {
-                  this.c4[0] = 0;
+               if (com.ea.sims3.TitleScreen.state == 11) {
+                  this.slotStringIds[0] = 0;
                }
 
-               if (com.ea.sims3.TitleScreen.a5 == 10) {
-                  this.a2.onTick(10);
+               if (com.ea.sims3.TitleScreen.state == 10) {
+                  this.screen.onTick(10);
                }
             }
          }
-      } catch (Exception var2) {
+      } catch (Exception ignored) {
       }
    }
 
-   public final void b7(int var1) {
-      int var2 = this.h();
-      this.t2(var1);
-      this.c4(var2);
-      if (this.l) {
-         m2();
-         this.l = false;
+   public final void advanceFrame(int deltaMs) {
+      int actions = this.consumeKeyState();
+      this.updateTimers(deltaMs);
+      this.clearAction(actions);
+      if (this.gcPending) {
+         gcYield();
+         this.gcPending = false;
       }
    }
 
-   private int h() {
-      int[] var1 = this.a11;
+   private int consumeKeyState() {
+      int[] queue = this.keyQueue;
 
-      for (int var2 = this.v - 1; var2 >= 0; var2--) {
-         if (var1[var2] < 0) {
-            this.t = this.t & ~(-var1[var2]);
-            if (-var1[var2] == 131072 || -var1[var2] == 262144 || -var1[var2] == 524288) {
-               this.u = 0;
+      for (int clearIndex = this.keyQueueSize - 1; clearIndex >= 0; clearIndex--) {
+         if (queue[clearIndex] < 0) {
+            this.actionState = this.actionState & ~(-queue[clearIndex]);
+            if (-queue[clearIndex] == 131072 || -queue[clearIndex] == 262144 || -queue[clearIndex] == 524288) {
+               this.softKeyAction = 0;
             }
          }
       }
 
-      for (int var5 = this.v - 1; var5 >= 0; var5--) {
-         if (var1[var5] > 0) {
-            this.t = this.t | var1[var5];
-            if (var1[var5] == 524288) {
-               this.u = 4;
-            } else if (var1[var5] == 262144) {
-               this.u = this.d2;
-            } else if (var1[var5] == 131072) {
-               this.u = this.e;
+      for (int pressIndex = this.keyQueueSize - 1; pressIndex >= 0; pressIndex--) {
+         if (queue[pressIndex] > 0) {
+            this.actionState = this.actionState | queue[pressIndex];
+            if (queue[pressIndex] == 524288) {
+               this.softKeyAction = 4;
+            } else if (queue[pressIndex] == 262144) {
+               this.softKeyAction = this.rightSoftKeyAction;
+            } else if (queue[pressIndex] == 131072) {
+               this.softKeyAction = this.leftSoftKeyAction;
             }
          }
       }
 
-      int var6 = 0;
+      int state = 0;
 
-      for (int var3 = 1; var3 <= 18; var3++) {
-         for (int var4 = 0; var4 < this.v; var4++) {
-            if (var1[var4] < 0) {
-               var6 |= -var1[var4];
-            } else if (var6 == 1 << var3 && var1[var4] > 0) {
-               var6 &= ~var1[var4];
+      for (int actionBit = 1; actionBit <= 18; actionBit++) {
+         for (int index = 0; index < this.keyQueueSize; index++) {
+            if (queue[index] < 0) {
+               state |= -queue[index];
+            } else if (state == 1 << actionBit && queue[index] > 0) {
+               state &= ~queue[index];
             }
 
-            var1[var4] = 0;
+            queue[index] = 0;
          }
       }
 
-      this.v = 0;
-      return var6;
+      this.keyQueueSize = 0;
+      return state;
    }
 
-   public final void d2() {
+   public final void muteSound() {
       com.ea.sims3.SdkSound.muteAll();
-      this.k = false;
+      this.running = false;
    }
 
-   public final void e2() {
-      this.h2();
-      this.g2();
-      if (this.a2 != null) {
-         this.a2.stop();
+   public final void suspendGame() {
+      this.releaseSoftKeys();
+      this.clearActions();
+      if (this.screen != null) {
+         this.screen.stop();
       }
 
       com.ea.sims3.SdkSound.muteAll();
-      this.a7.playQueued();
-      this.a7.update();
-      this.a3 = true;
+      this.sound.playQueued();
+      this.sound.update();
+      this.suspended = true;
    }
 
-   public final void f2() {
-      d = true;
-      this.h2();
-      this.g2();
-      this.v = 0;
-      this.a3 = false;
+   public final void resumeGame() {
+      resuming = true;
+      this.releaseSoftKeys();
+      this.clearActions();
+      this.keyQueueSize = 0;
+      this.suspended = false;
    }
 
-   private final void t2(int var1) {
-      if (d) {
-         this.c2++;
+   private final void updateTimers(int deltaMs) {
+      if (resuming) {
+         this.frozenFrames++;
       }
 
-      if (this.c2 > 500) {
-         if (this.s != -1) {
-            this.a12(this.s);
+      if (this.frozenFrames > 500) {
+         if (this.soundLoopId != -1) {
+            this.setSoundLoop(this.soundLoopId);
          }
 
-         this.c2 = 0;
-         d = false;
+         this.frozenFrames = 0;
+         resuming = false;
       }
 
-      if (var1 > 150) {
-         var1 = 150;
+      if (deltaMs > 150) {
+         deltaMs = 150;
       }
 
-      if (this.h != -1) {
-         this.e2(this.h, this.A);
-         this.h = -1;
-         this.A = -1;
+      if (this.pendingScreenAction != -1) {
+         this.changeScreen(this.pendingScreenAction, this.pendingLanguage);
+         this.pendingScreenAction = -1;
+         this.pendingLanguage = -1;
       }
 
-      if (this.a2 != null) {
-         if (this.n) {
-            this.y = this.y + this.z * this.g * (var1 >> 3);
-            if (this.z > 0 && this.y >= 16777215) {
-               this.y = 16777215;
-            } else if (this.z < 0 && this.y <= 0) {
-               this.y = 0;
+      if (this.screen != null) {
+         if (this.fading) {
+            this.fadeColor = this.fadeColor + this.fadeStep * this.fadeSpeed * (deltaMs >> 3);
+            if (this.fadeStep > 0 && this.fadeColor >= 16777215) {
+               this.fadeColor = 16777215;
+            } else if (this.fadeStep < 0 && this.fadeColor <= 0) {
+               this.fadeColor = 0;
             }
          }
 
-         if (this.a2 != null) {
+         if (this.screen != null) {
             try {
-               byte var2 = 0;
-               if (this.u == 4 && this.d2 != 4 && this.e != 4) {
-                  var2 = 4;
-                  this.u = 0;
+               byte newAction = 0;
+               if (this.softKeyAction == 4 && this.rightSoftKeyAction != 4 && this.leftSoftKeyAction != 4) {
+                  newAction = 4;
+                  this.softKeyAction = 0;
                }
 
-               this.a2.update(this.t, var2);
-               this.x2(this.u);
-            } catch (Exception var3) {
+               this.screen.update(this.actionState, newAction);
+               this.startSoftKeyAnimation(this.softKeyAction);
+            } catch (Exception updateError) {
             }
 
             try {
-               this.y2(var1);
-               this.a2.keyPressed(var1);
+               this.updateSoftKeyAnimation(deltaMs);
+               this.screen.keyPressed(deltaMs);
                return;
-            } catch (Exception var4) {
+            } catch (Exception keyError) {
             }
          }
       }
    }
 
-   public final synchronized void paint(Graphics var1) {
+   public final synchronized void paint(Graphics gfx) {
       try {
-         Graphics var2 = var1;
-         com.ea.sims3.SdkText.setGraphics(var1);
+         Graphics graphicsCopy = gfx;
+         com.ea.sims3.SdkText.setGraphics(gfx);
 
          try {
-            if (this.a2 != null && this.k) {
-               this.a2.render(var2);
+            if (this.screen != null && this.running) {
+               this.screen.render(graphicsCopy);
             }
 
-            if (this.a11()) {
-               this.e(var2);
-               if (this.z > 0 && this.y >= 16777215 || this.z < 0 && this.y <= 0) {
-                  this.e4 = true;
+            if (this.isFading()) {
+               this.drawFade(graphicsCopy);
+               if (this.fadeStep > 0 && this.fadeColor >= 16777215 || this.fadeStep < 0 && this.fadeColor <= 0) {
+                  this.fadeFinished = true;
                }
             }
-         } catch (Exception var7) {
+         } catch (Exception ignored) {
          }
       } finally {
-         this.m = false;
+         this.updating = false;
       }
    }
 
-   private int d(int var1) {
-      switch (var1) {
+   private int keyToAction(int keyCode) {
+      switch (keyCode) {
          case -8:
             return 524288;
          case -7:
@@ -519,7 +519,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          case 57:
             return 512;
          default:
-            switch (this.getGameAction(var1)) {
+            switch (this.getGameAction(keyCode)) {
                case 1:
                   return 8192;
                case 2:
@@ -539,1304 +539,1304 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
    }
 
-   public final void keyPressed(int var1) {
-      if (this.c) {
-         this.a5.processKey(var1);
+   public final void keyPressed(int keyCode) {
+      if (this.promoActive) {
+         this.promoImages.processKey(keyCode);
       } else {
-         int var2;
-         if ((var2 = this.d(var1)) != 0 && this.v < this.a11.length) {
-            this.a11[this.v++] = var2;
-            this.w2(var2);
+         int action;
+         if ((action = this.keyToAction(keyCode)) != 0 && this.keyQueueSize < this.keyQueue.length) {
+            this.keyQueue[this.keyQueueSize++] = action;
+            this.trackCheatSequence(action);
          }
       }
    }
 
-   public final void keyRepeated(int var1) {
-      this.keyPressed(var1);
+   public final void keyRepeated(int keyCode) {
+      this.keyPressed(keyCode);
    }
 
-   public final void keyReleased(int var1) {
-      int var2;
-      if ((var2 = this.d(var1)) != 0 && this.v < this.a11.length) {
-         this.a11[this.v++] = -var2;
+   public final void keyReleased(int keyCode) {
+      int action;
+      if ((action = this.keyToAction(keyCode)) != 0 && this.keyQueueSize < this.keyQueue.length) {
+         this.keyQueue[this.keyQueueSize++] = -action;
       }
    }
 
-   public final void c4(int var1) {
-      this.t &= ~var1;
+   public final void clearAction(int mask) {
+      this.actionState &= ~mask;
    }
 
-   public final void g2() {
-      this.t = 0;
+   public final void clearActions() {
+      this.actionState = 0;
    }
 
-   public final void h2() {
-      this.u = 0;
-      this.c4(524288);
+   public final void releaseSoftKeys() {
+      this.softKeyAction = 0;
+      this.clearAction(524288);
    }
 
-   public final void a4(int var1, int var2) {
-      if (var1 != this.d2) {
-         this.d2 = var1;
-         this.b6 = 0L;
+   public final void setSoftKeys(int leftAction, int rightAction) {
+      if (leftAction != this.rightSoftKeyAction) {
+         this.rightSoftKeyAction = leftAction;
+         this.rightSoftKeyTimer = 0L;
       }
 
-      if (var2 != this.e) {
-         this.e = var2;
-         this.a19 = 0L;
+      if (rightAction != this.leftSoftKeyAction) {
+         this.leftSoftKeyAction = rightAction;
+         this.leftSoftKeyTimer = 0L;
       }
    }
 
-   private static final int e(int var0) {
-      if (var0 == 0) {
+   private static final int actionToLabelId(int action) {
+      if (action == 0) {
          return -1;
-      } else if (var0 == 1) {
+      } else if (action == 1) {
          return 45;
-      } else if (var0 == 2) {
+      } else if (action == 2) {
          return 36;
-      } else if (var0 == 4) {
+      } else if (action == 4) {
          return 37;
-      } else if (var0 == 8) {
+      } else if (action == 8) {
          return 38;
-      } else if (var0 == 16) {
+      } else if (action == 16) {
          return 39;
-      } else if (var0 == 32) {
+      } else if (action == 32) {
          return 40;
-      } else if (var0 == 64) {
+      } else if (action == 64) {
          return 41;
-      } else if (var0 == 128) {
+      } else if (action == 128) {
          return 49;
-      } else if (var0 == 256) {
+      } else if (action == 256) {
          return 43;
-      } else if (var0 == 512) {
+      } else if (action == 512) {
          return 44;
-      } else if (var0 == 1024) {
+      } else if (action == 1024) {
          return 35;
-      } else if (var0 == 2048) {
+      } else if (action == 2048) {
          return 46;
-      } else if (var0 == 4096) {
+      } else if (action == 4096) {
          return 47;
-      } else if (var0 == 8192) {
+      } else if (action == 8192) {
          return 48;
-      } else if (var0 == 16384) {
+      } else if (action == 16384) {
          return 1;
       } else {
-         return var0 == 32768 ? 2 : -1;
+         return action == 32768 ? 2 : -1;
       }
    }
 
-   private void x() {
-      a13 = new byte[2600];
-      byte[] var1 = this.a5("/hdr");
-      this.f = com.ea.sims3.SdkText.loadTextHeader(var1);
-      int var2 = 0;
-      int var14;
-      int var3 = var14 = com.ea.sims3.SdkText.chooseLanguage(var2 = 0 + this.i2);
-      if (var14 < 0) {
-         var3 = -1;
-         var14 = 0;
+   private void loadFonts() {
+      ioBuffer = new byte[2600];
+      byte[] header = this.readResource("/hdr");
+      this.headerCount = com.ea.sims3.SdkText.loadTextHeader(header);
+      int languageArg = 0;
+      int fontSetIndex;
+      int selectedLanguage = fontSetIndex = com.ea.sims3.SdkText.chooseLanguage(languageArg = 0 + this.language);
+      if (fontSetIndex < 0) {
+         selectedLanguage = -1;
+         fontSetIndex = 0;
       }
 
-      Object[] var4 = new Object[5];
-      Image[] var5 = new Image[5];
-      this.a12 = var4;
-      String var6 = "/" + com.ea.sims3.SdkText.getFontDifferentiator(var14);
+      Object[] fontArray = new Object[5];
+      Image[] fontImages = new Image[5];
+      this.fonts = fontArray;
+      String fontPath = "/" + com.ea.sims3.SdkText.getFontDifferentiator(fontSetIndex);
 
       try {
-         var5[0] = Image.createImage(var6 + "font_sims_white_outline.png");
-         var5[1] = Image.createImage(var6 + "font_sims_black.png");
-         var5[2] = Image.createImage(var6 + "font_sims_white_smallcaps.png");
-         var5[3] = Image.createImage(var6 + "font_the.png");
-         var5[4] = Image.createImage(var6 + "font_thesmall.png");
-      } catch (IOException var12) {
+         fontImages[0] = Image.createImage(fontPath + "font_sims_white_outline.png");
+         fontImages[1] = Image.createImage(fontPath + "font_sims_black.png");
+         fontImages[2] = Image.createImage(fontPath + "font_sims_white_smallcaps.png");
+         fontImages[3] = Image.createImage(fontPath + "font_the.png");
+         fontImages[4] = Image.createImage(fontPath + "font_thesmall.png");
+      } catch (IOException ignored) {
       }
 
-      byte[] var7 = this.a5(var6 + "font_sims_white_outline.rff");
-      var4[0] = com.ea.sims3.SdkText.createFont(var5[0], var7);
-      var7 = this.a5(var6 + "font_sims_black.rff");
-      var4[1] = com.ea.sims3.SdkText.createFont(var5[1], var7);
-      var7 = this.a5(var6 + "font_sims_white_smallcaps.rff");
-      var4[2] = com.ea.sims3.SdkText.createFont(var5[2], var7);
-      var7 = this.a5(var6 + "font_the.rff");
-      var4[3] = com.ea.sims3.SdkText.createFont(var5[3], var7);
-      var7 = this.a5(var6 + "font_thesmall.rff");
-      var4[4] = com.ea.sims3.SdkText.createFont(var5[4], var7);
-      a13 = null;
-      m2();
-      this.d3(var14);
-      this.i2 = var3;
-      Object[] var8;
-      (var8 = new Object[5])[0] = var4[1];
-      var8[1] = var4[0];
-      var8[2] = var4[0];
-      var8[3] = var4[1];
-      var8[4] = var4[0];
-      this.a5.setFonts(var8);
+      byte[] data = this.readResource(fontPath + "font_sims_white_outline.rff");
+      fontArray[0] = com.ea.sims3.SdkText.createFont(fontImages[0], data);
+      data = this.readResource(fontPath + "font_sims_black.rff");
+      fontArray[1] = com.ea.sims3.SdkText.createFont(fontImages[1], data);
+      data = this.readResource(fontPath + "font_sims_white_smallcaps.rff");
+      fontArray[2] = com.ea.sims3.SdkText.createFont(fontImages[2], data);
+      data = this.readResource(fontPath + "font_the.rff");
+      fontArray[3] = com.ea.sims3.SdkText.createFont(fontImages[3], data);
+      data = this.readResource(fontPath + "font_thesmall.rff");
+      fontArray[4] = com.ea.sims3.SdkText.createFont(fontImages[4], data);
+      ioBuffer = null;
+      gcYield();
+      this.setLanguage(fontSetIndex);
+      this.language = selectedLanguage;
+      Object[] orderedFonts;
+      (orderedFonts = new Object[5])[0] = fontArray[1];
+      orderedFonts[1] = fontArray[0];
+      orderedFonts[2] = fontArray[0];
+      orderedFonts[3] = fontArray[1];
+      orderedFonts[4] = fontArray[0];
+      this.promoImages.setFonts(orderedFonts);
 
       try {
-         InputStream var9 = this.a6.openStream(52);
-         byte[] var10 = new byte[com.ea.sims3.ResourceLoader.getSize(52)];
-         var9.read(var10);
-         var9.close();
-         this.a5.setProductData(var10);
-         m2();
-      } catch (IOException var11) {
+         InputStream stream = this.resources.openStream(52);
+         byte[] productData = new byte[com.ea.sims3.ResourceLoader.getSize(52)];
+         stream.read(productData);
+         stream.close();
+         this.promoImages.setProductData(productData);
+         gcYield();
+      } catch (IOException ignored2) {
       }
    }
 
-   public final void d3(int var1) {
-      this.i2 = var1;
-      com.ea.sims3.SdkText.setCurrentLanguage(var1);
+   public final void setLanguage(int languageIndex) {
+      this.language = languageIndex;
+      com.ea.sims3.SdkText.setCurrentLanguage(languageIndex);
       com.ea.sims3.SdkText.loadStringsChunk(2);
-      if (this.a9() != null) {
+      if (this.titleScreen() != null) {
          com.ea.sims3.SdkText.loadStringsChunk(1);
       }
 
-      a2(this.c4, -1);
-      a(this.e2, (Object) null);
-      this.b5 = null;
-      a(this.c5, -1);
-      a(this.f2, (Object) null);
+      fillShorts(this.slotStringIds, -1);
+      fillObjects(this.slotTexts, (Object) null);
+      this.wrappedString = null;
+      fillInts(this.marqueeStringIds, -1);
+      fillObjects(this.marqueeTexts, (Object) null);
    }
 
-   private byte[] a5(String var1) {
-      byte[] var2 = null;
-      InputStream var3 = null;
+   private byte[] readResource(String path) {
+      byte[] data = null;
+      InputStream stream = null;
 
       try {
-         if ((var3 = this.getClass().getResourceAsStream(var1)) != null) {
-            int var4 = var3.read(a13);
-            int var5 = 0;
+         if ((stream = this.getClass().getResourceAsStream(path)) != null) {
+            int read = stream.read(ioBuffer);
+            int total = 0;
 
-            for (int var6 = 2600; var4 > 0; var4 = var3.read(a13, var5, var6)) {
-               var5 += var4;
-               var6 -= var4;
+            for (int remaining = 2600; read > 0; read = stream.read(ioBuffer, total, remaining)) {
+               total += read;
+               remaining -= read;
             }
 
-            var2 = new byte[var5];
-            System.arraycopy(a13, 0, var2, 0, var5);
+            data = new byte[total];
+            System.arraycopy(ioBuffer, 0, data, 0, total);
          }
-      } catch (IOException var7) {
+      } catch (IOException ignored) {
       }
 
-      return var2;
+      return data;
    }
 
-   public final void a2(int var1, int var2, int var3, int var4, int var5) {
-      if (var1 != -1) {
-         SdkString var6 = this.a4(var1);
-         com.ea.sims3.SdkText.setFont(this.a12[var2]);
-         this.a(var6, var2, var3, var4, var5);
+   public final void drawStringById(int stringId, int fontIndex, int xPos, int yPos, int anchor) {
+      if (stringId != -1) {
+         SdkString text = this.getString(stringId);
+         com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+         this.drawString(text, fontIndex, xPos, yPos, anchor);
       }
    }
 
-   public final void a(SdkString var1, int var2, int var3, int var4, int var5) {
-      if (var1 != null) {
-         com.ea.sims3.SdkText.setFont(this.a12[var2]);
+   public final void drawString(SdkString text, int fontIndex, int xPos, int yPos, int anchor) {
+      if (text != null) {
+         com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
          com.ea.sims3.SdkText.setSpaceSpacing(5);
-         if ((var5 & 2) != 0) {
-            var4 -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() >> 1;
-            var5 &= -3;
+         if ((anchor & 2) != 0) {
+            yPos -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() >> 1;
+            anchor &= -3;
          }
 
-         com.ea.sims3.SdkText.drawString(var1, var3, var4, var5);
+         com.ea.sims3.SdkText.drawString(text, xPos, yPos, anchor);
       }
    }
 
-   public final int a3(int var1) {
-      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+   public final int spaceWidth(int fontIndex) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
       return com.ea.sims3.SdkText.getSpaceSpacing();
    }
 
-   public final int b2(int var1) {
-      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+   public final int lineHeight(int fontIndex) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
       return com.ea.sims3.SdkText.getLineHeight();
    }
 
-   public final SdkString a4(int var1) {
-      if (var1 < -2) {
-         return this.b3[var1 - -12];
+   public final SdkString getString(int stringId) {
+      if (stringId < -2) {
+         return this.formattedStrings[stringId - -12];
       } else {
-         SdkString var2 = this.a14[this.w];
-         this.w = (this.w + 1) % 10;
-         return var1 <= 3 ? com.ea.sims3.SdkText.getHeaderString(com.ea.sims3.SdkText.getCurrentLanguage(), var1, var2) : com.ea.sims3.SdkText.getString(var1, var2);
+         SdkString buffer = this.tempStrings[this.tempStringCursor];
+         this.tempStringCursor = (this.tempStringCursor + 1) % 10;
+         return stringId <= 3 ? com.ea.sims3.SdkText.getHeaderString(com.ea.sims3.SdkText.getCurrentLanguage(), stringId, buffer) : com.ea.sims3.SdkText.getString(stringId, buffer);
       }
    }
 
-   public final int a2(int var1, int var2) {
-      com.ea.sims3.SdkText.setFont(this.a12[var2]);
-      return com.ea.sims3.SdkText.stringWidth(this.a4(var1));
+   public final int stringWidthById(int stringId, int fontIndex) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      return com.ea.sims3.SdkText.stringWidth(this.getString(stringId));
    }
 
-   public final int a(SdkString var1, int var2) {
-      com.ea.sims3.SdkText.setFont(this.a12[var2]);
-      return com.ea.sims3.SdkText.stringWidth(var1);
+   public final int stringWidth(SdkString text, int fontIndex) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      return com.ea.sims3.SdkText.stringWidth(text);
    }
 
-   public static SdkString a(String var0) {
-      return new SdkString(var0);
+   public static SdkString createString(String text) {
+      return new SdkString(text);
    }
 
-   public final void a4(int var1, int var2, int var3) {
-      SdkString var4 = this.a4(var2);
-      this.b3[var1 - -12] = var4.format(this.a4(var3));
+   public final void formatString1(int slot, int formatId, int argId) {
+      SdkString format = this.getString(formatId);
+      this.formattedStrings[slot - -12] = format.format(this.getString(argId));
    }
 
-   public final void a2(int var1, int var2, int var3, int var4) {
-      SdkString var5 = this.a4(var2);
-      SdkString[] var6;
-      (var6 = c3)[0] = this.a4(var3);
-      var6[1] = this.a4(var4);
-      this.b3[var1 - -12] = var5.format(var6);
+   public final void formatString2(int slot, int formatId, int argId1, int argId2) {
+      SdkString format = this.getString(formatId);
+      SdkString[] args;
+      (args = formatArgs)[0] = this.getString(argId1);
+      args[1] = this.getString(argId2);
+      this.formattedStrings[slot - -12] = format.format(args);
    }
 
-   public final void a2(int var1, int var2, SdkString var3) {
-      SdkString var4 = this.a4(var2);
-      this.b3[var1 - -12] = var4.format(var3);
+   public final void formatStringWith(int slot, int formatId, SdkString arg) {
+      SdkString format = this.getString(formatId);
+      this.formattedStrings[slot - -12] = format.format(arg);
    }
 
-   public final void a(int var1, int var2, SdkString var3, SdkString var4) {
-      SdkString var5 = this.a4(var2);
-      SdkString[] var6 = c3;
-      c3[0] = var3;
-      var6[1] = var4;
-      this.b3[var1 - -12] = var5.format(var6);
+   public final void formatStringWith2(int slot, int formatId, SdkString argument1, SdkString argument2) {
+      SdkString format = this.getString(formatId);
+      SdkString[] args = formatArgs;
+      formatArgs[0] = argument1;
+      args[1] = argument2;
+      this.formattedStrings[slot - -12] = format.format(args);
    }
 
-   public final void a(int var1, int var2, SdkString var3, SdkString var4, SdkString var5) {
-      SdkString var6 = this.a4(var2);
-      SdkString[] var7 = c3;
-      c3[0] = var3;
-      var7[1] = var4;
-      var7[2] = var5;
-      this.b3[var1 - -12] = var6.format(var7);
+   public final void formatStringWith3(int slot, int formatId, SdkString argument1, SdkString argument2, SdkString argument3) {
+      SdkString format = this.getString(formatId);
+      SdkString[] args = formatArgs;
+      formatArgs[0] = argument1;
+      args[1] = argument2;
+      args[2] = argument3;
+      this.formattedStrings[slot - -12] = format.format(args);
    }
 
-   public final void a2(int var1, SdkString var2) {
-      this.b3[var1 - -12] = var2;
+   public final void setString(int slot, SdkString text) {
+      this.formattedStrings[slot - -12] = text;
    }
 
-   public final SdkString a2() {
-      this.x++;
-      if (this.x >= 25) {
-         this.x = 0;
+   public final SdkString beginString() {
+      this.buildStringCursor++;
+      if (this.buildStringCursor >= 25) {
+         this.buildStringCursor = 0;
       }
 
-      this.a15 = this.d3[this.x];
-      this.a15.setLength(0);
-      return this.a15;
+      this.buildBuffer = this.stringPool[this.buildStringCursor];
+      this.buildBuffer.setLength(0);
+      return this.buildBuffer;
    }
 
-   public final void e3(int var1) {
-      this.a15.append(this.a4(var1));
+   public final void appendStringId(int stringId) {
+      this.buildBuffer.append(this.getString(stringId));
    }
 
-   public final void a3(SdkString var1) {
-      this.a15.append(var1);
+   public final void appendString(SdkString text) {
+      this.buildBuffer.append(text);
    }
 
-   public final void f3(int var1) {
-      SdkString var2 = this.a15;
-      int var3 = this.a15.length;
-      if (var1 == 0) {
-         var2.setLength(var3 + 1);
-         var2.setCharAt(var3, '0');
+   public final void appendInt(int value) {
+      SdkString builder = this.buildBuffer;
+      int length = this.buildBuffer.length;
+      if (value == 0) {
+         builder.setLength(length + 1);
+         builder.setCharAt(length, '0');
       } else {
-         if (var1 < 0) {
-            var2.setLength(var3 + 1);
-            var2.setCharAt(var3++, '-');
-            var1 = -var1;
+         if (value < 0) {
+            builder.setLength(length + 1);
+            builder.setCharAt(length++, '-');
+            value = -value;
          }
 
-         int var4 = 1000000000;
-         int var5 = 0;
+         int divisor = 1000000000;
+         int digit = 0;
 
-         for (boolean var6 = false; var4 > 0; var4 /= 10) {
-            if ((var5 = var1 / var4) != 0 || var6) {
-               var6 = true;
-               var2.setLength(var3 + 1);
-               var2.setCharAt(var3++, (char)(48 + var5));
+         for (boolean started = false; divisor > 0; divisor /= 10) {
+            if ((digit = value / divisor) != 0 || started) {
+               started = true;
+               builder.setLength(length + 1);
+               builder.setCharAt(length++, (char)(48 + digit));
             }
 
-            var1 -= var5 * var4;
+            value -= digit * divisor;
          }
       }
    }
 
-   private void u2(int var1) {
-      SdkString var2 = this.a15;
-      int var3 = this.a15.length;
-      if (var1 == 0) {
-         var2.setLength(var3 + 1);
-         var2.setCharAt(var3, '0');
+   private void appendGroupedInt(int value) {
+      SdkString builder = this.buildBuffer;
+      int length = this.buildBuffer.length;
+      if (value == 0) {
+         builder.setLength(length + 1);
+         builder.setCharAt(length, '0');
       } else {
-         if (var1 < 0) {
-            var2.setLength(var3 + 1);
-            var2.setCharAt(var3++, '-');
-            var1 = -var1;
+         if (value < 0) {
+            builder.setLength(length + 1);
+            builder.setCharAt(length++, '-');
+            value = -value;
          }
 
-         int var4 = 1000000000;
-         int var5 = 0;
+         int divisor = 1000000000;
+         int digit = 0;
 
-         for (boolean var6 = false; var4 > 0; var4 /= 10) {
-            if ((var5 = var1 / var4) != 0 || var6) {
-               var6 = true;
-               var2.setLength(var3 + 1);
-               var2.setCharAt(var3++, (char)(48 + var5));
-               if (var4 == 1000000000 || var4 == 1000000 || var4 == 1000) {
-                  var2.append(this.a4(31));
-                  var3 = var2.length;
+         for (boolean started = false; divisor > 0; divisor /= 10) {
+            if ((digit = value / divisor) != 0 || started) {
+               started = true;
+               builder.setLength(length + 1);
+               builder.setCharAt(length++, (char)(48 + digit));
+               if (divisor == 1000000000 || divisor == 1000000 || divisor == 1000) {
+                  builder.append(this.getString(31));
+                  length = builder.length;
                }
             }
 
-            var1 -= var5 * var4;
+            value -= digit * divisor;
          }
       }
    }
 
-   public final void g2(int var1) {
-      int var2 = this.x;
-      SdkString var3 = this.a15;
-      SdkString var4 = this.a2();
-      this.u2(Math.abs(var1));
-      SdkString var5 = this.a4(30).format(var4);
-      if (var1 < 0) {
-         var3.append("-");
+   public final void formatNumber(int value) {
+      int savedCursor = this.buildStringCursor;
+      SdkString outer = this.buildBuffer;
+      SdkString inner = this.beginString();
+      this.appendGroupedInt(Math.abs(value));
+      SdkString formatted = this.getString(30).format(inner);
+      if (value < 0) {
+         outer.append("-");
       }
 
-      var3.append(var5);
-      this.a15 = var3;
-      this.x = var2;
+      outer.append(formatted);
+      this.buildBuffer = outer;
+      this.buildStringCursor = savedCursor;
    }
 
-   public final void h2(int var1) {
-      int var2 = var1 / 60;
-      int var3 = var1 - var2 * 60;
-      int var4 = var2;
-      SdkString var5 = this.a15;
-      int var6 = this.a15.length;
-      char var7 = '0';
-      if (var2 >= 20) {
-         var7 = '2';
-         var4 = var2 - 20;
-      } else if (var2 >= 10) {
-         var7 = '1';
-         var4 = var2 - 10;
+   public final void appendTime(int seconds) {
+      int minutes = seconds / 60;
+      int secondsPart = seconds - minutes * 60;
+      int minuteValue = minutes;
+      SdkString builder = this.buildBuffer;
+      int index = this.buildBuffer.length;
+      char minuteTens = '0';
+      if (minutes >= 20) {
+         minuteTens = '2';
+         minuteValue = minutes - 20;
+      } else if (minutes >= 10) {
+         minuteTens = '1';
+         minuteValue = minutes - 10;
       }
 
-      var5.setLength(var6 + 1);
-      var5.setCharAt(var6++, var7);
-      var5.setLength(var6 + 1);
-      var5.setCharAt(var6++, (char)(48 + var4));
-      var5.setLength(var6 + 1);
-      var5.setCharAt(var6++, ':');
-      int var8 = var3 / 10;
-      var5.setLength(var6 + 2);
-      var5.setCharAt(var6++, (char)(48 + var8));
-      var5.setCharAt(var6, (char)(48 + (var3 - var8 * 10)));
+      builder.setLength(index + 1);
+      builder.setCharAt(index++, minuteTens);
+      builder.setLength(index + 1);
+      builder.setCharAt(index++, (char)(48 + minuteValue));
+      builder.setLength(index + 1);
+      builder.setCharAt(index++, ':');
+      int secondTens = secondsPart / 10;
+      builder.setLength(index + 2);
+      builder.setCharAt(index++, (char)(48 + secondTens));
+      builder.setCharAt(index, (char)(48 + (secondsPart - secondTens * 10)));
    }
 
-   private void y() {
-      this.b4 = new short[255];
-      this.b4[0] = 0;
-      this.a16 = new short[20][10];
+   private void initTextSlots() {
+      this.wrappedLineOffsets = new short[255];
+      this.wrappedLineOffsets[0] = 0;
+      this.wrapOffsets = new short[20][10];
 
-      for (int var1 = 0; var1 < 20; var1++) {
-         this.a16[var1][0] = 0;
+      for (int slot = 0; slot < 20; slot++) {
+         this.wrapOffsets[slot][0] = 0;
       }
 
-      this.e2 = new SdkString[20];
-      this.c4 = new short[20];
+      this.slotTexts = new SdkString[20];
+      this.slotStringIds = new short[20];
    }
 
-   public final int a(int var1, int var2, int var3) {
-      com.ea.sims3.SdkText.setFont(this.a12[var2]);
-      if (var1 == -1) {
+   public final int setWrappedString(int stringId, int fontIndex, int width) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      if (stringId == -1) {
          return 0;
       } else {
-         this.b5 = this.a4(var1).copy();
-         if (var1 == 89) {
-            String var4 = this.a.getAppProperty("MIDlet-Version");
-            this.b5 = this.b5.format(var4);
+         this.wrappedString = this.getString(stringId).copy();
+         if (stringId == 89) {
+            String version = this.app.getAppProperty("MIDlet-Version");
+            this.wrappedString = this.wrappedString.format(version);
          }
 
-         com.ea.sims3.SdkText.wrapText(this.b5, this.b4, var3, (short)124);
-         return this.b4[0];
+         com.ea.sims3.SdkText.wrapText(this.wrappedString, this.wrappedLineOffsets, width, (short)124);
+         return this.wrappedLineOffsets[0];
       }
    }
 
-   public final int c() {
-      return this.b4[0];
+   public final int wrappedLineCount() {
+      return this.wrappedLineOffsets[0];
    }
 
-   public final void b2(int var1, int var2, int var3, int var4) {
-      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+   public final void drawWrappedText(int fontIndex, int xPos, int yPos, int anchor) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
       com.ea.sims3.SdkText.setSpaceSpacing(5);
-      com.ea.sims3.SdkText.drawWrappedString(this.b5, this.b4, 1, this.b4[0], var2, var3, var4);
+      com.ea.sims3.SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, 1, this.wrappedLineOffsets[0], xPos, yPos, anchor);
    }
 
-   public final void a(int var1, int var2, int var3, int var4, int var5, int var6) {
-      com.ea.sims3.SdkText.setFont(this.a12[var1]);
+   public final void drawWrappedTextClipped(int fontIndex, int xPos, int yPos, int anchor, int firstLine, int lineCount) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
       com.ea.sims3.SdkText.setSpaceSpacing(5);
-      if ((var4 & 2) != 0) {
-         int var7 = com.ea.sims3.SdkText.getLineHeight() + com.ea.sims3.SdkText.getLeadingSpacing();
-         int var8;
-         int var9 = (var8 = var6 * var7) >> 1;
-         var3 -= var9;
-         var4 ^= 2;
+      if ((anchor & 2) != 0) {
+         int lineHeight = com.ea.sims3.SdkText.getLineHeight() + com.ea.sims3.SdkText.getLeadingSpacing();
+         int halfHeight;
+         int centerOffset = (halfHeight = lineCount * lineHeight) >> 1;
+         yPos -= centerOffset;
+         anchor ^= 2;
       }
 
-      var6 = Math.min(this.b4[0] - var5, var6);
-      com.ea.sims3.SdkText.drawWrappedString(this.b5, this.b4, var5 + 1, var6, var2, var3, var4);
+      lineCount = Math.min(this.wrappedLineOffsets[0] - firstLine, lineCount);
+      com.ea.sims3.SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, firstLine + 1, lineCount, xPos, yPos, anchor);
    }
 
-   private int a(int var1, int var2, int var3, int var4) {
-      com.ea.sims3.SdkText.setFont(this.a12[var3]);
-      this.c4[var1] = (short)var2;
-      if (var2 == -1) {
+   private int setSlotText(int slot, int stringId, int fontIndex, int width) {
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      this.slotStringIds[slot] = (short)stringId;
+      if (stringId == -1) {
          return 0;
       } else {
-         this.e2[var1] = this.a4(var2).copy();
-         com.ea.sims3.SdkText.wrapText(this.e2[var1], this.a16[var1], var4, (short)124);
-         return this.a16[var1][0];
+         this.slotTexts[slot] = this.getString(stringId).copy();
+         com.ea.sims3.SdkText.wrapText(this.slotTexts[slot], this.wrapOffsets[slot], width, (short)124);
+         return this.wrapOffsets[slot][0];
       }
    }
 
-   public final void a(int var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      if (var2 != this.c4[var1]) {
-         this.a(var1, var2, var3, var4);
-         this.c4[var1] = (short)var2;
+   public final void drawSlotText(int slot, int stringId, int fontIndex, int xPos, int yPos, int firstLine, int lineCount) {
+      if (stringId != this.slotStringIds[slot]) {
+         this.setSlotText(slot, stringId, fontIndex, xPos);
+         this.slotStringIds[slot] = (short)stringId;
       }
 
-      com.ea.sims3.SdkText.setFont(this.a12[var3]);
+      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
       com.ea.sims3.SdkText.setSpaceSpacing(5);
-      com.ea.sims3.SdkText.drawWrappedString(this.e2[var1], this.a16[var1], 1, this.a16[var1][0], var5, var6, var7);
+      com.ea.sims3.SdkText.drawWrappedString(this.slotTexts[slot], this.wrapOffsets[slot], 1, this.wrapOffsets[slot][0], yPos, firstLine, lineCount);
    }
 
-   public final void a2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      this.a(var1, this.a4(var2), var3, var4, var5, var6, var7);
+   public final void drawTextById(Graphics gfx, int stringId, int fontIndex, int xPos, int yPos, int maxWidth, int anchor) {
+      this.drawTextClipped(gfx, this.getString(stringId), fontIndex, xPos, yPos, maxWidth, anchor);
    }
 
-   public final void a(Graphics var1, SdkString var2, int var3, int var4, int var5, int var6, int var7) {
-      if (this.a(var2, var3) <= var6) {
-         if ((var7 & 1) != 0) {
-            var4 += var6 >> 1;
+   public final void drawTextClipped(Graphics gfx, SdkString text, int fontIndex, int xPos, int yPos, int maxWidth, int anchor) {
+      if (this.stringWidth(text, fontIndex) <= maxWidth) {
+         if ((anchor & 1) != 0) {
+            xPos += maxWidth >> 1;
          }
 
-         this.a(var2, var3, var4, var5, var7);
+         this.drawString(text, fontIndex, xPos, yPos, anchor);
       } else {
-         int var9 = var1.getClipX();
-         int var10 = var1.getClipY();
-         int var11 = var1.getClipWidth();
-         int var12 = var1.getClipHeight();
-         int var13 = this.a2(26, var3);
-         var1.setClip(var4, var10, var6 - var13, var12);
-         this.a(var2, var3, var4, var5, var7 & -10 | 4);
-         var1.setClip(var9, var10, var11, var12);
-         this.a2(26, var3, var4 + var6, var5, var7 & -6 | 8);
+         int clipX = gfx.getClipX();
+         int clipY = gfx.getClipY();
+         int clipWidth = gfx.getClipWidth();
+         int clipHeight = gfx.getClipHeight();
+         int ellipsisWidth = this.stringWidthById(26, fontIndex);
+         gfx.setClip(xPos, clipY, maxWidth - ellipsisWidth, clipHeight);
+         this.drawString(text, fontIndex, xPos, yPos, anchor & -10 | 4);
+         gfx.setClip(clipX, clipY, clipWidth, clipHeight);
+         this.drawStringById(26, fontIndex, xPos + maxWidth, yPos, anchor & -6 | 8);
       }
    }
 
-   public final void i2() {
-      for (int var1 = 0; var1 < 2; var1++) {
-         this.c5[var1] = -1;
-         this.f2[var1] = null;
+   public final void resetMarquees() {
+      for (int slot = 0; slot < 2; slot++) {
+         this.marqueeStringIds[slot] = -1;
+         this.marqueeTexts[slot] = null;
       }
    }
 
-   private void b2(int var1, int var2, int var3) {
-      if (var1 < 2) {
-         this.e3[var1] = 0;
-         this.c5[var1] = var3;
-         this.f2[var1] = null;
-         if (var3 != -1) {
-            this.d4[var1] = this.a2(var3, var2);
-            this.f3[var1] = 0;
+   private void setMarqueeId(int slot, int fontIndex, int stringId) {
+      if (slot < 2) {
+         this.marqueeTimers[slot] = 0;
+         this.marqueeStringIds[slot] = stringId;
+         this.marqueeTexts[slot] = null;
+         if (stringId != -1) {
+            this.textWidths[slot] = this.stringWidthById(stringId, fontIndex);
+            this.scrollOffsets[slot] = 0;
          }
       }
    }
 
-   private void b(int var1, int var2, SdkString var3) {
-      if (var1 < 2) {
-         this.e3[var1] = 0;
-         this.c5[var1] = -1;
-         this.f2[var1] = var3;
-         if (var3 != null) {
-            this.d4[var1] = this.a(var3, var2);
-            this.f3[var1] = 0;
+   private void setMarqueeText(int slot, int fontIndex, SdkString text) {
+      if (slot < 2) {
+         this.marqueeTimers[slot] = 0;
+         this.marqueeStringIds[slot] = -1;
+         this.marqueeTexts[slot] = text;
+         if (text != null) {
+            this.textWidths[slot] = this.stringWidth(text, fontIndex);
+            this.scrollOffsets[slot] = 0;
          }
       }
    }
 
-   public final void i2(int var1) {
-      for (int var2 = 0; var2 < 2; var2++) {
-         if (this.c5[var2] != -1 || this.f2[var2] != null) {
-            this.e3[var2] = this.e3[var2] + var1;
-            if (this.e3[var2] > 1500) {
-               long var3 = this.e3[var2] - 1500;
-               this.f3[var2] = (int)(var3 * 20L >> 10);
-               int var5 = this.d4[var2] + 20;
-               if (this.f3[var2] >= var5) {
-                  this.f3[var2] = this.f3[var2] - var5;
-                  this.e3[var2] = this.e3[var2] - (var5 << 10) / 20;
+   public final void updateMarquees(int deltaMs) {
+      for (int slot = 0; slot < 2; slot++) {
+         if (this.marqueeStringIds[slot] != -1 || this.marqueeTexts[slot] != null) {
+            this.marqueeTimers[slot] = this.marqueeTimers[slot] + deltaMs;
+            if (this.marqueeTimers[slot] > 1500) {
+               long overrun = this.marqueeTimers[slot] - 1500;
+               this.scrollOffsets[slot] = (int)(overrun * 20L >> 10);
+               int gap = this.textWidths[slot] + 20;
+               if (this.scrollOffsets[slot] >= gap) {
+                  this.scrollOffsets[slot] = this.scrollOffsets[slot] - gap;
+                  this.marqueeTimers[slot] = this.marqueeTimers[slot] - (gap << 10) / 20;
                }
             }
          }
       }
    }
 
-   public final void a(int var1, Graphics var2, int var3, int var4, int var5, int var6, int var7, int var8) {
-      if (this.c5[var1] != var3 || this.d4[var1] != this.a2(var3, var4)) {
-         this.b2(var1, var4, var3);
+   public final void drawMarqueeId(int slot, Graphics gfx, int stringId, int fontIndex, int xPos, int yPos, int maxWidth, int anchor) {
+      if (this.marqueeStringIds[slot] != stringId || this.textWidths[slot] != this.stringWidthById(stringId, fontIndex)) {
+         this.setMarqueeId(slot, fontIndex, stringId);
       }
 
-      if (this.d4[var1] <= var7) {
-         if ((var8 & 1) != 0) {
-            var5 += var7 >> 1;
-         } else if ((var8 & 8) != 0) {
-            var5 += var7;
+      if (this.textWidths[slot] <= maxWidth) {
+         if ((anchor & 1) != 0) {
+            xPos += maxWidth >> 1;
+         } else if ((anchor & 8) != 0) {
+            xPos += maxWidth;
          }
 
-         this.a2(var3, var4, var5, var6, var8);
+         this.drawStringById(stringId, fontIndex, xPos, yPos, anchor);
       } else {
-         int var9 = var2.getClipX();
-         int var10 = var2.getClipY();
-         int var11 = var2.getClipWidth();
-         int var12 = var2.getClipHeight();
-         var2.setClip(var5, var10, var7, var12);
-         var8 = var8 & -10 | 4;
-         this.a2(var3, var4, var5 - this.f3[var1], var6, var8);
-         this.a2(var3, var4, var5 - this.f3[var1] + this.d4[var1] + 20, var6, var8);
-         var2.setClip(var9, var10, var11, var12);
+         int clipX = gfx.getClipX();
+         int clipY = gfx.getClipY();
+         int clipWidth = gfx.getClipWidth();
+         int clipHeight = gfx.getClipHeight();
+         gfx.setClip(xPos, clipY, maxWidth, clipHeight);
+         anchor = anchor & -10 | 4;
+         this.drawStringById(stringId, fontIndex, xPos - this.scrollOffsets[slot], yPos, anchor);
+         this.drawStringById(stringId, fontIndex, xPos - this.scrollOffsets[slot] + this.textWidths[slot] + 20, yPos, anchor);
+         gfx.setClip(clipX, clipY, clipWidth, clipHeight);
       }
    }
 
-   public final void a(int var1, Graphics var2, SdkString var3, int var4, int var5, int var6, int var7, int var8) {
-      if (this.f2[var1] != var3 || this.d4[var1] != this.a(var3, var4)) {
-         this.b(var1, var4, var3);
+   public final void drawMarqueeText(int slot, Graphics gfx, SdkString text, int fontIndex, int xPos, int yPos, int maxWidth, int anchor) {
+      if (this.marqueeTexts[slot] != text || this.textWidths[slot] != this.stringWidth(text, fontIndex)) {
+         this.setMarqueeText(slot, fontIndex, text);
       }
 
-      if (this.d4[var1] <= var7) {
-         if ((var8 & 1) != 0) {
-            var5 += var7 >> 1;
-         } else if ((var8 & 8) != 0) {
-            var5 += var7;
+      if (this.textWidths[slot] <= maxWidth) {
+         if ((anchor & 1) != 0) {
+            xPos += maxWidth >> 1;
+         } else if ((anchor & 8) != 0) {
+            xPos += maxWidth;
          }
 
-         this.a(var3, var4, var5, var6, var8);
+         this.drawString(text, fontIndex, xPos, yPos, anchor);
       } else {
-         int var9 = var2.getClipX();
-         int var10 = var2.getClipY();
-         int var11 = var2.getClipWidth();
-         int var12 = var2.getClipHeight();
-         var2.setClip(var5, var10, var7, var12);
-         var8 = var8 & -10 | 4;
-         this.a(var3, var4, var5 - this.f3[var1], var6, var8);
-         this.a(var3, var4, var5 - this.f3[var1] + this.d4[var1] + 20, var6, var8);
-         var2.setClip(var9, var10, var11, var12);
+         int clipX = gfx.getClipX();
+         int clipY = gfx.getClipY();
+         int clipWidth = gfx.getClipWidth();
+         int clipHeight = gfx.getClipHeight();
+         gfx.setClip(xPos, clipY, maxWidth, clipHeight);
+         anchor = anchor & -10 | 4;
+         this.drawString(text, fontIndex, xPos - this.scrollOffsets[slot], yPos, anchor);
+         this.drawString(text, fontIndex, xPos - this.scrollOffsets[slot] + this.textWidths[slot] + 20, yPos, anchor);
+         gfx.setClip(clipX, clipY, clipWidth, clipHeight);
       }
    }
 
-   public final void b(int var1, int var2, int var3, int var4, int var5, int var6) {
-      if (this.c5[var1] != var2) {
-         this.b(var1, var3, com.ea.sims3.SdkText.getString(var2, null));
-         this.c5[var1] = var2;
-         this.e3[var1] = 1500;
+   public final void drawScrollingText(int slot, int fontIndex, int stringId, int xPos, int yPos, int anchor) {
+      if (this.marqueeStringIds[slot] != fontIndex) {
+         this.setMarqueeText(slot, stringId, com.ea.sims3.SdkText.getString(fontIndex, null));
+         this.marqueeStringIds[slot] = fontIndex;
+         this.marqueeTimers[slot] = 1500;
       }
 
-      SdkString var7 = this.f2[var1];
-      int var8 = this.a(var7, var3);
-      if ((var6 & 1) != 0) {
-         var4 -= var8 >> 1;
-      } else if ((var6 & 8) != 0) {
-         var4 -= var8;
+      SdkString text = this.marqueeTexts[slot];
+      int textWidth = this.stringWidth(text, stringId);
+      if ((anchor & 1) != 0) {
+         xPos -= textWidth >> 1;
+      } else if ((anchor & 8) != 0) {
+         xPos -= textWidth;
       }
 
-      var6 = var6 & -10 | 4;
-      SdkString var9;
-      (var9 = this.a2()).setLength(1);
-      short var10 = var7.length;
-      int var11;
-      if ((var11 = this.f3[var1] << 1) > var8 + 20) {
-         this.e3[var1] = 1500;
-         this.f3[var1] = 0;
-         var11 = 0;
+      anchor = anchor & -10 | 4;
+      SdkString charString;
+      (charString = this.beginString()).setLength(1);
+      short charCount = text.length;
+      int scroll;
+      if ((scroll = this.scrollOffsets[slot] << 1) > textWidth + 20) {
+         this.marqueeTimers[slot] = 1500;
+         this.scrollOffsets[slot] = 0;
+         scroll = 0;
       }
 
-      int var12;
-      int var13 = (var12 = var11 - 10 - 20) + 20;
-      int var14 = 0;
+      int waveStart;
+      int waveEnd = (waveStart = scroll - 10 - 20) + 20;
+      int penX = 0;
 
-      for (int var15 = 0; var15 < var10; var15++) {
-         var9.setCharAt(0, var7.charAt(var15));
-         if (var14 >= var12 && var14 <= var13) {
-            int var16 = com.ea.sims3.FixedMath.div(var14 - var12 << 16, 1310720);
-            int var18 = com.ea.sims3.FixedMath.cos(com.ea.sims3.FixedMath.mul(411775, var16) - 205887) * 6;
-            this.a(var9, var3, var4 + var14, var5 - (var18 >> 16) - 6, var6);
+      for (int charIndex = 0; charIndex < charCount; charIndex++) {
+         charString.setCharAt(0, text.charAt(charIndex));
+         if (penX >= waveStart && penX <= waveEnd) {
+            int phase = com.ea.sims3.FixedMath.div(penX - waveStart << 16, 1310720);
+            int wave = com.ea.sims3.FixedMath.cos(com.ea.sims3.FixedMath.mul(411775, phase) - 205887) * 6;
+            this.drawString(charString, stringId, xPos + penX, yPos - (wave >> 16) - 6, anchor);
          } else {
-            this.a(var9, var3, var4 + var14, var5, var6);
+            this.drawString(charString, stringId, xPos + penX, yPos, anchor);
          }
 
-         var14 += this.a(var9, var3);
+         penX += this.stringWidth(charString, stringId);
       }
    }
 
-   public final void j2() {
-      this.y = 16777215;
-      this.z = -1;
-      this.n = true;
-      this.e4 = false;
+   public final void fadeFromWhite() {
+      this.fadeColor = 16777215;
+      this.fadeStep = -1;
+      this.fading = true;
+      this.fadeFinished = false;
    }
 
-   public final void k2() {
-      this.y = 0;
-      this.z = 1;
-      this.n = true;
-      this.e4 = false;
+   public final void fadeFromBlack() {
+      this.fadeColor = 0;
+      this.fadeStep = 1;
+      this.fading = true;
+      this.fadeFinished = false;
    }
 
-   public final void l2() {
-      this.y = 16777215;
-      this.z = -1;
-      this.n = false;
-      this.e4 = true;
+   public final void clearFade() {
+      this.fadeColor = 16777215;
+      this.fadeStep = -1;
+      this.fading = false;
+      this.fadeFinished = true;
    }
 
-   public final boolean a11() {
-      return this.n && !this.e4;
+   public final boolean isFading() {
+      return this.fading && !this.fadeFinished;
    }
 
-   public final boolean b5() {
-      return this.a11() && this.z == -1;
+   public final boolean isFadingFromWhite() {
+      return this.isFading() && this.fadeStep == -1;
    }
 
-   private void e(Graphics var1) {
-      this.a17.setViewport(0, 0, this.getWidth(), this.getHeight());
-      this.a17.setBlending(66);
-      this.a17.setColor(this.y);
-      this.a17.render(var1);
+   private void drawFade(Graphics gfx) {
+      this.fade.setViewport(0, 0, this.getWidth(), this.getHeight());
+      this.fade.setBlending(66);
+      this.fade.setColor(this.fadeColor);
+      this.fade.render(gfx);
    }
 
-   public final void b2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      this.a17.setBlending(var2);
-      this.a17.setViewport(var4, var5, var6, var7);
-      this.a17.setColor(var3);
-      this.a17.render(var1);
+   public final void drawFadeRect(Graphics gfx, int blending, int color, int xPos, int yPos, int width, int height) {
+      this.fade.setBlending(blending);
+      this.fade.setViewport(xPos, yPos, width, height);
+      this.fade.setColor(color);
+      this.fade.render(gfx);
    }
 
-   public final void a(Graphics var1) {
-      this.a17.setViewport(0, 0, this.getWidth(), this.getHeight() - 15);
-      this.a17.setBlending(66);
-      this.a17.setColor(6316128);
-      this.a17.render(var1);
+   public final void drawDialogOverlay(Graphics gfx) {
+      this.fade.setViewport(0, 0, this.getWidth(), this.getHeight() - 15);
+      this.fade.setBlending(66);
+      this.fade.setColor(6316128);
+      this.fade.render(gfx);
    }
 
-   public static final void m2() {
+   public static final void gcYield() {
       System.gc();
       Thread.yield();
 
       try {
          Thread.sleep(15L);
-      } catch (InterruptedException var1) {
+      } catch (InterruptedException ignored) {
       }
    }
 
-   private void a(boolean var1) {
-      if (var1) {
-         m2();
-         this.l = false;
+   private void setGcPending(boolean pending) {
+      if (pending) {
+         gcYield();
+         this.gcPending = false;
       } else {
-         this.l = true;
+         this.gcPending = true;
       }
    }
 
-   public final GameScreen a6() {
-      return this.a2 instanceof GameScreen ? (GameScreen)this.a2 : null;
+   public final GameScreen gameScreen() {
+      return this.screen instanceof GameScreen ? (GameScreen)this.screen : null;
    }
 
-   public final TitleScreen a9() {
-      return this.a2 instanceof TitleScreen ? (TitleScreen)this.a2 : null;
+   public final TitleScreen titleScreen() {
+      return this.screen instanceof TitleScreen ? (TitleScreen)this.screen : null;
    }
 
-   public final void b2(int var1, int var2) {
-      this.h = var1;
-      this.A = var2;
+   public final void setPendingScreen(int action, int languageIndex) {
+      this.pendingScreenAction = action;
+      this.pendingLanguage = languageIndex;
    }
 
-   private void e2(int var1, int var2) {
+   private void changeScreen(int action, int languageIndex) {
       try {
-         boolean var3 = this.a6() != null && var1 == 2;
-         this.D = -1;
-         if (this.a2 != null) {
-            this.a2.pause();
+         boolean sameGameScreen = this.gameScreen() != null && action == 2;
+         this.loadingTipId = -1;
+         if (this.screen != null) {
+            this.screen.pause();
          }
 
-         this.l2();
-         if (!var3) {
-            this.a2 = null;
+         this.clearFade();
+         if (!sameGameScreen) {
+            this.screen = null;
          }
 
-         this.a(true);
-         if (!var3) {
-            switch (var1) {
+         this.setGcPending(true);
+         if (!sameGameScreen) {
+            switch (action) {
                case 1:
-                  this.a2 = new TitleScreen(this);
+                  this.screen = new TitleScreen(this);
                   break;
                case 2:
-                  this.a2 = new GameScreen(this);
+                  this.screen = new GameScreen(this);
             }
          }
 
-         this.a2.setLanguage(var2);
-      } catch (Exception var4) {
+         this.screen.setLanguage(languageIndex);
+      } catch (Exception ignored) {
       }
 
-      this.g2();
-      this.h2();
+      this.clearActions();
+      this.releaseSoftKeys();
       this.repaint();
    }
 
-   public final int b(int var1, int var2) {
-      int var3 = var2 + 1 - var1;
-      return var1 + this.a8.nextInt(var3);
+   public final int randomRange(int min, int max) {
+      int range = max + 1 - min;
+      return min + this.random.nextInt(range);
    }
 
-   public final int d() {
-      return this.b(0, 99);
+   public final int randomPercent() {
+      return this.randomRange(0, 99);
    }
 
-   public final void n2() {
-      this.v2(400);
+   public final void vibrateShort() {
+      this.vibrate(400);
    }
 
-   private void v2(int var1) {
-      if (this.p) {
-         this.a7.vibrate(var1);
+   private void vibrate(int durationMs) {
+      if (this.vibrationEnabled) {
+         this.sound.vibrate(durationMs);
       }
    }
 
-   private void w2(int var1) {
-      for (int var2 = 0; var2 < a18.length; var2++) {
-         int[] var3;
-         int var4 = (var3 = a18[var2]).length - 1;
-         int var5 = var3[0];
-         int var6;
-         if ((var6 = var3[var5 + 1]) == var1) {
-            if (++var5 == var4) {
-               var5 = 0;
-               switch (var2) {
+   private void trackCheatSequence(int action) {
+      for (int sequenceIndex = 0; sequenceIndex < cheatSequences.length; sequenceIndex++) {
+         int[] sequence;
+         int lastIndex = (sequence = cheatSequences[sequenceIndex]).length - 1;
+         int cursor = sequence[0];
+         int expected;
+         if ((expected = sequence[cursor + 1]) == action) {
+            if (++cursor == lastIndex) {
+               cursor = 0;
+               switch (sequenceIndex) {
                   case 0:
-                     this.f4 = !this.f4;
+                     this.cheatToggled = !this.cheatToggled;
                }
             }
          } else {
-            var5 = 0;
+            cursor = 0;
          }
 
-         var3[0] = var5;
+         sequence[0] = cursor;
       }
    }
 
-   private static int a(int var0, int var1, int var2, long var3, long var5) {
-      if (var3 >= var5) {
-         return var2;
-      } else if (var3 < 0L) {
-         return var1;
+   private static int ease(int kind, int from, int toValue, long elapsed, long duration) {
+      if (elapsed >= duration) {
+         return toValue;
+      } else if (elapsed < 0L) {
+         return from;
       } else {
-         int var7 = 0;
-         switch (var0) {
+         int value = 0;
+         switch (kind) {
             case 0:
             default:
-               return (int)(var1 + var3 * (var2 - var1) / var5);
+               return (int)(from + elapsed * (toValue - from) / duration);
             case 1:
-               int var8 = (int)(var5 >> 1);
-               if (var3 < var8) {
-                  var7 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul((int)var3, 102944), var8)), 72089);
+               int half = (int)(duration >> 1);
+               if (elapsed < half) {
+                  value = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul((int)elapsed, 102944), half)), 72089);
                } else {
-                  int var9;
-                  int var10 = com.ea.sims3.FixedMath.mul(var9 = com.ea.sims3.FixedMath.div((int)var3 - var8, (int)var5 - var8), 617662);
-                  int var11 = 6554 - com.ea.sims3.FixedMath.mul(6554, var9);
-                  var7 = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(var10), var11) + 65536;
+                  int progress;
+                  int angle = com.ea.sims3.FixedMath.mul(progress = com.ea.sims3.FixedMath.div((int)elapsed - half, (int)duration - half), 617662);
+                  int amplitude = 6554 - com.ea.sims3.FixedMath.mul(6554, progress);
+                  value = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(angle), amplitude) + 65536;
                }
                break;
             case 2:
-               var7 = com.ea.sims3.FixedMath.smoothStep(0, (int)var5, (int)var3);
+               value = com.ea.sims3.FixedMath.smoothStep(0, (int)duration, (int)elapsed);
          }
 
-         return var1 + (var7 * (var2 - var1) >> 16);
+         return from + (value * (toValue - from) >> 16);
       }
    }
 
-   private void x2(int var1) {
-      if (!this.a11() && var1 != 0 && !this.a20.isRunning()) {
-         if (var1 == this.e) {
-            this.h2();
-            this.o = false;
-            this.a20.play(675, 16);
-            this.a20.frame = 1;
-            this.b7.play(677, 16);
-            this.b7.frame = 1;
+   private void startSoftKeyAnimation(int action) {
+      if (!this.isFading() && action != 0 && !this.leftSoftKeyAnimator.isRunning()) {
+         if (action == this.leftSoftKeyAction) {
+            this.releaseSoftKeys();
+            this.rightSoftKeySelected = false;
+            this.leftSoftKeyAnimator.play(675, 16);
+            this.leftSoftKeyAnimator.frame = 1;
+            this.rightSoftKeyAnimator.play(677, 16);
+            this.rightSoftKeyAnimator.frame = 1;
          } else {
-            if (var1 == this.d2) {
-               this.h2();
-               this.o = true;
-               this.a20.play(675, 16);
-               this.a20.frame = 1;
-               this.b7.play(677, 16);
-               this.b7.frame = 1;
+            if (action == this.rightSoftKeyAction) {
+               this.releaseSoftKeys();
+               this.rightSoftKeySelected = true;
+               this.leftSoftKeyAnimator.play(675, 16);
+               this.leftSoftKeyAnimator.frame = 1;
+               this.rightSoftKeyAnimator.play(677, 16);
+               this.rightSoftKeyAnimator.frame = 1;
             }
          }
       }
    }
 
-   private void y2(int var1) {
-      if (this.a11()) {
-         this.a19 = 0L;
-         this.b6 = 0L;
+   private void updateSoftKeyAnimation(int deltaMs) {
+      if (this.isFading()) {
+         this.leftSoftKeyTimer = 0L;
+         this.rightSoftKeyTimer = 0L;
       } else {
-         if (this.a19 < 400L) {
-            this.a19 += var1;
+         if (this.leftSoftKeyTimer < 400L) {
+            this.leftSoftKeyTimer += deltaMs;
          }
 
-         if (this.b6 < 400L) {
-            this.b6 += var1;
+         if (this.rightSoftKeyTimer < 400L) {
+            this.rightSoftKeyTimer += deltaMs;
          }
       }
 
-      if (this.a20.isRunning()) {
-         this.a20.advance(var1);
-         this.b7.advance(var1);
-         if (!this.a20.isRunning()) {
-            int var2 = this.o ? this.d2 : this.e;
-            if (this.a2 != null) {
-               this.a2.update(0, var2);
+      if (this.leftSoftKeyAnimator.isRunning()) {
+         this.leftSoftKeyAnimator.advance(deltaMs);
+         this.rightSoftKeyAnimator.advance(deltaMs);
+         if (!this.leftSoftKeyAnimator.isRunning()) {
+            int action = this.rightSoftKeySelected ? this.rightSoftKeyAction : this.leftSoftKeyAction;
+            if (this.screen != null) {
+               this.screen.update(0, action);
             }
          }
       }
    }
 
-   public final void b(Graphics var1) {
-      this.a(var1, 0);
+   public final void drawBottomBar(Graphics gfx) {
+      this.drawBottomBar(gfx, 0);
    }
 
-   public final void a(Graphics var1, int var2) {
-      int var3 = this.getHeight();
-      int var4 = this.getWidth();
-      int var5 = com.ea.sims3.SpriteRenderer.frameWidth(674, 0);
+   public final void drawBottomBar(Graphics gfx, int yOffset) {
+      int height = this.getHeight();
+      int width = this.getWidth();
+      int frameWidth = com.ea.sims3.SpriteRenderer.frameWidth(674, 0);
 
-      for (int var6 = 0; var6 < var4; var6 += var5) {
-         com.ea.sims3.SpriteRenderer.drawFrame(var1, 674, 0, var6, var3 + var2);
+      for (int xPos = 0; xPos < width; xPos += frameWidth) {
+         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 674, 0, xPos, height + yOffset);
       }
 
-      if (!this.a11()) {
-         this.b(var1, var2);
+      if (!this.isFading()) {
+         this.drawSoftKeys(gfx, yOffset);
       }
    }
 
-   private void b(Graphics var1, int var2) {
-      int var3 = e(this.e);
-      int var4 = e(this.d2);
-      if (b) {
-         if (var3 >= 0) {
-            SdkString var14 = this.a4(var3);
-            int var17 = a(1, 15, 0, this.b6, 400L);
-            int var20;
-            int var23 = (var20 = this.getHeight() + var17 + var2) - 7;
-            int var26 = Math.max(25, this.a(var14, 0));
-            int var28;
-            int var31;
-            int var34 = (var31 = (var28 = this.getWidth() - 11) - var26 + 4) + var28 >> 1;
-            if (this.a20.isRunning() && this.o) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.a20, var31, var20);
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.b7, var28, var20);
-               a(var1, var31 + 2, var20, var28 - var31 - 4, true);
-               this.a(var14, 0, var34, var23, 3);
+   private void drawSoftKeys(Graphics gfx, int yOffset) {
+      int leftLabelId = actionToLabelId(this.leftSoftKeyAction);
+      int rightLabelId = actionToLabelId(this.rightSoftKeyAction);
+      if (landscape) {
+         if (leftLabelId >= 0) {
+            SdkString leftTextWide = this.getString(leftLabelId);
+            int leftAnimOffsetWide = ease(1, 15, 0, this.rightSoftKeyTimer, 400L);
+            int leftYWide;
+            int leftTextYWide = (leftYWide = this.getHeight() + leftAnimOffsetWide + yOffset) - 7;
+            int leftWidthWide = Math.max(25, this.stringWidth(leftTextWide, 0));
+            int rightXWide;
+            int leftXWide;
+            int centerXWide = (leftXWide = (rightXWide = this.getWidth() - 11) - leftWidthWide + 4) + rightXWide >> 1;
+            if (this.leftSoftKeyAnimator.isRunning() && this.rightSoftKeySelected) {
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, leftXWide, leftYWide);
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightXWide, leftYWide);
+               drawDivider(gfx, leftXWide + 2, leftYWide, rightXWide - leftXWide - 4, true);
+               this.drawString(leftTextWide, 0, centerXWide, leftTextYWide, 3);
             } else {
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 677, 0, var28, var20);
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 675, 0, var31, var20);
-               a(var1, var31 + 2, var20, var28 - var31 - 4, false);
-               this.a(var14, 0, var34, var23, 3);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightXWide, leftYWide);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, leftXWide, leftYWide);
+               drawDivider(gfx, leftXWide + 2, leftYWide, rightXWide - leftXWide - 4, false);
+               this.drawString(leftTextWide, 0, centerXWide, leftTextYWide, 3);
             }
          }
 
-         if (var4 >= 0) {
-            SdkString var15 = this.a4(var4);
-            int var18 = a(1, 15, 0, this.b6, 400L);
-            int var21;
-            int var24 = (var21 = 15 + var18 + var2) - 7;
-            int var27 = Math.max(25, this.a(var15, 0));
-            int var29;
-            int var32;
-            int var35 = (var32 = (var29 = this.getWidth() - 11) - var27 + 4) + var29 >> 1;
-            if (this.a20.isRunning() && this.o) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.a20, var32, var21);
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.b7, var29, var21);
-               a(var1, var32 + 2, var21, var29 - var32 - 4, true);
-               this.a(var15, 0, var35, var24, 3);
+         if (rightLabelId >= 0) {
+            SdkString rightTextWide = this.getString(rightLabelId);
+            int rightAnimOffsetWide = ease(1, 15, 0, this.rightSoftKeyTimer, 400L);
+            int rightYWide;
+            int rightTextYWide = (rightYWide = 15 + rightAnimOffsetWide + yOffset) - 7;
+            int rightWidthWide = Math.max(25, this.stringWidth(rightTextWide, 0));
+            int rightRightXWide;
+            int rightLeftXWide;
+            int rightCenterXWide = (rightLeftXWide = (rightRightXWide = this.getWidth() - 11) - rightWidthWide + 4) + rightRightXWide >> 1;
+            if (this.leftSoftKeyAnimator.isRunning() && this.rightSoftKeySelected) {
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightLeftXWide, rightYWide);
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightRightXWide, rightYWide);
+               drawDivider(gfx, rightLeftXWide + 2, rightYWide, rightRightXWide - rightLeftXWide - 4, true);
+               this.drawString(rightTextWide, 0, rightCenterXWide, rightTextYWide, 3);
                return;
             }
 
-            com.ea.sims3.SpriteRenderer.drawFrame(var1, 677, 0, var29, var21);
-            com.ea.sims3.SpriteRenderer.drawFrame(var1, 675, 0, var32, var21);
-            a(var1, var32 + 2, var21, var29 - var32 - 4, false);
-            this.a(var15, 0, var35, var24, 3);
+            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightRightXWide, rightYWide);
+            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, rightLeftXWide, rightYWide);
+            drawDivider(gfx, rightLeftXWide + 2, rightYWide, rightRightXWide - rightLeftXWide - 4, false);
+            this.drawString(rightTextWide, 0, rightCenterXWide, rightTextYWide, 3);
          }
       } else {
-         if (var3 >= 0) {
-            SdkString var5 = this.a4(var3);
-            int var6 = a(1, 15, 0, this.a19, 400L);
-            int var7;
-            int var8 = (var7 = this.getHeight() + var6 + var2) - 7;
-            int var9 = Math.max(25, this.a(var5, 0));
-            int var11 = 11 + var9 - 4;
-            int var12 = 11 + var11 >> 1;
-            if (this.a20.isRunning() && !this.o) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.a20, 11, var7);
-               com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.b7, var11, var7);
-               a(var1, 13, var7, var11 - 11 - 4, true);
-               this.a(var5, 0, var12, var8, 3);
+         if (leftLabelId >= 0) {
+            SdkString leftText = this.getString(leftLabelId);
+            int leftAnimOffset = ease(1, 15, 0, this.leftSoftKeyTimer, 400L);
+            int leftY;
+            int leftTextY = (leftY = this.getHeight() + leftAnimOffset + yOffset) - 7;
+            int leftWidth = Math.max(25, this.stringWidth(leftText, 0));
+            int rightX = 11 + leftWidth - 4;
+            int leftCenterX = 11 + rightX >> 1;
+            if (this.leftSoftKeyAnimator.isRunning() && !this.rightSoftKeySelected) {
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, 11, leftY);
+               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightX, leftY);
+               drawDivider(gfx, 13, leftY, rightX - 11 - 4, true);
+               this.drawString(leftText, 0, leftCenterX, leftTextY, 3);
             } else {
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 677, 0, var11, var7);
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 675, 0, 11, var7);
-               a(var1, 13, var7, var11 - 11 - 4, false);
-               this.a(var5, 0, var12, var8, 3);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightX, leftY);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, 11, leftY);
+               drawDivider(gfx, 13, leftY, rightX - 11 - 4, false);
+               this.drawString(leftText, 0, leftCenterX, leftTextY, 3);
             }
          }
 
-         if (var4 >= 0) {
-            SdkString var13 = this.a4(var4);
-            int var16 = a(1, 15, 0, this.b6, 400L);
-            int var19;
-            int var22 = (var19 = this.getHeight() + var16 + var2) - 7;
-            int var25 = Math.max(25, this.a(var13, 0));
-            int var10;
-            int var30;
-            int var33 = (var30 = (var10 = this.getWidth() - 11) - var25 + 4) + var10 >> 1;
-            if (!this.a20.isRunning() || !this.o) {
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 677, 0, var10, var19);
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 675, 0, var30, var19);
-               a(var1, var30 + 2, var19, var10 - var30 - 4, false);
-               this.a(var13, 0, var33, var22, 3);
+         if (rightLabelId >= 0) {
+            SdkString rightText = this.getString(rightLabelId);
+            int rightAnimOffset = ease(1, 15, 0, this.rightSoftKeyTimer, 400L);
+            int rightY;
+            int rightTextY = (rightY = this.getHeight() + rightAnimOffset + yOffset) - 7;
+            int rightWidth = Math.max(25, this.stringWidth(rightText, 0));
+            int rightLimit;
+            int rightRightX;
+            int rightCenterX = (rightRightX = (rightLimit = this.getWidth() - 11) - rightWidth + 4) + rightLimit >> 1;
+            if (!this.leftSoftKeyAnimator.isRunning() || !this.rightSoftKeySelected) {
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightLimit, rightY);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, rightRightX, rightY);
+               drawDivider(gfx, rightRightX + 2, rightY, rightLimit - rightRightX - 4, false);
+               this.drawString(rightText, 0, rightCenterX, rightTextY, 3);
                return;
             }
 
-            com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.a20, var30, var19);
-            com.ea.sims3.SpriteRenderer.drawAnimator(var1, this.b7, var10, var19);
-            a(var1, var30 + 2, var19, var10 - var30 - 4, true);
-            this.a(var13, 0, var33, var22, 3);
+            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightRightX, rightY);
+            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightLimit, rightY);
+            drawDivider(gfx, rightRightX + 2, rightY, rightLimit - rightRightX - 4, true);
+            this.drawString(rightText, 0, rightCenterX, rightTextY, 3);
          }
       }
    }
 
-   private static void a(Graphics var0, int var1, int var2, int var3, boolean var4) {
-      int var5 = var4 ? 1 : 0;
-      int var6 = var0.getClipX();
-      int var7 = var0.getClipY();
-      int var8 = var0.getClipWidth();
-      int var9 = var0.getClipHeight();
-      var0.setClip(var1, var7, var3, var9);
-      com.ea.sims3.SpriteRenderer.drawFrame(var0, 676, var5, var1, var2);
-      var0.setClip(var6, var7, var8, var9);
+   private static void drawDivider(Graphics gfx, int xPos, int yPos, int width, boolean active) {
+      int frame = active ? 1 : 0;
+      int clipX = gfx.getClipX();
+      int clipY = gfx.getClipY();
+      int clipWidth = gfx.getClipWidth();
+      int clipHeight = gfx.getClipHeight();
+      gfx.setClip(xPos, clipY, width, clipHeight);
+      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 676, frame, xPos, yPos);
+      gfx.setClip(clipX, clipY, clipWidth, clipHeight);
    }
 
-   public final void o2() {
-      this.B = 0;
+   public final void resetTileLoad() {
+      this.tileLoadCursor = 0;
    }
 
-   public final boolean a13(int var1) {
-      return this.a2(var1, null, null, 0);
+   public final boolean loadTilesFor(int mask) {
+      return this.loadNextTileGroup(mask, null, null, 0);
    }
 
-   public final boolean a2(int var1, int[] var2, int[] var3, int var4) {
-      ResourceLoader var6 = this.a6;
-      int var7 = 0;
+   public final boolean loadNextTileGroup(int mask, int[] recolorFrom, int[] recolorTo, int recolorIndex) {
+      ResourceLoader loader = this.resources;
+      int loaded = 0;
 
-      int var8;
-      for (var8 = this.B; var8 << 1 < this.g2.length && var7 < 2; var8++) {
-         if ((this.g2[(var8 << 1) + 1] & var1) != 0) {
-            int var9 = 1;
+      int index;
+      for (index = this.tileLoadCursor; index << 1 < this.tileMasks.length && loaded < 2; index++) {
+         if ((this.tileMasks[(index << 1) + 1] & mask) != 0) {
+            int attempt = 1;
 
-            while (!com.ea.sims3.SpriteRenderer.loadTileRecolored(var6, this.g2[var8 << 1], var2, var3, var4) && var9 < 2) {
-               var9++;
-               m2();
+            while (!com.ea.sims3.SpriteRenderer.loadTileRecolored(loader, this.tileMasks[index << 1], recolorFrom, recolorTo, recolorIndex) && attempt < 2) {
+               attempt++;
+               gcYield();
             }
 
-            if (var9 >= 2) {
+            if (attempt >= 2) {
                throw new Error("OOM");
             }
 
-            var7++;
+            loaded++;
          }
       }
 
-      this.B = var8;
-      return var8 << 1 == this.g2.length;
+      this.tileLoadCursor = index;
+      return index << 1 == this.tileMasks.length;
    }
 
-   public final void j2(int var1) {
-      this.a(var1, null, null, 0);
+   public final void loadTilesBlocking(int mask) {
+      this.loadTiles(mask, null, null, 0);
    }
 
-   public final void a(int var1, int[] var2, int[] var3, int var4) {
-      this.o2();
+   public final void loadTiles(int mask, int[] recolorFrom, int[] recolorTo, int recolorIndex) {
+      this.resetTileLoad();
 
-      while (!this.a2(var1, var2, var3, var4)) {
+      while (!this.loadNextTileGroup(mask, recolorFrom, recolorTo, recolorIndex)) {
       }
    }
 
-   public final void c2(int var1, int var2) {
-      int[] var3 = this.g2;
+   public final void unloadTiles(int mask, int variant) {
+      int[] masks = this.tileMasks;
 
-      for (int var4 = 0; var4 << 1 < var3.length; var4++) {
-         if ((var3[(var4 << 1) + 1] & var1) != 0) {
-            int var5 = var3[var4 << 1];
-            if (var2 == -1) {
-               for (int var6 = 0; var6 < 4; var6++) {
-                  com.ea.sims3.SpriteRenderer.unloadTile(var5, var6);
+      for (int index = 0; index << 1 < masks.length; index++) {
+         if ((masks[(index << 1) + 1] & mask) != 0) {
+            int tileId = masks[index << 1];
+            if (variant == -1) {
+               for (int variantIndex = 0; variantIndex < 4; variantIndex++) {
+                  com.ea.sims3.SpriteRenderer.unloadTile(tileId, variantIndex);
                }
             } else {
-               com.ea.sims3.SpriteRenderer.unloadTile(var5, var2);
+               com.ea.sims3.SpriteRenderer.unloadTile(tileId, variant);
             }
          }
       }
 
-      m2();
+      gcYield();
    }
 
-   public static final void a(Object[] var0, Object var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         var0[var2] = var1;
+   public static final void fillObjects(Object[] array, Object value) {
+      for (int index = 0; index < array.length; index++) {
+         array[index] = value;
       }
    }
 
-   public static final void a3(byte[] var0, int var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         var0[var2] = (byte)var1;
+   public static final void fillBytes(byte[] array, int value) {
+      for (int index = 0; index < array.length; index++) {
+         array[index] = (byte)value;
       }
    }
 
-   public static final void a2(short[] var0, int var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         var0[var2] = (short)var1;
+   public static final void fillShorts(short[] array, int value) {
+      for (int index = 0; index < array.length; index++) {
+         array[index] = (short)value;
       }
    }
 
-   public static final void a(int[] var0, int var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         var0[var2] = var1;
+   public static final void fillInts(int[] array, int value) {
+      for (int index = 0; index < array.length; index++) {
+         array[index] = value;
       }
    }
 
-   public static final void a(int[][] var0, int var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         a(var0[var2], var1);
+   public static final void fillIntMatrix(int[][] matrix, int value) {
+      for (int row = 0; row < matrix.length; row++) {
+         fillInts(matrix[row], value);
       }
    }
 
-   public static final void a(short[][] var0, int var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         a2(var0[var2], var1);
+   public static final void fillShortMatrix(short[][] matrix, int value) {
+      for (int row = 0; row < matrix.length; row++) {
+         fillShorts(matrix[row], value);
       }
    }
 
-   public static final int a(int var0, int[] var1) {
-      return b(var0, var1, 0);
+   public static final int indexOfInt(int value, int[] array) {
+      return indexOfIntFrom(value, array, 0);
    }
 
-   public static final int a(int var0, short[] var1) {
-      return a(var0, var1, 0);
+   public static final int indexOfShort(int value, short[] array) {
+      return indexOfShortFrom(value, array, 0);
    }
 
-   public static final int a(int var0, byte[] var1) {
-      return a(var0, var1, 0);
+   public static final int indexOfByte(int value, byte[] array) {
+      return indexOfByteFrom(value, array, 0);
    }
 
-   public static final int a(Object var0, Object[] var1) {
-      return a(var0, var1, 0);
+   public static final int indexOfObject(Object target, Object[] array) {
+      return indexOfObjectFrom(target, array, 0);
    }
 
-   private static int b(int var0, int[] var1, int var2) {
-      for (int var3 = var2; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            return var3;
+   private static int indexOfIntFrom(int value, int[] array, int from) {
+      for (int index = from; index < array.length; index++) {
+         if (array[index] == value) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int a(int var0, short[] var1, int var2) {
-      for (int var3 = var2; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            return var3;
+   public static final int indexOfShortFrom(int value, short[] array, int from) {
+      for (int index = from; index < array.length; index++) {
+         if (array[index] == value) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int a(int var0, byte[] var1, int var2) {
-      for (int var3 = var2; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            return var3;
+   public static final int indexOfByteFrom(int value, byte[] array, int from) {
+      for (int index = from; index < array.length; index++) {
+         if (array[index] == value) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   private static int a(Object var0, Object[] var1, int var2) {
-      for (int var3 = var2; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            return var3;
+   private static int indexOfObjectFrom(Object target, Object[] array, int from) {
+      for (int index = from; index < array.length; index++) {
+         if (array[index] == target) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int b(int var0, short[] var1) {
-      return e(var0, var1, 0);
+   public static final int indexOfAnyFlag(int mask, short[] array) {
+      return indexOfAnyFlagFrom(mask, array, 0);
    }
 
-   private static int e(int var0, short[] var1, int var2) {
-      for (int var3 = var2; var3 < var1.length; var3++) {
-         if ((var1[var3] & var0) != 0) {
-            return var3;
+   private static int indexOfAnyFlagFrom(int mask, short[] array, int from) {
+      for (int index = from; index < array.length; index++) {
+         if ((array[index] & mask) != 0) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int b(int var0, byte[] var1, int var2) {
-      int var3 = 0;
+   public static final int nthIndexNotEqualByte(int occurrence, byte[] array, int excluded) {
+      int count = 0;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if (var1[var4] != var2 && var3++ == var0) {
-            return var4;
+      for (int index = 0; index < array.length; index++) {
+         if (array[index] != excluded && count++ == occurrence) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int b(int var0, short[] var1, int var2) {
-      int var3 = 0;
+   public static final int nthIndexNotEqualShort(int occurrence, short[] array, int excluded) {
+      int count = 0;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if (var1[var4] != var2 && var3++ == var0) {
-            return var4;
+      for (int index = 0; index < array.length; index++) {
+         if (array[index] != excluded && count++ == occurrence) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int c(int var0, short[] var1, int var2) {
-      int var3 = 0;
+   public static final int nthIndexWithFlag(int occurrence, short[] array, int mask) {
+      int count = 0;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if ((var1[var4] & var2) != 0 && var3++ == var0) {
-            return var4;
+      for (int index = 0; index < array.length; index++) {
+         if ((array[index] & mask) != 0 && count++ == occurrence) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int a(int var0, int[] var1, int var2) {
-      int var3 = 0;
+   public static final int nthIndexWithFlagInt(int occurrence, int[] array, int mask) {
+      int count = 0;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if ((var1[var4] & var2) != 0 && var3++ == var0) {
-            return var4;
+      for (int index = 0; index < array.length; index++) {
+         if ((array[index] & mask) != 0 && count++ == occurrence) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public static final int c(int var0, short[] var1) {
-      int var2 = 0;
+   public static final int countEqualShorts(int value, short[] array) {
+      int count = 0;
 
-      for (int var3 = 0; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            var2++;
+      for (int index = 0; index < array.length; index++) {
+         if (array[index] == value) {
+            count++;
          }
       }
 
-      return var2;
+      return count;
    }
 
-   public static final int b(int var0, byte[] var1) {
-      int var2 = 0;
+   public static final int countEqualBytes(int value, byte[] array) {
+      int count = 0;
 
-      for (int var3 = 0; var3 < var1.length; var3++) {
-         if (var1[var3] == var0) {
-            var2++;
+      for (int index = 0; index < array.length; index++) {
+         if (array[index] == value) {
+            count++;
          }
       }
 
-      return var2;
+      return count;
    }
 
-   public static final int b(int var0, int[] var1) {
-      return c(var0, var1, 0);
+   public static final int countAnyFlagInt(int mask, int[] array) {
+      return countAnyFlagIntFrom(mask, array, 0);
    }
 
-   private static int c(int var0, int[] var1, int var2) {
-      int var3 = 0;
+   private static int countAnyFlagIntFrom(int mask, int[] array, int from) {
+      int count = 0;
 
-      for (int var4 = var2; var4 < var1.length; var4++) {
-         if ((var1[var4] & var0) != 0) {
-            var3++;
+      for (int index = from; index < array.length; index++) {
+         if ((array[index] & mask) != 0) {
+            count++;
          }
       }
 
-      return var3;
+      return count;
    }
 
-   public static final int d(int var0, short[] var1) {
-      return d(var0, var1, 0);
+   public static final int countAllFlags(int mask, short[] array) {
+      return countAllFlagsFrom(mask, array, 0);
    }
 
-   public static final int d(int var0, short[] var1, int var2) {
-      int var3 = 0;
+   public static final int countAllFlagsFrom(int mask, short[] array, int from) {
+      int count = 0;
 
-      for (int var4 = var2; var4 < var1.length; var4++) {
-         if ((var1[var4] & var0) != 0) {
-            var3++;
+      for (int index = from; index < array.length; index++) {
+         if ((array[index] & mask) != 0) {
+            count++;
          }
       }
 
-      return var3;
+      return count;
    }
 
-   public static void b2(short[] var0, int var1) {
-      a(var0, var1, -1);
+   public static void initList(short[] list, int value) {
+      initListWith(list, value, -1);
    }
 
-   public static void a(short[] var0, int var1, int var2) {
-      var0[1] = (short)var1;
-      var0[2] = 0;
-      var0[3] = 0;
-      var0[4] = (short)var2;
-      var0[0] = 0;
+   public static void initListWith(short[] list, int value, int extra) {
+      list[1] = (short)value;
+      list[2] = 0;
+      list[3] = 0;
+      list[4] = (short)extra;
+      list[0] = 0;
    }
 
-   public static void c2(short[] var0, int var1) {
-      short var2 = var0[0];
-      var0[5 + var2] = (short)var1;
-      var0[0] = (short)(var2 + 1);
+   public static void addToList(short[] list, int value) {
+      short count = list[0];
+      list[5 + count] = (short)value;
+      list[0] = (short)(count + 1);
    }
 
-   public static boolean a3(short[] var0, int var1) {
-      int var2 = var0[0] + 5;
+   public static boolean listContains(short[] list, int value) {
+      int end = list[0] + 5;
 
-      for (int var3 = 5; var3 < var2; var3++) {
-         if (var1 == var0[var3]) {
+      for (int index = 5; index < end; index++) {
+         if (value == list[index]) {
             return true;
          }
       }
@@ -1844,68 +1844,42 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       return false;
    }
 
-   public static void a(short[] var0, short[] var1) {
-      System.arraycopy(var1, 0, var0, 0, 5 + var1[0]);
+   public static void copyList(short[] target, short[] source) {
+      System.arraycopy(source, 0, target, 0, 5 + source[0]);
    }
 
-   public static void a2(short[] var0) {
-      short var1;
-      if ((var1 = var0[4]) > 0) {
-         short var2 = var0[2];
-         int var3 = var0[3];
-         if (var2 < var3) {
-            var3 = var2;
-         } else if (var2 >= var3 + var1) {
-            var3 = Math.max(0, var2 - var1 + 1);
+   public static void clampListIndex(short[] list) {
+      short maxValue;
+      if ((maxValue = list[4]) > 0) {
+         short value = list[2];
+         int start = list[3];
+         if (value < start) {
+            start = value;
+         } else if (value >= start + maxValue) {
+            start = Math.max(0, value - maxValue + 1);
          }
 
-         var0[3] = (short)var3;
+         list[3] = (short)start;
       }
    }
 
-   public final boolean b3(short[] var1, int var2) {
-      short var3 = var1[0];
-      short var4 = var1[2];
-      if ((var2 & 8196) != 0) {
-         this.c4(8196);
-         var1[2] = (short)((var4 + var3 - 1) % var3);
+   public final boolean navigateLeftRight(short[] list, int actions) {
+      short count = list[0];
+      short index = list[2];
+      if ((actions & 8196) != 0) {
+         this.clearAction(8196);
+         list[2] = (short)((index + count - 1) % count);
       }
 
-      if ((var2 & 16640) != 0) {
-         this.c4(16640);
-         var1[2] = (short)((var4 + 1) % var3);
+      if ((actions & 16640) != 0) {
+         this.clearAction(16640);
+         list[2] = (short)((index + 1) % count);
       }
 
-      if (var1[2] != var4) {
-         a2(var1);
-         if (this.a6() != null) {
-            this.a7.pendingSound = 0;
-         }
-
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   public final boolean c3(short[] var1, int var2) {
-      short var3 = var1[0];
-      short var4 = var1[2];
-      if ((var2 & 32784) != 0) {
-         this.c4(32784);
-         var1[2] = (short)((var4 + var3 - 1) % var3);
-      }
-
-      if ((var2 & 65600) != 0) {
-         this.c4(65600);
-         var1[2] = (short)((var4 + 1) % var3);
-      }
-
-      if (var1[2] != var4) {
-         a2(var1);
-         this.i2();
-         if (this.a6() != null) {
-            this.a7.pendingSound = 1;
+      if (list[2] != index) {
+         clampListIndex(list);
+         if (this.gameScreen() != null) {
+            this.sound.pendingSound = 0;
          }
 
          return true;
@@ -1914,753 +1888,779 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
    }
 
-   public static void d2(short[] var0, int var1) {
-      for (int var2 = 5; var2 < var0.length; var2++) {
-         if (var0[var2] == var1) {
-            var0[2] = (short)(var2 - 5);
+   public final boolean navigateUpDown(short[] list, int actions) {
+      short count = list[0];
+      short index = list[2];
+      if ((actions & 32784) != 0) {
+         this.clearAction(32784);
+         list[2] = (short)((index + count - 1) % count);
+      }
+
+      if ((actions & 65600) != 0) {
+         this.clearAction(65600);
+         list[2] = (short)((index + 1) % count);
+      }
+
+      if (list[2] != index) {
+         clampListIndex(list);
+         this.resetMarquees();
+         if (this.gameScreen() != null) {
+            this.sound.pendingSound = 1;
+         }
+
+         return true;
+      } else {
+         return false;
+      }
+   }
+
+   public static void selectListValue(short[] list, int value) {
+      for (int index = 5; index < list.length; index++) {
+         if (list[index] == value) {
+            list[2] = (short)(index - 5);
             return;
          }
       }
    }
 
-   private void z() {
-      this.p = true;
-      this.g3 = true;
-      this.h2 = true;
-      this.i = true;
-      this.j2 = false;
-      this.c6 = 0L;
-      this.d5 = 0L;
-      this.e5 = 0L;
-      this.f5 = 0L;
-      this.i2 = -1;
-      this.C();
+   private void resetSettings() {
+      this.vibrationEnabled = true;
+      this.tutorialsEnabled = true;
+      this.autonomousEnabled = true;
+      this.savePromptsEnabled = true;
+      this.gameStarted = false;
+      this.flagsLow = 0L;
+      this.flagsHigh = 0L;
+      this.visitedFlagsLow = 0L;
+      this.visitedFlagsHigh = 0L;
+      this.language = -1;
+      this.resetProfiles();
    }
 
-   private void A() {
-      RecordStore var1 = null;
-      ByteArrayInputStream var2 = null;
-      DataInputStream var3 = null;
+   private void loadSettings() {
+      RecordStore store = null;
+      ByteArrayInputStream bytes = null;
+      DataInputStream input = null;
 
       try {
-         byte[] var4 = (var1 = RecordStore.openRecordStore("sim3set", false)).getRecord(1);
-         var2 = new ByteArrayInputStream(var4);
-         int var5 = (var3 = new DataInputStream(var2)).readInt();
-         int var6 = var3.readInt();
-         if (var5 == 86 && var6 == 2) {
-            this.p = var3.readBoolean();
-            this.g3 = var3.readBoolean();
-            this.h2 = var3.readBoolean();
-            this.i = var3.readBoolean();
-            this.j2 = var3.readBoolean();
-            this.c6 = var3.readLong();
-            this.d5 = var3.readLong();
-            this.e5 = var3.readLong();
-            this.f5 = var3.readLong();
-            this.i2 = var3.readByte();
+         byte[] data = (store = RecordStore.openRecordStore("sim3set", false)).getRecord(1);
+         bytes = new ByteArrayInputStream(data);
+         int version = (input = new DataInputStream(bytes)).readInt();
+         int format = input.readInt();
+         if (version == 86 && format == 2) {
+            this.vibrationEnabled = input.readBoolean();
+            this.tutorialsEnabled = input.readBoolean();
+            this.autonomousEnabled = input.readBoolean();
+            this.savePromptsEnabled = input.readBoolean();
+            this.gameStarted = input.readBoolean();
+            this.flagsLow = input.readLong();
+            this.flagsHigh = input.readLong();
+            this.visitedFlagsLow = input.readLong();
+            this.visitedFlagsHigh = input.readLong();
+            this.language = input.readByte();
 
-            for (int var7 = 0; var7 != 2; var7++) {
-               boolean var8 = false;
-               SdkString var10 = this.g4[var7];
+            for (int slot = 0; slot != 2; slot++) {
+               boolean done = false;
+               SdkString name = this.profileNames[slot];
 
-               for (int var11 = 0; var11 < 8; var11++) {
-                  char var9;
-                  if ((var9 = var3.readChar()) == ' ') {
-                     var8 = true;
-                  } else if (!var8) {
-                     var10.setLength(var11 + 1);
-                     var10.setCharAt(var11, var9);
+               for (int charIndex = 0; charIndex < 8; charIndex++) {
+                  char character;
+                  if ((character = input.readChar()) == ' ') {
+                     done = true;
+                  } else if (!done) {
+                     name.setLength(charIndex + 1);
+                     name.setCharAt(charIndex, character);
                   }
                }
 
-               if (!var8) {
-                  var10.setLength(8);
+               if (!done) {
+                  name.setLength(8);
                }
 
-               this.a21[var7] = var3.readBoolean();
+               this.profileUsed[slot] = input.readBoolean();
             }
          } else {
-            this.z();
-            this.c3();
+            this.resetSettings();
+            this.saveSettings();
          }
-      } catch (RecordStoreNotFoundException var13) {
-         this.z();
-      } catch (Exception var14) {
+      } catch (RecordStoreNotFoundException notFound) {
+         this.resetSettings();
+      } catch (Exception ignored) {
       }
 
       try {
-         var3.close();
-         var2.close();
-         if (var1 != null) {
-            var1.closeRecordStore();
+         input.close();
+         bytes.close();
+         if (store != null) {
+            store.closeRecordStore();
          }
-      } catch (Exception var12) {
+      } catch (Exception closeError) {
       }
    }
 
-   public final boolean c3() {
+   public final boolean saveSettings() {
       try {
          RecordStore.deleteRecordStore("sim3set");
-      } catch (Exception var10) {
+      } catch (Exception deleteError) {
       }
 
-      boolean var1 = false;
-      RecordStore var2 = null;
-      ByteArrayOutputStream var3 = new ByteArrayOutputStream();
-      DataOutputStream var4 = new DataOutputStream(var3);
+      boolean failed = false;
+      RecordStore store = null;
+      ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+      DataOutputStream out = new DataOutputStream(bytes);
 
       try {
-         var4.writeInt(86);
-         var4.writeInt(2);
-         var4.writeBoolean(this.p);
-         var4.writeBoolean(this.g3);
-         var4.writeBoolean(this.h2);
-         var4.writeBoolean(this.i);
-         var4.writeBoolean(this.j2);
-         var4.writeLong(this.c6);
-         var4.writeLong(this.d5);
-         var4.writeLong(this.e5);
-         var4.writeLong(this.f5);
-         var4.writeByte(this.i2);
+         out.writeInt(86);
+         out.writeInt(2);
+         out.writeBoolean(this.vibrationEnabled);
+         out.writeBoolean(this.tutorialsEnabled);
+         out.writeBoolean(this.autonomousEnabled);
+         out.writeBoolean(this.savePromptsEnabled);
+         out.writeBoolean(this.gameStarted);
+         out.writeLong(this.flagsLow);
+         out.writeLong(this.flagsHigh);
+         out.writeLong(this.visitedFlagsLow);
+         out.writeLong(this.visitedFlagsHigh);
+         out.writeByte(this.language);
 
-         for (int var5 = 0; var5 != 2; var5++) {
-            SdkString var6 = this.g4[var5];
+         for (int slot = 0; slot != 2; slot++) {
+            SdkString name = this.profileNames[slot];
 
-            for (int var7 = 0; var7 != 8; var7++) {
-               char var8 = ' ';
-               if (var7 < var6.length) {
-                  var8 = var6.charAt(var7);
+            for (int charIndex = 0; charIndex != 8; charIndex++) {
+               char character = ' ';
+               if (charIndex < name.length) {
+                  character = name.charAt(charIndex);
                }
 
-               var4.writeChar(var8);
+               out.writeChar(character);
             }
 
-            var4.writeBoolean(this.a21[var5]);
+            out.writeBoolean(this.profileUsed[slot]);
          }
 
-         byte[] var12 = var3.toByteArray();
-         if ((var2 = RecordStore.openRecordStore("sim3set", true)).getNumRecords() == 0) {
-            var2.addRecord(var12, 0, var12.length);
+         byte[] data = bytes.toByteArray();
+         if ((store = RecordStore.openRecordStore("sim3set", true)).getNumRecords() == 0) {
+            store.addRecord(data, 0, data.length);
          } else {
-            var2.setRecord(1, var12, 0, var12.length);
+            store.setRecord(1, data, 0, data.length);
          }
-      } catch (Exception var11) {
-         var1 = true;
+      } catch (Exception writeError) {
+         failed = true;
       }
 
       try {
-         var4.close();
-         var3.close();
-         var2.closeRecordStore();
-      } catch (Exception var9) {
-         var1 = true;
+         out.close();
+         bytes.close();
+         store.closeRecordStore();
+      } catch (Exception closeError) {
+         failed = true;
       }
 
-      return !var1;
+      return !failed;
    }
 
-   public final void p2() {
-      this.C = 0;
-      this.u2();
-      this.a23.h2();
-      this.a24.b4();
+   public final void resetGameData() {
+      this.progressFlags = 0;
+      this.clearNewFlags();
+      this.neighborhood.resetAllState();
+      this.lot.resetStages();
    }
 
-   private void B() {
-      RecordStore var1 = null;
-      ByteArrayInputStream var2 = null;
-      DataInputStream var3 = null;
+   private void loadGameData() {
+      RecordStore store = null;
+      ByteArrayInputStream bytes = null;
+      DataInputStream input = null;
 
       try {
-         byte[] var4 = (var1 = RecordStore.openRecordStore("sim3dat" + this.j, false)).getRecord(1);
-         var2 = new ByteArrayInputStream(var4);
-         if ((var3 = new DataInputStream(var2)).readInt() == 86) {
-            this.C = var3.readInt();
-            this.a23.a2(var3);
-            this.a24.a2(var3);
-            this.l2 = 0;
+         byte[] data = (store = RecordStore.openRecordStore("sim3dat" + this.profileSlot, false)).getRecord(1);
+         bytes = new ByteArrayInputStream(data);
+         if ((input = new DataInputStream(bytes)).readInt() == 86) {
+            this.progressFlags = input.readInt();
+            this.neighborhood.load(input);
+            this.lot.readObjects(input);
+            this.houseIndex = 0;
          } else {
-            this.p2();
-            this.d3();
+            this.resetGameData();
+            this.saveGameData();
          }
-      } catch (Exception var7) {
-         this.p2();
-         this.d3();
+      } catch (Exception loadError) {
+         this.resetGameData();
+         this.saveGameData();
       }
 
       try {
-         var3.close();
-         var2.close();
-         if (var1 != null) {
-            var1.closeRecordStore();
+         input.close();
+         bytes.close();
+         if (store != null) {
+            store.closeRecordStore();
          }
-      } catch (Exception var6) {
+      } catch (Exception closeError) {
       }
    }
 
-   public final boolean d3() {
-      String var1 = "sim3dat" + this.j;
+   public final boolean saveGameData() {
+      String recordName = "sim3dat" + this.profileSlot;
 
       try {
-         RecordStore.deleteRecordStore(var1);
-      } catch (Exception var9) {
+         RecordStore.deleteRecordStore(recordName);
+      } catch (Exception deleteError) {
       }
 
-      this.c6 = this.c6 | this.g5;
-      this.d5 = this.d5 | this.h3;
-      this.e5 = this.e5 | this.i3;
-      this.f5 = this.f5 | this.j3;
-      this.c3();
-      boolean var2 = false;
-      RecordStore var3 = null;
-      ByteArrayOutputStream var4 = new ByteArrayOutputStream();
-      DataOutputStream var5 = new DataOutputStream(var4);
+      this.flagsLow = this.flagsLow | this.newFlagsLow;
+      this.flagsHigh = this.flagsHigh | this.newFlagsHigh;
+      this.visitedFlagsLow = this.visitedFlagsLow | this.newVisitedFlagsLow;
+      this.visitedFlagsHigh = this.visitedFlagsHigh | this.newVisitedFlagsHigh;
+      this.saveSettings();
+      boolean failed = false;
+      RecordStore store = null;
+      ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+      DataOutputStream out = new DataOutputStream(bytes);
 
       try {
-         var5.writeInt(86);
-         var5.writeInt(this.C);
-         this.a23.a(var5);
-         this.a24.a(var5);
-         byte[] var6 = var4.toByteArray();
-         if ((var3 = RecordStore.openRecordStore(var1, true)).getNumRecords() == 0) {
-            var3.addRecord(var6, 0, var6.length);
+         out.writeInt(86);
+         out.writeInt(this.progressFlags);
+         this.neighborhood.save(out);
+         this.lot.writeObjects(out);
+         byte[] data = bytes.toByteArray();
+         if ((store = RecordStore.openRecordStore(recordName, true)).getNumRecords() == 0) {
+            store.addRecord(data, 0, data.length);
          } else {
-            var3.setRecord(1, var6, 0, var6.length);
+            store.setRecord(1, data, 0, data.length);
          }
-      } catch (Exception var8) {
-         var2 = true;
+      } catch (Exception writeError) {
+         failed = true;
       }
 
       try {
-         var5.close();
-         var4.close();
-         if (var3 != null) {
-            var3.closeRecordStore();
+         out.close();
+         bytes.close();
+         if (store != null) {
+            store.closeRecordStore();
          }
-      } catch (Exception var7) {
-         var2 = true;
+      } catch (Exception closeError) {
+         failed = true;
       }
 
-      return !var2;
+      return !failed;
    }
 
-   public final int c(int var1) {
-      if (var1 == 79) {
-         return this.a7.enabled ? 87 : 88;
-      } else if (var1 == 80) {
-         return this.p ? 87 : 88;
-      } else if (var1 == 81) {
-         return this.g3 ? 87 : 88;
-      } else if (var1 == 82) {
-         return this.h2 ? 87 : 88;
-      } else if (var1 == 83) {
-         return this.i ? 87 : 88;
+   public final int optionStringId(int optionId) {
+      if (optionId == 79) {
+         return this.sound.enabled ? 87 : 88;
+      } else if (optionId == 80) {
+         return this.vibrationEnabled ? 87 : 88;
+      } else if (optionId == 81) {
+         return this.tutorialsEnabled ? 87 : 88;
+      } else if (optionId == 82) {
+         return this.autonomousEnabled ? 87 : 88;
+      } else if (optionId == 83) {
+         return this.savePromptsEnabled ? 87 : 88;
       } else {
          return -1;
       }
    }
 
-   public final int e() {
-      return this.g4[this.j].length;
+   public final int profileNameLength() {
+      return this.profileNames[this.profileSlot].length;
    }
 
-   public final void q2() {
-      SdkString var1;
-      (var1 = this.g4[this.j]).setLength(0);
+   public final void clearProfileName() {
+      SdkString name;
+      (name = this.profileNames[this.profileSlot]).setLength(0);
    }
 
-   public final void a(int var1, char var2) {
-      this.g4[this.j].setCharAt(var1, var2);
+   public final void setProfileNameChar(int index, char character) {
+      this.profileNames[this.profileSlot].setCharAt(index, character);
    }
 
-   public final void b(int var1, char var2) {
-      SdkString var3;
-      int var4 = (var3 = this.g4[this.j]).length;
-      var3.setLength(var3.length + 1);
+   public final void insertProfileNameChar(int index, char character) {
+      SdkString name;
+      int length = (name = this.profileNames[this.profileSlot]).length;
+      name.setLength(name.length + 1);
 
-      while (var1 < var4) {
-         char var5 = var3.charAt(var4 - 1);
-         var3.setCharAt(var4, var5);
-         var4--;
+      while (index < length) {
+         char moved = name.charAt(length - 1);
+         name.setCharAt(length, moved);
+         length--;
       }
 
-      var3.setCharAt(var1, var2);
+      name.setCharAt(index, character);
    }
 
-   public final void k2(int var1) {
-      SdkString var2;
-      int var3 = (var2 = this.g4[this.j]).length - 1;
+   public final void deleteProfileNameChar(int index) {
+      SdkString name;
+      int lastIndex = (name = this.profileNames[this.profileSlot]).length - 1;
 
-      while (var1 != var3) {
-         char var4 = var2.charAt(var1 + 1);
-         var2.setCharAt(var1, var4);
-         var1++;
+      while (index != lastIndex) {
+         char moved = name.charAt(index + 1);
+         name.setCharAt(index, moved);
+         index++;
       }
 
-      var2.setCharAt(var1, ' ');
-      var2.setLength(var3);
+      name.setCharAt(index, ' ');
+      name.setLength(lastIndex);
    }
 
-   public final void l2(int var1) {
-      this.j = var1;
-      if (this.e3()) {
-         this.B();
-      }
-   }
-
-   public final SdkString b2() {
-      return this.g4[this.j];
-   }
-
-   public final SdkString b3(int var1) {
-      return this.g4[var1];
-   }
-
-   public final boolean e3() {
-      return this.a21[this.j];
-   }
-
-   public final boolean b8(int var1) {
-      return this.a21[var1];
-   }
-
-   private void C() {
-      for (int var1 = 0; var1 < 2; var1++) {
-         this.m2(var1);
+   public final void selectProfile(int slot) {
+      this.profileSlot = slot;
+      if (this.isProfileUsed()) {
+         this.loadGameData();
       }
    }
 
-   public final void m2(int var1) {
-      this.a21[var1] = false;
+   public final SdkString profileName() {
+      return this.profileNames[this.profileSlot];
    }
 
-   public final void r2() {
-      this.a21[this.j] = true;
-      this.C = 0;
-      this.c3();
-      this.a23.g2();
-      this.d3();
+   public final SdkString profileNameAt(int slot) {
+      return this.profileNames[slot];
    }
 
-   public final void s2() {
-      this.B();
-      this.l2 = 0;
+   public final boolean isProfileUsed() {
+      return this.profileUsed[this.profileSlot];
    }
 
-   public final boolean c5(int var1) {
-      return (1 << var1 & this.C) != 0;
+   public final boolean isProfileUsedAt(int slot) {
+      return this.profileUsed[slot];
    }
 
-   public final void n2(int var1) {
-      this.C |= 1 << var1;
+   private void resetProfiles() {
+      for (int slot = 0; slot < 2; slot++) {
+         this.clearProfile(slot);
+      }
    }
 
-   public final void t2() {
-      this.j2 = true;
-      this.c3();
+   public final void clearProfile(int slot) {
+      this.profileUsed[slot] = false;
    }
 
-   private void D() {
-      this.j2 = false;
-      this.c6 = 0L;
-      this.d5 = 0L;
-      this.e5 = 0L;
-      this.f5 = 0L;
+   public final void commitProfile() {
+      this.profileUsed[this.profileSlot] = true;
+      this.progressFlags = 0;
+      this.saveSettings();
+      this.neighborhood.completeAllTips();
+      this.saveGameData();
    }
 
-   public final void u2() {
-      this.g5 = 0L;
-      this.h3 = 0L;
-      this.i3 = 0L;
-      this.j3 = 0L;
+   public final void reloadGameData() {
+      this.loadGameData();
+      this.houseIndex = 0;
    }
 
-   public final boolean d4(int var1) {
-      if (var1 < 64) {
-         long var4 = 1L << var1;
-         return ((this.c6 | this.g5) & var4) != 0L;
+   public final boolean hasProgressFlag(int flag) {
+      return (1 << flag & this.progressFlags) != 0;
+   }
+
+   public final void setProgressFlag(int flag) {
+      this.progressFlags |= 1 << flag;
+   }
+
+   public final void markGameStarted() {
+      this.gameStarted = true;
+      this.saveSettings();
+   }
+
+   private void resetProgressFlags() {
+      this.gameStarted = false;
+      this.flagsLow = 0L;
+      this.flagsHigh = 0L;
+      this.visitedFlagsLow = 0L;
+      this.visitedFlagsHigh = 0L;
+   }
+
+   public final void clearNewFlags() {
+      this.newFlagsLow = 0L;
+      this.newFlagsHigh = 0L;
+      this.newVisitedFlagsLow = 0L;
+      this.newVisitedFlagsHigh = 0L;
+   }
+
+   public final boolean hasFlag(int flag) {
+      if (flag < 64) {
+         long lowBit = 1L << flag;
+         return ((this.flagsLow | this.newFlagsLow) & lowBit) != 0L;
       } else {
-         long var2 = 1L << var1 - 64;
-         return ((this.d5 | this.h3) & var2) != 0L;
+         long highBit = 1L << flag - 64;
+         return ((this.flagsHigh | this.newFlagsHigh) & highBit) != 0L;
       }
    }
 
-   public final void o2(int var1) {
-      if (var1 < 64) {
-         long var4 = 1L << var1;
-         this.g5 |= var4;
+   public final void addFlag(int flag) {
+      if (flag < 64) {
+         long lowBit = 1L << flag;
+         this.newFlagsLow |= lowBit;
       } else {
-         long var2 = 1L << var1 - 64;
-         this.h3 |= var2;
+         long highBit = 1L << flag - 64;
+         this.newFlagsHigh |= highBit;
       }
    }
 
-   public final int f() {
-      long var1 = this.c6 | this.g5;
-      long var3 = this.d5 | this.h3;
-      int var5 = 0;
+   public final int flagCount() {
+      long low = this.flagsLow | this.newFlagsLow;
+      long high = this.flagsHigh | this.newFlagsHigh;
+      int count = 0;
 
-      for (int var6 = 0; var6 != 64; var6++) {
-         var5 = (int)((int)(var5 + (var1 >> var6 & 1L)) + (var3 >> var6 & 1L));
+      for (int bit = 0; bit != 64; bit++) {
+         count = (int)((int)(count + (low >> bit & 1L)) + (high >> bit & 1L));
       }
 
-      return var5;
+      return count;
    }
 
-   public final boolean e4(int var1) {
-      if (var1 < 64) {
-         long var4 = 1L << var1;
-         return ((this.e5 | this.i3) & var4) != 0L;
+   public final boolean hasVisitedFlag(int flag) {
+      if (flag < 64) {
+         long lowBit = 1L << flag;
+         return ((this.visitedFlagsLow | this.newVisitedFlagsLow) & lowBit) != 0L;
       } else {
-         long var2 = 1L << var1 - 64;
-         return ((this.f5 | this.j3) & var2) != 0L;
+         long highBit = 1L << flag - 64;
+         return ((this.visitedFlagsHigh | this.newVisitedFlagsHigh) & highBit) != 0L;
       }
    }
 
-   public final void p2(int var1) {
-      this.o2(var1);
-      if (var1 < 64) {
-         long var4 = 1L << var1;
-         this.i3 |= var4;
+   public final void addVisitedFlag(int flag) {
+      this.addFlag(flag);
+      if (flag < 64) {
+         long lowBit = 1L << flag;
+         this.newVisitedFlagsLow |= lowBit;
       } else {
-         long var2 = 1L << var1 - 64;
-         this.j3 |= var2;
+         long highBit = 1L << flag - 64;
+         this.newVisitedFlagsHigh |= highBit;
       }
    }
 
-   public final int g() {
-      long var1 = this.e5 | this.i3;
-      long var3 = this.f5 | this.j3;
-      int var5 = 0;
+   public final int visitedFlagCount() {
+      long low = this.visitedFlagsLow | this.newVisitedFlagsLow;
+      long high = this.visitedFlagsHigh | this.newVisitedFlagsHigh;
+      int count = 0;
 
-      for (int var6 = 0; var6 != 64; var6++) {
-         var5 = (int)((int)(var5 + (var1 >> var6 & 1L)) + (var3 >> var6 & 1L));
+      for (int bit = 0; bit != 64; bit++) {
+         count = (int)((int)(count + (low >> bit & 1L)) + (high >> bit & 1L));
       }
 
-      return var5;
+      return count;
    }
 
-   public final void q2(int var1) {
-      if (this.D == -1) {
-         this.D = this.b(920, 955);
-         this.E = this.getWidth() << 16;
-         this.F = this.a2(this.D, 0);
+   public final void updateLoadingTip(int deltaMs) {
+      if (this.loadingTipId == -1) {
+         this.loadingTipId = this.randomRange(920, 955);
+         this.loadingTipX = this.getWidth() << 16;
+         this.loadingTipWidth = this.stringWidthById(this.loadingTipId, 0);
       } else {
-         this.E -= var1 * 4915;
-         if (this.E < -(this.F << 16)) {
-            this.D = -1;
+         this.loadingTipX -= deltaMs * 4915;
+         if (this.loadingTipX < -(this.loadingTipWidth << 16)) {
+            this.loadingTipId = -1;
          }
       }
    }
 
-   public final void c(Graphics var1) {
-      com.ea.sims3.SpriteRenderer.setColor(var1, 77);
-      var1.fillRect(0, 0, this.getWidth(), this.getHeight());
-      this.a2.b(var1, 0, 0, 0, this.getWidth(), this.getHeight());
-      if (this.D != -1) {
-         int var2 = this.getHeight() - 40;
-         this.a2(this.D, 0, this.E >> 16, var2, 20);
+   public final void drawLoadingScreen(Graphics gfx) {
+      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      gfx.fillRect(0, 0, this.getWidth(), this.getHeight());
+      this.screen.drawTextBlock(gfx, 0, 0, 0, this.getWidth(), this.getHeight());
+      if (this.loadingTipId != -1) {
+         int yPos = this.getHeight() - 40;
+         this.drawStringById(this.loadingTipId, 0, this.loadingTipX >> 16, yPos, 20);
       }
    }
 
-   private void E() {
-      this.a22 = (short)((this.getHeight() - 15 - 22) / 15);
-      short[] var1;
-      a(var1 = new short[12], 60, this.a22);
-      c2(var1, 79);
-      c2(var1, 80);
-      c2(var1, 81);
-      c2(var1, 82);
-      c2(var1, 83);
-      this.e6 = new short[var1[0] + 5];
-      a(this.e6, var1);
-      c2(var1, 3);
-      c2(var1, 85);
-      this.d6 = var1;
-      a(var1 = new short[12], 61, this.a22);
-      c2(var1, 62);
-      c2(var1, 90);
-      c2(var1, 94);
-      c2(var1, 96);
-      c2(var1, 98);
-      c2(var1, 100);
-      c2(var1, 105);
-      this.f6 = var1;
-      this.k2 = -1;
+   private void buildMenus() {
+      this.menuRowSpacing = (short)((this.getHeight() - 15 - 22) / 15);
+      short[] items;
+      initListWith(items = new short[12], 60, this.menuRowSpacing);
+      addToList(items, 79);
+      addToList(items, 80);
+      addToList(items, 81);
+      addToList(items, 82);
+      addToList(items, 83);
+      this.compactOptionsMenu = new short[items[0] + 5];
+      copyList(this.compactOptionsMenu, items);
+      addToList(items, 3);
+      addToList(items, 85);
+      this.optionsMenu = items;
+      initListWith(items = new short[12], 61, this.menuRowSpacing);
+      addToList(items, 62);
+      addToList(items, 90);
+      addToList(items, 94);
+      addToList(items, 96);
+      addToList(items, 98);
+      addToList(items, 100);
+      addToList(items, 105);
+      this.helpMenu = items;
+      this.menuMode = -1;
    }
 
-   public final void r2(int var1) {
-      short[] var2 = null;
-      byte var3 = -1;
-      char var4 = 4;
-      short var5 = 16;
-      switch (var1) {
+   public final void setMenuMode(int mode) {
+      short[] items = null;
+      byte argMode = -1;
+      char leftAction = 4;
+      short rightAction = 16;
+      switch (mode) {
          case -1:
          default:
             break;
          case 0:
-            var2 = this.d6;
+            items = this.optionsMenu;
             break;
          case 1:
-            var2 = this.e6;
+            items = this.compactOptionsMenu;
             break;
          case 2:
-            var5 = 256;
-            var4 = 512;
-            var3 = 0;
-            this.a2.l2(86, 85);
+            rightAction = 256;
+            leftAction = 512;
+            argMode = 0;
+            this.screen.showInfoPanel(86, 85);
             break;
          case 3:
-            var2 = this.f6;
+            items = this.helpMenu;
             break;
          case 4:
-            var5 = 0;
-            var3 = 3;
+            rightAction = 0;
+            argMode = 3;
             break;
          case 5:
-            var4 = '\u8000';
-            var5 = 16384;
+            leftAction = '\u8000';
+            rightAction = 16384;
       }
 
-      if (this.k2 == -1 && var2 != null) {
-         var2[2] = 0;
+      if (this.menuMode == -1 && items != null) {
+         items[2] = 0;
       }
 
-      this.g6 = var2;
-      this.G = var3;
-      this.k2 = var1;
-      this.a4(var4, var5);
+      this.currentMenu = items;
+      this.returnMenuMode = argMode;
+      this.menuMode = mode;
+      this.setSoftKeys(leftAction, rightAction);
    }
 
-   public final void d(Graphics var1) {
-      BaseScreen var2 = this.a2;
-      switch (this.k2) {
+   public final void drawMenu(Graphics gfx) {
+      BaseScreen screen = this.screen;
+      switch (this.menuMode) {
          case -1:
             return;
          case 0:
-            var2.a(var1, this.d6, 1);
+            screen.drawCaption(gfx, this.optionsMenu, 1);
             return;
          case 1:
-            var2.a(var1, this.e6, 1);
+            screen.drawCaption(gfx, this.compactOptionsMenu, 1);
             return;
          case 2:
-            var2.b(var1);
+            screen.drawPageOne(gfx);
             return;
          case 3:
-            var2.a(var1, this.f6, 1);
+            screen.drawCaption(gfx, this.helpMenu, 1);
             return;
          case 4:
-            var2.c(var1);
+            screen.drawPageTwo(gfx);
             return;
       }
    }
 
-   public final void d2(int var1, int var2) {
-      if (this.g6 != null) {
-         if (var2 != 16 && (var1 & 4128) == 0) {
-            this.b3(this.g6, var1);
+   public final void menuKeyPressed(int keyCode, int action) {
+      if (this.currentMenu != null) {
+         if (action != 16 && (keyCode & 4128) == 0) {
+            this.navigateLeftRight(this.currentMenu, keyCode);
          } else {
-            this.h2();
-            this.c4(4128);
-            int var3 = 5 + this.g6[2];
-            this.z2(this.g6[var3]);
+            this.releaseSoftKeys();
+            this.clearAction(4128);
+            int selectedValue = 5 + this.currentMenu[2];
+            this.menuAction(this.currentMenu[selectedValue]);
          }
       }
 
-      if (this.k2 == 4) {
-         this.a2.j2(var1);
-      } else if (this.k2 == 2) {
-         if (var2 == 256) {
-            this.h2();
-            this.C();
-            this.D();
-            this.c3();
-            this.p2();
-            this.d3();
-            this.r2(this.G);
-            this.a9().d3(60);
-         } else if (var2 == 512) {
-            this.h2();
-            this.r2(this.G);
+      if (this.menuMode == 4) {
+         this.screen.scrollMenu(keyCode);
+      } else if (this.menuMode == 2) {
+         if (action == 256) {
+            this.releaseSoftKeys();
+            this.resetProfiles();
+            this.resetProgressFlags();
+            this.saveSettings();
+            this.resetGameData();
+            this.saveGameData();
+            this.setMenuMode(this.returnMenuMode);
+            this.titleScreen().buildMainMenu(60);
+         } else if (action == 512) {
+            this.releaseSoftKeys();
+            this.setMenuMode(this.returnMenuMode);
          }
       }
 
-      if (var2 == 4) {
-         this.h2();
-         this.r2(this.G);
+      if (action == 4) {
+         this.releaseSoftKeys();
+         this.setMenuMode(this.returnMenuMode);
       }
    }
 
-   private void z2(int var1) {
-      BaseScreen var2 = this.a2;
-      switch (var1) {
+   private void menuAction(int actionId) {
+      BaseScreen screen = this.screen;
+      switch (actionId) {
          case 3:
-            this.r2(5);
+            this.setMenuMode(5);
             return;
          case 62:
-            var2.m2(89, 62);
-            this.r2(4);
+            screen.showPanelTwo(89, 62);
+            this.setMenuMode(4);
             return;
          case 79:
-            this.a7.setEnabled(!this.a7.enabled);
-            if (this.a7.enabled) {
-               if (this.a9() != null) {
-                  this.a12(this.s);
+            this.sound.setEnabled(!this.sound.enabled);
+            if (this.sound.enabled) {
+               if (this.titleScreen() != null) {
+                  this.setSoundLoop(this.soundLoopId);
                   return;
                }
 
-               this.a7.pendingSound = 3;
+               this.sound.pendingSound = 3;
                return;
             }
             break;
          case 80:
-            this.p = !this.p;
-            if (this.p) {
-               this.v2(400);
+            this.vibrationEnabled = !this.vibrationEnabled;
+            if (this.vibrationEnabled) {
+               this.vibrate(400);
             }
 
-            this.c3();
+            this.saveSettings();
             return;
          case 81:
-            this.g3 = !this.g3;
-            this.c3();
+            this.tutorialsEnabled = !this.tutorialsEnabled;
+            this.saveSettings();
             return;
          case 82:
-            this.h2 = !this.h2;
-            this.c3();
+            this.autonomousEnabled = !this.autonomousEnabled;
+            this.saveSettings();
             return;
          case 83:
-            this.i = !this.i;
-            this.c3();
+            this.savePromptsEnabled = !this.savePromptsEnabled;
+            this.saveSettings();
             return;
          case 85:
-            this.r2(2);
+            this.setMenuMode(2);
             return;
          case 90:
-            var2.m2(91, 90);
-            this.r2(4);
+            screen.showPanelTwo(91, 90);
+            this.setMenuMode(4);
             return;
          case 94:
-            var2.m2(95, 94);
-            this.r2(4);
+            screen.showPanelTwo(95, 94);
+            this.setMenuMode(4);
             return;
          case 96:
-            var2.m2(97, 96);
-            this.r2(4);
+            screen.showPanelTwo(97, 96);
+            this.setMenuMode(4);
             return;
          case 98:
-            var2.m2(99, 98);
-            this.r2(4);
+            screen.showPanelTwo(99, 98);
+            this.setMenuMode(4);
             return;
          case 100:
-            var2.m2(101, 100);
-            this.r2(4);
+            screen.showPanelTwo(101, 100);
+            this.setMenuMode(4);
             return;
          case 105:
-            var2.m2(106, 105);
-            this.r2(4);
+            screen.showPanelTwo(106, 105);
+            this.setMenuMode(4);
       }
    }
 
-   private void F() {
-      this.G();
-      this.a24 = new Lot(this);
-      this.a23 = new Neighborhood(this);
-      this.l2 = 0;
-      this.m2 = -1;
-      this.r = -1;
+   private void initWorld() {
+      this.loadTileTable();
+      this.lot = new Lot(this);
+      this.neighborhood = new Neighborhood(this);
+      this.houseIndex = 0;
+      this.houseUpgrade = -1;
+      this.walkTargetFrame = -1;
    }
 
-   public final void s2(int var1) {
-      this.l2 = var1;
-      this.m2 = -1;
+   public final void setHouse(int houseIndex) {
+      this.houseIndex = houseIndex;
+      this.houseUpgrade = -1;
    }
 
-   public final void a(Sim var1) {
-      Sim var2 = this.a6().a14;
-      this.n2 = var2.posX;
-      this.o2 = var2.posY;
-      if (var1 != null) {
-         this.p2 = var1.posX;
-         this.q = var1.posY;
-         this.r = var1.b;
+   public final void enterHouseWith(Sim sim) {
+      Sim currentSim = this.gameScreen().activePlayer;
+      this.simPosX = currentSim.posX;
+      this.simPosY = currentSim.posY;
+      if (sim != null) {
+         this.walkTargetX = sim.posX;
+         this.walkTargetY = sim.posY;
+         this.walkTargetFrame = sim.variant;
       } else {
-         this.r = -1;
+         this.walkTargetFrame = -1;
       }
 
-      this.l2 = -1;
+      this.houseIndex = -1;
    }
 
-   private static final short a(DataInputStream var0) throws IOException {
-      return var0.readShort();
+   private static final short readShort(DataInputStream input) throws IOException {
+      return input.readShort();
    }
 
-   private void G() {
-      ResourceLoader var1 = this.a6;
+   private void loadTileTable() {
+      ResourceLoader loader = this.resources;
 
       try {
-         DataInputStream var2;
-         byte var3;
-         short[][] var4 = new short[var3 = (var2 = new DataInputStream(var1.openStream(63))).readByte()][];
+         DataInputStream input;
+         byte groupCount;
+         short[][] groups = new short[groupCount = (input = new DataInputStream(loader.openStream(63))).readByte()][];
 
-         for (int var5 = 0; var5 < var3; var5++) {
-            byte var6;
-            short[] var7 = new short[(var6 = var2.readByte()) << 1];
+         for (int groupIndex = 0; groupIndex < groupCount; groupIndex++) {
+            byte groupSize;
+            short[] entries = new short[(groupSize = input.readByte()) << 1];
             // decompiled as byte; the table holds more entries than a byte can index
-            int var8 = 0;
+            int entryIndex = 0;
 
-            for (int var9 = 0; var9 < var6; var9++) {
-               var7[var8] = var2.readByte();
-               var7[var8 + 1] = a(var2);
-               var8 += 2;
+            for (int index = 0; index < groupSize; index++) {
+               entries[entryIndex] = input.readByte();
+               entries[entryIndex + 1] = readShort(input);
+               entryIndex += 2;
             }
 
-            var4[var5] = var7;
+            groups[groupIndex] = entries;
          }
 
-         byte var11;
-         int[] var12 = new int[(var11 = var2.readByte()) << 1];
+         byte maskCount;
+         int[] masks = new int[(maskCount = input.readByte()) << 1];
          // decompiled as byte; the table holds more entries than a byte can index
-         int var13 = 0;
+         int maskIndex = 0;
 
-         for (int var14 = 0; var14 < var11; var14++) {
-            var12[var13] = a(var2);
-            var12[var13 + 1] = var2.readInt();
-            var13 += 2;
+         for (int index2 = 0; index2 < maskCount; index2++) {
+            masks[maskIndex] = readShort(input);
+            masks[maskIndex + 1] = input.readInt();
+            maskIndex += 2;
          }
 
-         this.g2 = var12;
-         var2.close();
-         this.b8 = var4;
-      } catch (IOException var10) {
+         this.tileMasks = masks;
+         input.close();
+         this.tileGroups = groups;
+      } catch (IOException ignored) {
       }
    }
 
-   public final short[] a16(int var1) {
-      return this.b8[var1];
+   public final short[] tileGroup(int index) {
+      return this.tileGroups[index];
    }
 
-   public static boolean a3(GameCanvas var0) {
-      return var0.k;
+   public static boolean isRunning(GameCanvas canvas) {
+      return canvas.running;
    }
 
-   public static void a2(GameCanvas var0) {
-      var0.w();
+   public static void repaintTick(GameCanvas canvas) {
+      canvas.tick();
    }
 
-   public static boolean b(GameCanvas var0) {
-      return var0.a3;
+   public static boolean isLandscape(GameCanvas canvas) {
+      return canvas.suspended;
    }
 
-   public static boolean c(GameCanvas var0) {
-      return var0.m;
+   public static boolean isUpdating(GameCanvas canvas) {
+      return canvas.updating;
    }
 
-   public static boolean a(GameCanvas var0, boolean var1) {
-      return var0.m = var1;
+   public static boolean setUpdating(GameCanvas canvas, boolean updating) {
+      return canvas.updating = updating;
    }
 
-   public static SdkSound a(GameCanvas var0) {
-      return var0.a7;
+   public static SdkSound sound(GameCanvas canvas) {
+      return canvas.sound;
    }
 }

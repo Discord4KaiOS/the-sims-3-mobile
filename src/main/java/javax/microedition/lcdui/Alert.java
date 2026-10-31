@@ -7,7 +7,6 @@ package javax.microedition.lcdui;
  * text screen is enough; {@code setCurrent} on an alert logs the message.
  */
 public class Alert extends Screen {
-    private final String title;
     private final String text;
     private final Image image;
     private final AlertType type;
@@ -18,7 +17,7 @@ public class Alert extends Screen {
     public static final int DEFAULT_TIMEOUT = 3000;
 
     public Alert(String title, String text, Image image, AlertType type) {
-        this.title = title == null ? "" : title;
+        setTitle(title);
         this.text = text == null ? "" : text;
         this.image = image;
         this.type = type == null ? AlertType.INFO : type;
@@ -44,21 +43,16 @@ public class Alert extends Screen {
         return type;
     }
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
     void paintTo(Graphics graphics) {
         graphics.setColor(0x000000);
         graphics.fillRect(0, 0, getWidth(), getHeight());
         if (!reported) {
             reported = true;
-            System.err.println("[Alert/" + type.getName() + "] " + title + ": " + text);
+            System.err.println("[Alert/" + type.getName() + "] " + getTitle() + ": " + text);
         }
         graphics.setColor(0xFFFFFF);
         int y = 8;
-        String message = title.isEmpty() ? text : title + "\n" + text;
+        String message = getTitle().isEmpty() ? text : getTitle() + "\n" + text;
         for (String line : message.split("\n")) {
             graphics.drawString(line, getWidth() / 2, y, Graphics.TOP | Graphics.HCENTER);
             y += Font.getDefaultFont().getHeight() + 2;

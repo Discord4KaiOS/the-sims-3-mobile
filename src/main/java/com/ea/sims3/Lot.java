@@ -7,493 +7,493 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 public final class Lot implements SpriteIndex, SoundIndex, Resources {
-   private GameCanvas a;
-   private byte[] a2;
-   private short[] b;
-   private short[] c;
-   private int[] c2;
-   private short[] d;
-   private short[] e;
-   private short[] f;
-   private byte[] b2;
-   private byte[] c3;
-   private short[] g;
-   private short[][] a3;
-   private byte[][] a4;
-   private byte[][] b3;
-   private short[][] b4;
-   private short[] h;
-   private short[][] c4;
-   private byte[][] c5;
-   private short[] i;
-   private short[] j;
-   private int[] d2;
-   private short[] k;
-   private short[] l;
-   private byte[] d3;
-   private byte[] e2;
-   private byte[] f2;
-   private short[][] d4;
-   private short[] m;
-   private byte[][] d5;
-   private byte[][] e3;
-   private byte[][] f3;
-   private byte[][] g2;
-   private byte[][] h2;
-   private byte[][] i2;
-   private byte[][] j2;
-   private byte[][] k2;
-   private byte[][] l2;
-   private byte[][] m2;
-   private byte[][] n;
-   private short[][] e4;
-   private byte[][] o;
-   private int g3;
-   private static final byte[] g4 = new byte[]{0, 1, 2};
-   private static final short[] n2 = new short[]{166, 167, 168};
-   public byte a5;
-   private byte[] h3;
-   private byte[] i3;
-   private short[] o2;
-   private byte[] j3;
-   public int a6;
-   public int b5;
-   public int c6;
-   public int d6;
-   public static final int[] a7 = new int[]{128, 256, 512, 1024};
-   private int h4;
-   private int i4;
-   private int j4;
-   private int k3;
-   private int l3;
-   private int m3;
-   private int n3;
-   private int o3;
-   private byte[] k4;
-   public Tile a8;
-   private Tile b6;
-   public int e5;
-   public int f4;
-   private int[][] a9;
-   private byte[][] p;
-   private int p2;
-   private int q;
-   private int r;
-   private int s;
-   private int[] e6;
-   private int t;
-   private int u;
-   private int v;
-   private short[] p3;
-   private int w;
-   private short[] q2;
-   private int x;
-   private short[][] f5;
-   private int[][] b7;
-   private int[][] c7;
-   private int[][] d7;
-   private short[] r2;
-   private int y;
+   private GameCanvas canvas;
+   private byte[] objectKind;
+   private short[] spriteId;
+   private short[] spriteVariant;
+   private int[] objectFlags;
+   private short[] linkedId;
+   private short[] objectIds;
+   private short[] altIds;
+   private byte[] objectWidth;
+   private byte[] objectHeight;
+   private short[] subType;
+   private short[][] attachments;
+   private byte[][] frameFlags;
+   private byte[][] frameMirrored;
+   private short[][] frameRefs;
+   private short[] frameData;
+   private short[][] frameParts;
+   private byte[][] layoutTables;
+   private short[] categoryIds;
+   private short[] categoryValues;
+   private int[] categoryMasks;
+   private short[] categoryTypes;
+   private short[] categorySubTypes;
+   private byte[] categoryFlags;
+   private byte[] categoryRefs;
+   private byte[] categoryVolumes;
+   private short[][] categoryLists;
+   private short[] lotIds;
+   private byte[][] floorX;
+   private byte[][] floorY;
+   private byte[][] floorWidth;
+   private byte[][] floorHeight;
+   private byte[][] floorEdgeA;
+   private byte[][] floorEdgeB;
+   private byte[][] wallX;
+   private byte[][] wallY;
+   private byte[][] wallLength;
+   private byte[][] levelObjectX;
+   private byte[][] levelObjectY;
+   private short[][] levelObjectIds;
+   private byte[][] levelObjectFacing;
+   private int areaId;
+   private static final byte[] STAGES = new byte[]{0, 1, 2};
+   private static final short[] STAGE_MUSIC = new short[]{166, 167, 168};
+   public byte stageIndex;
+   private byte[] liveObjectX;
+   private byte[] liveObjectY;
+   private short[] liveObjectIds;
+   private byte[] liveObjectFacing;
+   public int boundsX;
+   public int boundsY;
+   public int boundsWidth;
+   public int boundsHeight;
+   public static final int[] DIRECTION_MASKS = new int[]{128, 256, 512, 1024};
+   private int isoOriginX;
+   private int isoOriginY;
+   private int isoOriginXFixed;
+   private int isoOriginYFixed;
+   private int gridWidth;
+   private int gridHeight;
+   private int gridHalfWidth;
+   private int gridHalfHeight;
+   private byte[] cellFlags;
+   public Tile groundTile;
+   private Tile overlayTile;
+   public int cameraX;
+   public int cameraY;
+   private int[][] palettes;
+   private byte[][] categoryTables;
+   private int pathStartX;
+   private int pathStartY;
+   private int pathGoalX;
+   private int pathGoalY;
+   private int[] waypoints;
+   private int waypointCount;
+   private int pathCenterX;
+   private int pathCenterY;
+   private short[] openList;
+   private int openCount;
+   private short[] closedList;
+   private int closedCount;
+   private short[][] parentLinks;
+   private int[][] pathScore;
+   private int[][] pathCost;
+   private int[][] pathHeuristic;
+   private short[] pathResult;
+   private int pathFlags;
 
-   public Lot(GameCanvas var1) {
-      this.a = var1;
-      this.e2();
-      this.f2();
-      this.o2();
-      this.p2();
+   public Lot(GameCanvas canvasArg) {
+      this.canvas = canvasArg;
+      this.loadObjects();
+      this.loadPlacements();
+      this.loadPalettes();
+      this.initPathfinder();
    }
 
-   private static final short a(DataInputStream var0) throws IOException {
-      return var0.readShort();
+   private static final short readRef(DataInputStream stream) throws IOException {
+      return stream.readShort();
    }
 
-   private void e2() {
-      ResourceLoader var1 = this.a.a6;
+   private void loadObjects() {
+      ResourceLoader res = this.canvas.resources;
 
       try {
-         DataInputStream var2;
-         short var3;
-         byte[] var4 = new byte[var3 = (var2 = new DataInputStream(var1.openStream(64))).readShort()];
-         short[] var5 = new short[var3];
-         short[] var6 = new short[var3];
-         int[] var7 = new int[var3];
-         short[] var8 = new short[var3];
-         short[] var9 = new short[var3];
-         short[] var10 = new short[var3];
-         byte[] var11 = new byte[var3];
-         byte[] var12 = new byte[var3];
-         short[] var13 = new short[var3];
-         short[][] var14 = new short[var3][];
-         byte[][] var15 = new byte[var3][];
-         byte[][] var16 = new byte[var3][];
-         short[][] var17 = new short[var3][];
+         DataInputStream stream;
+         short count;
+         byte[] kinds = new byte[count = (stream = new DataInputStream(res.openStream(64))).readShort()];
+         short[] spriteIds = new short[count];
+         short[] spriteVariants = new short[count];
+         int[] flags = new int[count];
+         short[] linkedIds = new short[count];
+         short[] ids = new short[count];
+         short[] altIdValues = new short[count];
+         byte[] widths = new byte[count];
+         byte[] heights = new byte[count];
+         short[] subTypes = new short[count];
+         short[][] attachmentLists = new short[count][];
+         byte[][] frameFlagLists = new byte[count][];
+         byte[][] frameMirrorLists = new byte[count][];
+         short[][] frameRefLists = new short[count][];
 
-         for (int var18 = 0; var18 < var3; var18++) {
-            var4[var18] = var2.readByte();
-            var5[var18] = a(var2);
-            var6[var18] = a(var2);
-            var7[var18] = var2.readInt();
-            var8[var18] = a(var2);
-            if (var8[var18] == -1) {
-               var8[var18] = 0;
+         for (int objIndex = 0; objIndex < count; objIndex++) {
+            kinds[objIndex] = stream.readByte();
+            spriteIds[objIndex] = readRef(stream);
+            spriteVariants[objIndex] = readRef(stream);
+            flags[objIndex] = stream.readInt();
+            linkedIds[objIndex] = readRef(stream);
+            if (linkedIds[objIndex] == -1) {
+               linkedIds[objIndex] = 0;
             }
 
-            var9[var18] = var2.readShort();
-            var10[var18] = var2.readShort();
-            var11[var18] = var2.readByte();
-            var12[var18] = var2.readByte();
-            var13[var18] = a(var2);
-            byte var19;
-            short[] var20 = new short[var19 = var2.readByte()];
+            ids[objIndex] = stream.readShort();
+            altIdValues[objIndex] = stream.readShort();
+            widths[objIndex] = stream.readByte();
+            heights[objIndex] = stream.readByte();
+            subTypes[objIndex] = readRef(stream);
+            byte attachmentCount;
+            short[] attachmentIds = new short[attachmentCount = stream.readByte()];
 
-            for (int var21 = 0; var21 < var19; var21++) {
-               var20[var21] = var2.readShort();
+            for (int attachIndex = 0; attachIndex < attachmentCount; attachIndex++) {
+               attachmentIds[attachIndex] = stream.readShort();
             }
 
-            byte var45;
-            byte[] var22 = new byte[var45 = var2.readByte()];
-            byte[] var23 = new byte[var45];
+            byte frameCount;
+            byte[] frameFlagRow = new byte[frameCount = stream.readByte()];
+            byte[] frameMirrorRow = new byte[frameCount];
 
-            for (int var24 = 0; var24 < var45; var24++) {
-               var22[var24] = var2.readByte();
-               var23[var24] = var2.readByte();
+            for (int frameIndex = 0; frameIndex < frameCount; frameIndex++) {
+               frameFlagRow[frameIndex] = stream.readByte();
+               frameMirrorRow[frameIndex] = stream.readByte();
             }
 
-            byte var50;
-            short[] var25 = new short[var50 = var2.readByte()];
+            byte refCount;
+            short[] refIds = new short[refCount = stream.readByte()];
 
-            for (int var26 = 0; var26 < var50; var26++) {
-               var25[var26] = a(var2);
+            for (int refIndex = 0; refIndex < refCount; refIndex++) {
+               refIds[refIndex] = readRef(stream);
             }
 
-            var14[var18] = var20;
-            var15[var18] = var22;
-            var16[var18] = var23;
-            var17[var18] = var25;
+            attachmentLists[objIndex] = attachmentIds;
+            frameFlagLists[objIndex] = frameFlagRow;
+            frameMirrorLists[objIndex] = frameMirrorRow;
+            frameRefLists[objIndex] = refIds;
          }
 
-         int var43;
-         short[] var44 = new short[var43 = var2.readShort() << 2];
+         int frameEntryCount;
+         short[] frameDataAll = new short[frameEntryCount = stream.readShort() << 2];
 
-         for (int var46 = 0; var46 < var43; var46++) {
-            var44[var46] = a(var2);
+         for (int frameSlot = 0; frameSlot < frameEntryCount; frameSlot++) {
+            frameDataAll[frameSlot] = readRef(stream);
          }
 
-         byte var47;
-         short[][] var48 = new short[var47 = var2.readByte()][];
+         byte framePartCount;
+         short[][] framePartRows = new short[framePartCount = stream.readByte()][];
 
-         for (int var49 = 0; var49 < var47; var49++) {
-            int var51;
-            short[] var53 = new short[var51 = var2.readByte() << 1];
+         for (int partIndex = 0; partIndex < framePartCount; partIndex++) {
+            int partCount;
+            short[] partRow = new short[partCount = stream.readByte() << 1];
 
-            for (int var27 = 0; var27 < var51; var27++) {
-               var53[var27] = var2.readShort();
+            for (int partSlot = 0; partSlot < partCount; partSlot++) {
+               partRow[partSlot] = stream.readShort();
             }
 
-            var48[var49] = var53;
+            framePartRows[partIndex] = partRow;
          }
 
-         var2.readByte();
-         var2.readByte();
-         byte var52;
-         byte[][] var54 = new byte[var52 = var2.readByte()][];
+         stream.readByte();
+         stream.readByte();
+         byte tableCount;
+         byte[][] tables = new byte[tableCount = stream.readByte()][];
 
-         for (int var55 = 0; var55 < var52; var55++) {
-            byte[] var29 = new byte[var2.readByte()];
-            var2.readFully(var29);
-            var54[var55] = var29;
+         for (int tableIndex = 0; tableIndex < tableCount; tableIndex++) {
+            byte[] tableRow = new byte[stream.readByte()];
+            stream.readFully(tableRow);
+            tables[tableIndex] = tableRow;
          }
 
-         byte var56;
-         short[] var28 = new short[var56 = var2.readByte()];
-         short[] var57 = new short[var56];
-         int[] var30 = new int[var56];
-         short[] var31 = new short[var56];
-         short[] var32 = new short[var56];
-         byte[] var33 = new byte[var56];
+         byte categoryCount;
+         short[] categoryIdValues = new short[categoryCount = stream.readByte()];
+         short[] categoryValueValues = new short[categoryCount];
+         int[] categoryMaskValues = new int[categoryCount];
+         short[] categoryTypeValues = new short[categoryCount];
+         short[] categorySubTypeValues = new short[categoryCount];
+         byte[] categoryFlagValues = new byte[categoryCount];
 
-         for (int var34 = 0; var34 < var56; var34++) {
-            var28[var34] = a(var2);
-            var57[var34] = a(var2);
-            var30[var34] = var2.readInt();
-            var31[var34] = var2.readShort();
-            var32[var34] = var2.readShort();
-            var33[var34] = var2.readByte();
+         for (int categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
+            categoryIdValues[categoryIndex] = readRef(stream);
+            categoryValueValues[categoryIndex] = readRef(stream);
+            categoryMaskValues[categoryIndex] = stream.readInt();
+            categoryTypeValues[categoryIndex] = stream.readShort();
+            categorySubTypeValues[categoryIndex] = stream.readShort();
+            categoryFlagValues[categoryIndex] = stream.readByte();
          }
 
-         byte var58;
-         byte[] var35 = new byte[var58 = var2.readByte()];
-         byte[] var36 = new byte[var58];
-         short[][] var37 = new short[var58][];
+         byte refEntryCount;
+         byte[] categoryRefValues = new byte[refEntryCount = stream.readByte()];
+         byte[] categoryVolumeValues = new byte[refEntryCount];
+         short[][] categoryListRows = new short[refEntryCount][];
 
-         for (int var38 = 0; var38 < var58; var38++) {
-            var35[var38] = var2.readByte();
-            var36[var38] = var2.readByte();
-            byte var39;
-            short[] var40 = new short[var39 = var2.readByte()];
+         for (int listIndex = 0; listIndex < refEntryCount; listIndex++) {
+            categoryRefValues[listIndex] = stream.readByte();
+            categoryVolumeValues[listIndex] = stream.readByte();
+            byte listCount;
+            short[] listRow = new short[listCount = stream.readByte()];
 
-            for (int var41 = 0; var41 < var39; var41++) {
-               var40[var41] = var2.readByte();
+            for (int listSlot = 0; listSlot < listCount; listSlot++) {
+               listRow[listSlot] = stream.readByte();
             }
 
-            var37[var38] = var40;
+            categoryListRows[listIndex] = listRow;
          }
 
-         var2.close();
-         this.a2 = var4;
-         this.b = var5;
-         this.c = var6;
-         this.c2 = var7;
-         this.d = var8;
-         this.e = var9;
-         this.f = var10;
-         this.b2 = var11;
-         this.c3 = var12;
-         this.g = var13;
-         this.a3 = var14;
-         this.a4 = var15;
-         this.b3 = var16;
-         this.b4 = var17;
-         this.h = var44;
-         this.c4 = var48;
-         this.c5 = var54;
-         this.i = var28;
-         this.j = var57;
-         this.d2 = var30;
-         this.k = var31;
-         this.l = var32;
-         this.d3 = var33;
-         this.e2 = var35;
-         this.f2 = var36;
-         this.d4 = var37;
-      } catch (IOException var42) {
+         stream.close();
+         this.objectKind = kinds;
+         this.spriteId = spriteIds;
+         this.spriteVariant = spriteVariants;
+         this.objectFlags = flags;
+         this.linkedId = linkedIds;
+         this.objectIds = ids;
+         this.altIds = altIdValues;
+         this.objectWidth = widths;
+         this.objectHeight = heights;
+         this.subType = subTypes;
+         this.attachments = attachmentLists;
+         this.frameFlags = frameFlagLists;
+         this.frameMirrored = frameMirrorLists;
+         this.frameRefs = frameRefLists;
+         this.frameData = frameDataAll;
+         this.frameParts = framePartRows;
+         this.layoutTables = tables;
+         this.categoryIds = categoryIdValues;
+         this.categoryValues = categoryValueValues;
+         this.categoryMasks = categoryMaskValues;
+         this.categoryTypes = categoryTypeValues;
+         this.categorySubTypes = categorySubTypeValues;
+         this.categoryFlags = categoryFlagValues;
+         this.categoryRefs = categoryRefValues;
+         this.categoryVolumes = categoryVolumeValues;
+         this.categoryLists = categoryListRows;
+      } catch (IOException ignored) {
       }
    }
 
-   private static final short b(DataInputStream var0) throws IOException {
-      return var0.readShort();
+   private static final short readShortValue(DataInputStream stream) throws IOException {
+      return stream.readShort();
    }
 
-   private void f2() {
-      ResourceLoader var1 = this.a.a6;
+   private void loadPlacements() {
+      ResourceLoader res = this.canvas.resources;
 
       try {
-         DataInputStream var2;
-         byte var3;
-         short[] var4 = new short[var3 = (var2 = new DataInputStream(var1.openStream(62))).readByte()];
-         byte[][] var5 = new byte[var3][];
-         byte[][] var6 = new byte[var3][];
-         byte[][] var7 = new byte[var3][];
-         byte[][] var8 = new byte[var3][];
-         byte[][] var9 = new byte[var3][];
-         byte[][] var10 = new byte[var3][];
-         byte[][] var11 = new byte[var3][];
-         byte[][] var12 = new byte[var3][];
-         byte[][] var13 = new byte[var3][];
-         byte[][] var14 = new byte[var3][];
-         byte[][] var15 = new byte[var3][];
-         short[][] var16 = new short[var3][];
-         byte[][] var17 = new byte[var3][];
+         DataInputStream stream;
+         byte count;
+         short[] lotIdValues = new short[count = (stream = new DataInputStream(res.openStream(62))).readByte()];
+         byte[][] floorXLists = new byte[count][];
+         byte[][] floorYLists = new byte[count][];
+         byte[][] floorWidthLists = new byte[count][];
+         byte[][] floorHeightLists = new byte[count][];
+         byte[][] floorEdgeALists = new byte[count][];
+         byte[][] floorEdgeBLists = new byte[count][];
+         byte[][] wallXLists = new byte[count][];
+         byte[][] wallYLists = new byte[count][];
+         byte[][] wallLengthLists = new byte[count][];
+         byte[][] objectXLists = new byte[count][];
+         byte[][] objectYLists = new byte[count][];
+         short[][] objectIdLists = new short[count][];
+         byte[][] objectFacingLists = new byte[count][];
 
-         for (int var18 = 0; var18 < var3; var18++) {
-            var4[var18] = b(var2);
-            byte var19;
-            byte[] var20 = new byte[var19 = var2.readByte()];
-            byte[] var21 = new byte[var19];
-            byte[] var22 = new byte[var19];
-            byte[] var23 = new byte[var19];
-            byte[] var24 = new byte[var19];
-            byte[] var25 = new byte[var19];
+         for (int objIndex = 0; objIndex < count; objIndex++) {
+            lotIdValues[objIndex] = readShortValue(stream);
+            byte rowCount;
+            byte[] floorXRow = new byte[rowCount = stream.readByte()];
+            byte[] floorYRow = new byte[rowCount];
+            byte[] floorWidthRow = new byte[rowCount];
+            byte[] floorHeightRow = new byte[rowCount];
+            byte[] floorEdgeARow = new byte[rowCount];
+            byte[] floorEdgeBRow = new byte[rowCount];
 
-            for (int var26 = 0; var26 < var19; var26++) {
-               var20[var26] = var2.readByte();
-               var21[var26] = var2.readByte();
-               var22[var26] = var2.readByte();
-               var23[var26] = var2.readByte();
-               var24[var26] = (byte)b(var2);
-               var25[var26] = (byte)b(var2);
+            for (int floorIndex = 0; floorIndex < rowCount; floorIndex++) {
+               floorXRow[floorIndex] = stream.readByte();
+               floorYRow[floorIndex] = stream.readByte();
+               floorWidthRow[floorIndex] = stream.readByte();
+               floorHeightRow[floorIndex] = stream.readByte();
+               floorEdgeARow[floorIndex] = (byte)readShortValue(stream);
+               floorEdgeBRow[floorIndex] = (byte)readShortValue(stream);
             }
 
-            byte var37;
-            byte[] var27 = new byte[var37 = var2.readByte()];
-            byte[] var28 = new byte[var37];
-            byte[] var29 = new byte[var37];
+            byte wallCount;
+            byte[] wallXRow = new byte[wallCount = stream.readByte()];
+            byte[] wallYRow = new byte[wallCount];
+            byte[] wallLengthRow = new byte[wallCount];
 
-            for (int var30 = 0; var30 < var37; var30++) {
-               var27[var30] = var2.readByte();
-               var28[var30] = var2.readByte();
-               var29[var30] = var2.readByte();
+            for (int wallIndex = 0; wallIndex < wallCount; wallIndex++) {
+               wallXRow[wallIndex] = stream.readByte();
+               wallYRow[wallIndex] = stream.readByte();
+               wallLengthRow[wallIndex] = stream.readByte();
             }
 
-            byte var38;
-            byte[] var31 = new byte[var38 = var2.readByte()];
-            byte[] var32 = new byte[var38];
-            short[] var33 = new short[var38];
-            byte[] var34 = new byte[var38];
+            byte objectCount;
+            byte[] objectXCol = new byte[objectCount = stream.readByte()];
+            byte[] objectYCol = new byte[objectCount];
+            short[] objectIdCol = new short[objectCount];
+            byte[] objectFacingCol = new byte[objectCount];
 
-            for (int var35 = 0; var35 < var38; var35++) {
-               var31[var35] = var2.readByte();
-               var32[var35] = var2.readByte();
-               var33[var35] = b(var2);
-               var34[var35] = (byte)b(var2);
+            for (int objectIndex = 0; objectIndex < objectCount; objectIndex++) {
+               objectXCol[objectIndex] = stream.readByte();
+               objectYCol[objectIndex] = stream.readByte();
+               objectIdCol[objectIndex] = readShortValue(stream);
+               objectFacingCol[objectIndex] = (byte)readShortValue(stream);
             }
 
-            var5[var18] = var20;
-            var6[var18] = var21;
-            var7[var18] = var22;
-            var8[var18] = var23;
-            var9[var18] = var24;
-            var10[var18] = var25;
-            var11[var18] = var27;
-            var12[var18] = var28;
-            var13[var18] = var29;
-            var14[var18] = var31;
-            var15[var18] = var32;
-            var16[var18] = var33;
-            var17[var18] = var34;
+            floorXLists[objIndex] = floorXRow;
+            floorYLists[objIndex] = floorYRow;
+            floorWidthLists[objIndex] = floorWidthRow;
+            floorHeightLists[objIndex] = floorHeightRow;
+            floorEdgeALists[objIndex] = floorEdgeARow;
+            floorEdgeBLists[objIndex] = floorEdgeBRow;
+            wallXLists[objIndex] = wallXRow;
+            wallYLists[objIndex] = wallYRow;
+            wallLengthLists[objIndex] = wallLengthRow;
+            objectXLists[objIndex] = objectXCol;
+            objectYLists[objIndex] = objectYCol;
+            objectIdLists[objIndex] = objectIdCol;
+            objectFacingLists[objIndex] = objectFacingCol;
          }
 
-         var2.close();
-         this.m = var4;
-         this.d5 = var5;
-         this.e3 = var6;
-         this.f3 = var7;
-         this.g2 = var8;
-         this.h2 = var9;
-         this.i2 = var10;
-         this.j2 = var11;
-         this.k2 = var12;
-         this.l2 = var13;
-         this.m2 = var14;
-         this.n = var15;
-         this.e4 = var16;
-         this.o = var17;
-      } catch (IOException var36) {
+         stream.close();
+         this.lotIds = lotIdValues;
+         this.floorX = floorXLists;
+         this.floorY = floorYLists;
+         this.floorWidth = floorWidthLists;
+         this.floorHeight = floorHeightLists;
+         this.floorEdgeA = floorEdgeALists;
+         this.floorEdgeB = floorEdgeBLists;
+         this.wallX = wallXLists;
+         this.wallY = wallYLists;
+         this.wallLength = wallLengthLists;
+         this.levelObjectX = objectXLists;
+         this.levelObjectY = objectYLists;
+         this.levelObjectIds = objectIdLists;
+         this.levelObjectFacing = objectFacingLists;
+      } catch (IOException ignored) {
       }
    }
 
-   public final int a() {
-      return com.ea.sims3.GameCanvas.a(this.g3, g4) != -1 ? 0 : this.g3;
+   public final int areaId() {
+      return com.ea.sims3.GameCanvas.indexOfByte(this.areaId, STAGES) != -1 ? 0 : this.areaId;
    }
 
-   public final int a3(int var1) {
-      return this.m[var1];
+   public final int lotIdAt(int lotId) {
+      return this.lotIds[lotId];
    }
 
-   public final int b2(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.m);
+   public final int indexOfLotId(int lotId) {
+      return com.ea.sims3.GameCanvas.indexOfShort(lotId, this.lotIds);
    }
 
-   private void g2() {
-      this.a5 = 0;
-      if (this.h3 == null) {
-         this.h3 = new byte[150];
-         this.i3 = new byte[150];
-         this.o2 = new short[150];
-         this.j3 = new byte[150];
+   private void resetLiveObjects() {
+      this.stageIndex = 0;
+      if (this.liveObjectX == null) {
+         this.liveObjectX = new byte[150];
+         this.liveObjectY = new byte[150];
+         this.liveObjectIds = new short[150];
+         this.liveObjectFacing = new byte[150];
       }
 
-      com.ea.sims3.GameCanvas.a2(this.o2, -1);
-      byte[] var1 = this.m2[0];
-      byte[] var2 = this.n[0];
-      short[] var3 = this.e4[0];
-      byte[] var4 = this.o[0];
-      System.arraycopy(var1, 0, this.h3, 0, var1.length);
-      System.arraycopy(var2, 0, this.i3, 0, var2.length);
-      System.arraycopy(var3, 0, this.o2, 0, var3.length);
-      System.arraycopy(var4, 0, this.j3, 0, var4.length);
+      com.ea.sims3.GameCanvas.fillShorts(this.liveObjectIds, -1);
+      byte[] levelX = this.levelObjectX[0];
+      byte[] levelY = this.levelObjectY[0];
+      short[] levelIds = this.levelObjectIds[0];
+      byte[] levelFacings = this.levelObjectFacing[0];
+      System.arraycopy(levelX, 0, this.liveObjectX, 0, levelX.length);
+      System.arraycopy(levelY, 0, this.liveObjectY, 0, levelY.length);
+      System.arraycopy(levelIds, 0, this.liveObjectIds, 0, levelIds.length);
+      System.arraycopy(levelFacings, 0, this.liveObjectFacing, 0, levelFacings.length);
    }
 
-   public final int b() {
-      if (this.a5 == g4.length - 1) {
+   public final int stageReward() {
+      if (this.stageIndex == STAGES.length - 1) {
          return -1;
-      } else if (this.a5 == 0) {
-         return this.a.a23.b8(16) ? 1000 : 0;
+      } else if (this.stageIndex == 0) {
+         return this.canvas.neighborhood.hasMilestone(16) ? 1000 : 0;
       } else {
-         return this.a.a23.b8(32) ? 2500 : 0;
+         return this.canvas.neighborhood.hasMilestone(32) ? 2500 : 0;
       }
    }
 
-   public final boolean a11() {
-      return this.a5 == g4.length - 1;
+   public final boolean isFinalStage() {
+      return this.stageIndex == STAGES.length - 1;
    }
 
-   public final int c() {
-      return n2[this.a5];
+   public final int stageMusicId() {
+      return STAGE_MUSIC[this.stageIndex];
    }
 
-   public final boolean b5() {
-      int var1 = 0;
-      short[] var2 = this.o2;
-      int[] var3 = this.c2;
+   public final boolean allItemsPlaced() {
+      int placedCount = 0;
+      short[] ids = this.liveObjectIds;
+      int[] flags = this.objectFlags;
 
-      for (int var4 = var2.length - 1; var4 >= 0; var4--) {
-         short var5;
-         if ((var5 = var2[var4]) != -1 && (var3[var5] & 131072) != 0 && com.ea.sims3.GameCanvas.a(var5, var2, var4 + 1) == -1) {
-            var1++;
+      for (int slotIndex = ids.length - 1; slotIndex >= 0; slotIndex--) {
+         short id;
+         if ((id = ids[slotIndex]) != -1 && (flags[id] & 131072) != 0 && com.ea.sims3.GameCanvas.indexOfShortFrom(id, ids, slotIndex + 1) == -1) {
+            placedCount++;
          }
       }
 
-      int var6 = com.ea.sims3.GameCanvas.b(131072, var3);
-      return var1 == var6;
+      int expectedCount = com.ea.sims3.GameCanvas.countAnyFlagInt(131072, flags);
+      return placedCount == expectedCount;
    }
 
-   public final void a10() {
-      this.a5++;
-      byte var1 = g4[this.a5];
-      byte[] var2 = this.m2[var1];
-      byte[] var3 = this.n[var1];
-      short[] var4 = this.e4[var1];
-      byte[] var5 = this.o[var1];
-      short[] var6 = this.o2;
-      byte[] var7 = this.h3;
-      byte[] var8 = this.i3;
-      byte[] var9 = this.j3;
+   public final void nextStage() {
+      this.stageIndex++;
+      byte level = STAGES[this.stageIndex];
+      byte[] levelX = this.levelObjectX[level];
+      byte[] levelY = this.levelObjectY[level];
+      short[] levelIds = this.levelObjectIds[level];
+      byte[] levelFacings = this.levelObjectFacing[level];
+      short[] ids = this.liveObjectIds;
+      byte[] liveXs = this.liveObjectX;
+      byte[] liveYs = this.liveObjectY;
+      byte[] facings = this.liveObjectFacing;
 
-      for (int var10 = 0; var10 < var4.length; var10++) {
-         short var11 = var4[var10];
-         byte var12 = var2[var10];
-         byte var13 = var3[var10];
-         if (var11 != var6[var10]) {
-            if (var6[var10] != -1) {
-               int var14 = com.ea.sims3.GameCanvas.a(-1, var6);
-               var6[var14] = var6[var10];
-               var7[var14] = var7[var10];
-               var8[var14] = var8[var10];
-               var9[var14] = var9[var10];
-               this.a.a23.a4(var10, var14);
+      for (int slotIndex = 0; slotIndex < levelIds.length; slotIndex++) {
+         short id = levelIds[slotIndex];
+         byte x = levelX[slotIndex];
+         byte y = levelY[slotIndex];
+         if (id != ids[slotIndex]) {
+            if (ids[slotIndex] != -1) {
+               int freeSlot = com.ea.sims3.GameCanvas.indexOfShort(-1, ids);
+               ids[freeSlot] = ids[slotIndex];
+               liveXs[freeSlot] = liveXs[slotIndex];
+               liveYs[freeSlot] = liveYs[slotIndex];
+               facings[freeSlot] = facings[slotIndex];
+               this.canvas.neighborhood.setTipValue(slotIndex, freeSlot);
             }
-         } else if ((this.k(var11) & 4) != 0) {
-            byte var15 = var7[var10];
-            byte var16 = var8[var10];
+         } else if ((this.objectFlagsAt(id) & 4) != 0) {
+            byte baseX = liveXs[slotIndex];
+            byte baseY = liveYs[slotIndex];
 
-            for (int var17 = 0; var17 < 150; var17++) {
-               short var18;
-               if (var10 != var17 && (var18 = var6[var17]) != -1) {
-                  int var19 = this.k(var18);
-                  byte var20 = var7[var17];
-                  byte var21 = var8[var17];
-                  if ((var19 & 524292) == 0 && var20 == var15 && var21 == var16) {
-                     var7[var17] = var12;
-                     var8[var17] = var13;
-                     if ((var19 & 262144) != 0) {
-                        int var22 = this.o(var18);
-                        int var23 = this.p(var18);
-                        byte var24;
-                        if ((var24 = var9[var17]) == 1 || var24 == 3) {
-                           int var25 = var22;
-                           var22 = var23;
-                           var23 = var25;
+            for (int otherIndex = 0; otherIndex < 150; otherIndex++) {
+               short otherId;
+               if (slotIndex != otherIndex && (otherId = ids[otherIndex]) != -1) {
+                  int otherFlags = this.objectFlagsAt(otherId);
+                  byte otherX = liveXs[otherIndex];
+                  byte otherY = liveYs[otherIndex];
+                  if ((otherFlags & 524292) == 0 && otherX == baseX && otherY == baseY) {
+                     liveXs[otherIndex] = x;
+                     liveYs[otherIndex] = y;
+                     if ((otherFlags & 262144) != 0) {
+                        int width = this.objectWidthAt(otherId);
+                        int height = this.objectHeightAt(otherId);
+                        byte facing;
+                        if ((facing = facings[otherIndex]) == 1 || facing == 3) {
+                           int swap = width;
+                           width = height;
+                           height = swap;
                         }
 
-                        for (int var29 = 0; var29 < 150; var29++) {
-                           short var26;
-                           if ((var26 = var6[var29]) != -1 && (this.k(var26) & 524288) != 0) {
-                              byte var27 = var7[var29];
-                              byte var28 = var8[var29];
-                              if (var27 <= var20 && var28 <= var21 && var27 > var20 - var22 && var28 > var21 - var23) {
-                                 var7[var29] = (byte)(var7[var29] + (var12 - var20));
-                                 var8[var29] = (byte)(var8[var29] + (var13 - var21));
+                        for (int areaSlotIndex = 0; areaSlotIndex < 150; areaSlotIndex++) {
+                           short idAt;
+                           if ((idAt = ids[areaSlotIndex]) != -1 && (this.objectFlagsAt(idAt) & 524288) != 0) {
+                              byte xAt = liveXs[areaSlotIndex];
+                              byte yAt = liveYs[areaSlotIndex];
+                              if (xAt <= otherX && yAt <= otherY && xAt > otherX - width && yAt > otherY - height) {
+                                 liveXs[areaSlotIndex] = (byte)(liveXs[areaSlotIndex] + (x - otherX));
+                                 liveYs[areaSlotIndex] = (byte)(liveYs[areaSlotIndex] + (y - otherY));
                               }
                            }
                         }
@@ -503,49 +503,49 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
             }
          }
 
-         var6[var10] = var11;
-         var7[var10] = var12;
-         var8[var10] = var13;
-         var9[var10] = var5[var10];
+         ids[slotIndex] = id;
+         liveXs[slotIndex] = x;
+         liveYs[slotIndex] = y;
+         facings[slotIndex] = levelFacings[slotIndex];
       }
 
-      this.a.a23.a10();
+      this.canvas.neighborhood.markPromotionDay();
    }
 
-   public final int a(int var1, int var2, int var3, int var4) {
-      int var5 = com.ea.sims3.GameCanvas.a(-1, this.o2);
-      this.o2[var5] = (short)var1;
-      this.h3[var5] = (byte)f(var2);
-      this.i3[var5] = (byte)g(var3);
-      this.j3[var5] = (byte)var4;
-      return var5;
+   public final int addObject(int objectTypeId, int worldX, int worldY, int facing) {
+      int slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.liveObjectIds);
+      this.liveObjectIds[slot] = (short)objectTypeId;
+      this.liveObjectX[slot] = (byte)toTileX(worldX);
+      this.liveObjectY[slot] = (byte)toTileY(worldY);
+      this.liveObjectFacing[slot] = (byte)facing;
+      return slot;
    }
 
-   public final void a12(int var1) {
-      this.o2[var1] = -1;
-      this.a.a23.j2(0, var1);
+   public final void removeObject(int slot) {
+      this.liveObjectIds[slot] = -1;
+      this.canvas.neighborhood.removeTip(0, slot);
    }
 
-   public final void a4(int var1, int var2) {
-      this.j3[var1] = (byte)var2;
+   public final void setObjectFacing(int slot, int facing) {
+      this.liveObjectFacing[slot] = (byte)facing;
    }
 
-   public final void b2(int var1, int var2) {
-      this.o2[var1] = (short)var2;
+   public final void setObjectId(int slot, int objectId) {
+      this.liveObjectIds[slot] = (short)objectId;
    }
 
-   public final void a2(int var1, int var2, int var3, int var4) {
-      this.h3[var1] = (byte)f(var2);
-      this.i3[var1] = (byte)g(var3);
-      this.j3[var1] = (byte)var4;
+   public final void setObjectPosition(int slot, int worldX, int worldY, int facing) {
+      this.liveObjectX[slot] = (byte)toTileX(worldX);
+      this.liveObjectY[slot] = (byte)toTileY(worldY);
+      this.liveObjectFacing[slot] = (byte)facing;
    }
 
-   public final boolean a13(int var1) {
-      short[] var2 = this.o2;
+   public final boolean hasObjectKind(int kind) {
+      short[] ids = this.liveObjectIds;
 
-      for (int var3 = 0; var3 < var2.length; var3++) {
-         short var4;
-         if ((var4 = var2[var3]) != -1 && this.h(var4) == var1) {
+      for (int slotIndex = 0; slotIndex < ids.length; slotIndex++) {
+         short id;
+         if ((id = ids[slotIndex]) != -1 && this.objectKindAt(id) == kind) {
             return true;
          }
       }
@@ -553,145 +553,145 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       return false;
    }
 
-   public final boolean b8(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.o2) != -1;
+   public final boolean hasObject(int objectId) {
+      return com.ea.sims3.GameCanvas.indexOfShort(objectId, this.liveObjectIds) != -1;
    }
 
-   public final void b4() {
-      this.a5 = 0;
-      this.g2();
+   public final void resetStages() {
+      this.stageIndex = 0;
+      this.resetLiveObjects();
    }
 
-   public final void a2(DataInputStream var1) throws IOException {
-      this.a5 = var1.readByte();
+   public final void readObjects(DataInputStream stream) throws IOException {
+      this.stageIndex = stream.readByte();
 
-      for (int var2 = 0; var2 < this.o2.length; var2++) {
-         this.o2[var2] = var1.readShort();
-         this.h3[var2] = var1.readByte();
-         this.i3[var2] = var1.readByte();
-         this.j3[var2] = var1.readByte();
+      for (int slot = 0; slot < this.liveObjectIds.length; slot++) {
+         this.liveObjectIds[slot] = stream.readShort();
+         this.liveObjectX[slot] = stream.readByte();
+         this.liveObjectY[slot] = stream.readByte();
+         this.liveObjectFacing[slot] = stream.readByte();
       }
    }
 
-   public final void a(DataOutputStream var1) throws IOException {
-      var1.writeByte(this.a5);
+   public final void writeObjects(DataOutputStream out) throws IOException {
+      out.writeByte(this.stageIndex);
 
-      for (int var2 = 0; var2 < this.o2.length; var2++) {
-         var1.writeShort(this.o2[var2]);
-         var1.writeByte(this.h3[var2]);
-         var1.writeByte(this.i3[var2]);
-         var1.writeByte(this.j3[var2]);
+      for (int slot = 0; slot < this.liveObjectIds.length; slot++) {
+         out.writeShort(this.liveObjectIds[slot]);
+         out.writeByte(this.liveObjectX[slot]);
+         out.writeByte(this.liveObjectY[slot]);
+         out.writeByte(this.liveObjectFacing[slot]);
       }
    }
 
-   public final void b2(int var1, int var2, int var3, int var4) {
-      this.a6 = var1;
-      this.b5 = var2;
-      this.c6 = var3;
-      this.d6 = var4;
+   public final void setBounds(int x, int y, int width, int height) {
+      this.boundsX = x;
+      this.boundsY = y;
+      this.boundsWidth = width;
+      this.boundsHeight = height;
    }
 
-   private void h2() {
-      this.l3 = 64;
-      this.m3 = 64;
-      this.n3 = this.l3 >> 1;
-      this.o3 = this.m3 >> 1;
-      this.h4 = 512;
-      this.j4 = this.h4 << 16;
-      this.i4 = 264;
-      this.k3 = this.i4 << 16;
-      if (this.k4 == null) {
-         this.k4 = new byte[this.l3 * this.m3];
+   private void initGrid() {
+      this.gridWidth = 64;
+      this.gridHeight = 64;
+      this.gridHalfWidth = this.gridWidth >> 1;
+      this.gridHalfHeight = this.gridHeight >> 1;
+      this.isoOriginX = 512;
+      this.isoOriginXFixed = this.isoOriginX << 16;
+      this.isoOriginY = 264;
+      this.isoOriginYFixed = this.isoOriginY << 16;
+      if (this.cellFlags == null) {
+         this.cellFlags = new byte[this.gridWidth * this.gridHeight];
       }
 
-      com.ea.sims3.GameCanvas.a3(this.k4, 0);
+      com.ea.sims3.GameCanvas.fillBytes(this.cellFlags, 0);
    }
 
-   public final void b7(int var1) {
-      if (var1 == 0) {
-         var1 = g4[this.a5];
+   public final void loadArea(int area) {
+      if (area == 0) {
+         area = STAGES[this.stageIndex];
       }
 
-      this.g3 = var1;
-      this.h2();
-      this.e3(var1);
-      this.d3(var1);
+      this.areaId = area;
+      this.initGrid();
+      this.buildGroundTiles(area);
+      this.buildScene(area);
    }
 
-   private void d3(int var1) {
-      GameScreen var2 = (GameScreen)this.a.a2;
-      byte[] var3 = this.m2[var1];
-      byte[] var4 = this.n[var1];
-      short[] var5 = this.e4[var1];
-      byte[] var6 = this.o[var1];
-      if (this.a() == 0) {
-         var3 = this.h3;
-         var4 = this.i3;
-         var5 = this.o2;
-         var6 = this.j3;
+   private void buildScene(int level) {
+      GameScreen screen = (GameScreen)this.canvas.screen;
+      byte[] xRow = this.levelObjectX[level];
+      byte[] yRow = this.levelObjectY[level];
+      short[] ids = this.levelObjectIds[level];
+      byte[] facings = this.levelObjectFacing[level];
+      if (this.areaId() == 0) {
+         xRow = this.liveObjectX;
+         yRow = this.liveObjectY;
+         ids = this.liveObjectIds;
+         facings = this.liveObjectFacing;
       }
 
-      boolean var7b = false;  // var7 is reused below for the spawn mode
-      int var8 = 0;
-      int var9 = 0;
-      int var10 = var5.length;
+      boolean spawnFound = false;
+      int spawnX = 0;
+      int spawnY = 0;
+      int count = ids.length;
 
-      for (int var11 = 0; var11 < var10; var11++) {
-         short var12;
-         if ((var12 = var5[var11]) != -1) {
-            byte var13 = var3[var11];
-            byte var14 = var4[var11];
-            byte var15 = var6[var11];
-            var2.b(var12, var13, var14, var15, var11);
-            if (!var7b && this.a2[var12] == 16) {
-               var7b = true;
-               var8 = var13;
-               var9 = var14;
+      for (int slotIndex = 0; slotIndex < count; slotIndex++) {
+         short id;
+         if ((id = ids[slotIndex]) != -1) {
+            byte x = xRow[slotIndex];
+            byte y = yRow[slotIndex];
+            byte facing = facings[slotIndex];
+            screen.createEntityAtTile(id, x, y, facing, slotIndex);
+            if (!spawnFound && this.objectKind[id] == 16) {
+               spawnFound = true;
+               spawnX = x;
+               spawnY = y;
             }
          }
       }
 
-      if (var7b) {
-         int var27 = this.n3;
-         var8 += var27;
-         var9 += 0;
-         this.d(var8, var9, 3, 3);
+      if (spawnFound) {
+         int halfWidth = this.gridHalfWidth;
+         spawnX += halfWidth;
+         spawnY += 0;
+         this.paintRoomEdges(spawnX, spawnY, 3, 3);
       }
 
-      this.i2();
-      int var7 = this.a() == 0 ? 2 : 3;
-      var8 = com.ea.sims3.GameCanvas.a(var7, var5);
-      int var23 = var3[var8];
-      byte var25 = var4[var8];
-      byte var29 = var6[var8];
-      var2.b(0, var23, var25, var29, 0);
-      var23 = var7 == 2 ? var8 : -1;
-      Neighborhood var26 = var2.a17;
-      int var28 = var2.a17.b6;
+      this.buildRoomEdges();
+      int spawnMode = this.areaId() == 0 ? 2 : 3;
+      spawnX = com.ea.sims3.GameCanvas.indexOfShort(spawnMode, ids);
+      int playerSlot = xRow[spawnX];
+      byte playerY = yRow[spawnX];
+      byte playerFacing = facings[spawnX];
+      screen.createEntityAtTile(0, playerSlot, playerY, playerFacing, 0);
+      playerSlot = spawnMode == 2 ? spawnX : -1;
+      Neighborhood neighborhood = screen.neighborhood;
+      int simCount = screen.neighborhood.simCount;
 
-      for (int var30 = 1; var30 < var28; var30++) {
-         int var31;
-         if (var26.U(var30) == var1 && ((var31 = var26.o(var30)) & 8) != 0) {
-            var23 = com.ea.sims3.GameCanvas.a(2, var5, var23 + 1);
-            byte var32 = var3[var23];
-            byte var33 = var4[var23];
-            byte var17 = var6[var23];
-            Sim var18 = (Sim)var2.b(1, var32, var33, var17, var30);
-            if ((var31 & 16) != 0 && this.a.d() < 30) {
-               var2.a(var18);
+      for (int simIndex = 1; simIndex < simCount; simIndex++) {
+         int simFlags;
+         if (neighborhood.simHomeLotOf(simIndex) == level && ((simFlags = neighborhood.lotStateNow(simIndex)) & 8) != 0) {
+            playerSlot = com.ea.sims3.GameCanvas.indexOfShortFrom(2, ids, playerSlot + 1);
+            byte simX = xRow[playerSlot];
+            byte simY = yRow[playerSlot];
+            byte simFacing = facings[playerSlot];
+            Sim sim = (Sim)screen.createEntityAtTile(1, simX, simY, simFacing, simIndex);
+            if ((simFlags & 16) != 0 && this.canvas.randomPercent() < 30) {
+               screen.assignFreeWillAction(sim);
             }
          }
       }
    }
 
-   public final boolean a5(int var1, int var2) {
-      byte[] var3 = this.h3;
-      byte[] var4 = this.i3;
-      short[] var5 = this.o2;
+   public final boolean hasObjectAt(int tileX, int tileY) {
+      byte[] xValues = this.liveObjectX;
+      byte[] yValues = this.liveObjectY;
+      short[] ids = this.liveObjectIds;
 
-      for (int var6 = 0; var6 < var5.length; var6++) {
-         short var7;
-         if ((var7 = var5[var6]) != -1 && (this.k(var7) & 524288) != 0 && var1 == var3[var6] && var2 == var4[var6]) {
+      for (int slotIndex = 0; slotIndex < ids.length; slotIndex++) {
+         short id;
+         if ((id = ids[slotIndex]) != -1 && (this.objectFlagsAt(id) & 524288) != 0 && tileX == xValues[slotIndex] && tileY == yValues[slotIndex]) {
             return true;
          }
       }
@@ -699,368 +699,368 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       return false;
    }
 
-   private static int I(int var0) {
-      for (int var1 = 0; var1 < 4; var1++) {
-         if ((var0 & a7[var1]) != 0) {
-            return var1;
+   private static int directionOfMask(int mask) {
+      for (int index = 0; index < 4; index++) {
+         if ((mask & DIRECTION_MASKS[index]) != 0) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   public final boolean a3(int var1, int var2, int var3, int var4, int var5) {
-      boolean var6 = true;
-      if (var5 != 0 && var5 != 2) {
-         if (var5 == 1 || var5 == 3) {
-            byte var11 = 1;
-            if (var5 == 3) {
-               var11 = -1;
+   public final boolean footprintFree(int x, int y, int width, int length, int direction) {
+      boolean free = true;
+      if (direction != 0 && direction != 2) {
+         if (direction == 1 || direction == 3) {
+            byte stepAlt = 1;
+            if (direction == 3) {
+               stepAlt = -1;
             }
 
-            int var12 = var1;
-            int var13 = var2 - var3 * var11;
+            int xAtAlt = x;
+            int yAtAlt = y - width * stepAlt;
 
-            for (int var14 = 0; var14 < var4 && var6; var14++) {
-               var6 = (this.g(var12 - var14 * var11, var13) & 64) != 0;
+            for (int stepIndex = 0; stepIndex < length && free; stepIndex++) {
+               free = (this.cellFlagsAt(xAtAlt - stepIndex * stepAlt, yAtAlt) & 64) != 0;
             }
          }
       } else {
-         byte var7 = 1;
-         if (var5 == 2) {
-            var7 = -1;
+         byte step = 1;
+         if (direction == 2) {
+            step = -1;
          }
 
-         int var8 = var1 - var3 * var7;
-         int var9 = var2;
+         int xAt = x - width * step;
+         int yAt = y;
 
-         for (int var10 = 0; var10 < var4 && var6; var10++) {
-            var6 = (this.g(var8, var9 - var10 * var7) & 64) != 0;
+         for (int altStepIndex = 0; altStepIndex < length && free; altStepIndex++) {
+            free = (this.cellFlagsAt(xAt, yAt - altStepIndex * step) & 64) != 0;
          }
       }
 
-      return var6;
+      return free;
    }
 
-   public final int a(int var1, int var2, int var3) {
-      int var4 = this.k(var1);
-      int var5 = this.o(var1);
-      int var6 = this.p(var1);
-      int var7 = this.r(var1);
-      int var8 = 0;
+   public final int directionMaskAt(int objectTypeId, int x, int y) {
+      int flags = this.objectFlagsAt(objectTypeId);
+      int width = this.objectWidthAt(objectTypeId);
+      int height = this.objectHeightAt(objectTypeId);
+      int frames = this.frameCountAt(objectTypeId);
+      int mask = 0;
 
-      for (int var9 = 0; var9 < a7.length; var9++) {
-         int var10 = a7[var9];
-         if ((var4 & var10) != 0) {
-            int var11 = var5;
-            int var12 = var6;
-            if (var9 == 1 || var9 == 3) {
-               var11 = var6;
-               var12 = var5;
+      for (int dir = 0; dir < DIRECTION_MASKS.length; dir++) {
+         int dirMask = DIRECTION_MASKS[dir];
+         if ((flags & dirMask) != 0) {
+            int widthRotated = width;
+            int heightRotated = height;
+            if (dir == 1 || dir == 3) {
+               widthRotated = height;
+               heightRotated = width;
             }
 
-            if ((var4 & 524288) != 0 || this.a3(var2, var3, var11, var12)) {
-               if (var7 > 0) {
-                  int var13 = 0;
+            if ((flags & 524288) != 0 || this.isAreaPassable(x, y, widthRotated, heightRotated)) {
+               if (frames > 0) {
+                  int hits = 0;
 
-                  for (int var14 = 0; var14 < var7; var14++) {
-                     int var15 = this.b(var1, var14, var9);
-                     int var16 = this.c(var1, var14, var9);
-                     if (this.c3(var2 + var15, var3 + var16)) {
-                        var13++;
+                  for (int frame = 0; frame < frames; frame++) {
+                     int dx = this.framePartX(objectTypeId, frame, dir);
+                     int dy = this.framePartY(objectTypeId, frame, dir);
+                     if (this.isPassable(x + dx, y + dy)) {
+                        hits++;
                      }
                   }
 
-                  if (var13 < 1) {
+                  if (hits < 1) {
                      continue;
                   }
                }
 
-               if (((var4 & 1048576) == 0 || this.a3(var2, var3, var5, var6, var9)) && ((var4 & 2097152) == 0 || !this.a3(var2, var3, var5, var6, var9))) {
-                  var8 |= var10;
+               if (((flags & 1048576) == 0 || this.footprintFree(x, y, width, height, dir)) && ((flags & 2097152) == 0 || !this.footprintFree(x, y, width, height, dir))) {
+                  mask |= dirMask;
                }
             }
          }
       }
 
-      return var8;
+      return mask;
    }
 
-   public final int c(int var1) {
-      GameScreen var2 = (GameScreen)this.a.a2;
-      byte[] var3 = this.h3;
-      byte[] var4 = this.i3;
-      short[] var5 = this.o2;
-      byte[] var6 = this.j3;
-      int var7 = this.k(var1);
-      int var8 = this.o(var1);
-      int var9 = this.p(var1);
-      int var10 = 0;
-      int var11 = var5.length;
+   public final int spawnWalkers(int objectTypeId) {
+      GameScreen screen = (GameScreen)this.canvas.screen;
+      byte[] xValues = this.liveObjectX;
+      byte[] yValues = this.liveObjectY;
+      short[] ids = this.liveObjectIds;
+      byte[] facings = this.liveObjectFacing;
+      int flags = this.objectFlagsAt(objectTypeId);
+      int width = this.objectWidthAt(objectTypeId);
+      int height = this.objectHeightAt(objectTypeId);
+      int spawned = 0;
+      int count = ids.length;
 
-      for (int var12 = 0; var12 < var11; var12++) {
-         short var13;
-         if ((var13 = var5[var12]) != -1) {
-            byte var14 = var3[var12];
-            byte var15 = var4[var12];
-            byte var16 = var6[var12];
-            int var17 = this.k(var13);
-            int var18 = this.o(var13);
-            int var19 = this.p(var13);
-            if ((var7 & 524288) != 0) {
-               if ((var17 & 262144) != 0) {
-                  if (var16 == 1 || var16 == 3) {
-                     int var20 = var18;
-                     var18 = var19;
-                     var19 = var20;
+      for (int slotIndex = 0; slotIndex < count; slotIndex++) {
+         short id;
+         if ((id = ids[slotIndex]) != -1) {
+            byte x = xValues[slotIndex];
+            byte y = yValues[slotIndex];
+            byte facing = facings[slotIndex];
+            int otherFlags = this.objectFlagsAt(id);
+            int otherWidth = this.objectWidthAt(id);
+            int otherHeight = this.objectHeightAt(id);
+            if ((flags & 524288) != 0) {
+               if ((otherFlags & 262144) != 0) {
+                  if (facing == 1 || facing == 3) {
+                     int swap = otherWidth;
+                     otherWidth = otherHeight;
+                     otherHeight = swap;
                   }
 
-                  for (int var26 = 0; var26 < var18; var26++) {
-                     for (int var27 = 0; var27 < var19; var27++) {
-                        int var22 = var14 - var26;
-                        int var23 = var15 - var27;
-                        int var25;
-                        if (!this.a5(var22, var23) && (var25 = I(this.a(var1, var22, var23))) != -1) {
-                           var2.b(11, var22, var23, var25, -1);
-                           var10++;
+                  for (int dx = 0; dx < otherWidth; dx++) {
+                     for (int dy = 0; dy < otherHeight; dy++) {
+                        int xAt = x - dx;
+                        int yAt = y - dy;
+                        int dirAlt;
+                        if (!this.hasObjectAt(xAt, yAt) && (dirAlt = directionOfMask(this.directionMaskAt(objectTypeId, xAt, yAt))) != -1) {
+                           screen.createEntityAtTile(11, xAt, yAt, dirAlt, -1);
+                           spawned++;
                         }
                      }
                   }
                }
             } else {
-               int var21;
-               if ((var17 & 4) != 0 && var18 == var8 && var19 == var9 && (var21 = I(this.a(var1, var14, var15))) != -1) {
-                  var2.b(10, var14, var15, var21, -1);
-                  var10++;
+               int dir;
+               if ((otherFlags & 4) != 0 && otherWidth == width && otherHeight == height && (dir = directionOfMask(this.directionMaskAt(objectTypeId, x, y))) != -1) {
+                  screen.createEntityAtTile(10, x, y, dir, -1);
+                  spawned++;
                }
             }
          }
       }
 
-      return var10;
+      return spawned;
    }
 
-   public final void c4(int var1) {
-      this.h2();
-      GameCanvas var2 = this.a;
-      Image var4 = com.ea.sims3.ResourceLoader.loadImage(0);
-      Tile var5;
-      (var5 = new Tile(var1, var4)).setBounds(this.a6, this.b5, this.c6, this.d6);
-      var5.setBackingEnabled(true);
-      this.a8 = var5;
-      this.f3(var1);
-      this.b(true);
-      GameScreen var6;
-      Entity var7;
-      int var8 = f((var7 = (var6 = this.a.a6()).a5(3)).posX);
-      int var9 = g(var7.posY);
-      var6.b(0, var8, var9, 3, 0);
-      int var10 = var2.r;
-      if (var2.r != -1) {
-         Entity var11 = var6.b(1, var8, var9 - 1, 1, var10);
-         var6.b(var11);
-         var6.f(var11);
+   public final void openHouse(int imageId) {
+      this.initGrid();
+      GameCanvas canvas = this.canvas;
+      Image image = com.ea.sims3.ResourceLoader.loadImage(0);
+      Tile tile;
+      (tile = new Tile(imageId, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
+      tile.setBackingEnabled(true);
+      this.groundTile = tile;
+      this.markBorderCells(imageId);
+      this.createFurniture(true);
+      GameScreen screen;
+      Entity sim;
+      int x = toTileX((sim = (screen = this.canvas.gameScreen()).findEntityByType(3)).posX);
+      int y = toTileY(sim.posY);
+      screen.createEntityAtTile(0, x, y, 3, 0);
+      int simId = canvas.walkTargetFrame;
+      if (canvas.walkTargetFrame != -1) {
+         Entity entity = screen.createEntityAtTile(1, x, y - 1, 1, simId);
+         screen.followEntity(entity);
+         screen.openInteractionMenu(entity);
       }
    }
 
-   public final void a(boolean var1) {
-      this.h2();
-      GameCanvas var2 = this.a;
-      Image var4 = com.ea.sims3.ResourceLoader.loadImage(1);
-      Tile var6;
-      (var6 = new Tile(40, var4)).setBounds(this.a6, this.b5, this.c6, this.d6);
-      var6.setBackingEnabled(true);
-      this.a8 = var6;
-      this.l2();
-      this.b(false);
-      GameScreen var7 = var2.a6();
-      if (var1) {
-         Neighborhood var11;
-         int var13 = (var11 = var7.a17).s(var11.V(0));
-         Entity var14 = var7.a5(var13);
-         var7.a(0, var14, 0);
-         var7.a(159, var14, 0, 0);
+   public final void openArea(boolean resetView) {
+      this.initGrid();
+      GameCanvas canvas = this.canvas;
+      Image image = com.ea.sims3.ResourceLoader.loadImage(1);
+      Tile tile;
+      (tile = new Tile(40, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
+      tile.setBackingEnabled(true);
+      this.groundTile = tile;
+      this.markBlockedCells();
+      this.createFurniture(false);
+      GameScreen screen = canvas.gameScreen();
+      if (resetView) {
+         Neighborhood neighborhood;
+         int simIndex = (neighborhood = screen.neighborhood).lotOccupantType(neighborhood.simLot(0));
+         Entity sim = screen.findEntityByType(simIndex);
+         screen.createEntityNear(0, sim, 0);
+         screen.startInteraction(159, sim, 0, 0);
       } else {
-         int var8 = var2.l2;
-         if (var2.l2 != -1) {
-            this.g3 = 13;
-            int var12 = this.a3(var8);
-            Entity var10 = var7.a5(var12);
-            var7.a(0, var10, 0);
+         int savedLotIndex = canvas.houseIndex;
+         if (canvas.houseIndex != -1) {
+            this.areaId = 13;
+            int lotId = this.lotIdAt(savedLotIndex);
+            Entity savedEntity = screen.findEntityByType(lotId);
+            screen.createEntityNear(0, savedEntity, 0);
          } else {
-            var7.a(0, var2.n2, var2.o2, 0, 0);
-            int var9 = var2.r;
-            if (var2.r != -1) {
-               var7.a(1, var2.p2, var2.q, 0, var9);
+            screen.createEntity(0, canvas.simPosX, canvas.simPosY, 0, 0);
+            int simId = canvas.walkTargetFrame;
+            if (canvas.walkTargetFrame != -1) {
+               screen.createEntity(1, canvas.walkTargetX, canvas.walkTargetY, 0, simId);
             }
 
-            var2.a((Sim) null);
+            canvas.enterHouseWith((Sim) null);
          }
       }
    }
 
-   private void b(boolean var1) {
-      GameScreen var2 = this.a.a6();
-      Tile var3 = this.a8;
-      int var4 = this.a8.frameCount();
-      short[] var5 = var3.frames;
+   private void createFurniture(boolean snapToTiles) {
+      GameScreen screen = this.canvas.gameScreen();
+      Tile tile = this.groundTile;
+      int frameCount = this.groundTile.frameCount();
+      short[] frames = tile.frames;
 
-      for (int var6 = 0; var6 < var4; var6++) {
-         int var7 = var6 * 3;
-         short var8 = var5[var7 + 0];
-         int var9 = var5[var7 + 1] << 16;
-         int var10 = var5[var7 + 2] << 16;
-         int var11 = this.e(var9, var10);
-         int var12 = this.f(var9, var10);
-         if (var1) {
-            var11 = d(f(var11));
-            var12 = e(g(var12));
+      for (int frame = 0; frame < frameCount; frame++) {
+         int offset = frame * 3;
+         short spriteId = frames[offset + 0];
+         int x = frames[offset + 1] << 16;
+         int y = frames[offset + 2] << 16;
+         int worldX = this.toWorldX(x, y);
+         int worldY = this.toWorldY(x, y);
+         if (snapToTiles) {
+            worldX = toFixedX(toTileX(worldX));
+            worldY = toFixedY(toTileY(worldY));
          }
 
-         var2.a(var8, var11, var12, 0, -1);
+         screen.createEntity(spriteId, worldX, worldY, 0, -1);
       }
 
-      int var16 = var3.rowCount();
-      short[] var17 = var3.rows;
+      int rowCount = tile.rowCount();
+      short[] rows = tile.rows;
 
-      for (int var18 = 0; var18 < var16; var18++) {
-         int var19 = var18 * 3;
-         short var20 = var17[var19 + 0];
-         int var21 = var17[var19 + 1] << 16;
-         int var22 = var17[var19 + 2] << 16;
-         int var13 = this.e(var21, var22);
-         int var14 = this.f(var21, var22);
-         if (var1) {
-            var13 = d(f(var13));
-            var14 = e(g(var14));
+      for (int row = 0; row < rowCount; row++) {
+         int rowOffset = row * 3;
+         short value = rows[rowOffset + 0];
+         int rowX = rows[rowOffset + 1] << 16;
+         int rowY = rows[rowOffset + 2] << 16;
+         int rowWorldX = this.toWorldX(rowX, rowY);
+         int rowWorldY = this.toWorldY(rowX, rowY);
+         if (snapToTiles) {
+            rowWorldX = toFixedX(toTileX(rowWorldX));
+            rowWorldY = toFixedY(toTileY(rowWorldY));
          }
 
-         Entity var15;
-         (var15 = var2.a(98, var13, var14, 0, -1)).playIdleAnimation(var20);
-         if (var20 == 170 || var20 == 171 || var20 == 172 || var20 == 173 || var20 == 174) {
-            var15.setValueC(-50);
-         } else if (var20 == 151 || var20 == 152 || var20 == 153 || var20 == 154) {
-            var15.setValueC(-18);
+         Entity entity;
+         (entity = screen.createEntity(98, rowWorldX, rowWorldY, 0, -1)).playIdleAnimation(value);
+         if (value == 170 || value == 171 || value == 172 || value == 173 || value == 174) {
+            entity.setValueC(-50);
+         } else if (value == 151 || value == 152 || value == 153 || value == 154) {
+            entity.setValueC(-18);
          }
       }
    }
 
-   public final void c2() {
-      this.a8 = null;
-      this.b6 = null;
+   public final void dispose() {
+      this.groundTile = null;
+      this.overlayTile = null;
    }
 
-   public final void a(Graphics var1) {
-      this.b(var1);
+   public final void draw(Graphics gfx) {
+      this.drawScene(gfx);
    }
 
-   public final int d() {
-      return this.a6 + (this.c6 >> 1) - (this.e5 >> 16);
+   public final int viewCenterX() {
+      return this.boundsX + (this.boundsWidth >> 1) - (this.cameraX >> 16);
    }
 
-   public final int e() {
-      return this.b5 + (this.d6 >> 1) - (this.f4 >> 16);
+   public final int viewCenterY() {
+      return this.boundsY + (this.boundsHeight >> 1) - (this.cameraY >> 16);
    }
 
-   public final int a2(int var1, int var2) {
-      return (var1 - var2 << 1) + this.j4;
+   public final int toScreenFixedX(int worldX, int worldY) {
+      return (worldX - worldY << 1) + this.isoOriginXFixed;
    }
 
-   public final int b(int var1, int var2) {
-      return var1 + var2 + this.k3;
+   public final int toScreenFixedY(int worldX, int worldY) {
+      return worldX + worldY + this.isoOriginYFixed;
    }
 
-   public final int c(int var1, int var2) {
-      return (var1 - var2 >> 15) + this.h4;
+   public final int toScreenX(int worldX, int worldY) {
+      return (worldX - worldY >> 15) + this.isoOriginX;
    }
 
-   public final int d(int var1, int var2) {
-      return (var1 + var2 >> 16) + this.i4;
+   public final int toScreenY(int worldX, int worldY) {
+      return (worldX + worldY >> 16) + this.isoOriginY;
    }
 
-   public final int e(int var1, int var2) {
-      return (var1 - this.j4 >> 1) + (var2 - this.k3) >> 1;
+   public final int toWorldX(int screenX, int screenY) {
+      return (screenX - this.isoOriginXFixed >> 1) + (screenY - this.isoOriginYFixed) >> 1;
    }
 
-   public final int f(int var1, int var2) {
-      return (-(var1 - this.j4) >> 1) + (var2 - this.k3) >> 1;
+   public final int toWorldY(int screenX, int screenY) {
+      return (-(screenX - this.isoOriginXFixed) >> 1) + (screenY - this.isoOriginYFixed) >> 1;
    }
 
-   private static int l(int var0, int var1) {
-      return var0 - var1;
+   private static int subtract(int left, int right) {
+      return left - right;
    }
 
-   private static int m(int var0, int var1) {
-      return var0 + var1;
+   private static int add(int left, int right) {
+      return left + right;
    }
 
-   public static int d(int var0) {
-      return (var0 << 19) + 262144;
+   public static int toFixedX(int value) {
+      return (value << 19) + 262144;
    }
 
-   public static int e(int var0) {
-      return (var0 << 19) + 262144;
+   public static int toFixedY(int value) {
+      return (value << 19) + 262144;
    }
 
-   public static int f(int var0) {
-      return var0 >> 19;
+   public static int toTileX(int value) {
+      return value >> 19;
    }
 
-   public static int g(int var0) {
-      return var0 >> 19;
+   public static int toTileY(int value) {
+      return value >> 19;
    }
 
-   public final boolean b3(int var1, int var2) {
-      return this.c3(f(var1), g(var2));
+   public final boolean isWalkableAt(int x, int y) {
+      return this.isPassable(toTileX(x), toTileY(y));
    }
 
-   private boolean c3(int var1, int var2) {
-      return (this.g(var1, var2) & 128) == 0;
+   private boolean isPassable(int x, int y) {
+      return (this.cellFlagsAt(x, y) & 128) == 0;
    }
 
-   public final int g(int var1, int var2) {
-      var1 += this.n3;
-      var2 += this.o3;
-      if (var1 >= 0 && var1 < this.l3 && var2 >= 0 && var2 < this.m3) {
-         int var3 = var1 + var2 * this.l3;
-         return this.k4[var3];
+   public final int cellFlagsAt(int x, int y) {
+      x += this.gridHalfWidth;
+      y += this.gridHalfHeight;
+      if (x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight) {
+         int index = x + y * this.gridWidth;
+         return this.cellFlags[index];
       } else {
          return 128;
       }
    }
 
-   private void c(int var1, int var2, int var3, int var4) {
-      var1 += this.n3;
-      var2 += this.o3;
-      if (var1 >= 0 && var1 < this.l3 && var2 >= 0 && var2 < this.m3) {
-         byte[] var5 = this.k4;
-         int var6 = var1 + var2 * this.l3;
-         int var7 = var5[var6] & var3;
-         var5[var6] = (byte)(var7 | var4);
+   private void setCellFlags(int x, int y, int clearMask, int setMask) {
+      x += this.gridHalfWidth;
+      y += this.gridHalfHeight;
+      if (x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight) {
+         byte[] cells = this.cellFlags;
+         int index = x + y * this.gridWidth;
+         int value = cells[index] & clearMask;
+         cells[index] = (byte)(value | setMask);
       }
    }
 
-   public final void a(int var1, int var2, int var3, int var4, int var5, int var6) {
-      byte[] var7 = this.k4;
-      int var8 = this.l3;
-      int var9 = this.n3 + var1;
-      int var10 = this.n3 + var1 + var3;
-      int var11 = this.o3 + var2;
-      int var12 = this.o3 + var2 + var4;
+   public final void fillCellFlags(int x, int y, int width, int height, int clearMask, int setMask) {
+      byte[] cells = this.cellFlags;
+      int stride = this.gridWidth;
+      int startX = this.gridHalfWidth + x;
+      int x1 = this.gridHalfWidth + x + width;
+      int startY = this.gridHalfHeight + y;
+      int y1 = this.gridHalfHeight + y + height;
 
-      for (int var13 = var9; var13 < var10; var13++) {
-         for (int var14 = var11; var14 < var12; var14++) {
-            int var15 = var13 + var14 * var8;
-            int var16 = var7[var15] & var5;
-            var7[var15] = (byte)(var16 | var6);
+      for (int col = startX; col < x1; col++) {
+         for (int row = startY; row < y1; row++) {
+            int index = col + row * stride;
+            int value = cells[index] & clearMask;
+            cells[index] = (byte)(value | setMask);
          }
       }
    }
 
-   private boolean a3(int var1, int var2, int var3, int var4) {
-      for (int var5 = 0; var5 < var3; var5++) {
-         for (int var6 = 0; var6 < var4; var6++) {
-            if (!this.c3(var1 - var5, var2 - var6)) {
+   private boolean isAreaPassable(int x, int y, int width, int height) {
+      for (int dx = 0; dx < width; dx++) {
+         for (int dy = 0; dy < height; dy++) {
+            if (!this.isPassable(x - dx, y - dy)) {
                return false;
             }
          }
@@ -1069,930 +1069,930 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       return true;
    }
 
-   private void b(Graphics var1) {
-      Tile var2 = this.a8;
-      int var3 = var1.getClipX();
-      int var4 = var1.getClipY();
-      int var5 = var1.getClipWidth();
-      int var6 = var1.getClipHeight();
-      var1.setClip(this.a6, this.b5, this.c6, this.d6);
-      var2.worldX = this.e5 - (this.c6 >> 1 << 16);
-      var2.worldY = this.f4 - (this.d6 >> 1 << 16);
-      var2.draw(var1);
-      this.c(var1);
-      var1.setClip(var3, var4, var5, var6);
+   private void drawScene(Graphics gfx) {
+      Tile tile = this.groundTile;
+      int clipX = gfx.getClipX();
+      int clipY = gfx.getClipY();
+      int clipWidth = gfx.getClipWidth();
+      int clipHeight = gfx.getClipHeight();
+      gfx.setClip(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
+      tile.worldX = this.cameraX - (this.boundsWidth >> 1 << 16);
+      tile.worldY = this.cameraY - (this.boundsHeight >> 1 << 16);
+      tile.draw(gfx);
+      this.drawEntities(gfx);
+      gfx.setClip(clipX, clipY, clipWidth, clipHeight);
    }
 
-   private void e3(int var1) {
-      if (this.a8 == null) {
-         Image var3 = com.ea.sims3.ResourceLoader.loadImage(0);
-         Tile var4;
-         (var4 = new Tile(64, 64, var3)).setBounds(this.a6, this.b5, this.c6, this.d6);
-         var4.setBackingEnabled(true);
-         this.a8 = var4;
+   private void buildGroundTiles(int level) {
+      if (this.groundTile == null) {
+         Image image = com.ea.sims3.ResourceLoader.loadImage(0);
+         Tile tile;
+         (tile = new Tile(64, 64, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
+         tile.setBackingEnabled(true);
+         this.groundTile = tile;
       }
 
-      if (this.b6 == null) {
-         Image var27 = com.ea.sims3.ResourceLoader.loadImage(2);
-         Tile var29 = new Tile(64, 64, var27);
-         this.b6 = var29;
-         var29.setBounds(this.a6, this.b5, this.c6, this.d6);
-         this.a8.next = var29;
+      if (this.overlayTile == null) {
+         Image overlayImage = com.ea.sims3.ResourceLoader.loadImage(2);
+         Tile overlay = new Tile(64, 64, overlayImage);
+         this.overlayTile = overlay;
+         overlay.setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
+         this.groundTile.next = overlay;
       }
 
-      byte[] var28 = this.d5[var1];
-      byte[] var30 = this.e3[var1];
-      byte[] var5 = this.f3[var1];
-      byte[] var6 = this.g2[var1];
-      byte[] var7 = this.h2[var1];
-      byte[] var8 = this.i2[var1];
-      byte[] var9 = this.j2[var1];
-      byte[] var10 = this.k2[var1];
-      byte[] var11 = this.l2[var1];
-      int var12 = var28.length;
-      int var13 = var9.length;
+      byte[] floorXs = this.floorX[level];
+      byte[] floorYs = this.floorY[level];
+      byte[] widths = this.floorWidth[level];
+      byte[] heights = this.floorHeight[level];
+      byte[] edgeA = this.floorEdgeA[level];
+      byte[] edgeB = this.floorEdgeB[level];
+      byte[] wallsX = this.wallX[level];
+      byte[] wallsY = this.wallY[level];
+      byte[] wallLengths = this.wallLength[level];
+      int floorCount = floorXs.length;
+      int wallCount = wallsX.length;
 
-      for (int var14 = 0; var14 < var12; var14++) {
-         byte var15 = var28[var14];
-         byte var16 = var30[var14];
-         byte var17 = var5[var14];
-         byte var18 = var6[var14];
-         this.a(var15, var16, var17, var18, 255, var14 + 1 | 16);
-         this.a(var15 - 1, var16 - 1, var17 + 2, 1, 255, 128);
-         this.a(var15 - 1, var16 + var18, var17 + 2, 1, 255, 128);
-         this.a(var15 - 1, var16, 1, var18, 255, 128);
-         this.a(var15 + var17, var16, 1, var18, 255, 128);
+      for (int floorIndex = 0; floorIndex < floorCount; floorIndex++) {
+         byte x = floorXs[floorIndex];
+         byte y = floorYs[floorIndex];
+         byte tileWidth = widths[floorIndex];
+         byte tileHeight = heights[floorIndex];
+         this.fillCellFlags(x, y, tileWidth, tileHeight, 255, floorIndex + 1 | 16);
+         this.fillCellFlags(x - 1, y - 1, tileWidth + 2, 1, 255, 128);
+         this.fillCellFlags(x - 1, y + tileHeight, tileWidth + 2, 1, 255, 128);
+         this.fillCellFlags(x - 1, y, 1, tileHeight, 255, 128);
+         this.fillCellFlags(x + tileWidth, y, 1, tileHeight, 255, 128);
       }
 
-      for (int var31 = 0; var31 < var13; var31++) {
-         byte var33 = var9[var31];
-         byte var34 = var10[var31];
-         int var37 = Math.abs(var11[var31]);
-         if ((this.g(var33 - 1, var34) & 128) != 0) {
-            this.a(var33, var34, var37, 1, -129, 0);
+      for (int wallIndex = 0; wallIndex < wallCount; wallIndex++) {
+         byte wallXAt = wallsX[wallIndex];
+         byte wallYAt = wallsY[wallIndex];
+         int length = Math.abs(wallLengths[wallIndex]);
+         if ((this.cellFlagsAt(wallXAt - 1, wallYAt) & 128) != 0) {
+            this.fillCellFlags(wallXAt, wallYAt, length, 1, -129, 0);
          } else {
-            this.a(var33, var34, 1, var37, -129, 0);
-            var11[var31] = (byte)(-var37);
+            this.fillCellFlags(wallXAt, wallYAt, 1, length, -129, 0);
+            wallLengths[wallIndex] = (byte)(-length);
          }
       }
 
-      com.ea.sims3.GameCanvas.a3(this.a8.cellIndices, 16);
-      com.ea.sims3.GameCanvas.a3(this.b6.cellIndices, 60);
-      int var32 = this.n3;
+      com.ea.sims3.GameCanvas.fillBytes(this.groundTile.cellIndices, 16);
+      com.ea.sims3.GameCanvas.fillBytes(this.overlayTile.cellIndices, 60);
+      int halfWidth = this.gridHalfWidth;
 
-      for (int var35 = 0; var35 < var12; var35++) {
-         int var38 = var32 + var28[var35];
-         int var40 = 0 + var30[var35];
-         byte var19 = var5[var35];
-         byte var20 = var6[var35];
-         byte var21 = var7[var35];
-         byte var22 = var8[var35];
-         this.b(var38, var40, var19, var20, var21, var22);
+      for (int floorSlot = 0; floorSlot < floorCount; floorSlot++) {
+         int posX = halfWidth + floorXs[floorSlot];
+         int posY = 0 + floorYs[floorSlot];
+         byte tileW = widths[floorSlot];
+         byte tileH = heights[floorSlot];
+         byte edgeAId = edgeA[floorSlot];
+         byte edgeBId = edgeB[floorSlot];
+         this.paintFloorRect(posX, posY, tileW, tileH, edgeAId, edgeBId);
       }
 
-      for (int var36 = 0; var36 < var13; var36++) {
-         byte var39 = var9[var36];
-         byte var41 = var10[var36];
-         byte var42;
-         int var43;
-         int var44;
-         if ((var42 = var11[var36]) > 0) {
-            var43 = this.g(var39, var41 - 1);
-            var44 = this.g(var39, var41 + 1);
+      for (int wIdx = 0; wIdx < wallCount; wIdx++) {
+         byte wallTileX = wallsX[wIdx];
+         byte wallTileY = wallsY[wIdx];
+         byte len;
+         int flagsA;
+         int flagsB;
+         if ((len = wallLengths[wIdx]) > 0) {
+            flagsA = this.cellFlagsAt(wallTileX, wallTileY - 1);
+            flagsB = this.cellFlagsAt(wallTileX, wallTileY + 1);
          } else {
-            var43 = this.g(var39 - 1, var41);
-            var44 = this.g(var39 + 1, var41);
+            flagsA = this.cellFlagsAt(wallTileX - 1, wallTileY);
+            flagsB = this.cellFlagsAt(wallTileX + 1, wallTileY);
          }
 
-         int var45 = (var43 & 15) - 1;
-         int var23 = (var44 & 15) - 1;
-         byte var24 = var45 == -1 ? 3 : var7[var45];
-         byte var26 = var23 == -1 ? 0 : var8[var23];
-         this.c(var32 + var39, 0 + var41, Math.abs((int)var42), var24, var26, var42 < 0 ? 2 : 1);
+         int edgeAIndex = (flagsA & 15) - 1;
+         int edgeBIndex = (flagsB & 15) - 1;
+         byte edgeAId2 = edgeAIndex == -1 ? 3 : edgeA[edgeAIndex];
+         byte edgeBId2 = edgeBIndex == -1 ? 0 : edgeB[edgeBIndex];
+         this.paintWallStrip(halfWidth + wallTileX, 0 + wallTileY, Math.abs((int)len), edgeAId2, edgeBId2, len < 0 ? 2 : 1);
       }
 
-      this.j2();
-      this.k2();
-      this.a8.invalidateBacking();
+      this.fixWallCorners();
+      this.markPerimeter();
+      this.groundTile.invalidateBacking();
    }
 
-   private void b(int var1, int var2, int var3, int var4, int var5, int var6) {
-      Tile var7 = this.a8;
-      byte[] var8 = this.a8.cellIndices;
-      byte[] var9 = this.b6.cellIndices;
-      int var10 = var7.columns;
-      int var11 = l(var1, var2);
-      int var12 = m(var1, var2);
-      int var13 = var3 + var4;
-      byte var14 = this.a(5, var5);
-      byte var15 = this.a(12, var6);
-      byte var16 = this.a(18, var6);
-      byte var17 = this.a(8, var6);
-      byte var18 = this.a(14, var6);
-      int var19 = var11 - var4;
-      int var20;
-      int var21 = (var20 = var12 + var4) + 1;
+   private void paintFloorRect(int x, int y, int width, int height, int edgeId, int textureId) {
+      Tile tile = this.groundTile;
+      byte[] groundCells = this.groundTile.cellIndices;
+      byte[] overlayCells = this.overlayTile.cellIndices;
+      int stride = tile.columns;
+      int isoX = subtract(x, y);
+      int isoY = add(x, y);
+      int rows = width + height;
+      byte fillId = this.tableValueAt(5, edgeId);
+      byte nearId = this.tableValueAt(12, textureId);
+      byte farId = this.tableValueAt(18, textureId);
+      byte sideAId = this.tableValueAt(8, textureId);
+      byte sideBId = this.tableValueAt(14, textureId);
+      int col = isoX - height;
+      int row;
+      int rowB = (row = isoY + height) + 1;
 
-      for (int var22 = 0; var22 < var13; var22++) {
-         boolean var23 = var22 < var4;
-         boolean var24 = var22 < var3;
-         byte var25 = var23 ? var15 : var16;
-         var9[var19 + (var20 - 0) * var10] = var25;
-         byte var26 = var23 ? var17 : var18;
-         var9[var19 + (var20 - 1) * var10] = var26;
-         int var27 = var24 ? 56 : 48;
-         var9[var19 + (var21 + 0) * var10] = (byte)var27;
-         int var28 = var21 - var20 + 2;
+      for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
+         boolean inHeight = rowIndex < height;
+         boolean inWidth = rowIndex < width;
+         byte topId = inHeight ? nearId : farId;
+         overlayCells[col + (row - 0) * stride] = topId;
+         byte bottomId = inHeight ? sideAId : sideBId;
+         overlayCells[col + (row - 1) * stride] = bottomId;
+         int rowId = inWidth ? 56 : 48;
+         overlayCells[col + (rowB + 0) * stride] = (byte)rowId;
+         int span = rowB - row + 2;
 
-         for (int var29 = 0; var29 < var28; var29++) {
-            var8[var19 + (var20 + var29) * var10] = var14;
+         for (int cellIndex = 0; cellIndex < span; cellIndex++) {
+            groundCells[col + (row + cellIndex) * stride] = fillId;
          }
 
-         if (var22 == 0) {
-            var9[var19 - 1 + (var20 + 0) * var10] = this.a(20, var6);
-         } else if (var22 == var13 - 1) {
-            var9[var19 + 1 + (var20 + 0) * var10] = this.a(21, var6);
+         if (rowIndex == 0) {
+            overlayCells[col - 1 + (row + 0) * stride] = this.tableValueAt(20, textureId);
+         } else if (rowIndex == rows - 1) {
+            overlayCells[col + 1 + (row + 0) * stride] = this.tableValueAt(21, textureId);
          }
 
-         var19++;
-         if (var22 != var3 - 1) {
-            var21 += var24 ? 1 : -1;
+         col++;
+         if (rowIndex != width - 1) {
+            rowB += inWidth ? 1 : -1;
          }
 
-         if (var22 != var4 - 1) {
-            var20 += var23 ? -1 : 1;
+         if (rowIndex != height - 1) {
+            row += inHeight ? -1 : 1;
          }
       }
    }
 
-   private void c(int var1, int var2, int var3, int var4, int var5, int var6) {
-      Tile var7 = this.a8;
-      int var8 = this.a8.columns;
-      byte[] var9 = this.b6.cellIndices;
-      int var10 = l(var1, var2);
-      int var11 = m(var1, var2);
-      boolean var12;
-      if (var12 = (var6 & 1) != 0) {
-         var10--;
-         byte var25 = this.a(24, var5);
-         byte var26 = this.a(25, var5);
-         byte var27 = this.a(7, var4);
-         int var36 = var10 + var11 * var8;
-         var9[var36] = var25;
-         var36 += var8;
-         var9[var36] = var26;
-         var36 += var8;
-         var9[var36] = var27;
+   private void paintWallStrip(int x, int y, int length, int edgeIndex, int textureId, int orientation) {
+      Tile tile = this.groundTile;
+      int stride = this.groundTile.columns;
+      byte[] cells = this.overlayTile.cellIndices;
+      int isoX = subtract(x, y);
+      int isoY = add(x, y);
+      boolean leftSide;
+      if (leftSide = (orientation & 1) != 0) {
+         isoX--;
+         byte topA = this.tableValueAt(24, textureId);
+         byte topB = this.tableValueAt(25, textureId);
+         byte side = this.tableValueAt(7, edgeIndex);
+         int index = isoX + isoY * stride;
+         cells[index] = topA;
+         index += stride;
+         cells[index] = topB;
+         index += stride;
+         cells[index] = side;
 
-         for (int var45 = 0; var45 < var3; var45++) {
-            var36 = ++var10 + ++var11 * var8;
-            var9[var36] = 60;
-            var36 += var8;
-            var9[var36] = 60;
-            var36 += var8;
-            var9[var36] = var27;
+         for (int stepIndex = 0; stepIndex < length; stepIndex++) {
+            index = ++isoX + ++isoY * stride;
+            cells[index] = 60;
+            index += stride;
+            cells[index] = 60;
+            index += stride;
+            cells[index] = side;
          }
 
-         var36 = ++var10 + ++var11 * var8;
-         var9[var36] = 52;
-         var36 += var8;
-         if (var9[var36] == 60) {
-            var9[var36] = this.a(14, var5);
-            var36 += var8;
-            var9[var36] = this.a(18, var5);
+         index = ++isoX + ++isoY * stride;
+         cells[index] = 52;
+         index += stride;
+         if (cells[index] == 60) {
+            cells[index] = this.tableValueAt(14, textureId);
+            index += stride;
+            cells[index] = this.tableValueAt(18, textureId);
          }
       } else {
-         var10 -= 2;
-         var11 += 2;
-         byte var13 = this.a(22, var5);
-         byte var14 = this.a(23, var5);
-         byte var15 = this.a(6, var4);
-         int var16 = var10 + (var11 + 0) * var8;
-         var9[var16] = 52;
-         var16 += var8;
-         if (var9[var16] == 60) {
-            var9[var16] = this.a(8, var5);
-            var16 += var8;
-            var9[var16] = this.a(12, var5);
+         isoX -= 2;
+         isoY += 2;
+         byte topC = this.tableValueAt(22, textureId);
+         byte topD = this.tableValueAt(23, textureId);
+         byte side2 = this.tableValueAt(6, edgeIndex);
+         int index2 = isoX + (isoY + 0) * stride;
+         cells[index2] = 52;
+         index2 += stride;
+         if (cells[index2] == 60) {
+            cells[index2] = this.tableValueAt(8, textureId);
+            index2 += stride;
+            cells[index2] = this.tableValueAt(12, textureId);
          }
 
-         for (int var17 = 0; var17 < var3; var17++) {
-            var16 = ++var10 + (--var11 + 0) * var8;
-            var9[var16] = 60;
-            var16 += var8;
-            var9[var16] = 60;
-            var16 += var8;
-            var9[var16] = var15;
+         for (int stepIndex2 = 0; stepIndex2 < length; stepIndex2++) {
+            index2 = ++isoX + (--isoY + 0) * stride;
+            cells[index2] = 60;
+            index2 += stride;
+            cells[index2] = 60;
+            index2 += stride;
+            cells[index2] = side2;
          }
 
-         var16 = ++var10 + (--var11 + 0) * var8;
-         var9[var16] = var13;
-         var16 += var8;
-         var9[var16] = var14;
-         var16 += var8;
-         var9[var16] = var15;
+         index2 = ++isoX + (--isoY + 0) * stride;
+         cells[index2] = topC;
+         index2 += stride;
+         cells[index2] = topD;
+         index2 += stride;
+         cells[index2] = side2;
       }
    }
 
-   private void d(int var1, int var2, int var3, int var4) {
-      GameCanvas var5 = this.a;
-      Tile var6 = this.a8;
-      byte[] var7 = this.a8.cellIndices;
-      int var8 = var6.columns;
-      int var9 = l(var1, var2);
-      int var10 = m(var1, var2);
-      int var11 = var3 + var4 + 2;
-      int var12 = var9 - var4 - 1;
-      int var13;
-      int var14 = var13 = var10 + var4 + 1;
-      var7[var12 - 1 + (var13 - 2) * var8] = 4;
-      var7[var12 - 1 + (var13 - 1) * var8] = 12;
-      var7[var12 - 1 + var13 * var8] = 13;
-      var7[var12 - 1 + (var13 + 1) * var8] = 21;
-      var7[var12 - 2 + (var13 - 1) * var8] = 4;
-      var7[var12 - 2 + var13 * var8] = 21;
+   private void paintRoomEdges(int x, int y, int width, int height) {
+      GameCanvas canvas = this.canvas;
+      Tile tile = this.groundTile;
+      byte[] cells = this.groundTile.cellIndices;
+      int stride = tile.columns;
+      int isoX = subtract(x, y);
+      int isoY = add(x, y);
+      int rows = width + height + 2;
+      int col = isoX - height - 1;
+      int rowA;
+      int rowB = rowA = isoY + height + 1;
+      cells[col - 1 + (rowA - 2) * stride] = 4;
+      cells[col - 1 + (rowA - 1) * stride] = 12;
+      cells[col - 1 + rowA * stride] = 13;
+      cells[col - 1 + (rowA + 1) * stride] = 21;
+      cells[col - 2 + (rowA - 1) * stride] = 4;
+      cells[col - 2 + rowA * stride] = 21;
 
-      for (int var15 = 0; var15 < var11; var15++) {
-         boolean var16 = var15 < var4 + 1;
-         boolean var17 = var15 < var3 + 1;
-         int var18 = var14 - var13;
+      for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
+         boolean inHeight = rowIndex < height + 1;
+         boolean inWidth = rowIndex < width + 1;
+         int span = rowB - rowA;
 
-         for (int var19 = 0; var19 < var18; var19++) {
-            int var20 = var5.d() < 50 ? 6 : 7;
-            var7[var12 + (var13 + var19) * var8] = (byte)var20;
+         for (int cellIndex = 0; cellIndex < span; cellIndex++) {
+            int id = canvas.randomPercent() < 50 ? 6 : 7;
+            cells[col + (rowA + cellIndex) * stride] = (byte)id;
          }
 
-         int var24 = var16 ? 22 : 23;
-         var7[var12 + (var13 - 1) * var8] = (byte)var24;
-         int var25 = var16 ? 4 : 5;
-         var7[var12 + (var13 - 3) * var8] = (byte)var25;
-         int var21 = var17 ? 15 : 14;
-         var7[var12 + var14 * var8] = (byte)var21;
-         int var22 = var17 ? 21 : 20;
-         var7[var12 + (var14 + 2) * var8] = (byte)var22;
-         int var23 = var5.d() < 50 ? 12 : 13;
-         var7[var12 + (var13 - 2) * var8] = (byte)var23;
-         var7[var12 + (var14 + 1) * var8] = (byte)var23;
-         if (var15 != var3) {
-            var14 += var17 ? 1 : -1;
+         int idE = inHeight ? 22 : 23;
+         cells[col + (rowA - 1) * stride] = (byte)idE;
+         int idF = inHeight ? 4 : 5;
+         cells[col + (rowA - 3) * stride] = (byte)idF;
+         int idB = inWidth ? 15 : 14;
+         cells[col + rowB * stride] = (byte)idB;
+         int idC = inWidth ? 21 : 20;
+         cells[col + (rowB + 2) * stride] = (byte)idC;
+         int idD = canvas.randomPercent() < 50 ? 12 : 13;
+         cells[col + (rowA - 2) * stride] = (byte)idD;
+         cells[col + (rowB + 1) * stride] = (byte)idD;
+         if (rowIndex != width) {
+            rowB += inWidth ? 1 : -1;
          }
 
-         if (var15 != var4) {
-            var13 += var16 ? -1 : 1;
+         if (rowIndex != height) {
+            rowA += inHeight ? -1 : 1;
          }
 
-         var12++;
+         col++;
       }
 
-      var7[var12 + (var13 - 3) * var8] = 5;
-      var7[var12 + (var13 - 2) * var8] = 12;
-      var7[var12 + (var13 - 1) * var8] = 13;
-      var7[var12 + var13 * var8] = 20;
-      var7[var12 + 1 + (var13 - 2) * var8] = 5;
-      var7[var12 + 1 + (var13 - 1) * var8] = 20;
+      cells[col + (rowA - 3) * stride] = 5;
+      cells[col + (rowA - 2) * stride] = 12;
+      cells[col + (rowA - 1) * stride] = 13;
+      cells[col + rowA * stride] = 20;
+      cells[col + 1 + (rowA - 2) * stride] = 5;
+      cells[col + 1 + (rowA - 1) * stride] = 20;
    }
 
-   private void i2() {
-      GameScreen var1 = this.a.a6();
-      boolean var2 = false;
-      Entity var3;
-      if ((var3 = var1.b4(10)).facing == 1) {
-         var2 = true;
-         byte[] var4 = this.b9(1);
-         this.a2(1, var4);
-         byte[] var5 = new byte[]{16, 86, 94, 6, 6, 6, 6, 6};
-         this.a2(0, var5);
+   private void buildRoomEdges() {
+      GameScreen screen = this.canvas.gameScreen();
+      boolean flipped = false;
+      Entity entity;
+      if ((entity = screen.findEntityByObjectType(10)).facing == 1) {
+         flipped = true;
+         byte[] patternTable = this.tableAt(1);
+         this.paintEdgePattern(1, patternTable);
+         byte[] patternA = new byte[]{16, 86, 94, 6, 6, 6, 6, 6};
+         this.paintEdgePattern(0, patternA);
       } else {
-         byte[] var7 = this.b9(0);
-         this.a2(0, var7);
-         byte[] var10 = new byte[]{17, 87, 95, 7, 7, 7, 7, 7};
-         this.a2(1, var10);
+         byte[] patternB = this.tableAt(0);
+         this.paintEdgePattern(0, patternB);
+         byte[] patternC = new byte[]{17, 87, 95, 7, 7, 7, 7, 7};
+         this.paintEdgePattern(1, patternC);
       }
 
-      if (!var2) {
-         boolean var9 = false;
-         int var12 = g(var3.posY);
-         var1.b(57, 21, var12, 0, -1);
+      if (!flipped) {
+         boolean unusedFlag = false;
+         int y = toTileY(entity.posY);
+         screen.createEntityAtTile(57, 21, y, 0, -1);
 
-         for (int var14 = var12 + 6; var14 < 15; var14 += 4) {
-            var1.b(54, 21, var14, 0, -1);
+         for (int yDown = y + 6; yDown < 15; yDown += 4) {
+            screen.createEntityAtTile(54, 21, yDown, 0, -1);
          }
 
-         for (int var15 = var12 - 6; var15 > -14; var15 -= 4) {
-            var1.b(54, 21, var15, 0, -1);
+         for (int yUp = y - 6; yUp > -14; yUp -= 4) {
+            screen.createEntityAtTile(54, 21, yUp, 0, -1);
          }
       } else {
-         int var8 = f(var3.posX);
-         boolean var11 = false;
-         var1.b(57, var8, 21, 1, -1);
+         int x = toTileX(entity.posX);
+         boolean unusedFlag2 = false;
+         screen.createEntityAtTile(57, x, 21, 1, -1);
 
-         for (int var6 = var8 + 6; var6 < 15; var6 += 4) {
-            var1.b(54, var6, 21, 1, -1);
+         for (int xRight = x + 6; xRight < 15; xRight += 4) {
+            screen.createEntityAtTile(54, xRight, 21, 1, -1);
          }
 
-         for (int var13 = var8 - 6; var13 > -14; var13 -= 4) {
-            var1.b(54, var13, 21, 1, -1);
+         for (int xLeft = x - 6; xLeft > -14; xLeft -= 4) {
+            screen.createEntityAtTile(54, xLeft, 21, 1, -1);
          }
       }
    }
 
-   private void a2(int var1, byte[] var2) {
-      Tile var3 = this.a8;
-      byte[] var4 = this.a8.cellIndices;
-      int var5 = var3.columns;
-      int var6 = var3.rowCountValue;
-      int var7 = var2.length - 1;
-      int var8 = var5 - var7;
-      int var9 = var6 - 1;
-      byte var10 = 1;
-      if (var1 == 1) {
-         var8 = var7 - 1;
-         var10 = -1;
+   private void paintEdgePattern(int orientation, byte[] pattern) {
+      Tile tile = this.groundTile;
+      byte[] cells = this.groundTile.cellIndices;
+      int stride = tile.columns;
+      int rows = tile.rowCountValue;
+      int patternLength = pattern.length - 1;
+      int col = stride - patternLength;
+      int row = rows - 1;
+      byte step = 1;
+      if (orientation == 1) {
+         col = patternLength - 1;
+         step = -1;
       }
 
-      byte[] var12 = this.b9(2);
+      byte[] mirrorTable = this.tableAt(2);
 
-      for (byte[] var13 = this.b9(3); var8 >= 0 && var8 < var5; var9 += -1) {
-         for (int var14 = 0; var9 + var14 < var6 && var14 < var2.length; var14++) {
-            byte var15 = var2[var14];
-            int var16;
-            if ((var8 & 1) == 0 && (var16 = com.ea.sims3.GameCanvas.a(var15, var12)) != -1) {
-               var15 = var13[var16];
+      for (byte[] mapTable = this.tableAt(3); col >= 0 && col < stride; row += -1) {
+         for (int rowIndex = 0; row + rowIndex < rows && rowIndex < pattern.length; rowIndex++) {
+            byte id = pattern[rowIndex];
+            int index;
+            if ((col & 1) == 0 && (index = com.ea.sims3.GameCanvas.indexOfByte(id, mirrorTable)) != -1) {
+               id = mapTable[index];
             }
 
-            var16 = var9 + var14;
-            var4[var8 + var16 * var5] = var15;
-            int var17 = com.ea.sims3.Tile.toWorld16(var8);
-            int var18 = com.ea.sims3.Tile.toWorld8(var16);
-            int var19 = this.e(var17, var18);
-            int var20 = this.f(var17, var18);
-            int var21 = f(var19);
-            int var22 = g(var20);
-            this.c(var21, var22, 255, 128);
+            index = row + rowIndex;
+            cells[col + index * stride] = id;
+            int worldX = com.ea.sims3.Tile.toWorld16(col);
+            int worldY = com.ea.sims3.Tile.toWorld8(index);
+            int fixedX = this.toWorldX(worldX, worldY);
+            int fixedY = this.toWorldY(worldX, worldY);
+            int tileX = toTileX(fixedX);
+            int tileY = toTileY(fixedY);
+            this.setCellFlags(tileX, tileY, 255, 128);
          }
 
-         var8 += var10;
+         col += step;
       }
    }
 
-   private void j2() {
-      Tile var1 = this.a8;
-      byte[] var2 = this.b6.cellIndices;
-      byte[] var3 = var1.cellIndices;
-      int var4 = var1.columns;
-      int var5 = var1.rowCountValue;
-      byte[] var6 = this.b9(4);
-      byte[] var7 = this.b9(5);
-      byte[] var8 = this.b9(26);
-      byte[] var9 = this.b9(8);
-      byte[] var10 = this.b9(14);
-      byte[] var11 = this.b9(20);
-      byte[] var12 = this.b9(21);
+   private void fixWallCorners() {
+      Tile tile = this.groundTile;
+      byte[] overlayCells = this.overlayTile.cellIndices;
+      byte[] groundCells = tile.cellIndices;
+      int stride = tile.columns;
+      int rows = tile.rowCountValue;
+      byte[] table4 = this.tableAt(4);
+      byte[] table5 = this.tableAt(5);
+      byte[] table26 = this.tableAt(26);
+      byte[] table8 = this.tableAt(8);
+      byte[] table14 = this.tableAt(14);
+      byte[] table20 = this.tableAt(20);
+      byte[] table21 = this.tableAt(21);
 
-      for (int var13 = 1; var13 < var4 - 1; var13++) {
-         boolean var14 = false;
+      for (int x = 1; x < stride - 1; x++) {
+         boolean joined = false;
 
-         for (int var15 = 0; var15 < var5 - 1; var15++) {
-            int var16;
-            int var17 = (var16 = var13 + (var15 + 0) * var4) + var4;
-            byte var18 = var3[var16];
-            byte var19 = var3[var17];
-            byte var20 = var2[var16];
-            byte var21 = var2[var17];
-            if (var20 == 56 && var21 == 60) {
-               var21 = var10[0];
+         for (int y = 0; y < rows - 1; y++) {
+            int index;
+            int indexBelow = (index = x + (y + 0) * stride) + stride;
+            byte groundAbove = groundCells[index];
+            byte groundBelow = groundCells[indexBelow];
+            byte overlayAbove = overlayCells[index];
+            byte overlayBelow = overlayCells[indexBelow];
+            if (overlayAbove == 56 && overlayBelow == 60) {
+               overlayBelow = table14[0];
             }
 
-            if (var20 == 48 && var21 == 60) {
-               var21 = var9[0];
+            if (overlayAbove == 48 && overlayBelow == 60) {
+               overlayBelow = table8[0];
             }
 
-            if ((this.n(var20, 27) != -1 || com.ea.sims3.GameCanvas.a(var20, var11) != -1) && var21 == 60) {
-               var21 = var10[0];
-               int var22 = var16 + var4;
-               if (var2[var22] == 60) {
-                  var2[var22] = this.a(18, 0);
+            if ((this.indexInTable(overlayAbove, 27) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table20) != -1) && overlayBelow == 60) {
+               overlayBelow = table14[0];
+               int indexA = index + stride;
+               if (overlayCells[indexA] == 60) {
+                  overlayCells[indexA] = this.tableValueAt(18, 0);
                }
             }
 
-            if ((com.ea.sims3.GameCanvas.a(var20, var8) != -1 || com.ea.sims3.GameCanvas.a(var20, var12) != -1) && var21 == 60) {
-               var21 = var9[0];
-               int var34 = var16 + var4;
-               if (var2[var34] == 60) {
-                  var2[var34] = this.a(12, 0);
+            if ((com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table26) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table21) != -1) && overlayBelow == 60) {
+               overlayBelow = table8[0];
+               int indexB = index + stride;
+               if (overlayCells[indexB] == 60) {
+                  overlayCells[indexB] = this.tableValueAt(12, 0);
                }
             }
 
-            int var35;
-            if ((var35 = com.ea.sims3.GameCanvas.a(var20, var10)) != -1) {
-               if (com.ea.sims3.GameCanvas.a(var21, var9) != -1 || com.ea.sims3.GameCanvas.a(var21, var11) != -1) {
-                  var20 = var12[var35];
-               } else if (com.ea.sims3.GameCanvas.a(var19, var7) != -1 && var21 == 60) {
-                  var21 = this.a(18, var35);
+            int indexC;
+            if ((indexC = com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table14)) != -1) {
+               if (com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20) != -1) {
+                  overlayAbove = table21[indexC];
+               } else if (com.ea.sims3.GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
+                  overlayBelow = this.tableValueAt(18, indexC);
                }
             }
 
-            if ((var35 = com.ea.sims3.GameCanvas.a(var20, var9)) != -1) {
-               if (com.ea.sims3.GameCanvas.a(var21, var10) != -1 || com.ea.sims3.GameCanvas.a(var21, var12) != -1) {
-                  var20 = var11[var35];
-               } else if (com.ea.sims3.GameCanvas.a(var19, var7) != -1 && var21 == 60) {
-                  var21 = this.a(12, var35);
+            if ((indexC = com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table8)) != -1) {
+               if (com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21) != -1) {
+                  overlayAbove = table20[indexC];
+               } else if (com.ea.sims3.GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
+                  overlayBelow = this.tableValueAt(12, indexC);
                }
             }
 
-            int var23;
-            if ((var23 = com.ea.sims3.GameCanvas.a(var18, var7)) != -1) {
-               int var24;
-               if ((var24 = com.ea.sims3.GameCanvas.a(var21, var9)) == -1 && (var24 = com.ea.sims3.GameCanvas.a(var21, var11)) == -1) {
-                  if ((var24 = com.ea.sims3.GameCanvas.a(var21, var10)) == -1 && (var24 = com.ea.sims3.GameCanvas.a(var21, var12)) == -1) {
-                     byte[] var43 = this.b9(24);
-                     if (var23 == 3) {
-                        int var45 = this.a.b(0, var6.length - 1);
-                        var18 = var6[var45];
+            int indexD;
+            if ((indexD = com.ea.sims3.GameCanvas.indexOfByte(groundAbove, table5)) != -1) {
+               int indexE;
+               if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8)) == -1 && (indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20)) == -1) {
+                  if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14)) == -1 && (indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21)) == -1) {
+                     byte[] table24 = this.tableAt(24);
+                     if (indexD == 3) {
+                        int randomIdx = this.canvas.randomRange(0, table4.length - 1);
+                        groundAbove = table4[randomIdx];
                      }
 
-                     byte var51;
-                     if (com.ea.sims3.GameCanvas.a(var51 = var2[var13 + 1 + var15 * var4], var11) != -1) {
-                        if (var14) {
-                           if (var20 == 60) {
-                              var20 = this.a(22, 0);
+                     byte overlayRight;
+                     if (com.ea.sims3.GameCanvas.indexOfByte(overlayRight = overlayCells[x + 1 + y * stride], table20) != -1) {
+                        if (joined) {
+                           if (overlayAbove == 60) {
+                              overlayAbove = this.tableValueAt(22, 0);
                            }
                         } else {
-                           byte var54 = this.a(30, 0);
-                           byte var29 = this.a(29, 0);
+                           byte endId = this.tableValueAt(30, 0);
+                           byte midId = this.tableValueAt(29, 0);
 
-                           for (int var30 = 0; var30 < 5; var30++) {
-                              byte var31 = var30 == 4 ? var54 : var29;
-                              var2[var13 + (var15 - var30 - 1) * var4] = var31;
+                           for (int rowIdLoop = 0; rowIdLoop < 5; rowIdLoop++) {
+                              byte rowId = rowIdLoop == 4 ? endId : midId;
+                              overlayCells[x + (y - rowIdLoop - 1) * stride] = rowId;
                            }
 
-                           var20 = this.a(28, 0);
-                           int var57 = var13 + (var15 - 1 - 5) * var4;
-                           var2[var57] = this.a(22, 0);
-                           var14 = true;
+                           overlayAbove = this.tableValueAt(28, 0);
+                           int rowIndex = x + (y - 1 - 5) * stride;
+                           overlayCells[rowIndex] = this.tableValueAt(22, 0);
+                           joined = true;
                         }
 
-                        if (var21 == 60) {
-                           var21 = this.a(23, 0);
+                        if (overlayBelow == 60) {
+                           overlayBelow = this.tableValueAt(23, 0);
                         }
                      }
 
-                     byte var56;
-                     if (com.ea.sims3.GameCanvas.a(var56 = var2[var13 - 1 + var15 * var4], var12) != -1) {
-                        if (var20 == 60) {
-                           byte var59;
-                           int var61 = com.ea.sims3.GameCanvas.a(var59 = var2[var13 - 1 + (var15 + 1) * var4], var9);
-                           var20 = var43[var61];
-                           var21 = this.a(25, var61);
+                     byte overlayLeft;
+                     if (com.ea.sims3.GameCanvas.indexOfByte(overlayLeft = overlayCells[x - 1 + y * stride], table21) != -1) {
+                        if (overlayAbove == 60) {
+                           byte overlayDiag;
+                           int idxDiag = com.ea.sims3.GameCanvas.indexOfByte(overlayDiag = overlayCells[x - 1 + (y + 1) * stride], table8);
+                           overlayAbove = table24[idxDiag];
+                           overlayBelow = this.tableValueAt(25, idxDiag);
                         }
                      } else {
-                        int var55;
-                        if ((var55 = com.ea.sims3.GameCanvas.a(var56, var8)) != -1) {
-                           if (!var14) {
-                              var55 = 0;
-                              byte var58 = this.a(33, 0);
-                              byte var60 = this.a(32, 0);
+                        int idx8;
+                        if ((idx8 = com.ea.sims3.GameCanvas.indexOfByte(overlayLeft, table26)) != -1) {
+                           if (!joined) {
+                              idx8 = 0;
+                              byte endId2 = this.tableValueAt(33, 0);
+                              byte midId2 = this.tableValueAt(32, 0);
 
-                              for (int var32 = 0; var32 < 5; var32++) {
-                                 byte var33 = var32 == 4 ? var58 : var60;
-                                 var2[var13 + (var15 - var32 - 1) * var4] = var33;
+                              for (int columnIndex = 0; columnIndex < 5; columnIndex++) {
+                                 byte rowId2 = columnIndex == 4 ? endId2 : midId2;
+                                 overlayCells[x + (y - columnIndex - 1) * stride] = rowId2;
                               }
 
-                              var20 = this.a(31, 0);
-                              int var62 = var13 + (var15 - 1 - 5) * var4;
-                              var2[var62] = var43[0];
-                              var14 = true;
-                              var62 -= var4 + 1;
-                              if (var2[var62] == 52) {
-                                 var2[var62] = 56;
+                              overlayAbove = this.tableValueAt(31, 0);
+                              int rowIndex2 = x + (y - 1 - 5) * stride;
+                              overlayCells[rowIndex2] = table24[0];
+                              joined = true;
+                              rowIndex2 -= stride + 1;
+                              if (overlayCells[rowIndex2] == 52) {
+                                 overlayCells[rowIndex2] = 56;
                               }
-                           } else if (var20 == 60) {
-                              var20 = var43[var55];
+                           } else if (overlayAbove == 60) {
+                              overlayAbove = table24[idx8];
                            }
 
-                           if (var21 == 60) {
-                              var21 = this.a(25, var55);
+                           if (overlayBelow == 60) {
+                              overlayBelow = this.tableValueAt(25, idx8);
                            }
                         }
                      }
-                  } else if (!var14) {
-                     byte var42 = this.a(16, var24);
-                     byte var44 = this.a(17, var24);
+                  } else if (!joined) {
+                     byte endId3 = this.tableValueAt(16, indexE);
+                     byte midId3 = this.tableValueAt(17, indexE);
 
-                     for (int var48 = 0; var48 < 5; var48++) {
-                        byte var52 = var48 == 3 ? var42 : var44;
-                        var2[var13 + (var15 - var48 - 1) * var4] = var52;
+                     for (int fillIndex = 0; fillIndex < 5; fillIndex++) {
+                        byte rowId3 = fillIndex == 3 ? endId3 : midId3;
+                        overlayCells[x + (y - fillIndex - 1) * stride] = rowId3;
                      }
 
-                     var20 = var44;
-                     int var49 = var13 + (var15 - 5 - 1) * var4;
-                     byte var53 = var2[var49 - 1];
-                     if (this.n(var53, 15) == -1 && var53 != 52) {
-                        var2[var49] = 52;
+                     overlayAbove = midId3;
+                     int rowIndex3 = x + (y - 5 - 1) * stride;
+                     byte aboveId = overlayCells[rowIndex3 - 1];
+                     if (this.indexInTable(aboveId, 15) == -1 && aboveId != 52) {
+                        overlayCells[rowIndex3] = 52;
                      } else {
-                        var2[var49] = 56;
+                        overlayCells[rowIndex3] = 56;
                      }
 
-                     var2[var13 + (var15 - 5 - 0) * var4] = this.a(15, var24);
-                     if (var2[--var49] == 52) {
-                        var2[var49] = 48;
+                     overlayCells[x + (y - 5 - 0) * stride] = this.tableValueAt(15, indexE);
+                     if (overlayCells[--rowIndex3] == 52) {
+                        overlayCells[rowIndex3] = 48;
                      }
 
-                     if ((var24 = com.ea.sims3.GameCanvas.a(var21, var10)) != -1) {
-                        var21 = this.a(19, var24);
-                     } else if ((var24 = com.ea.sims3.GameCanvas.a(var21, var12)) != -1) {
-                        var21 = var8[var24];
+                     if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14)) != -1) {
+                        overlayBelow = this.tableValueAt(19, indexE);
+                     } else if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21)) != -1) {
+                        overlayBelow = table26[indexE];
                      }
 
-                     var14 = true;
-                  } else if (var20 == 60) {
-                     var20 = 56;
+                     joined = true;
+                  } else if (overlayAbove == 60) {
+                     overlayAbove = 56;
                   }
-               } else if (var14) {
-                  if (var20 == 60) {
-                     var20 = 48;
+               } else if (joined) {
+                  if (overlayAbove == 60) {
+                     overlayAbove = 48;
                   }
                } else {
-                  byte var25 = this.a(10, var24);
-                  byte var26 = this.a(11, var24);
+                  byte endId4 = this.tableValueAt(10, indexE);
+                  byte midId4 = this.tableValueAt(11, indexE);
 
-                  for (int var27 = 0; var27 < 5; var27++) {
-                     byte var28 = var27 == 4 ? var25 : var26;
-                     var2[var13 + (var15 - var27) * var4] = var28;
+                  for (int fillIndex2 = 0; fillIndex2 < 5; fillIndex2++) {
+                     byte rowId4 = fillIndex2 == 4 ? endId4 : midId4;
+                     overlayCells[x + (y - fillIndex2) * stride] = rowId4;
                   }
 
-                  var20 = var26;
-                  var2[var13 + (var15 - 5 - 1) * var4] = 52;
-                  int var46 = var13 + (var15 - 5 - 0) * var4;
-                  var2[var46] = this.a(9, var24);
-                  if (var2[--var46] == 52) {
-                     var2[var46] = 48;
+                  overlayAbove = midId4;
+                  overlayCells[x + (y - 5 - 1) * stride] = 52;
+                  int rowIndex4 = x + (y - 5 - 0) * stride;
+                  overlayCells[rowIndex4] = this.tableValueAt(9, indexE);
+                  if (overlayCells[--rowIndex4] == 52) {
+                     overlayCells[rowIndex4] = 48;
                   }
 
-                  if ((var24 = com.ea.sims3.GameCanvas.a(var21, var9)) != -1) {
-                     var21 = this.a(13, var24);
-                  } else if ((var24 = com.ea.sims3.GameCanvas.a(var21, var11)) != -1) {
-                     var21 = this.a(27, var24);
+                  if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8)) != -1) {
+                     overlayBelow = this.tableValueAt(13, indexE);
+                  } else if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20)) != -1) {
+                     overlayBelow = this.tableValueAt(27, indexE);
                   }
 
-                  var14 = true;
+                  joined = true;
                }
             }
 
-            var3[var16] = var18;
-            var3[var17] = var19;
-            var2[var16] = var20;
-            var2[var17] = var21;
+            groundCells[index] = groundAbove;
+            groundCells[indexBelow] = groundBelow;
+            overlayCells[index] = overlayAbove;
+            overlayCells[indexBelow] = overlayBelow;
          }
       }
    }
 
-   private void k2() {
-      Tile var1 = this.b6;
-      byte[] var2 = this.b6.cellIndices;
-      int var3 = var1.columns;
-      int var4 = var1.rowCountValue;
-      byte[] var5 = this.k4;
+   private void markPerimeter() {
+      Tile overlay = this.overlayTile;
+      byte[] cells = this.overlayTile.cellIndices;
+      int stride = overlay.columns;
+      int rows = overlay.rowCountValue;
+      byte[] flags = this.cellFlags;
 
-      for (int var6 = 0; var6 < this.k4.length; var6++) {
-         if ((var5[var6] & 128) != 0) {
-            var5[var6] = (byte)(var5[var6] | 64);
+      for (int flagIndex = 0; flagIndex < this.cellFlags.length; flagIndex++) {
+         if ((flags[flagIndex] & 128) != 0) {
+            flags[flagIndex] = (byte)(flags[flagIndex] | 64);
          }
       }
 
-      for (int var15 = 0; var15 < var3; var15++) {
-         for (int var7 = 0; var7 < var4; var7++) {
-            byte var8 = var2[var15 + var7 * var3];
-            if (var15 == 0
-               || var15 == var3 - 1
-               || var7 == 0
-               || var7 == var4 - 1
-               || this.n(var8, 11) != -1
-               || this.n(var8, 17) != -1
-               || this.n(var8, 31) != -1
-               || this.n(var8, 32) != -1
-               || this.n(var8, 33) != -1
-               || this.n(var8, 8) != -1
-               || this.n(var8, 10) != -1
-               || this.n(var8, 9) != -1
-               || this.n(var8, 14) != -1
-               || this.n(var8, 16) != -1
-               || this.n(var8, 15) != -1) {
-               int var9 = com.ea.sims3.Tile.toWorld16(var15);
-               int var10 = com.ea.sims3.Tile.toWorld8(var7);
-               int var11 = this.e(var9, var10);
-               int var12 = this.f(var9, var10);
-               int var13 = f(var11);
-               int var14 = g(var12);
-               this.c(var13, var14, 255, 128);
-            }
-         }
-      }
-   }
-
-   private void l2() {
-      Tile var1 = this.a8;
-      byte[] var2 = this.a8.cellIndices;
-      int var3 = var1.columns;
-      int var4 = var1.rowCountValue;
-      byte[] var5 = this.b9(34);
-      com.ea.sims3.GameCanvas.a3(this.k4, 128);
-
-      for (int var6 = 0; var6 < var3; var6++) {
-         for (int var7 = 0; var7 < var4; var7++) {
-            byte var8;
-            if (com.ea.sims3.GameCanvas.a(var8 = var2[var6 + var7 * var3], var5) != -1) {
-               int var9 = com.ea.sims3.Tile.toWorld16(var6);
-               int var10 = com.ea.sims3.Tile.toWorld8(var7);
-               int var11 = this.e(var9, var10);
-               int var12 = this.f(var9, var10);
-               int var13 = f(var11);
-               int var14 = g(var12);
-               this.c(var13, var14, -129, 32);
-               this.c(var13 + 1, var14, 255, 16);
-               this.c(var13 - 1, var14, 255, 16);
-               this.c(var13, var14 + 1, 255, 16);
-               this.c(var13, var14 - 1, 255, 16);
-            }
-         }
-      }
-
-      byte[] var15 = this.k4;
-
-      for (int var16 = 0; var16 < var15.length; var16++) {
-         byte var17 = var15[var16];
-         short var18 = 255;
-         if ((var17 & 32) != 0) {
-            var18 = 239;
-         }
-
-         if ((var17 & 16) != 0) {
-            var18 &= -129;
-         }
-
-         var15[var16] = (byte)(var17 & var18);
-      }
-   }
-
-   private void f3(int var1) {
-      byte[] var2 = this.b9(var1 == 39 ? 36 : 35);
-      Tile var3 = this.a8;
-      byte[] var4 = this.a8.cellIndices;
-      int var5 = var3.columns;
-      int var6 = var3.rowCountValue;
-
-      for (int var7 = 0; var7 < var5; var7++) {
-         for (int var8 = 0; var8 < var6; var8++) {
-            byte var9;
-            boolean var10 = com.ea.sims3.GameCanvas.a(var9 = var4[var7 + var8 * var5], var2) != -1;
-            if (var7 == 0 || var7 == var5 - 1 || var8 == 0 || var8 == var6 - 1 || var10) {
-               int var11 = var7;
-               if (!var10 && var7 == var5 - 1) {
-                  var11 = var7 + 1;
-               }
-
-               int var12 = com.ea.sims3.Tile.toWorld16(var11);
-               int var13 = com.ea.sims3.Tile.toWorld8(var8);
-               int var14 = this.e(var12, var13);
-               int var15 = this.f(var12, var13);
-               int var16 = f(var14);
-               int var17 = g(var15);
-               this.c(var16, var17, 255, 128);
+      for (int x = 0; x < stride; x++) {
+         for (int y = 0; y < rows; y++) {
+            byte id = cells[x + y * stride];
+            if (x == 0
+               || x == stride - 1
+               || y == 0
+               || y == rows - 1
+               || this.indexInTable(id, 11) != -1
+               || this.indexInTable(id, 17) != -1
+               || this.indexInTable(id, 31) != -1
+               || this.indexInTable(id, 32) != -1
+               || this.indexInTable(id, 33) != -1
+               || this.indexInTable(id, 8) != -1
+               || this.indexInTable(id, 10) != -1
+               || this.indexInTable(id, 9) != -1
+               || this.indexInTable(id, 14) != -1
+               || this.indexInTable(id, 16) != -1
+               || this.indexInTable(id, 15) != -1) {
+               int worldX = com.ea.sims3.Tile.toWorld16(x);
+               int worldY = com.ea.sims3.Tile.toWorld8(y);
+               int fixedX = this.toWorldX(worldX, worldY);
+               int fixedY = this.toWorldY(worldX, worldY);
+               int tileX = toTileX(fixedX);
+               int tileY = toTileY(fixedY);
+               this.setCellFlags(tileX, tileY, 255, 128);
             }
          }
       }
    }
 
-   private void m2() {
-      GameCanvas var1 = this.a;
-      Entity[] var3 = this.a.a6().a12();
-      boolean var4 = false;
+   private void markBlockedCells() {
+      Tile tile = this.groundTile;
+      byte[] cells = this.groundTile.cellIndices;
+      int stride = tile.columns;
+      int rows = tile.rowCountValue;
+      byte[] table = this.tableAt(34);
+      com.ea.sims3.GameCanvas.fillBytes(this.cellFlags, 128);
 
-      for (int var5 = 0; var5 < var3.length; var5++) {
-         for (int var6 = 1; var6 < var3.length; var6++) {
-            Entity var7 = var3[var6];
-            Entity var8 = var3[var6 - 1];
-            int var9 = this.c(var7.posX, var7.posY);
-            int var10 = this.c(var8.posX, var8.posY);
-            if (var9 < var10) {
-               if (var7.f() < var8.e()) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+      for (int x = 0; x < stride; x++) {
+         for (int y = 0; y < rows; y++) {
+            byte id;
+            if (com.ea.sims3.GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1) {
+               int worldX = com.ea.sims3.Tile.toWorld16(x);
+               int worldY = com.ea.sims3.Tile.toWorld8(y);
+               int fixedX = this.toWorldX(worldX, worldY);
+               int fixedY = this.toWorldY(worldX, worldY);
+               int tileX = toTileX(fixedX);
+               int tileY = toTileY(fixedY);
+               this.setCellFlags(tileX, tileY, -129, 32);
+               this.setCellFlags(tileX + 1, tileY, 255, 16);
+               this.setCellFlags(tileX - 1, tileY, 255, 16);
+               this.setCellFlags(tileX, tileY + 1, 255, 16);
+               this.setCellFlags(tileX, tileY - 1, 255, 16);
+            }
+         }
+      }
+
+      byte[] flags = this.cellFlags;
+
+      for (int flagIndex = 0; flagIndex < flags.length; flagIndex++) {
+         byte value = flags[flagIndex];
+         short mask = 255;
+         if ((value & 32) != 0) {
+            mask = 239;
+         }
+
+         if ((value & 16) != 0) {
+            mask &= -129;
+         }
+
+         flags[flagIndex] = (byte)(value & mask);
+      }
+   }
+
+   private void markBorderCells(int imageId) {
+      byte[] table = this.tableAt(imageId == 39 ? 36 : 35);
+      Tile tile = this.groundTile;
+      byte[] cells = this.groundTile.cellIndices;
+      int stride = tile.columns;
+      int rows = tile.rowCountValue;
+
+      for (int x = 0; x < stride; x++) {
+         for (int y = 0; y < rows; y++) {
+            byte id;
+            boolean matched = com.ea.sims3.GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1;
+            if (x == 0 || x == stride - 1 || y == 0 || y == rows - 1 || matched) {
+               int xAdj = x;
+               if (!matched && x == stride - 1) {
+                  xAdj = x + 1;
                }
 
-               if (var7.type == 98
-                  && var8.type == 0
-                  && var3.length < 25
-                  && (var7.f() == 176 || var7.f() == 144 || var7.f() == 112 || var7.f() == 80 || var7.f() == 48)) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+               int worldX = com.ea.sims3.Tile.toWorld16(xAdj);
+               int worldY = com.ea.sims3.Tile.toWorld8(y);
+               int fixedX = this.toWorldX(worldX, worldY);
+               int fixedY = this.toWorldY(worldX, worldY);
+               int tileX = toTileX(fixedX);
+               int tileY = toTileY(fixedY);
+               this.setCellFlags(tileX, tileY, 255, 128);
+            }
+         }
+      }
+   }
+
+   private void sortEntities() {
+      GameCanvas canvas = this.canvas;
+      Entity[] entities = this.canvas.gameScreen().getEntities();
+      boolean swapped = false;
+
+      for (int passIndex = 0; passIndex < entities.length; passIndex++) {
+         for (int entryIndex = 1; entryIndex < entities.length; entryIndex++) {
+            Entity current = entities[entryIndex];
+            Entity previous = entities[entryIndex - 1];
+            int depthX = this.toScreenX(current.posX, current.posY);
+            int depthY = this.toScreenX(previous.posX, previous.posY);
+            if (depthX < depthY) {
+               if (current.backSortY() < previous.frontSortY()) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
                }
 
-               if (var7.type == 0
-                  && var8.type == 98
-                  && var3.length < 25
-                  && (var8.f() == 400 || var8.f() == 368 || var8.f() == 336 || var8.f() == 304 || var8.f() == 272)) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+               if (current.type == 98
+                  && previous.type == 0
+                  && entities.length < 25
+                  && (current.backSortY() == 176 || current.backSortY() == 144 || current.backSortY() == 112 || current.backSortY() == 80 || current.backSortY() == 48)) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
+               }
+
+               if (current.type == 0
+                  && previous.type == 98
+                  && entities.length < 25
+                  && (previous.backSortY() == 400 || previous.backSortY() == 368 || previous.backSortY() == 336 || previous.backSortY() == 304 || previous.backSortY() == 272)) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
                }
             } else {
-               if (var7.e() < var8.f()) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+               if (current.frontSortY() < previous.backSortY()) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
                }
 
-               if (var7.type == 98 && var8.type == 0 && var3.length < 25 && (var7.f() == 176 || var7.f() == 144 || var7.f() == 112 || var7.f() == 80)) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+               if (current.type == 98 && previous.type == 0 && entities.length < 25 && (current.backSortY() == 176 || current.backSortY() == 144 || current.backSortY() == 112 || current.backSortY() == 80)) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
                }
 
-               if (var7.type == 0
-                  && var8.type == 98
-                  && var3.length < 25
-                  && (var8.f() == 400 || var8.f() == 368 || var8.f() == 336 || var8.f() == 304 || var8.f() == 272)) {
-                  var3[var6 - 1] = var7;
-                  var3[var6] = var8;
-                  var4 = true;
+               if (current.type == 0
+                  && previous.type == 98
+                  && entities.length < 25
+                  && (previous.backSortY() == 400 || previous.backSortY() == 368 || previous.backSortY() == 336 || previous.backSortY() == 304 || previous.backSortY() == 272)) {
+                  entities[entryIndex - 1] = current;
+                  entities[entryIndex] = previous;
+                  swapped = true;
                }
             }
          }
 
-         if (!var4) {
+         if (!swapped) {
             return;
          }
 
-         var4 = false;
+         swapped = false;
       }
    }
 
-   private void n2() {
-      GameCanvas var1 = this.a;
-      Entity[] var3 = this.a.a6().a12();
-      int var4 = this.a6 - 50;
-      int var5 = this.b5 - 20;
-      int var6 = this.a6 + this.c6 + 50;
-      int var7 = this.b5 + this.d6 + 60;
-      int var8 = this.d();
-      int var9 = this.e();
+   private void updateVisibility() {
+      GameCanvas canvas = this.canvas;
+      Entity[] entities = this.canvas.gameScreen().getEntities();
+      int minX = this.boundsX - 50;
+      int minY = this.boundsY - 20;
+      int maxX = this.boundsX + this.boundsWidth + 50;
+      int maxY = this.boundsY + this.boundsHeight + 60;
+      int centerX = this.viewCenterX();
+      int centerY = this.viewCenterY();
 
-      for (int var10 = 0; var10 < var3.length; var10++) {
-         Entity var11 = var3[var10];
-         int var12 = var8 + this.c(var11.posX, var11.posY);
-         int var13 = var9 + this.d(var11.posX, var11.posY);
-         var11.a7 = var12 >= var4 && var12 <= var6 && var13 >= var5 && var13 <= var7;
+      for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
+         Entity entity = entities[entityIndex];
+         int screenX = centerX + this.toScreenX(entity.posX, entity.posY);
+         int screenY = centerY + this.toScreenY(entity.posX, entity.posY);
+         entity.reservedFlag = screenX >= minX && screenX <= maxX && screenY >= minY && screenY <= maxY;
       }
    }
 
-   private void c(Graphics var1) {
-      this.m2();
-      this.n2();
-      GameCanvas var2 = this.a;
-      Entity[] var4;
-      int var5 = (var4 = this.a.a6().a12()).length;
+   private void drawEntities(Graphics gfx) {
+      this.sortEntities();
+      this.updateVisibility();
+      GameCanvas canvas = this.canvas;
+      Entity[] entities;
+      int count = (entities = this.canvas.gameScreen().getEntities()).length;
 
-      for (int var6 = 0; var6 < var5; var6++) {
-         Entity var7;
-         if ((var7 = var4[var6]).a7 && !var7.hasState(8192)) {
-            var7.a(var1);
+      for (int entityIndex = 0; entityIndex < count; entityIndex++) {
+         Entity entity;
+         if ((entity = entities[entityIndex]).reservedFlag && !entity.hasState(8192)) {
+            entity.render(gfx);
          }
       }
    }
 
-   public final void a(Graphics var1, Entity var2, Entity var3, int var4, int var5) {
-      int var6 = this.e5;
-      int var7 = this.f4;
-      this.e5 = var4;
-      this.f4 = var5;
-      GameCanvas var8 = this.a;
-      Entity[] var10;
-      int var11 = (var10 = this.a.a6().a12()).length;
+   public final void drawEntityPair(Graphics gfx, Entity first, Entity second, int cameraX, int cameraY) {
+      int savedCameraX = this.cameraX;
+      int savedCameraY = this.cameraY;
+      this.cameraX = cameraX;
+      this.cameraY = cameraY;
+      GameCanvas canvas = this.canvas;
+      Entity[] entities;
+      int count = (entities = this.canvas.gameScreen().getEntities()).length;
 
-      for (int var12 = 0; var12 < var11; var12++) {
-         Entity var13;
-         if ((var13 = var10[var12]) == var2 || var13 == var3) {
-            var13.a(var1);
+      for (int entityIndex = 0; entityIndex < count; entityIndex++) {
+         Entity entity;
+         if ((entity = entities[entityIndex]) == first || entity == second) {
+            entity.render(gfx);
          }
       }
 
-      this.e5 = var6;
-      this.f4 = var7;
+      this.cameraX = savedCameraX;
+      this.cameraY = savedCameraY;
    }
 
-   public final int f() {
-      return this.b.length;
+   public final int objectCount() {
+      return this.spriteId.length;
    }
 
-   public final int h(int var1) {
-      return this.a2[var1];
+   public final int objectKindAt(int objectTypeId) {
+      return this.objectKind[objectTypeId];
    }
 
-   public final int i(int var1) {
-      return this.b[var1];
+   public final int spriteIdAt(int objectTypeId) {
+      return this.spriteId[objectTypeId];
    }
 
-   public final int j(int var1) {
-      return this.c[var1];
+   public final int spriteVariantAt(int objectTypeId) {
+      return this.spriteVariant[objectTypeId];
    }
 
-   public final int k(int var1) {
-      return this.c2[var1];
+   public final int objectFlagsAt(int objectTypeId) {
+      return this.objectFlags[objectTypeId];
    }
 
-   public final int l(int var1) {
-      return this.d[var1];
+   public final int linkedIdAt(int objectTypeId) {
+      return this.linkedId[objectTypeId];
    }
 
-   public final int m(int var1) {
-      return this.e[var1];
+   public final int objectIdsAt(int objectTypeId) {
+      return this.objectIds[objectTypeId];
    }
 
-   public final int n(int var1) {
-      return this.f[var1];
+   public final int altIdAt(int objectTypeId) {
+      return this.altIds[objectTypeId];
    }
 
-   public final int o(int var1) {
-      return this.b2[var1];
+   public final int objectWidthAt(int objectTypeId) {
+      return this.objectWidth[objectTypeId];
    }
 
-   public final int p(int var1) {
-      return this.c3[var1];
+   public final int objectHeightAt(int objectTypeId) {
+      return this.objectHeight[objectTypeId];
    }
 
-   public final int q(int var1) {
-      return this.g[var1];
+   public final int subTypeAt(int objectTypeId) {
+      return this.subType[objectTypeId];
    }
 
-   public final int h(int var1, int var2) {
-      return var2 < this.a3[var1].length ? this.a3[var1][var2] : 0;
+   public final int attachmentAt(int objectTypeId, int index) {
+      return index < this.attachments[objectTypeId].length ? this.attachments[objectTypeId][index] : 0;
    }
 
-   public final int r(int var1) {
-      return this.a4[var1].length;
+   public final int frameCountAt(int objectTypeId) {
+      return this.frameFlags[objectTypeId].length;
    }
 
-   public final int b(int var1, int var2, int var3) {
-      int var4 = this.a4[var1][var2];
-      byte var5 = this.b3[var1][var2];
-      switch (var3) {
+   public final int framePartX(int objectTypeId, int frame, int direction) {
+      int offset = this.frameFlags[objectTypeId][frame];
+      byte mirrored = this.frameMirrored[objectTypeId][frame];
+      switch (direction) {
          case 0:
          default:
             break;
          case 1:
-            var4 = var5;
+            offset = mirrored;
             break;
          case 2:
-            var4 = 1 - var4 - Math.max(this.c3[var1], 1);
+            offset = 1 - offset - Math.max(this.objectHeight[objectTypeId], 1);
             break;
          case 3:
-            var4 = 1 - Math.max(this.b2[var1], 1) - var5;
+            offset = 1 - Math.max(this.objectWidth[objectTypeId], 1) - mirrored;
       }
 
-      return var4;
+      return offset;
    }
 
-   public final int c(int var1, int var2, int var3) {
-      byte var4 = this.a4[var1][var2];
-      int var5 = this.b3[var1][var2];
-      switch (var3) {
+   public final int framePartY(int objectTypeId, int frame, int direction) {
+      byte offset = this.frameFlags[objectTypeId][frame];
+      int mirrored = this.frameMirrored[objectTypeId][frame];
+      switch (direction) {
          case 0:
          default:
             break;
          case 1:
-            var5 = var4;
+            mirrored = offset;
             break;
          case 2:
-            var5 = 1 - var5 - Math.max(this.b2[var1], 1);
+            mirrored = 1 - mirrored - Math.max(this.objectWidth[objectTypeId], 1);
             break;
          case 3:
-            var5 = 1 - Math.max(this.c3[var1], 1) - var4;
+            mirrored = 1 - Math.max(this.objectHeight[objectTypeId], 1) - offset;
       }
 
-      return var5;
+      return mirrored;
    }
 
-   public final short[] a16(int var1) {
-      return this.b4[var1];
+   public final short[] frameRefsAt(int objectTypeId) {
+      return this.frameRefs[objectTypeId];
    }
 
-   public final int s(int var1) {
-      int[] var2 = this.c2;
-      if ((this.c2[var1] & 32) == 0) {
+   public final int indexOfKind(int kind) {
+      int[] flags = this.objectFlags;
+      if ((this.objectFlags[kind] & 32) == 0) {
          return -1;
       } else {
-         int var3 = 0;
+         int position = 0;
 
-         for (int var4 = 0; var4 < var2.length; var4++) {
-            if ((var2[var4] & 32) != 0) {
-               if (var4 == var1) {
-                  return var3;
+         for (int typeIndex = 0; typeIndex < flags.length; typeIndex++) {
+            if ((flags[typeIndex] & 32) != 0) {
+               if (typeIndex == kind) {
+                  return position;
                }
 
-               var3++;
+               position++;
             }
          }
 
@@ -2000,59 +2000,59 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final int i(int var1, int var2) {
-      int var3 = (var1 << 2) + var2;
-      return this.h[var3];
+   public final int frameDataAt(int objectTypeId, int index) {
+      int indexInArray = (objectTypeId << 2) + index;
+      return this.frameData[indexInArray];
    }
 
-   public final int a(int var1, boolean var2) {
-      if (var1 < 0) {
-         int var3 = this.a.d();
-         if (var1 == -2) {
-            if (!var2) {
-               var3 = var3 * 75 / 100;
+   public final int resolveObjectId(int objectId, boolean isOutdoor) {
+      if (objectId < 0) {
+         int progress = this.canvas.randomPercent();
+         if (objectId == -2) {
+            if (!isOutdoor) {
+               progress = progress * 75 / 100;
             }
 
-            if (var3 < 25) {
-               var1 = 6;
-            } else if (var3 < 50) {
-               var1 = 7;
-            } else if (var3 < 75) {
-               var1 = 8;
+            if (progress < 25) {
+               objectId = 6;
+            } else if (progress < 50) {
+               objectId = 7;
+            } else if (progress < 75) {
+               objectId = 8;
             } else {
-               var1 = 9;
+               objectId = 9;
             }
-         } else if (var1 == -3) {
-            var1 = var3 < 50 ? 10 : 11;
-         } else if (var1 == -4) {
-            var1 = var3 < 50 ? 13 : 14;
+         } else if (objectId == -3) {
+            objectId = progress < 50 ? 10 : 11;
+         } else if (objectId == -4) {
+            objectId = progress < 50 ? 13 : 14;
          }
       }
 
-      return var1;
+      return objectId;
    }
 
-   public final int a(int var1, int var2, boolean var3) {
-      short[] var4 = this.c4[var1];
-      var2 <<= 1;
-      if (var3) {
-         var2++;
+   public final int framePartAt(int objectTypeId, int frame, boolean secondary) {
+      short[] parts = this.frameParts[objectTypeId];
+      frame <<= 1;
+      if (secondary) {
+         frame++;
       }
 
-      if (var2 < var4.length) {
-         return var4[var2];
+      if (frame < parts.length) {
+         return parts[frame];
       } else {
-         return var3 ? 0 : var4[0];
+         return secondary ? 0 : parts[0];
       }
    }
 
-   public final boolean c5(int var1) {
-      int var2 = this.i();
-      return (this.k(var1) & var2) == 0;
+   public final boolean isStageItemAllowed(int objectTypeId) {
+      int mask = this.platformMask();
+      return (this.objectFlagsAt(objectTypeId) & mask) == 0;
    }
 
-   private int i() {
-      switch (this.a.a23.d()) {
+   private int platformMask() {
+      switch (this.canvas.neighborhood.careerLevel()) {
          case 0:
          default:
             return 805306368;
@@ -2063,309 +2063,309 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final int g() {
-      return this.e.length - com.ea.sims3.GameCanvas.c(-1, this.e);
+   public final int itemCount() {
+      return this.objectIds.length - com.ea.sims3.GameCanvas.countEqualShorts(-1, this.objectIds);
    }
 
-   public final int t(int var1) {
-      return com.ea.sims3.GameCanvas.b(var1, this.e, -1);
+   public final int indexOfItem(int value) {
+      return com.ea.sims3.GameCanvas.nthIndexNotEqualShort(value, this.objectIds, -1);
    }
 
-   private final byte[] b9(int var1) {
-      return this.c5[var1];
+   private final byte[] tableAt(int tableId) {
+      return this.layoutTables[tableId];
    }
 
-   private final byte a(int var1, int var2) {
-      return this.c5[var1][var2];
+   private final byte tableValueAt(int tableId, int index) {
+      return this.layoutTables[tableId][index];
    }
 
-   private final int n(int var1, int var2) {
-      return com.ea.sims3.GameCanvas.a(var1, this.c5[var2]);
+   private final int indexInTable(int value, int tableId) {
+      return com.ea.sims3.GameCanvas.indexOfByte(value, this.layoutTables[tableId]);
    }
 
-   public final int h() {
-      return this.i.length;
+   public final int categoryCount() {
+      return this.categoryIds.length;
    }
 
-   public final int u(int var1) {
-      return this.i[var1];
+   public final int categoryIdAt(int index) {
+      return this.categoryIds[index];
    }
 
-   public final int v(int var1) {
-      return this.j[var1];
+   public final int categoryValueAt(int index) {
+      return this.categoryValues[index];
    }
 
-   public final int w(int var1) {
-      return this.d2[var1];
+   public final int categoryMaskAt(int index) {
+      return this.categoryMasks[index];
    }
 
-   public final int x(int var1) {
-      return this.k[var1];
+   public final int categoryTypeAt(int index) {
+      return this.categoryTypes[index];
    }
 
-   public final int y(int var1) {
-      return this.l[var1];
+   public final int categorySubTypeAt(int index) {
+      return this.categorySubTypes[index];
    }
 
-   public final int z(int var1) {
-      return this.d3[var1];
+   public final int categoryFlagAt(int index) {
+      return this.categoryFlags[index];
    }
 
-   public final int A(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.i);
+   public final int indexOfCategoryId(int categoryId) {
+      return com.ea.sims3.GameCanvas.indexOfShort(categoryId, this.categoryIds);
    }
 
-   private static int J(int var0) {
-      char var1 = '\u0000';
-      switch (var0) {
+   private static int soundMask(int soundId) {
+      char result = '\u0000';
+      switch (soundId) {
          case 111:
-            var1 = '\u8000';
+            result = '\u8000';
             break;
          case 112:
          case 113:
          default:
-            var1 = '\u1000';
+            result = '\u1000';
             break;
          case 114:
-            var1 = '\u2000';
+            result = '\u2000';
             break;
          case 115:
-            var1 = '\u4000';
+            result = '\u4000';
       }
 
-      return var1;
+      return result;
    }
 
-   public final int B(int var1) {
-      return com.ea.sims3.GameCanvas.b(J(var1), this.d2);
+   public final int countBySoundMask(int soundId) {
+      return com.ea.sims3.GameCanvas.countAnyFlagInt(soundMask(soundId), this.categoryMasks);
    }
 
-   public final int j(int var1, int var2) {
-      int var3 = J(var1);
-      return com.ea.sims3.GameCanvas.a(var2, this.d2, var3);
+   public final int bitForSound(int soundId, int mask) {
+      int bit = soundMask(soundId);
+      return com.ea.sims3.GameCanvas.nthIndexWithFlagInt(mask, this.categoryMasks, bit);
    }
 
-   public final int C(int var1) {
-      return com.ea.sims3.FixedMath.mul(this.f2[var1] << 16, 22937);
+   public final int volumeOf(int categoryId) {
+      return com.ea.sims3.FixedMath.mul(this.categoryVolumes[categoryId] << 16, 22937);
    }
 
-   public final int D(int var1) {
-      return this.e2[var1];
+   public final int refAt(int categoryId) {
+      return this.categoryRefs[categoryId];
    }
 
-   public final int E(int var1) {
-      return this.d4[var1].length;
+   public final int listSize(int categoryId) {
+      return this.categoryLists[categoryId].length;
    }
 
-   public final int k(int var1, int var2) {
-      return this.d4[var1][var2];
+   public final int listValueAt(int categoryId, int index) {
+      return this.categoryLists[categoryId][index];
    }
 
-   public final int F(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.e2);
+   public final int indexOfRef(int ref) {
+      return com.ea.sims3.GameCanvas.indexOfByte(ref, this.categoryRefs);
    }
 
-   public final int G(int var1) {
-      return this.i[this.e2[var1]];
+   public final int categoryIdOfRef(int ref) {
+      return this.categoryIds[this.categoryRefs[ref]];
    }
 
-   public final int H(int var1) {
-      for (int var2 = 0; var2 < this.e2.length; var2++) {
-         if (this.G(var2) == var1) {
-            return var2;
+   public final int refForCategoryId(int categoryId) {
+      for (int index = 0; index < this.categoryRefs.length; index++) {
+         if (this.categoryIdOfRef(index) == categoryId) {
+            return index;
          }
       }
 
       return -1;
    }
 
-   private void o2() {
-      ResourceLoader var1 = this.a.a6;
+   private void loadPalettes() {
+      ResourceLoader res = this.canvas.resources;
 
       try {
-         DataInputStream var2;
-         byte var3;
-         int[][] var4 = new int[var3 = (var2 = new DataInputStream(var1.openStream(60))).readByte()][];
+         DataInputStream stream;
+         byte paletteCount;
+         int[][] paletteRows = new int[paletteCount = (stream = new DataInputStream(res.openStream(60))).readByte()][];
 
-         for (int var5 = 0; var5 < var3; var5++) {
-            byte var6;
-            int[] var7 = new int[var6 = var2.readByte()];
+         for (int paletteIndex = 0; paletteIndex < paletteCount; paletteIndex++) {
+            byte rowLength;
+            int[] row = new int[rowLength = stream.readByte()];
 
-            for (int var8 = 0; var8 < var6; var8++) {
-               var7[var8] = var2.readInt();
+            for (int rowIndex = 0; rowIndex < rowLength; rowIndex++) {
+               row[rowIndex] = stream.readInt();
             }
 
-            var4[var5] = var7;
+            paletteRows[paletteIndex] = row;
          }
 
-         byte var11;
-         byte[][] var12 = new byte[var11 = var2.readByte()][];
+         byte tableCount;
+         byte[][] tableRows = new byte[tableCount = stream.readByte()][];
 
-         for (int var13 = 0; var13 < var11; var13++) {
-            byte[] var9 = new byte[var2.readByte()];
-            var2.readFully(var9);
-            var12[var13] = var9;
+         for (int tableIndex = 0; tableIndex < tableCount; tableIndex++) {
+            byte[] tableRow = new byte[stream.readByte()];
+            stream.readFully(tableRow);
+            tableRows[tableIndex] = tableRow;
          }
 
-         var2.close();
-         this.a9 = var4;
-         this.p = var12;
-      } catch (IOException var10) {
+         stream.close();
+         this.palettes = paletteRows;
+         this.categoryTables = tableRows;
+      } catch (IOException ignored) {
       }
    }
 
-   private static void a(int[] var0, int[] var1) {
-      for (int var2 = 0; var2 < var0.length; var2++) {
-         var0[var2] = 16711935;
-         var1[var2] = 16711935;
+   private static void fillPlaceholders(int[] colorsA, int[] colorsB) {
+      for (int slotIndex = 0; slotIndex < colorsA.length; slotIndex++) {
+         colorsA[slotIndex] = 16711935;
+         colorsB[slotIndex] = 16711935;
       }
    }
 
-   private void a(int[] var1, int[] var2, int var3, int var4) {
-      if (var3 >= 0 && var4 >= 0) {
-         int[] var5 = this.a9[var3];
-         int[] var6 = this.a9[var4];
-         int var7 = -1;
+   private void applyPalette(int[] colorsA, int[] colorsB, int paletteA, int paletteB) {
+      if (paletteA >= 0 && paletteB >= 0) {
+         int[] paletteRowA = this.palettes[paletteA];
+         int[] paletteRowB = this.palettes[paletteB];
+         int slot = -1;
 
-         for (int var8 = 0; var8 < var1.length; var8++) {
-            if (var1[var8] == 16711935) {
-               var7 = var8;
+         for (int slotIndex = 0; slotIndex < colorsA.length; slotIndex++) {
+            if (colorsA[slotIndex] == 16711935) {
+               slot = slotIndex;
                break;
             }
          }
 
-         System.arraycopy(var5, 0, var1, var7, var5.length);
-         System.arraycopy(var6, 0, var2, var7, var6.length);
+         System.arraycopy(paletteRowA, 0, colorsA, slot, paletteRowA.length);
+         System.arraycopy(paletteRowB, 0, colorsB, slot, paletteRowB.length);
       }
    }
 
-   public final int[] a15(int var1) {
-      return this.a9[var1];
+   public final int[] paletteAt(int paletteId) {
+      return this.palettes[paletteId];
    }
 
-   public final byte[] a14(int var1) {
-      return this.p[var1];
+   public final byte[] tableRowAt(int tableId) {
+      return this.categoryTables[tableId];
    }
 
-   public final void a2(int var1, int[] var2, int[] var3) {
-      Neighborhood var4 = this.a.a23;
-      byte var5 = this.p[1][var4.i(var1, 3)];
-      byte var6 = this.p[2][var4.i(var1, 4)];
-      byte var7 = this.p[3][var4.i(var1, 5)];
-      byte var8 = this.p[4][var4.i(var1, 6)];
-      byte var9 = this.p[5][var4.i(var1, 7)];
-      byte var10 = this.p[6][var4.i(var1, 8)];
-      byte var11 = this.p[7][var4.i(var1, 9)];
-      byte var12 = this.p[0][var4.i(var1, 1)];
-      a(var2, var3);
-      this.a(var2, var3, 11, var5);
-      this.a(var2, var3, 34, var6);
-      this.a(var2, var3, 20, var7);
-      this.a(var2, var3, 30, var8);
-      this.a(var2, var3, 31, var9);
-      this.a(var2, var3, 32, var10);
-      this.a(var2, var3, 33, var11);
-      this.a(var2, var3, 5, var12);
+   public final void buildPaletteFor(int simIndex, int[] colorsA, int[] colorsB) {
+      Neighborhood neighborhood = this.canvas.neighborhood;
+      byte table1Index = this.categoryTables[1][neighborhood.simAttribute(simIndex, 3)];
+      byte table2Index = this.categoryTables[2][neighborhood.simAttribute(simIndex, 4)];
+      byte table3Index = this.categoryTables[3][neighborhood.simAttribute(simIndex, 5)];
+      byte table4Index = this.categoryTables[4][neighborhood.simAttribute(simIndex, 6)];
+      byte table5Index = this.categoryTables[5][neighborhood.simAttribute(simIndex, 7)];
+      byte table6Index = this.categoryTables[6][neighborhood.simAttribute(simIndex, 8)];
+      byte table7Index = this.categoryTables[7][neighborhood.simAttribute(simIndex, 9)];
+      byte table0Index = this.categoryTables[0][neighborhood.simAttribute(simIndex, 1)];
+      fillPlaceholders(colorsA, colorsB);
+      this.applyPalette(colorsA, colorsB, 11, table1Index);
+      this.applyPalette(colorsA, colorsB, 34, table2Index);
+      this.applyPalette(colorsA, colorsB, 20, table3Index);
+      this.applyPalette(colorsA, colorsB, 30, table4Index);
+      this.applyPalette(colorsA, colorsB, 31, table5Index);
+      this.applyPalette(colorsA, colorsB, 32, table6Index);
+      this.applyPalette(colorsA, colorsB, 33, table7Index);
+      this.applyPalette(colorsA, colorsB, 5, table0Index);
    }
 
-   public final void d2() {
-      this.t = 0;
+   public final void clearWaypoints() {
+      this.waypointCount = 0;
    }
 
-   public final void c2(int var1, int var2) {
-      int var3 = this.t << 1;
-      this.e6[var3] = var1;
-      this.e6[var3 + 1] = var2;
-      this.t++;
+   public final void addWaypoint(int x, int y) {
+      int offset = this.waypointCount << 1;
+      this.waypoints[offset] = x;
+      this.waypoints[offset + 1] = y;
+      this.waypointCount++;
    }
 
-   public final int[] a4(int var1, int var2, int var3, int var4, int var5) {
-      this.q2();
-      this.y = var5;
-      this.p2 = f(var1);
-      this.q = g(var2);
-      this.r = f(var3);
-      this.s = g(var4);
-      if (this.c3(this.p2, this.q) && this.c3(this.r, this.s)) {
-         this.u = this.p2 + this.r - 32 >> 1;
-         this.v = this.q + this.s - 32 >> 1;
-         int var6 = this.p2 - this.u;
-         int var7 = this.q - this.v;
-         if (var6 >= 0 && var7 >= 0 && var6 < 32 && var7 < 32) {
-            var6 = this.r - this.u;
-            var7 = this.s - this.v;
-            if (var6 >= 0 && var7 >= 0 && var6 < 32 && var7 < 32) {
-               this.d3(this.p2 - this.u, this.q - this.v);
-               boolean var20 = false;
+   public final int[] findPath(int startX, int startY, int goalX, int goalY, int flags) {
+      this.resetPathfinder();
+      this.pathFlags = flags;
+      this.pathStartX = toTileX(startX);
+      this.pathStartY = toTileY(startY);
+      this.pathGoalX = toTileX(goalX);
+      this.pathGoalY = toTileY(goalY);
+      if (this.isPassable(this.pathStartX, this.pathStartY) && this.isPassable(this.pathGoalX, this.pathGoalY)) {
+         this.pathCenterX = this.pathStartX + this.pathGoalX - 32 >> 1;
+         this.pathCenterY = this.pathStartY + this.pathGoalY - 32 >> 1;
+         int relX = this.pathStartX - this.pathCenterX;
+         int relY = this.pathStartY - this.pathCenterY;
+         if (relX >= 0 && relY >= 0 && relX < 32 && relY < 32) {
+            relX = this.pathGoalX - this.pathCenterX;
+            relY = this.pathGoalY - this.pathCenterY;
+            if (relX >= 0 && relY >= 0 && relX < 32 && relY < 32) {
+               this.pushOpen(this.pathStartX - this.pathCenterX, this.pathStartY - this.pathCenterY);
+               boolean done = false;
 
-               while (!var20) {
-                  if ((var7 = this.j()) == -1) {
+               while (!done) {
+                  if ((relY = this.bestOpenIndex()) == -1) {
                      return new int[0];
                   }
 
-                  int var8 = this.p3[var7] & 255;
-                  int var9 = (this.p3[var7] & '\uff00') >> 8;
+                  int currentX = this.openList[relY] & 255;
+                  int currentY = (this.openList[relY] & '\uff00') >> 8;
 
-                  for (int var10 = 0; var10 < 4; var10++) {
-                     int var11 = var8 + (var10 == 0 ? -1 : (var10 == 1 ? 1 : 0));
-                     int var12 = var9 + (var10 == 2 ? -1 : (var10 == 3 ? 1 : 0));
-                     if (!this.f3(var11, var12)) {
-                        if (this.d3(var11, var12)) {
-                           this.e(var11, var12, var8, var9);
-                           this.d2(var11, var12);
-                           this.e2(var11, var12);
-                           this.f2(var11, var12);
-                        } else if (this.b3(var11, var12, var8, var9)) {
-                           this.e(var11, var12, var8, var9);
-                           this.d2(var11, var12);
-                           this.f2(var11, var12);
+                  for (int dir = 0; dir < 4; dir++) {
+                     int nextX = currentX + (dir == 0 ? -1 : (dir == 1 ? 1 : 0));
+                     int nextY = currentY + (dir == 2 ? -1 : (dir == 3 ? 1 : 0));
+                     if (!this.isClosed(nextX, nextY)) {
+                        if (this.pushOpen(nextX, nextY)) {
+                           this.setParent(nextX, nextY, currentX, currentY);
+                           this.updateCost(nextX, nextY);
+                           this.updateHeuristic(nextX, nextY);
+                           this.updateScore(nextX, nextY);
+                        } else if (this.isCheaper(nextX, nextY, currentX, currentY)) {
+                           this.setParent(nextX, nextY, currentX, currentY);
+                           this.updateCost(nextX, nextY);
+                           this.updateScore(nextX, nextY);
                         }
                      }
                   }
 
-                  this.g2(var7);
-                  if (var8 == this.r - this.u && var9 == this.s - this.v) {
-                     var20 = true;
+                  this.popOpen(relY);
+                  if (currentX == this.pathGoalX - this.pathCenterX && currentY == this.pathGoalY - this.pathCenterY) {
+                     done = true;
                   }
                }
 
-               var7 = Integer.MAX_VALUE;
-               int var24 = Integer.MAX_VALUE;
-               int var25 = this.r - this.u;
-               int var26 = this.s - this.v;
-               int var27 = this.p2 - this.u;
-               int var28 = this.q - this.v;
-               int var13 = 0;
+               relY = Integer.MAX_VALUE;
+               int prevY = Integer.MAX_VALUE;
+               int goalRelX = this.pathGoalX - this.pathCenterX;
+               int goalRelY = this.pathGoalY - this.pathCenterY;
+               int startRelX = this.pathStartX - this.pathCenterX;
+               int startRelY = this.pathStartY - this.pathCenterY;
+               int count = 0;
 
-               short var14;
+               short link;
                while (
-                  var25 >= 0
-                     && var26 >= 0
-                     && var25 < 32
-                     && var26 < 32
-                     && (var25 != var27 || var26 != var28)
-                     && (var7 != var25 || var24 != var26)
-                     && (var14 = this.f5[var25][var26]) != -1
+                  goalRelX >= 0
+                     && goalRelY >= 0
+                     && goalRelX < 32
+                     && goalRelY < 32
+                     && (goalRelX != startRelX || goalRelY != startRelY)
+                     && (relY != goalRelX || prevY != goalRelY)
+                     && (link = this.parentLinks[goalRelX][goalRelY]) != -1
                ) {
-                  this.r2[var13] = (short)(var25 | var26 << 8);
-                  var13++;
-                  var7 = var25;
-                  var24 = var26;
-                  var25 = var14 & 255;
-                  var26 = (var14 & '\uff00') >> 8;
+                  this.pathResult[count] = (short)(goalRelX | goalRelY << 8);
+                  count++;
+                  relY = goalRelX;
+                  prevY = goalRelY;
+                  goalRelX = link & 255;
+                  goalRelY = (link & '\uff00') >> 8;
                }
 
-               int[] var29 = new int[var13 << 1];
+               int[] path = new int[count << 1];
 
-               for (int var15 = 0; var15 < var13; var15++) {
-                  int var16 = var13 - var15 - 1;
-                  int var17 = (this.r2[var16] & 255) + this.u;
-                  int var18 = ((this.r2[var16] & '\uff00') >> 8) + this.v;
-                  var29[(var15 << 1) + 0] = d(var17);
-                  var29[(var15 << 1) + 1] = e(var18);
+               for (int stepIndex = 0; stepIndex < count; stepIndex++) {
+                  int index = count - stepIndex - 1;
+                  int x = (this.pathResult[index] & 255) + this.pathCenterX;
+                  int y = ((this.pathResult[index] & '\uff00') >> 8) + this.pathCenterY;
+                  path[(stepIndex << 1) + 0] = toFixedX(x);
+                  path[(stepIndex << 1) + 1] = toFixedY(y);
                }
 
-               return var29;
+               return path;
             } else {
                return new int[0];
             }
@@ -2377,167 +2377,167 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private void p2() {
-      if (this.p3 == null) {
-         this.p3 = new short[1024];
-         this.w = 0;
-         this.q2 = new short[1024];
-         this.x = 0;
-         this.f5 = new short[32][];
+   private void initPathfinder() {
+      if (this.openList == null) {
+         this.openList = new short[1024];
+         this.openCount = 0;
+         this.closedList = new short[1024];
+         this.closedCount = 0;
+         this.parentLinks = new short[32][];
 
-         for (int var1 = 0; var1 < this.f5.length; var1++) {
-            this.f5[var1] = new short[32];
+         for (int rowIndex = 0; rowIndex < this.parentLinks.length; rowIndex++) {
+            this.parentLinks[rowIndex] = new short[32];
          }
 
-         this.c7 = new int[32][];
+         this.pathCost = new int[32][];
 
-         for (int var2 = 0; var2 < this.c7.length; var2++) {
-            this.c7[var2] = new int[32];
+         for (int rowIndex2 = 0; rowIndex2 < this.pathCost.length; rowIndex2++) {
+            this.pathCost[rowIndex2] = new int[32];
          }
 
-         this.b7 = new int[32][];
+         this.pathScore = new int[32][];
 
-         for (int var3 = 0; var3 < this.b7.length; var3++) {
-            this.b7[var3] = new int[32];
+         for (int rowIndex3 = 0; rowIndex3 < this.pathScore.length; rowIndex3++) {
+            this.pathScore[rowIndex3] = new int[32];
          }
 
-         this.d7 = new int[32][];
+         this.pathHeuristic = new int[32][];
 
-         for (int var4 = 0; var4 < this.d7.length; var4++) {
-            this.d7[var4] = new int[32];
+         for (int rowIndex4 = 0; rowIndex4 < this.pathHeuristic.length; rowIndex4++) {
+            this.pathHeuristic[rowIndex4] = new int[32];
          }
 
-         this.r2 = new short[256];
-         this.t = 0;
-         this.e6 = new int[20];
+         this.pathResult = new short[256];
+         this.waypointCount = 0;
+         this.waypoints = new int[20];
       }
    }
 
-   private boolean d3(int var1, int var2) {
-      short var3 = (short)(var1 | var2 << 8);
+   private boolean pushOpen(int x, int y) {
+      short key = (short)(x | y << 8);
 
-      for (int var4 = 0; var4 < this.w; var4++) {
-         if (this.p3[var4] == var3) {
+      for (int entryIndex = 0; entryIndex < this.openCount; entryIndex++) {
+         if (this.openList[entryIndex] == key) {
             return false;
          }
       }
 
-      this.p3[this.w] = var3;
-      this.w++;
+      this.openList[this.openCount] = key;
+      this.openCount++;
       return true;
    }
 
-   private void g2(int var1) {
-      this.q2[this.x] = this.p3[var1];
-      this.x++;
+   private void popOpen(int index) {
+      this.closedList[this.closedCount] = this.openList[index];
+      this.closedCount++;
 
-      for (int var2 = var1; var2 < this.w - 1; var2++) {
-         this.p3[var2] = this.p3[var2 + 1];
+      for (int entryIndex = index; entryIndex < this.openCount - 1; entryIndex++) {
+         this.openList[entryIndex] = this.openList[entryIndex + 1];
       }
 
-      this.w--;
+      this.openCount--;
    }
 
-   private void e(int var1, int var2, int var3, int var4) {
-      this.f5[var1][var2] = (short)(var3 | var4 << 8);
+   private void setParent(int x, int y, int parentX, int parentY) {
+      this.parentLinks[x][y] = (short)(parentX | parentY << 8);
    }
 
-   private int o(int var1, int var2) {
-      if ((this.y & 6) != 0) {
-         int var3 = var1 + this.u;
-         int var4 = var2 + this.v;
-         int var5;
-         if (((var5 = this.g(var3, var4)) & 32) != 0) {
-            return (this.y & 2) != 0 ? 5 : 50;
+   private int stepCost(int relX, int relY) {
+      if ((this.pathFlags & 6) != 0) {
+         int tileX = relX + this.pathCenterX;
+         int tileY = relY + this.pathCenterY;
+         int flags;
+         if (((flags = this.cellFlagsAt(tileX, tileY)) & 32) != 0) {
+            return (this.pathFlags & 2) != 0 ? 5 : 50;
          } else {
-            return (var5 & 16) != 0 ? 10 : 15;
+            return (flags & 16) != 0 ? 10 : 15;
          }
       } else {
          return 15;
       }
    }
 
-   private void d2(int var1, int var2) {
-      int var3 = this.f5[var1][var2] & 255;
-      int var4 = (this.f5[var1][var2] & '\uff00') >> 8;
-      int var5 = this.c7[var3][var4];
-      byte var6 = 0;
-      if ((this.y & 8) != 0) {
-         int var7 = this.f5[var3][var4] & 255;
-         int var8 = (this.f5[var3][var4] & '\uff00') >> 8;
-         if ((var7 != var3 || var3 != var1) && (var8 != var4 || var4 != var2)) {
-            var6 = 20;
+   private void updateCost(int x, int y) {
+      int parentX = this.parentLinks[x][y] & 255;
+      int parentY = (this.parentLinks[x][y] & '\uff00') >> 8;
+      int cost = this.pathCost[parentX][parentY];
+      byte penalty = 0;
+      if ((this.pathFlags & 8) != 0) {
+         int grandX = this.parentLinks[parentX][parentY] & 255;
+         int grandY = (this.parentLinks[parentX][parentY] & '\uff00') >> 8;
+         if ((grandX != parentX || parentX != x) && (grandY != parentY || parentY != y)) {
+            penalty = 20;
          }
       }
 
-      this.c7[var1][var2] = var5 + this.o(var1, var2) + var6;
+      this.pathCost[x][y] = cost + this.stepCost(x, y) + penalty;
    }
 
-   private boolean b3(int var1, int var2, int var3, int var4) {
-      int var5 = this.c7[var1][var2];
-      return this.c7[var3][var4] + this.o(var1, var2) < var5;
+   private boolean isCheaper(int x, int y, int parentX, int parentY) {
+      int cost = this.pathCost[x][y];
+      return this.pathCost[parentX][parentY] + this.stepCost(x, y) < cost;
    }
 
-   private void e2(int var1, int var2) {
-      int var3 = this.r - this.u - var1;
-      int var4 = this.s - this.v - var2;
-      if (var3 < 0) {
-         var3 = -var3;
+   private void updateHeuristic(int x, int y) {
+      int dx = this.pathGoalX - this.pathCenterX - x;
+      int dy = this.pathGoalY - this.pathCenterY - y;
+      if (dx < 0) {
+         dx = -dx;
       }
 
-      if (var4 < 0) {
-         var4 = -var4;
+      if (dy < 0) {
+         dy = -dy;
       }
 
-      short var5 = 0;
-      if ((this.y & 1) != 0) {
-         for (int var6 = 0; var6 < this.t; var6++) {
-            int var7 = var6 << 1;
-            if (var1 + this.u == this.e6[var7] && var2 + this.v == this.e6[var7 + 1]) {
-               var5 = 250;
+      short penalty = 0;
+      if ((this.pathFlags & 1) != 0) {
+         for (int waypointIndex = 0; waypointIndex < this.waypointCount; waypointIndex++) {
+            int offset = waypointIndex << 1;
+            if (x + this.pathCenterX == this.waypoints[offset] && y + this.pathCenterY == this.waypoints[offset + 1]) {
+               penalty = 250;
                break;
             }
          }
       }
 
-      this.d7[var1][var2] = var3 * 10 + var4 * 10 + var5;
+      this.pathHeuristic[x][y] = dx * 10 + dy * 10 + penalty;
    }
 
-   private void f2(int var1, int var2) {
-      this.b7[var1][var2] = this.d7[var1][var2] + this.c7[var1][var2];
+   private void updateScore(int x, int y) {
+      this.pathScore[x][y] = this.pathHeuristic[x][y] + this.pathCost[x][y];
    }
 
-   private int j() {
-      int var1 = -1;
-      int var2 = Integer.MAX_VALUE;
+   private int bestOpenIndex() {
+      int result = -1;
+      int bestScore = Integer.MAX_VALUE;
 
-      for (int var3 = 0; var3 < this.w; var3++) {
-         int var4 = this.p3[var3] & 255;
-         int var5 = (this.p3[var3] & '\uff00') >> 8;
-         if (var2 > this.b7[var4][var5]) {
-            var2 = this.b7[var4][var5];
-            var1 = var3;
+      for (int entryIndex = 0; entryIndex < this.openCount; entryIndex++) {
+         int x = this.openList[entryIndex] & 255;
+         int y = (this.openList[entryIndex] & '\uff00') >> 8;
+         if (bestScore > this.pathScore[x][y]) {
+            bestScore = this.pathScore[x][y];
+            result = entryIndex;
          }
       }
 
-      return var1;
+      return result;
    }
 
-   private boolean e3(int var1, int var2) {
-      int var3 = var1 + this.u;
-      int var4 = var2 + this.v;
-      return this.c3(var3, var4);
+   private boolean isWalkable(int relX, int relY) {
+      int tileX = relX + this.pathCenterX;
+      int tileY = relY + this.pathCenterY;
+      return this.isPassable(tileX, tileY);
    }
 
-   private boolean f3(int var1, int var2) {
-      if (var1 >= 0 && var2 >= 0 && var1 < 32 && var2 < 32) {
-         if (!this.e3(var1, var2)) {
+   private boolean isClosed(int x, int y) {
+      if (x >= 0 && y >= 0 && x < 32 && y < 32) {
+         if (!this.isWalkable(x, y)) {
             return true;
          } else {
-            int var3 = var1 | var2 << 8;
+            int key = x | y << 8;
 
-            for (int var4 = 0; var4 < this.x; var4++) {
-               if (var3 == this.q2[var4]) {
+            for (int entryIndex = 0; entryIndex < this.closedCount; entryIndex++) {
+               if (key == this.closedList[entryIndex]) {
                   return true;
                }
             }
@@ -2549,12 +2549,12 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private void q2() {
-      this.x = 0;
-      this.w = 0;
-      com.ea.sims3.GameCanvas.a(this.f5, 0);
-      com.ea.sims3.GameCanvas.a(this.c7, 0);
-      com.ea.sims3.GameCanvas.a(this.b7, 0);
-      com.ea.sims3.GameCanvas.a(this.d7, 0);
+   private void resetPathfinder() {
+      this.closedCount = 0;
+      this.openCount = 0;
+      com.ea.sims3.GameCanvas.fillShortMatrix(this.parentLinks, 0);
+      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathCost, 0);
+      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathScore, 0);
+      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathHeuristic, 0);
    }
 }

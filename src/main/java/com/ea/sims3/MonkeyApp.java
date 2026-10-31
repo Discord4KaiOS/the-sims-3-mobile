@@ -4,40 +4,40 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 
 public final class MonkeyApp extends MIDlet {
-   private boolean a = false;
-   private GameCanvas a2;
-   private Display a3;
+   private boolean started = false;
+   private GameCanvas canvas;
+   private Display display;
 
    public MonkeyApp() {
-      this.a = false;
-      this.a3 = Display.getDisplay(this);
-      GameCanvas.a(this);
-      this.a2 = GameCanvas.a7();
+      this.started = false;
+      this.display = Display.getDisplay(this);
+      GameCanvas.create(this);
+      this.canvas = GameCanvas.instance();
    }
 
    public final void startApp() {
-      GameCanvas var1 = this.a2;
-      this.a2.setFullScreenMode(true);
-      this.a3.setCurrent(var1);
-      var1.setFullScreenMode(true);
-      if (!this.a) {
-         var1.a10();
-         this.a = true;
-         var1.c2();
+      GameCanvas midletCanvas = this.canvas;
+      this.canvas.setFullScreenMode(true);
+      this.display.setCurrent(midletCanvas);
+      midletCanvas.setFullScreenMode(true);
+      if (!this.started) {
+         midletCanvas.startGame();
+         this.started = true;
+         midletCanvas.startTimer();
       }
 
-      if (var1.a3) {
-         var1.f2();
+      if (midletCanvas.suspended) {
+         midletCanvas.resumeGame();
       }
    }
 
    public final void pauseApp() {
-      if (this.a2 != null) {
-         this.a2.e2();
+      if (this.canvas != null) {
+         this.canvas.suspendGame();
       }
    }
 
-   public final void destroyApp(boolean var1) {
+   public final void destroyApp(boolean unconditional) {
       this.notifyDestroyed();
    }
 }

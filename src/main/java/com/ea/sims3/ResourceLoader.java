@@ -12,11 +12,11 @@ public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources 
    }
 
    public static final int getSize(int index) {
-      return Resources.b[index];
+      return Resources.resourceSizes[index];
    }
 
    public static final String getName(int index) {
-      return Resources.a[index];
+      return Resources.resourcePaths[index];
    }
 
    public static Image loadImage(int index) {
@@ -32,16 +32,16 @@ public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources 
    }
 
    public final byte[] loadSound(int index) {
-      return this.loadBytes(SoundIndex.b[index]);
+      return this.loadBytes(SoundIndex.SOUND_IDS[index]);
    }
 
    private byte[] loadBytes(int index) {
       int size;
-      byte[] data = new byte[size = Resources.b[index]];
+      byte[] data = new byte[size = Resources.resourceSizes[index]];
 
       try {
-         DataInputStream in = new DataInputStream(this.openStream(index));
-         in.readFully(data);
+         DataInputStream input = new DataInputStream(this.openStream(index));
+         input.readFully(data);
          return data;
       } catch (Exception exception) {
          return null;
@@ -53,18 +53,18 @@ public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources 
    }
 
    private static final int readInt(byte[] data, int offset) {
-      int b0 = (data[offset + 0] & 255) << 24;
-      int b1 = (data[offset + 1] & 255) << 16;
-      int b2 = (data[offset + 2] & 255) << 8;
-      int b3 = data[offset + 3] & 255;
-      return b0 | b1 | b2 | b3;
+      int byte0 = (data[offset + 0] & 255) << 24;
+      int byte1 = (data[offset + 1] & 255) << 16;
+      int byte2 = (data[offset + 2] & 255) << 8;
+      int byte3 = data[offset + 3] & 255;
+      return byte0 | byte1 | byte2 | byte3;
    }
 
    private final void initCrcTable() {
       this.crcTable = new int[256];
 
-      for (int i = 0; i <= 255; i++) {
-         int crc = i;
+      for (int index = 0; index <= 255; index++) {
+         int crc = index;
 
          for (int bit = 8; bit > 0; bit--) {
             if ((crc & 1) == 1) {
@@ -74,15 +74,15 @@ public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources 
             }
          }
 
-         this.crcTable[i] = crc;
+         this.crcTable[index] = crc;
       }
    }
 
    private int crc32(byte[] data, int offset, int length) {
       int crc = -1;
 
-      for (int i = offset; i < offset + length; i++) {
-         int index = 255 & data[i] ^ crc & 0xFF;
+      for (int byteIndex = offset; byteIndex < offset + length; byteIndex++) {
+         int index = 255 & data[byteIndex] ^ crc & 0xFF;
          crc = crc >>> 8 ^ this.crcTable[index];
       }
 
@@ -93,22 +93,22 @@ public final class ResourceLoader implements SpriteIndex, SoundIndex, Resources 
       int count = fromColors.length;
       int pixelCount = length / 3;
 
-      for (int i = 0; i < count; i++) {
-         if (fromColors[i] != 16711935) {
+      for (int colorIndex = 0; colorIndex < count; colorIndex++) {
+         if (fromColors[colorIndex] != 16711935) {
             int fromColor;
-            int fromR = ((fromColor = fromColors[i]) & 0xFF0000) >> 16;
+            int fromR = ((fromColor = fromColors[colorIndex]) & 0xFF0000) >> 16;
             int fromG = (fromColor & 0xFF00) >> 8;
             int fromB = (fromColor & 0xFF) >> 0;
             int pos = offset;
 
-            for (int p = 0; p < pixelCount; p++) {
-               int r = data[pos + 0] & 255;
-               int g = data[pos + 1] & 255;
-               int b = data[pos + 2] & 255;
-               if (r == fromR && g == fromG && b == fromB) {
-                  int toR = (toColors[i] & 0xFF0000) >> 16;
-                  int toG = (toColors[i] & 0xFF00) >> 8;
-                  int toB = (toColors[i] & 0xFF) >> 0;
+            for (int pixel = 0; pixel < pixelCount; pixel++) {
+               int red = data[pos + 0] & 255;
+               int green = data[pos + 1] & 255;
+               int blue = data[pos + 2] & 255;
+               if (red == fromR && green == fromG && blue == fromB) {
+                  int toR = (toColors[colorIndex] & 0xFF0000) >> 16;
+                  int toG = (toColors[colorIndex] & 0xFF00) >> 8;
+                  int toB = (toColors[colorIndex] & 0xFF) >> 0;
                   data[pos + 0] = (byte)(toR & 0xFF);
                   data[pos + 1] = (byte)(toG & 0xFF);
                   data[pos + 2] = (byte)(toB & 0xFF);

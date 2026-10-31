@@ -5,162 +5,162 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
-   private GameCanvas a;
-   private short[] b;
-   private int[][] a2;
-   private short[][] a3;
-   private short[][] b2;
-   private short[] c;
-   private short[] d;
-   private short[] e;
-   private byte[] a4;
-   private short[] f;
-   private short[] g;
-   private short[] h;
-   private short[][] c2;
-   private short[][] d2;
-   private short[][] e2;
-   private short[][] f2;
-   private short[][] g2;
-   private byte[][][] a5;
-   private short[] i;
-   private short[] j;
-   private short[] k;
-   private short[] l;
-   private short[] m;
-   private short[] n;
-   public int a6;
-   private short[] o;
-   private int[] f3;
-   private int[] g3;
-   private short[] p;
-   private int[] h2;
-   private short[] q;
-   private short[] r;
-   private byte[] b3;
-   private int j2;
-   private short[] s;
-   private int[] i2;
-   private byte[] c3;
-   private byte[] d3;
-   private byte[] e3;
-   private byte[][] a7;
-   private int[][] b4;
-   private byte[][] b5;
-   private byte[][] c4;
-   private byte[][] d4;
-   private int[][] c5;
-   private short[] t;
-   private short[] u;
-   private int k2;
-   private short[] v;
-   private byte[] f4;
-   private short[] w;
-   private short[] x;
-   private byte[][] e4;
-   private byte[][] f5;
-   private short[][] h3;
-   public int b6;
-   private short[] y;
-   private byte[] g4;
-   private byte[][] g5;
-   private short[] z;
-   private byte[] h4;
-   private byte[] i3;
-   private byte[] j3;
-   private byte[] k3;
-   private byte[][] h5;
-   private byte[][] i4;
-   public int c6;
-   private byte[][] j4;
-   private short[] A;
-   private int l2;
-   private short[] B;
-   private short[] C;
-   private int[] j5;
-   private short[] D;
-   private byte[][] k4;
-   private byte[][] l3;
-   private int[][] d5;
-   private short[][] i5;
-   private byte[][] m2;
-   private byte[][] n2;
-   private byte[][] o2;
-   private byte[][] p2;
-   private short[][] j6;
-   private byte[][] q2;
-   private short[] E;
-   private byte[] l4;
-   private byte[] m3;
-   private byte[] n3;
-   private short[] F;
-   private byte[] o3;
-   private short[] G;
-   private byte[] p3;
-   private short[] H;
-   private byte[] q3;
-   private short[] I;
-   private byte[] r2;
-   private short[] J;
-   private short[] K;
-   private short[] L;
-   private short[] M;
-   private short[] N;
-   private short[][] k5;
-   public static final int[] a8 = new int[]{4, 8, 16, 32, 64, 128, 256};
-   public static final int[] c7 = new int[]{653, 654, 655, 656, 657, 658, 659};
-   private int m4;
-   public int d6;
-   public int e5;
-   public int f6;
-   public boolean a9;
-   private byte c8;
-   private short a10;
-   private byte[] s2;
-   public int g6;
-   private int[] k6;
-   public static final int[] d7 = new int[]{1, 2};
-   public static final int[] e6 = new int[]{665, 666};
-   private byte d8;
-   private short b7;
-   private short c9;
-   private byte[] t2;
-   private byte e7;
-   private int n4;
-   public byte a11;
-   public byte b8;
-   private short d9;
-   private int o4;
-   private byte[] u2;
-   private int p4;
-   private int q4;
-   private int[] l5;
-   private short e8;
-   private short f7;
-   private int[] m5;
-   private int r3;
-   private int s3;
-   private int[] n5;
-   private int[] o5;
-   private int[] p5;
-   private int[] q5;
-   private short[] O;
-   private int[] r4;
-   private static final short[] P = new short[]{387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398};
-   private int[] s4;
-   private int t3;
-   public int h6;
-   private byte[] v2;
-   private short[] Q;
-   private int[][] e9;
-   private int[][] f8;
-   private short[][] l6;
-   private byte[][] r5;
-   private int u3;
-   public int i6;
-   private int v3;
-   private static final short[] R = new short[]{572, 571, 570, 196, 573, 574, 575};
-   private static final short[] S = new short[]{
+   private GameCanvas canvas;
+   private short[] residentIds;
+   private int[][] residentGrowthSteps;
+   private short[][] residentLook;
+   private short[][] residentLevelValues;
+   private short[] lotNameTextIds;
+   private short[] lotSubtitleTextIds;
+   private short[] lotOccupantTypes;
+   private byte[] lotKinds;
+   private short[] lotSpritesLow;
+   private short[] lotSpritesHigh;
+   private short[] lotExtraSprites;
+   private short[][] lotHourInteractions;
+   private short[][] lotHourIncome;
+   private short[][] lotHourDayBits;
+   private short[][] lotHourStarts;
+   private short[][] lotHourEnds;
+   private byte[][][] lotHourRequirements;
+   private short[] residentLabelTextIds;
+   private short[] residentInfoTextIds;
+   private short[] residentSpritesA;
+   private short[] residentSpritesB;
+   private short[] achievementTextIds;
+   private short[] achievementFlags;
+   public int needCount;
+   private short[] needIds;
+   private int[] needInitialValues;
+   private int[] needDecayRates;
+   private short[] needMoodFlags;
+   private int[] needThresholds;
+   private short[] needLabelTextIds;
+   private short[] needHintTextIds;
+   private byte[] achievementTriggerIds;
+   private int taskCount;
+   private short[] taskIds;
+   private int[] taskDurations;
+   private byte[] taskFollowUps;
+   private byte[] taskAchievements;
+   private byte[] taskFlags;
+   private byte[][] taskNeedIndices;
+   private int[][] taskNeedDeltas;
+   private byte[][] taskMoodIndices;
+   private byte[][] taskMoodDeltas;
+   private byte[][] taskLinkIndices;
+   private int[][] taskLinkDeltas;
+   private short[] itemNameTextIds;
+   private short[] itemSpriteIds;
+   private int simNeedCount;
+   private short[] stateSpriteIds;
+   private byte[] stateFlags;
+   private short[] stateBadgeIds;
+   private short[] stateLabelTextIds;
+   private byte[][] stateTransitionStates;
+   private byte[][] stateTransitionNeeds;
+   private short[][] stateTransitionThresholds;
+   public int simCount;
+   private short[] simNameTextIds;
+   private byte[] simSpareBytes;
+   private byte[][] simAttributes;
+   private short[] simHomeLots;
+   private byte[] simFlags;
+   private byte[] simPortraitIds;
+   private byte[] simLots;
+   private byte[] simHours;
+   private byte[][] simKnownIds;
+   private byte[][] simCardList;
+   public int portraitCount;
+   private byte[][] portraitData;
+   private short[] needTextIds;
+   private int interactionCount;
+   private short[] interactionTextIds;
+   private short[] interactionSprites;
+   private int[] interactionFlags;
+   private short[] interactionAltTextIds;
+   private byte[][] interactionStateReqs;
+   private byte[][] interactionNeedReqs;
+   private int[][] interactionFlagReqs;
+   private short[][] interactionConditionFlags;
+   private byte[][] interactionNeedGains;
+   private byte[][] interactionNeedLosses;
+   private byte[][] interactionMoodIndex;
+   private byte[][] interactionMoodGain;
+   private short[][] interactionResultTextIds;
+   private byte[][] interactionVariants;
+   private short[] visitCardTimeCosts;
+   private byte[] visitCardMinuteLimits;
+   private byte[] visitCardOtherLimits;
+   private byte[] visitCardUp;
+   private short[] visitCardTextA;
+   private byte[] visitCardDown;
+   private short[] visitCardTextB;
+   private byte[] visitCardLeft;
+   private short[] visitCardTextC;
+   private byte[] visitCardRight;
+   private short[] visitCardTextD;
+   private byte[] cardFlags;
+   private short[] cardLabelTextIds;
+   private short[] cardAltTextIds;
+   private short[] cardRequiredLots;
+   private short[] cardRewardItems;
+   private short[] cardRewardMoney;
+   private short[][] cardRequirementIds;
+   public static final int[] WEEKDAY_BITS = new int[]{4, 8, 16, 32, 64, 128, 256};
+   public static final int[] WEEKDAY_TEXT_IDS = new int[]{653, 654, 655, 656, 657, 658, 659};
+   private int timeAccumulator;
+   public int gameTime;
+   public int money;
+   public int moneySpent;
+   public boolean paused;
+   private byte lastCareerLevel;
+   private short lastPromotionDay;
+   private byte[] itemCounts;
+   public int lastPurchasedItem;
+   private int[] residentGrowth;
+   public static final int[] FEATURE_FLAGS = new int[]{1, 2};
+   public static final int[] FEATURE_TEXT_IDS = new int[]{665, 666};
+   private byte lastVisitDay;
+   private short tickCount;
+   private short idleTicks;
+   private byte[] lotLastHour;
+   private byte suggestedLot;
+   private int suggestionTimer;
+   public byte selectedResident;
+   public byte pendingAchievementId;
+   private short randomSeed;
+   private int achievementTimer;
+   private byte[] achievementSlots;
+   private int usedTaskBits;
+   private int milestoneFlags;
+   private int[] achievementTimes;
+   private short altEventCount;
+   private short otherEventCount;
+   private int[] recentTaskTimes;
+   private int visitedLotBits;
+   private int needTimer;
+   private int[] needValues;
+   private int[] needDecay;
+   private int[] needOffsets;
+   private int[] needModifiers;
+   private short[] activeTasks;
+   private int[] taskTimers;
+   private static final short[] MOOD_TEXT_IDS = new short[]{387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398};
+   private int[] moodDeltas;
+   private int moodIndex;
+   public int moodValue;
+   private byte[] simStates;
+   private short[] simMilestones;
+   private int[][] simNeeds;
+   private int[][] simNeedDecay;
+   private short[][] simActionHistory;
+   private byte[][] simRepeatCounts;
+   private int simTickTimer;
+   public int watchedSim;
+   private int watchedSimTimer;
+   private static final short[] REACTION_TEXT_IDS = new short[]{572, 571, 570, 196, 573, 574, 575};
+   private static final short[] COMMENT_TEXT_IDS = new short[]{
       1,
       5,
       2,
@@ -206,602 +206,602 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       196,
       2
    };
-   private byte[] w2;
-   private int[] t4;
-   private int w3;
-   private short[] T;
-   private int[] u4;
-   private int[] v4;
+   private byte[] cardPerformers;
+   private int[] cardTimes;
+   private int celebrationTimer;
+   private short[] pendingTips;
+   private int[] tipValues;
+   private int[] tipTimes;
 
-   public Neighborhood(GameCanvas var1) {
-      this.a = var1;
-      this.i2();
-      this.h2();
+   public Neighborhood(GameCanvas canvas) {
+      this.canvas = canvas;
+      this.loadData();
+      this.resetAllState();
    }
 
-   public final void a4(int var1, int var2) {
-      int var3;
-      int var4;
-      if ((var4 = com.ea.sims3.GameCanvas.a(var3 = 0 | var1, this.T)) != -1) {
-         int var5 = this.T[var4] & '\uff00';
-         this.T[var4] = (short)(var5 | var2);
+   public final void setTipValue(int tipKey, int tipValue) {
+      int tipKeyCopy;
+      int slot;
+      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(tipKeyCopy = 0 | tipKey, this.pendingTips)) != -1) {
+         int highBits = this.pendingTips[slot] & '\uff00';
+         this.pendingTips[slot] = (short)(highBits | tipValue);
       }
    }
 
-   private static final short a(DataInputStream var0) throws IOException {
-      return var0.readShort();
+   private static final short readShort(DataInputStream input) throws IOException {
+      return input.readShort();
    }
 
-   private void i2() {
-      ResourceLoader var1 = this.a.a6;
+   private void loadData() {
+      ResourceLoader resourceLoader = this.canvas.resources;
 
       try {
-         DataInputStream var2;
-         byte var3;
-         short[] var4 = new short[var3 = (var2 = new DataInputStream(var1.openStream(61))).readByte()];
-         int[][] var5 = new int[var3][];
-         short[][] var6 = new short[var3][];
-         short[][] var7 = new short[var3][];
+         DataInputStream input;
+         byte residentCount;
+         short[] residentIds = new short[residentCount = (input = new DataInputStream(resourceLoader.openStream(61))).readByte()];
+         int[][] residentGrowthSteps = new int[residentCount][];
+         short[][] residentLooks = new short[residentCount][];
+         short[][] residentLevelValues = new short[residentCount][];
 
-         for (int var8 = 0; var8 < var3; var8++) {
-            var4[var8] = a(var2);
-            short[] var9 = new short[3];
+         for (int residentIndex = 0; residentIndex < residentCount; residentIndex++) {
+            residentIds[residentIndex] = readShort(input);
+            short[] lookBuf = new short[3];
 
-            for (int var10 = 0; var10 < var9.length; var10++) {
-               var9[var10] = a(var2);
+            for (int lookIndex = 0; lookIndex < lookBuf.length; lookIndex++) {
+               lookBuf[lookIndex] = readShort(input);
             }
 
-            var6[var8] = var9;
-            int[] var121 = new int[5];
+            residentLooks[residentIndex] = lookBuf;
+            int[] growthBuf = new int[5];
 
-            for (int var11 = 0; var11 < 5; var11++) {
-               var121[var11] = var2.readInt();
+            for (int growthIndex = 0; growthIndex < 5; growthIndex++) {
+               growthBuf[growthIndex] = input.readInt();
             }
 
-            var5[var8] = var121;
-            short[] var123 = new short[6];
+            residentGrowthSteps[residentIndex] = growthBuf;
+            short[] levelBuf = new short[6];
 
-            for (int var12 = 0; var12 < 6; var12++) {
-               var123[var12] = a(var2);
+            for (int levelIndex = 0; levelIndex < 6; levelIndex++) {
+               levelBuf[levelIndex] = readShort(input);
             }
 
-            var7[var8] = var123;
+            residentLevelValues[residentIndex] = levelBuf;
          }
 
-         byte var119;
-         short[] var120 = new short[var119 = var2.readByte()];
-         short[] var122 = new short[var119];
-         short[] var124 = new short[var119];
-         byte[] var125 = new byte[var119];
-         short[] var13 = new short[var119];
-         short[] var14 = new short[var119];
-         short[] var15 = new short[var119];
-         short[][] var16 = new short[var119][];
-         short[][] var17 = new short[var119][];
-         short[][] var18 = new short[var119][];
-         short[][] var19 = new short[var119][];
-         short[][] var20 = new short[var119][];
-         byte[][][] var21 = new byte[var119][][];
+         byte lotCount;
+         short[] lotNameTextIds = new short[lotCount = input.readByte()];
+         short[] lotSubtitleTextIds = new short[lotCount];
+         short[] lotOccupantTypes = new short[lotCount];
+         byte[] lotKinds = new byte[lotCount];
+         short[] lotSpritesLow = new short[lotCount];
+         short[] lotSpritesHigh = new short[lotCount];
+         short[] lotExtraSprites = new short[lotCount];
+         short[][] lotHourInteractions = new short[lotCount][];
+         short[][] lotHourIncome = new short[lotCount][];
+         short[][] lotHourDayBits = new short[lotCount][];
+         short[][] lotHourStarts = new short[lotCount][];
+         short[][] lotHourEnds = new short[lotCount][];
+         byte[][][] lotHourRequirements = new byte[lotCount][][];
 
-         for (int var22 = 0; var22 < var119; var22++) {
-            var120[var22] = a(var2);
-            var122[var22] = a(var2);
-            var124[var22] = a(var2);
-            var125[var22] = var2.readByte();
-            var13[var22] = a(var2);
-            var14[var22] = a(var2);
-            var15[var22] = a(var2);
-            byte var23;
-            short[] var24 = new short[var23 = var2.readByte()];
-            short[] var25 = new short[var23];
-            short[] var26 = new short[var23];
-            short[] var27 = new short[var23];
-            short[] var28 = new short[var23];
-            byte[][] var29 = new byte[var23][];
+         for (int lotIndex = 0; lotIndex < lotCount; lotIndex++) {
+            lotNameTextIds[lotIndex] = readShort(input);
+            lotSubtitleTextIds[lotIndex] = readShort(input);
+            lotOccupantTypes[lotIndex] = readShort(input);
+            lotKinds[lotIndex] = input.readByte();
+            lotSpritesLow[lotIndex] = readShort(input);
+            lotSpritesHigh[lotIndex] = readShort(input);
+            lotExtraSprites[lotIndex] = readShort(input);
+            byte hourCount;
+            short[] hourInteractionBuf = new short[hourCount = input.readByte()];
+            short[] hourIncomeBuf = new short[hourCount];
+            short[] hourDayBuf = new short[hourCount];
+            short[] hourStartBuf = new short[hourCount];
+            short[] hourEndBuf = new short[hourCount];
+            byte[][] hourReqBuf = new byte[hourCount][];
 
-            for (int var30 = 0; var30 < var23; var30++) {
-               var24[var30] = a(var2);
-               var25[var30] = var2.readShort();
-               var26[var30] = var2.readShort();
-               int var31 = var2.readShort();
-               int var32 = var2.readShort();
-               var31 = var31 % 100 + var31 / 100 * 60;
-               var32 = var32 % 100 + var32 / 100 * 60;
-               var27[var30] = (short)var31;
-               var28[var30] = (short)var32;
-               byte[] var33;
-               (var33 = new byte[4])[0] = (byte)a(var2);
-               var33[1] = var2.readByte();
-               var33[2] = (byte)a(var2);
-               var33[3] = var2.readByte();
-               var29[var30] = var33;
+            for (int hourIndex = 0; hourIndex < hourCount; hourIndex++) {
+               hourInteractionBuf[hourIndex] = readShort(input);
+               hourIncomeBuf[hourIndex] = input.readShort();
+               hourDayBuf[hourIndex] = input.readShort();
+               int startMinutes = input.readShort();
+               int endMinutes = input.readShort();
+               startMinutes = startMinutes % 100 + startMinutes / 100 * 60;
+               endMinutes = endMinutes % 100 + endMinutes / 100 * 60;
+               hourStartBuf[hourIndex] = (short)startMinutes;
+               hourEndBuf[hourIndex] = (short)endMinutes;
+               byte[] requirement;
+               (requirement = new byte[4])[0] = (byte)readShort(input);
+               requirement[1] = input.readByte();
+               requirement[2] = (byte)readShort(input);
+               requirement[3] = input.readByte();
+               hourReqBuf[hourIndex] = requirement;
             }
 
-            var16[var22] = var24;
-            var17[var22] = var25;
-            var18[var22] = var26;
-            var19[var22] = var27;
-            var20[var22] = var28;
-            var21[var22] = var29;
+            lotHourInteractions[lotIndex] = hourInteractionBuf;
+            lotHourIncome[lotIndex] = hourIncomeBuf;
+            lotHourDayBits[lotIndex] = hourDayBuf;
+            lotHourStarts[lotIndex] = hourStartBuf;
+            lotHourEnds[lotIndex] = hourEndBuf;
+            lotHourRequirements[lotIndex] = hourReqBuf;
          }
 
-         byte var126;
-         short[] var127 = new short[var126 = var2.readByte()];
-         short[] var128 = new short[var126];
-         short[] var129 = new short[var126];
-         short[] var130 = new short[var126];
+         byte labelCount;
+         short[] residentLabelTextIds = new short[labelCount = input.readByte()];
+         short[] residentInfoTextIds = new short[labelCount];
+         short[] residentSpritesA = new short[labelCount];
+         short[] residentSpritesB = new short[labelCount];
 
-         for (int var131 = 0; var131 < var126; var131++) {
-            var127[var131] = a(var2);
-            var128[var131] = a(var2);
-            var129[var131] = a(var2);
-            var130[var131] = var2.readShort();
+         for (int labelIndex = 0; labelIndex < labelCount; labelIndex++) {
+            residentLabelTextIds[labelIndex] = readShort(input);
+            residentInfoTextIds[labelIndex] = readShort(input);
+            residentSpritesA[labelIndex] = readShort(input);
+            residentSpritesB[labelIndex] = input.readShort();
          }
 
-         byte var132;
-         short[] var133 = new short[var132 = var2.readByte()];
-         short[] var134 = new short[var132];
+         byte achievementCount;
+         short[] achievementTextIds = new short[achievementCount = input.readByte()];
+         short[] achievementFlags = new short[achievementCount];
 
-         for (int var135 = 0; var135 < var132; var135++) {
-            var133[var135] = a(var2);
-            var134[var135] = var2.readShort();
+         for (int achievementIndex = 0; achievementIndex < achievementCount; achievementIndex++) {
+            achievementTextIds[achievementIndex] = readShort(input);
+            achievementFlags[achievementIndex] = input.readShort();
          }
 
-         byte var136;
-         short[] var138 = new short[var136 = var2.readByte()];
-         int[] var140 = new int[var136];
-         int[] var141 = new int[var136];
-         short[] var34 = new short[var136];
-         int[] var35 = new int[var136];
-         short[] var36 = new short[var136];
-         short[] var37 = new short[var136];
+         byte needCount;
+         short[] needIds = new short[needCount = input.readByte()];
+         int[] needInitialValues = new int[needCount];
+         int[] needDecayRates = new int[needCount];
+         short[] needMoodFlags = new short[needCount];
+         int[] needThresholds = new int[needCount];
+         short[] needLabelTextIds = new short[needCount];
+         short[] needHintTextIds = new short[needCount];
 
-         for (int var38 = 0; var38 < var136; var38++) {
-            var138[var38] = a(var2);
-            var140[var38] = var2.readInt();
-            var141[var38] = var2.readInt();
-            var34[var38] = var2.readShort();
-            var35[var38] = var2.readInt();
-            var36[var38] = a(var2);
-            var37[var38] = a(var2);
+         for (int needIndex = 0; needIndex < needCount; needIndex++) {
+            needIds[needIndex] = readShort(input);
+            needInitialValues[needIndex] = input.readInt();
+            needDecayRates[needIndex] = input.readInt();
+            needMoodFlags[needIndex] = input.readShort();
+            needThresholds[needIndex] = input.readInt();
+            needLabelTextIds[needIndex] = readShort(input);
+            needHintTextIds[needIndex] = readShort(input);
          }
 
-         byte[] var39 = new byte[var2.readByte()];
-         var2.readFully(var39);
-         byte var40;
-         short[] var41 = new short[var40 = var2.readByte()];
-         int[] var42 = new int[var40];
-         byte[] var43 = new byte[var40];
-         byte[] var44 = new byte[var40];
-         byte[] var45 = new byte[var40];
-         byte[][] var46 = new byte[var40][];
-         int[][] var47 = new int[var40][];
-         byte[][] var48 = new byte[var40][];
-         byte[][] var49 = new byte[var40][];
-         byte[][] var50 = new byte[var40][];
-         int[][] var51 = new int[var40][];
+         byte[] achievementTriggerIds = new byte[input.readByte()];
+         input.readFully(achievementTriggerIds);
+         byte taskCount;
+         short[] taskIds = new short[taskCount = input.readByte()];
+         int[] taskDurations = new int[taskCount];
+         byte[] taskFollowUps = new byte[taskCount];
+         byte[] taskAchievements = new byte[taskCount];
+         byte[] taskFlags = new byte[taskCount];
+         byte[][] taskNeedIndices = new byte[taskCount][];
+         int[][] taskNeedDeltas = new int[taskCount][];
+         byte[][] taskMoodIndices = new byte[taskCount][];
+         byte[][] taskMoodDeltas = new byte[taskCount][];
+         byte[][] taskLinkIndices = new byte[taskCount][];
+         int[][] taskLinkDeltas = new int[taskCount][];
 
-         for (int var52 = 0; var52 < var40; var52++) {
-            var41[var52] = a(var2);
-            var42[var52] = var2.readInt();
-            var43[var52] = var2.readByte();
-            var44[var52] = var2.readByte();
-            var45[var52] = var2.readByte();
-            byte var53;
-            byte[] var54 = new byte[var53 = var2.readByte()];
-            int[] var55 = new int[var53];
+         for (int taskIndex = 0; taskIndex < taskCount; taskIndex++) {
+            taskIds[taskIndex] = readShort(input);
+            taskDurations[taskIndex] = input.readInt();
+            taskFollowUps[taskIndex] = input.readByte();
+            taskAchievements[taskIndex] = input.readByte();
+            taskFlags[taskIndex] = input.readByte();
+            byte subCount;
+            byte[] entryIndices = new byte[subCount = input.readByte()];
+            int[] entryValues = new int[subCount];
 
-            for (int var56 = 0; var56 < var53; var56++) {
-               var54[var56] = var2.readByte();
-               var55[var56] = var2.readInt();
+            for (int entryIndex = 0; entryIndex < subCount; entryIndex++) {
+               entryIndices[entryIndex] = input.readByte();
+               entryValues[entryIndex] = input.readInt();
             }
 
-            var46[var52] = var54;
-            var47[var52] = var55;
-            var54 = new byte[var53 = var2.readByte()];
-            byte[] var149 = new byte[var53];
+            taskNeedIndices[taskIndex] = entryIndices;
+            taskNeedDeltas[taskIndex] = entryValues;
+            entryIndices = new byte[subCount = input.readByte()];
+            byte[] moodDeltaBuf = new byte[subCount];
 
-            for (int var153 = 0; var153 < var53; var153++) {
-               var54[var153] = (byte)a(var2);
-               var149[var153] = var2.readByte();
+            for (int moodIndex2 = 0; moodIndex2 < subCount; moodIndex2++) {
+               entryIndices[moodIndex2] = (byte)readShort(input);
+               moodDeltaBuf[moodIndex2] = input.readByte();
             }
 
-            var48[var52] = var54;
-            var49[var52] = var149;
-            var54 = new byte[var53 = var2.readByte()];
-            var55 = new int[var53];
+            taskMoodIndices[taskIndex] = entryIndices;
+            taskMoodDeltas[taskIndex] = moodDeltaBuf;
+            entryIndices = new byte[subCount = input.readByte()];
+            entryValues = new int[subCount];
 
-            for (int var154 = 0; var154 < var53; var154++) {
-               var54[var154] = var2.readByte();
-               var55[var154] = var2.readInt();
+            for (int linkIndex = 0; linkIndex < subCount; linkIndex++) {
+               entryIndices[linkIndex] = input.readByte();
+               entryValues[linkIndex] = input.readInt();
             }
 
-            var50[var52] = var54;
-            var51[var52] = var55;
+            taskLinkIndices[taskIndex] = entryIndices;
+            taskLinkDeltas[taskIndex] = entryValues;
          }
 
-         byte var142;
-         short[] var145 = new short[var142 = var2.readByte()];
-         short[] var148 = new short[var142];
+         byte itemCount;
+         short[] itemNameTextIds = new short[itemCount = input.readByte()];
+         short[] itemSpriteIds = new short[itemCount];
 
-         for (int var151 = 0; var151 < var142; var151++) {
-            var145[var151] = a(var2);
-            var148[var151] = var2.readByte();
+         for (int itemIndex = 0; itemIndex < itemCount; itemIndex++) {
+            itemNameTextIds[itemIndex] = readShort(input);
+            itemSpriteIds[itemIndex] = input.readByte();
          }
 
-         byte var152 = var2.readByte();
-         byte var155;
-         short[] var57 = new short[var155 = var2.readByte()];
-         byte[] var58 = new byte[var155];
-         short[] var59 = new short[var155];
-         short[] var60 = new short[var155];
-         byte[][] var61 = new byte[var155][];
-         byte[][] var62 = new byte[var155][];
-         short[][] var63 = new short[var155][];
+         byte needLinkCount = input.readByte();
+         byte stateCount;
+         short[] stateSpriteIds = new short[stateCount = input.readByte()];
+         byte[] stateFlags = new byte[stateCount];
+         short[] stateBadgeIds = new short[stateCount];
+         short[] stateLabelTextIds = new short[stateCount];
+         byte[][] stateTransitionStates = new byte[stateCount][];
+         byte[][] stateTransitionNeeds = new byte[stateCount][];
+         short[][] stateTransitionThresholds = new short[stateCount][];
 
-         for (int var64 = 0; var64 < var155; var64++) {
-            var57[var64] = a(var2);
-            var58[var64] = var2.readByte();
-            var59[var64] = a(var2);
-            var60[var64] = a(var2);
-            int var65;
-            byte[] var66 = new byte[var65 = var2.readUnsignedByte()];
-            byte[] var67 = new byte[var65];
-            short[] var68 = new short[var65];
+         for (int stateIndex = 0; stateIndex < stateCount; stateIndex++) {
+            stateSpriteIds[stateIndex] = readShort(input);
+            stateFlags[stateIndex] = input.readByte();
+            stateBadgeIds[stateIndex] = readShort(input);
+            stateLabelTextIds[stateIndex] = readShort(input);
+            int transitionCount;
+            byte[] transStates = new byte[transitionCount = input.readUnsignedByte()];
+            byte[] transNeeds = new byte[transitionCount];
+            short[] transThresholds = new short[transitionCount];
 
-            for (int var69 = 0; var69 < var65; var69++) {
-               var66[var69] = var2.readByte();
-               var67[var69] = var2.readByte();
-               var68[var69] = var2.readShort();
+            for (int transitionIndex = 0; transitionIndex < transitionCount; transitionIndex++) {
+               transStates[transitionIndex] = input.readByte();
+               transNeeds[transitionIndex] = input.readByte();
+               transThresholds[transitionIndex] = input.readShort();
             }
 
-            var61[var64] = var66;
-            var62[var64] = var67;
-            var63[var64] = var68;
+            stateTransitionStates[stateIndex] = transStates;
+            stateTransitionNeeds[stateIndex] = transNeeds;
+            stateTransitionThresholds[stateIndex] = transThresholds;
          }
 
-         byte var156;
-         short[] var157 = new short[var156 = var2.readByte()];
-         byte[] var158 = new byte[var156];
-         byte[][] var159 = new byte[var156][10];
-         short[] var160 = new short[var156];
-         byte[] var161 = new byte[var156];
-         byte[] var70 = new byte[var156];
-         byte[] var71 = new byte[var156];
-         byte[] var72 = new byte[var156];
-         byte[][] var73 = new byte[var156][];
-         byte[][] var74 = new byte[var156][];
+         byte simCount;
+         short[] simNameTextIds = new short[simCount = input.readByte()];
+         byte[] simSpareBytes = new byte[simCount];
+         byte[][] simAttributes = new byte[simCount][10];
+         short[] simHomeLots = new short[simCount];
+         byte[] simFlags = new byte[simCount];
+         byte[] simPortraitIds = new byte[simCount];
+         byte[] simLots = new byte[simCount];
+         byte[] simHours = new byte[simCount];
+         byte[][] simKnownIds = new byte[simCount][];
+         byte[][] simActionList = new byte[simCount][];
 
-         for (int var75 = 0; var75 < var156; var75++) {
-            var157[var75] = a(var2);
-            var158[var75] = var2.readByte();
+         for (int simIndex = 0; simIndex < simCount; simIndex++) {
+            simNameTextIds[simIndex] = readShort(input);
+            simSpareBytes[simIndex] = input.readByte();
 
-            for (int var76 = 0; var76 < 10; var76++) {
-               var159[var75][var76] = var2.readByte();
+            for (int attributeIndex = 0; attributeIndex < 10; attributeIndex++) {
+               simAttributes[simIndex][attributeIndex] = input.readByte();
             }
 
-            var160[var75] = a(var2);
-            var161[var75] = var2.readByte();
-            var70[var75] = var2.readByte();
-            var71[var75] = var2.readByte();
-            var72[var75] = var2.readByte();
-            byte[] var77 = new byte[var2.readByte()];
-            var2.readFully(var77);
-            var73[var75] = var77;
-            byte[] var79 = new byte[var2.readByte()];
-            var2.readFully(var79);
-            var74[var75] = var79;
+            simHomeLots[simIndex] = readShort(input);
+            simFlags[simIndex] = input.readByte();
+            simPortraitIds[simIndex] = input.readByte();
+            simLots[simIndex] = input.readByte();
+            simHours[simIndex] = input.readByte();
+            byte[] knownBuf = new byte[input.readByte()];
+            input.readFully(knownBuf);
+            simKnownIds[simIndex] = knownBuf;
+            byte[] actionBuf = new byte[input.readByte()];
+            input.readFully(actionBuf);
+            simActionList[simIndex] = actionBuf;
          }
 
-         byte var162;
-         byte[][] var163 = new byte[var162 = var2.readByte()][12];
+         byte portraitCount;
+         byte[][] portraitData = new byte[portraitCount = input.readByte()][12];
 
-         for (int var164 = 0; var164 < var162; var164++) {
-            for (int var78 = 0; var78 < 12; var78++) {
-               var163[var164][var78] = var2.readByte();
+         for (int portraitIndex = 0; portraitIndex < portraitCount; portraitIndex++) {
+            for (int byteIndex = 0; byteIndex < 12; byteIndex++) {
+               portraitData[portraitIndex][byteIndex] = input.readByte();
             }
          }
 
-         byte var165;
-         short[] var166 = new short[var165 = var2.readByte()];
+         byte needTextCount;
+         short[] needTextIds = new short[needTextCount = input.readByte()];
 
-         for (int var167 = 0; var167 < var165; var167++) {
-            var166[var167] = a(var2);
+         for (int needTextIndex = 0; needTextIndex < needTextCount; needTextIndex++) {
+            needTextIds[needTextIndex] = readShort(input);
          }
 
-         short var168;
-         short[] var80 = new short[var168 = var2.readShort()];
-         short[] var81 = new short[var168];
-         int[] var82 = new int[var168];
-         short[] var83 = new short[var168];
-         byte[][] var84 = new byte[var168][];
-         byte[][] var85 = new byte[var168][];
-         byte[][] var86 = new byte[var168][];
-         int[][] var87 = new int[var168][];
-         short[][] var88 = new short[var168][];
-         byte[][] var89 = new byte[var168][];
-         byte[][] var90 = new byte[var168][];
-         byte[][] var91 = new byte[var168][];
-         byte[][] var92 = new byte[var168][];
-         short[][] var93 = new short[var168][];
+         short interactionCount;
+         short[] interactionTextIds = new short[interactionCount = input.readShort()];
+         short[] interactionSprites = new short[interactionCount];
+         int[] interactionFlags = new int[interactionCount];
+         short[] interactionAltTextIds = new short[interactionCount];
+         byte[][] interactionVariants = new byte[interactionCount][];
+         byte[][] interactionStateReqs = new byte[interactionCount][];
+         byte[][] interactionNeedReqs = new byte[interactionCount][];
+         int[][] interactionFlagReqs = new int[interactionCount][];
+         short[][] interactionConditionFlags = new short[interactionCount][];
+         byte[][] interactionNeedGains = new byte[interactionCount][];
+         byte[][] interactionNeedLosses = new byte[interactionCount][];
+         byte[][] interactionMoodIndex = new byte[interactionCount][];
+         byte[][] interactionMoodGain = new byte[interactionCount][];
+         short[][] interactionResultTextIds = new short[interactionCount][];
 
-         for (int var94 = 0; var94 < var168; var94++) {
-            var80[var94] = a(var2);
-            var81[var94] = a(var2);
-            int var95 = var2.readInt();
-            var82[var94] = var95;
-            var83[var94] = a(var2);
-            byte var96;
-            byte[] var97 = new byte[var96 = var2.readByte()];
-            byte[] var98 = new byte[var96];
-            int[] var99 = new int[var96];
-            short[] var100 = new short[var96];
-            byte[] var101 = new byte[var96];
-            byte[] var102 = new byte[var96];
-            byte[] var103 = new byte[var96];
-            byte[] var104 = new byte[var96];
-            short[] var105 = new short[var96];
+         for (int interactionIndex = 0; interactionIndex < interactionCount; interactionIndex++) {
+            interactionTextIds[interactionIndex] = readShort(input);
+            interactionSprites[interactionIndex] = readShort(input);
+            int variantCount = input.readInt();
+            interactionFlags[interactionIndex] = variantCount;
+            interactionAltTextIds[interactionIndex] = readShort(input);
+            byte subEntryCount;
+            byte[] variantBuf = new byte[subEntryCount = input.readByte()];
+            byte[] stateReqBuf = new byte[subEntryCount];
+            int[] flagReqBuf = new int[subEntryCount];
+            short[] conditionBuf = new short[subEntryCount];
+            byte[] needGainBuf = new byte[subEntryCount];
+            byte[] needLossBuf = new byte[subEntryCount];
+            byte[] moodIndexBuf = new byte[subEntryCount];
+            byte[] moodGainBuf = new byte[subEntryCount];
+            short[] resultTextBuf = new short[subEntryCount];
 
-            for (int var106 = 0; var106 < var96; var106++) {
-               var97[var106] = var2.readByte();
-               var98[var106] = var2.readByte();
-               int var107 = var2.readInt();
-               var100[var106] = var2.readShort();
-               var101[var106] = var2.readByte();
-               var102[var106] = var2.readByte();
-               var103[var106] = var2.readByte();
-               var104[var106] = var2.readByte();
-               var105[var106] = var2.readShort();
-               var99[var106] = (var107 & 1) != 0 ? ~var107 : var107;
+            for (int subEntryIndex = 0; subEntryIndex < subEntryCount; subEntryIndex++) {
+               variantBuf[subEntryIndex] = input.readByte();
+               stateReqBuf[subEntryIndex] = input.readByte();
+               int flagValue = input.readInt();
+               conditionBuf[subEntryIndex] = input.readShort();
+               needGainBuf[subEntryIndex] = input.readByte();
+               needLossBuf[subEntryIndex] = input.readByte();
+               moodIndexBuf[subEntryIndex] = input.readByte();
+               moodGainBuf[subEntryIndex] = input.readByte();
+               resultTextBuf[subEntryIndex] = input.readShort();
+               flagReqBuf[subEntryIndex] = (flagValue & 1) != 0 ? ~flagValue : flagValue;
             }
 
-            byte var181 = var2.readByte();
-            Object var184 = null;
-            if ((var95 & 1073741824) != 0) {
-               var184 = var84[26];
+            byte variantSize = input.readByte();
+            Object variants = null;
+            if ((variantCount & 1073741824) != 0) {
+               variants = interactionVariants[26];
             } else {
-               var184 = new byte[var181];
-               var2.readFully((byte[])var184);
+               variants = new byte[variantSize];
+               input.readFully((byte[])variants);
             }
 
-            var85[var94] = var97;
-            var86[var94] = var98;
-            var87[var94] = var99;
-            var88[var94] = var100;
-            var89[var94] = var101;
-            var90[var94] = var102;
-            var91[var94] = var103;
-            var92[var94] = var104;
-            var93[var94] = var105;
-            var84[var94] = (byte[])var184;
+            interactionStateReqs[interactionIndex] = variantBuf;
+            interactionNeedReqs[interactionIndex] = stateReqBuf;
+            interactionFlagReqs[interactionIndex] = flagReqBuf;
+            interactionConditionFlags[interactionIndex] = conditionBuf;
+            interactionNeedGains[interactionIndex] = needGainBuf;
+            interactionNeedLosses[interactionIndex] = needLossBuf;
+            interactionMoodIndex[interactionIndex] = moodIndexBuf;
+            interactionMoodGain[interactionIndex] = moodGainBuf;
+            interactionResultTextIds[interactionIndex] = resultTextBuf;
+            interactionVariants[interactionIndex] = (byte[])variants;
          }
 
-         byte var169;
-         short[] var170 = new short[var169 = var2.readByte()];
-         byte[] var171 = new byte[var169];
-         byte[] var172 = new byte[var169];
-         byte[] var173 = new byte[var169];
-         short[] var174 = new short[var169];
-         byte[] var175 = new byte[var169];
-         short[] var176 = new short[var169];
-         byte[] var177 = new byte[var169];
-         short[] var178 = new short[var169];
-         byte[] var179 = new byte[var169];
-         short[] var180 = new short[var169];
+         byte cardCount;
+         short[] visitCardTimeCosts = new short[cardCount = input.readByte()];
+         byte[] visitCardMinuteLimits = new byte[cardCount];
+         byte[] visitCardOtherLimits = new byte[cardCount];
+         byte[] visitCardUp = new byte[cardCount];
+         short[] visitCardTextA = new short[cardCount];
+         byte[] visitCardDown = new byte[cardCount];
+         short[] visitCardTextB = new short[cardCount];
+         byte[] visitCardLeft = new byte[cardCount];
+         short[] visitCardTextC = new short[cardCount];
+         byte[] visitCardRight = new byte[cardCount];
+         short[] visitCardTextD = new short[cardCount];
 
-         for (int var182 = 0; var182 < var169; var182++) {
-            var170[var182] = a(var2);
-            var171[var182] = var2.readByte();
-            var172[var182] = var2.readByte();
-            var173[var182] = var2.readByte();
-            var174[var182] = a(var2);
-            var175[var182] = var2.readByte();
-            var176[var182] = a(var2);
-            var177[var182] = var2.readByte();
-            var178[var182] = a(var2);
-            var179[var182] = var2.readByte();
-            var180[var182] = a(var2);
+         for (int cardDataIndex = 0; cardDataIndex < cardCount; cardDataIndex++) {
+            visitCardTimeCosts[cardDataIndex] = readShort(input);
+            visitCardMinuteLimits[cardDataIndex] = input.readByte();
+            visitCardOtherLimits[cardDataIndex] = input.readByte();
+            visitCardUp[cardDataIndex] = input.readByte();
+            visitCardTextA[cardDataIndex] = readShort(input);
+            visitCardDown[cardDataIndex] = input.readByte();
+            visitCardTextB[cardDataIndex] = readShort(input);
+            visitCardLeft[cardDataIndex] = input.readByte();
+            visitCardTextC[cardDataIndex] = readShort(input);
+            visitCardRight[cardDataIndex] = input.readByte();
+            visitCardTextD[cardDataIndex] = readShort(input);
          }
 
-         byte var183;
-         byte[] var186 = new byte[var183 = var2.readByte()];
-         short[] var108 = new short[var183];
-         short[] var109 = new short[var183];
-         short[] var110 = new short[var183];
-         short[] var111 = new short[var183];
-         short[] var112 = new short[var183];
-         short[][] var113 = new short[var183][];
+         byte cardActionCount;
+         byte[] cardFlags = new byte[cardActionCount = input.readByte()];
+         short[] cardLabelTextIds = new short[cardActionCount];
+         short[] cardAltTextIds = new short[cardActionCount];
+         short[] cardRequiredLots = new short[cardActionCount];
+         short[] cardRewardItems = new short[cardActionCount];
+         short[] cardRewardMoney = new short[cardActionCount];
+         short[][] cardRequirementIds = new short[cardActionCount][];
 
-         for (int var114 = 0; var114 < var183; var114++) {
-            var186[var114] = var2.readByte();
-            var108[var114] = a(var2);
-            var109[var114] = a(var2);
-            var110[var114] = var2.readShort();
-            var111[var114] = a(var2);
-            var112[var114] = var2.readShort();
-            byte var115;
-            short[] var116 = new short[var115 = var2.readByte()];
+         for (int cardIndex = 0; cardIndex < cardActionCount; cardIndex++) {
+            cardFlags[cardIndex] = input.readByte();
+            cardLabelTextIds[cardIndex] = readShort(input);
+            cardAltTextIds[cardIndex] = readShort(input);
+            cardRequiredLots[cardIndex] = input.readShort();
+            cardRewardItems[cardIndex] = readShort(input);
+            cardRewardMoney[cardIndex] = input.readShort();
+            byte requirementCount;
+            short[] requirementBuf = new short[requirementCount = input.readByte()];
 
-            for (int var117 = 0; var117 < var115; var117++) {
-               var116[var117] = var2.readShort();
+            for (int requirementIndex = 0; requirementIndex < requirementCount; requirementIndex++) {
+               requirementBuf[requirementIndex] = input.readShort();
             }
 
-            var113[var114] = var116;
+            cardRequirementIds[cardIndex] = requirementBuf;
          }
 
-         var2.close();
-         this.b = var4;
-         this.a2 = var5;
-         this.a3 = var6;
-         this.b2 = var7;
-         this.c = var120;
-         this.d = var122;
-         this.e = var124;
-         this.a4 = var125;
-         this.f = var13;
-         this.g = var14;
-         this.h = var15;
-         this.c2 = var16;
-         this.d2 = var17;
-         this.e2 = var18;
-         this.f2 = var19;
-         this.g2 = var20;
-         this.a5 = var21;
-         this.i = var127;
-         this.j = var128;
-         this.k = var129;
-         this.l = var130;
-         this.m = var133;
-         this.n = var134;
-         this.a6 = var136;
-         this.o = var138;
-         this.f3 = var140;
-         this.g3 = var141;
-         this.p = var34;
-         this.h2 = var35;
-         this.q = var36;
-         this.r = var37;
-         this.b3 = var39;
-         this.j2 = var40;
-         this.s = var41;
-         this.i2 = var42;
-         this.c3 = var43;
-         this.d3 = var44;
-         this.e3 = var45;
-         this.a7 = var46;
-         this.b4 = var47;
-         this.b5 = var48;
-         this.c4 = var49;
-         this.d4 = var50;
-         this.c5 = var51;
-         this.t = var145;
-         this.u = var148;
-         this.k2 = var152;
-         this.v = var57;
-         this.f4 = var58;
-         this.w = var59;
-         this.x = var60;
-         this.e4 = var61;
-         this.f5 = var62;
-         this.h3 = var63;
-         this.b6 = var156;
-         this.y = var157;
-         this.g4 = var158;
-         this.g5 = var159;
-         this.z = var160;
-         this.h4 = var161;
-         this.i3 = var70;
-         this.j3 = var71;
-         this.k3 = var72;
-         this.h5 = var73;
-         this.i4 = var74;
-         this.c6 = var162;
-         this.j4 = var163;
-         this.A = var166;
-         this.l2 = var168;
-         this.B = var80;
-         this.C = var81;
-         this.j5 = var82;
-         this.D = var83;
-         this.k4 = var85;
-         this.l3 = var86;
-         this.d5 = var87;
-         this.i5 = var88;
-         this.m2 = var89;
-         this.n2 = var90;
-         this.o2 = var91;
-         this.p2 = var92;
-         this.j6 = var93;
-         this.q2 = var84;
-         this.E = var170;
-         this.l4 = var171;
-         this.m3 = var172;
-         this.n3 = var173;
-         this.F = var174;
-         this.o3 = var175;
-         this.G = var176;
-         this.p3 = var177;
-         this.H = var178;
-         this.q3 = var179;
-         this.I = var180;
-         this.r2 = var186;
-         this.J = var108;
-         this.K = var109;
-         this.L = var110;
-         this.M = var111;
-         this.N = var112;
-         this.k5 = var113;
-      } catch (IOException var118) {
+         input.close();
+         this.residentIds = residentIds;
+         this.residentGrowthSteps = residentGrowthSteps;
+         this.residentLook = residentLooks;
+         this.residentLevelValues = residentLevelValues;
+         this.lotNameTextIds = lotNameTextIds;
+         this.lotSubtitleTextIds = lotSubtitleTextIds;
+         this.lotOccupantTypes = lotOccupantTypes;
+         this.lotKinds = lotKinds;
+         this.lotSpritesLow = lotSpritesLow;
+         this.lotSpritesHigh = lotSpritesHigh;
+         this.lotExtraSprites = lotExtraSprites;
+         this.lotHourInteractions = lotHourInteractions;
+         this.lotHourIncome = lotHourIncome;
+         this.lotHourDayBits = lotHourDayBits;
+         this.lotHourStarts = lotHourStarts;
+         this.lotHourEnds = lotHourEnds;
+         this.lotHourRequirements = lotHourRequirements;
+         this.residentLabelTextIds = residentLabelTextIds;
+         this.residentInfoTextIds = residentInfoTextIds;
+         this.residentSpritesA = residentSpritesA;
+         this.residentSpritesB = residentSpritesB;
+         this.achievementTextIds = achievementTextIds;
+         this.achievementFlags = achievementFlags;
+         this.needCount = needCount;
+         this.needIds = needIds;
+         this.needInitialValues = needInitialValues;
+         this.needDecayRates = needDecayRates;
+         this.needMoodFlags = needMoodFlags;
+         this.needThresholds = needThresholds;
+         this.needLabelTextIds = needLabelTextIds;
+         this.needHintTextIds = needHintTextIds;
+         this.achievementTriggerIds = achievementTriggerIds;
+         this.taskCount = taskCount;
+         this.taskIds = taskIds;
+         this.taskDurations = taskDurations;
+         this.taskFollowUps = taskFollowUps;
+         this.taskAchievements = taskAchievements;
+         this.taskFlags = taskFlags;
+         this.taskNeedIndices = taskNeedIndices;
+         this.taskNeedDeltas = taskNeedDeltas;
+         this.taskMoodIndices = taskMoodIndices;
+         this.taskMoodDeltas = taskMoodDeltas;
+         this.taskLinkIndices = taskLinkIndices;
+         this.taskLinkDeltas = taskLinkDeltas;
+         this.itemNameTextIds = itemNameTextIds;
+         this.itemSpriteIds = itemSpriteIds;
+         this.simNeedCount = needLinkCount;
+         this.stateSpriteIds = stateSpriteIds;
+         this.stateFlags = stateFlags;
+         this.stateBadgeIds = stateBadgeIds;
+         this.stateLabelTextIds = stateLabelTextIds;
+         this.stateTransitionStates = stateTransitionStates;
+         this.stateTransitionNeeds = stateTransitionNeeds;
+         this.stateTransitionThresholds = stateTransitionThresholds;
+         this.simCount = simCount;
+         this.simNameTextIds = simNameTextIds;
+         this.simSpareBytes = simSpareBytes;
+         this.simAttributes = simAttributes;
+         this.simHomeLots = simHomeLots;
+         this.simFlags = simFlags;
+         this.simPortraitIds = simPortraitIds;
+         this.simLots = simLots;
+         this.simHours = simHours;
+         this.simKnownIds = simKnownIds;
+         this.simCardList = simActionList;
+         this.portraitCount = portraitCount;
+         this.portraitData = portraitData;
+         this.needTextIds = needTextIds;
+         this.interactionCount = interactionCount;
+         this.interactionTextIds = interactionTextIds;
+         this.interactionSprites = interactionSprites;
+         this.interactionFlags = interactionFlags;
+         this.interactionAltTextIds = interactionAltTextIds;
+         this.interactionStateReqs = interactionStateReqs;
+         this.interactionNeedReqs = interactionNeedReqs;
+         this.interactionFlagReqs = interactionFlagReqs;
+         this.interactionConditionFlags = interactionConditionFlags;
+         this.interactionNeedGains = interactionNeedGains;
+         this.interactionNeedLosses = interactionNeedLosses;
+         this.interactionMoodIndex = interactionMoodIndex;
+         this.interactionMoodGain = interactionMoodGain;
+         this.interactionResultTextIds = interactionResultTextIds;
+         this.interactionVariants = interactionVariants;
+         this.visitCardTimeCosts = visitCardTimeCosts;
+         this.visitCardMinuteLimits = visitCardMinuteLimits;
+         this.visitCardOtherLimits = visitCardOtherLimits;
+         this.visitCardUp = visitCardUp;
+         this.visitCardTextA = visitCardTextA;
+         this.visitCardDown = visitCardDown;
+         this.visitCardTextB = visitCardTextB;
+         this.visitCardLeft = visitCardLeft;
+         this.visitCardTextC = visitCardTextC;
+         this.visitCardRight = visitCardRight;
+         this.visitCardTextD = visitCardTextD;
+         this.cardFlags = cardFlags;
+         this.cardLabelTextIds = cardLabelTextIds;
+         this.cardAltTextIds = cardAltTextIds;
+         this.cardRequiredLots = cardRequiredLots;
+         this.cardRewardItems = cardRewardItems;
+         this.cardRewardMoney = cardRewardMoney;
+         this.cardRequirementIds = cardRequirementIds;
+      } catch (IOException ioError) {
       }
    }
 
-   public final int a() {
-      return Z(this.d6);
+   public final int currentMinuteOfDay() {
+      return minuteOfDay(this.gameTime);
    }
 
-   private static int Z(int var0) {
-      return var0 % 1440;
+   private static int minuteOfDay(int time) {
+      return time % 1440;
    }
 
-   public final int b() {
-      return aa(this.d6);
+   public final int dayOfWeek() {
+      return weekdayOf(this.gameTime);
    }
 
-   private static int aa(int var0) {
-      return var0 / 1440 % 7;
+   private static int weekdayOf(int time) {
+      return time / 1440 % 7;
    }
 
-   private static int ab(int var0) {
-      return var0 / 1440 * 1440;
+   private static int startOfWeek(int time) {
+      return time / 1440 * 1440;
    }
 
-   public final int c() {
-      return (this.d6 - 840) / 1440;
+   public final int dayNumber() {
+      return (this.gameTime - 840) / 1440;
    }
 
-   public final void a12(int var1) {
-      this.e5 += var1;
-      if (var1 < 0) {
-         this.f6 -= var1;
+   public final void addMoney(int amount) {
+      this.money += amount;
+      if (amount < 0) {
+         this.moneySpent -= amount;
       } else {
-         if (this.e5 >= 1000) {
-            this.e3(43);
+         if (this.money >= 1000) {
+            this.unlockAchievement(43);
          }
 
-         if (this.e5 >= 5000) {
-            this.e3(62);
+         if (this.money >= 5000) {
+            this.unlockAchievement(62);
          }
       }
    }
 
-   private void j2() {
-      this.d6 = 840;
-      this.e5 = 700;
-      this.f6 = 0;
-      this.a9 = false;
-      this.c8 = 0;
-      this.a10 = -1;
+   private void resetProgress() {
+      this.gameTime = 840;
+      this.money = 700;
+      this.moneySpent = 0;
+      this.paused = false;
+      this.lastCareerLevel = 0;
+      this.lastPromotionDay = -1;
    }
 
-   private void p2(int var1) {
-      this.m4 += var1;
-      if (this.m4 > 1000) {
-         int var2 = this.m4 / 1000;
-         this.m4 -= var2 * 1000;
-         int var3 = this.d6;
-         this.d6 += var2;
-         this.a.a6().h2(var3, this.d6);
+   private void advanceTime(int elapsed) {
+      this.timeAccumulator += elapsed;
+      if (this.timeAccumulator > 1000) {
+         int minutes = this.timeAccumulator / 1000;
+         this.timeAccumulator -= minutes * 1000;
+         int previousTime = this.gameTime;
+         this.gameTime += minutes;
+         this.canvas.gameScreen().advanceTimeUntil(previousTime, this.gameTime);
       }
    }
 
-   public final int a3(int var1) {
-      if (var1 == 125) {
+   public final int eventTimeCost(int eventId) {
+      if (eventId == 125) {
          return 10;
-      } else if (var1 == 158) {
-         int var2;
-         if ((var2 = this.V(0)) != -1) {
-            int var3 = this.W(0);
-            if ((this.d(var2, var3) & 2) != 0) {
+      } else if (eventId == 158) {
+         int lot;
+         if ((lot = this.simLot(0)) != -1) {
+            int hour = this.simHour(0);
+            if ((this.lotHourDays(lot, hour) & 2) != 0) {
                return 15;
             }
          }
@@ -812,379 +812,379 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final int d() {
-      int var1 = this.c();
+   public final int careerLevel() {
+      int level = this.dayNumber();
 
-      for (int var2 = 0; var2 < this.g(); var2++) {
-         var1 += this.k(var2);
+      for (int resident = 0; resident < this.residentCount(); resident++) {
+         level += this.residentLevel(resident);
       }
 
-      if (var1 >= 15) {
+      if (level >= 15) {
          return 2;
       } else {
-         return var1 >= 5 ? 1 : 0;
+         return level >= 5 ? 1 : 0;
       }
    }
 
-   public final boolean a11() {
-      int var1;
-      if ((var1 = this.d()) > this.c8) {
-         this.c8 = (byte)var1;
+   public final boolean checkCareerPromotion() {
+      int level;
+      if ((level = this.careerLevel()) > this.lastCareerLevel) {
+         this.lastCareerLevel = (byte)level;
          return true;
       } else {
          return false;
       }
    }
 
-   public final void a10() {
-      this.a10 = (short)this.c();
+   public final void markPromotionDay() {
+      this.lastPromotionDay = (short)this.dayNumber();
    }
 
-   public final int e() {
-      int var1 = this.c();
-      byte var2 = this.a.a24.a5;
-      if (this.a.a24.a5 == 0) {
-         if (var1 >= 3 && !this.b8(16)) {
-            this.r2(16);
+   public final int pendingPromotion() {
+      int day = this.dayNumber();
+      byte careerTier = this.canvas.lot.stageIndex;
+      if (this.canvas.lot.stageIndex == 0) {
+         if (day >= 3 && !this.hasMilestone(16)) {
+            this.setMilestone(16);
             return 777;
          }
-      } else if (var2 == 1 && var1 - this.a10 >= 5 && !this.b8(32)) {
-         this.r2(32);
+      } else if (careerTier == 1 && day - this.lastPromotionDay >= 5 && !this.hasMilestone(32)) {
+         this.setMilestone(32);
          return 778;
       }
 
       return -1;
    }
 
-   private int ac(int var1) {
-      short var2 = 480;
-      if (this.j(var1, 10) != -1) {
-         var2 = 540;
-      } else if (this.j(var1, 11) != -1) {
-         var2 = 420;
+   private int defaultOpenMinutes(int lot) {
+      short minutes = 480;
+      if (this.simKnownIndex(lot, 10) != -1) {
+         minutes = 540;
+      } else if (this.simKnownIndex(lot, 11) != -1) {
+         minutes = 420;
       }
 
-      return var2;
+      return minutes;
    }
 
-   public final int b2(int var1) {
-      int var2 = this.d6;
-      int var3;
-      if (var1 == 0) {
-         int var4 = this.n5[1];
-         int var5 = 65536 - com.ea.sims3.FixedMath.div(var4, 6553600);
-         var3 = var2 + com.ea.sims3.FixedMath.mul(var5, 600);
+   public final int lotClosingTime(int sim) {
+      int now = this.gameTime;
+      int closing;
+      if (sim == 0) {
+         int needAmount = this.needValues[1];
+         int factor = 65536 - com.ea.sims3.FixedMath.div(needAmount, 6553600);
+         closing = now + com.ea.sims3.FixedMath.mul(factor, 600);
       } else {
-         var3 = var2 + 600;
+         closing = now + 600;
       }
 
-      int var6;
-      if (this.V(var1) != -1 && (var6 = this.n(var1, var2) - 60) > var2 && var6 - var2 < 1440) {
-         var3 = Math.min(var6, var3);
+      int nextOpen;
+      if (this.simLot(sim) != -1 && (nextOpen = this.nextOpenTime(sim, now) - 60) > now && nextOpen - now < 1440) {
+         closing = Math.min(nextOpen, closing);
       }
 
-      return var3;
+      return closing;
    }
 
-   public final void b4() {
-      int var1 = this.V(0);
-      int var2 = this.W(0);
-      int var3 = this.f(var1, var2);
-      int var4 = this.a();
-      int var5;
-      if ((var5 = var3 - var4) < 0) {
-         var5 += 1440;
+   public final void endOfDay() {
+      int lot = this.simLot(0);
+      int hour = this.simHour(0);
+      int endTime = this.lotHourEnd(lot, hour);
+      int now = this.currentMinuteOfDay();
+      int delta;
+      if ((delta = endTime - now) < 0) {
+         delta += 1440;
       }
 
-      int var6 = var5 * 1000;
-      this.p2(var6);
-      this.c2(1, -983040, 3);
-      this.c2(3, -1310720, 8);
-      this.d2(5, -1638400);
-      this.d2(2, this.y(2) < 2293760 ? 3276800 : -983040);
-      if (this.V(0) != 0) {
-         this.c2(0, -1310720, 0);
+      int elapsedMs = delta * 1000;
+      this.advanceTime(elapsedMs);
+      this.adjustNeedIfIdle(1, -983040, 3);
+      this.adjustNeedIfIdle(3, -1310720, 8);
+      this.adjustNeed(5, -1638400);
+      this.adjustNeed(2, this.needValue(2) < 2293760 ? 3276800 : -983040);
+      if (this.simLot(0) != 0) {
+         this.adjustNeedIfIdle(0, -1310720, 0);
       }
 
-      this.f2();
+      this.celebrate();
    }
 
-   public final void b7(int var1) {
-      int var2 = this.d6;
-      int var3 = (var1 - var2) * 1000;
-      this.p2(var3);
-      this.d2(1, 6553600);
-      this.d2(2, -655360);
-      this.c2(0, -1310720, 0);
-      this.c2(3, -983040, 8);
-      this.f2();
+   public final void skipToTime(int targetTime) {
+      int now = this.gameTime;
+      int elapsedMs = (targetTime - now) * 1000;
+      this.advanceTime(elapsedMs);
+      this.adjustNeed(1, 6553600);
+      this.adjustNeed(2, -655360);
+      this.adjustNeedIfIdle(0, -1310720, 0);
+      this.adjustNeedIfIdle(3, -983040, 8);
+      this.celebrate();
    }
 
-   private void k2() {
-      if (this.s2 == null) {
-         int var1 = this.a.a24.h();
-         this.s2 = new byte[var1];
+   private void refreshItemCounts() {
+      if (this.itemCounts == null) {
+         int count = this.canvas.lot.categoryCount();
+         this.itemCounts = new byte[count];
       }
 
-      com.ea.sims3.GameCanvas.a3(this.s2, 0);
+      com.ea.sims3.GameCanvas.fillBytes(this.itemCounts, 0);
    }
 
-   public final int c(int var1) {
-      return this.s2[var1];
+   public final int itemCount(int item) {
+      return this.itemCounts[item];
    }
 
-   public final int f() {
-      return this.s2.length - com.ea.sims3.GameCanvas.b(0, this.s2);
+   public final int ownedItemCount() {
+      return this.itemCounts.length - com.ea.sims3.GameCanvas.countEqualBytes(0, this.itemCounts);
    }
 
-   public final int d(int var1) {
-      return com.ea.sims3.GameCanvas.b(var1, this.s2, 0);
+   public final int itemCountOf(int item) {
+      return com.ea.sims3.GameCanvas.nthIndexNotEqualByte(item, this.itemCounts, 0);
    }
 
-   public final void b2(int var1, int var2) {
-      int var3 = this.a.a24.z(var1);
-      this.s2[var1] = (byte)Math.min(var3, this.s2[var1] + var2);
-      if (var2 > 0) {
-         Lot var4 = this.a.a24;
-         if ((this.a.a24.w(var1) & 2048) != 0) {
-            this.e3(27);
+   public final void addItem(int item, int delta) {
+      int max = this.canvas.lot.categoryFlagAt(item);
+      this.itemCounts[item] = (byte)Math.min(max, this.itemCounts[item] + delta);
+      if (delta > 0) {
+         Lot lot = this.canvas.lot;
+         if ((this.canvas.lot.categoryMaskAt(item) & 2048) != 0) {
+            this.unlockAchievement(27);
          }
       }
    }
 
-   public final void a(short[] var1, short[] var2, int var3) {
-      short var4 = this.B[var3];
-      com.ea.sims3.GameCanvas.b2(var1, var4);
-      com.ea.sims3.GameCanvas.b2(var2, var4);
-      Lot var5 = this.a.a24;
-      byte[] var6 = this.s2;
+   public final void buildItemMenu(short[] labels, short[] commands, int interaction) {
+      short textId = this.interactionTextIds[interaction];
+      com.ea.sims3.GameCanvas.initList(labels, textId);
+      com.ea.sims3.GameCanvas.initList(commands, textId);
+      Lot lot = this.canvas.lot;
+      byte[] counts = this.itemCounts;
 
-      for (int var7 = 0; var7 < var6.length; var7++) {
-         if (var6[var7] > 0 && (var5.w(var7) & 64) != 0) {
-            com.ea.sims3.GameCanvas.c2(var1, var5.u(var7));
-            com.ea.sims3.GameCanvas.c2(var2, var3);
+      for (int item = 0; item < counts.length; item++) {
+         if (counts[item] > 0 && (lot.categoryMaskAt(item) & 64) != 0) {
+            com.ea.sims3.GameCanvas.addToList(labels, lot.categoryIdAt(item));
+            com.ea.sims3.GameCanvas.addToList(commands, interaction);
          }
       }
    }
 
-   public final void b(short[] var1, short[] var2, int var3) {
-      short var4 = this.B[var3];
-      com.ea.sims3.GameCanvas.b2(var1, var4);
-      com.ea.sims3.GameCanvas.b2(var2, var4);
-      Lot var5 = this.a.a24;
-      byte[] var6 = this.s2;
+   public final void buildUseMenu(short[] labels, short[] commands, int interaction) {
+      short textId = this.interactionTextIds[interaction];
+      com.ea.sims3.GameCanvas.initList(labels, textId);
+      com.ea.sims3.GameCanvas.initList(commands, textId);
+      Lot lot = this.canvas.lot;
+      byte[] counts = this.itemCounts;
 
-      for (int var7 = 0; var7 < var6.length; var7++) {
-         if (var6[var7] > 0 && (var5.w(var7) & 2048) != 0) {
-            com.ea.sims3.GameCanvas.c2(var1, var5.u(var7));
-            com.ea.sims3.GameCanvas.c2(var2, var3);
+      for (int item = 0; item < counts.length; item++) {
+         if (counts[item] > 0 && (lot.categoryMaskAt(item) & 2048) != 0) {
+            com.ea.sims3.GameCanvas.addToList(labels, lot.categoryIdAt(item));
+            com.ea.sims3.GameCanvas.addToList(commands, interaction);
          }
       }
    }
 
-   public final boolean a13(int var1) {
-      Lot var2 = this.a.a24;
-      int var3 = this.a.a24.E(var1);
+   public final boolean purchaseUpgrade(int interaction) {
+      Lot lot = this.canvas.lot;
+      int ingredientCount = this.canvas.lot.listSize(interaction);
 
-      for (int var4 = 0; var4 < var3; var4++) {
-         int var5 = var2.k(var1, var4);
-         if (this.c(var5) < 1) {
+      for (int checkIndex = 0; checkIndex < ingredientCount; checkIndex++) {
+         int ingredient = lot.listValueAt(interaction, checkIndex);
+         if (this.itemCount(ingredient) < 1) {
             return false;
          }
       }
 
-      for (int var6 = 0; var6 < var3; var6++) {
-         int var7 = var2.k(var1, var6);
-         this.b2(var7, -1);
+      for (int consumeIndex = 0; consumeIndex < ingredientCount; consumeIndex++) {
+         int consumedIngredient = lot.listValueAt(interaction, consumeIndex);
+         this.addItem(consumedIngredient, -1);
       }
 
-      this.g6 = var1;
+      this.lastPurchasedItem = interaction;
       return true;
    }
 
-   public final boolean b5() {
-      return this.c(2) > 0;
+   public final boolean hasItemC() {
+      return this.itemCount(2) > 0;
    }
 
-   public final boolean c3() {
-      return this.c(1) > 0;
+   public final boolean hasItemB() {
+      return this.itemCount(1) > 0;
    }
 
-   public final boolean d3() {
-      return this.c(0) > 0;
+   public final boolean hasItemA() {
+      return this.itemCount(0) > 0;
    }
 
-   private void l2() {
-      int var1 = this.g();
-      if (this.k6 == null) {
-         this.k6 = new int[var1];
+   private void resetCareerLevels() {
+      int count = this.residentCount();
+      if (this.residentGrowth == null) {
+         this.residentGrowth = new int[count];
       }
 
-      com.ea.sims3.GameCanvas.a(this.k6, 0);
+      com.ea.sims3.GameCanvas.fillInts(this.residentGrowth, 0);
    }
 
-   public final int e(int var1) {
-      return this.k6[var1];
+   public final int careerPoints(int resident) {
+      return this.residentGrowth[resident];
    }
 
-   public final int g() {
-      return this.b.length;
+   public final int residentCount() {
+      return this.residentIds.length;
    }
 
-   public final int f(int var1) {
-      return this.b[var1];
+   public final int residentId(int resident) {
+      return this.residentIds[resident];
    }
 
-   public final int g(int var1) {
-      return this.a3[var1][0];
+   public final int residentBodySprite(int resident) {
+      return this.residentLook[resident][0];
    }
 
-   public final int h(int var1) {
-      return this.a3[var1][1];
+   public final int residentHeadSprite(int resident) {
+      return this.residentLook[resident][1];
    }
 
-   public final int i(int var1) {
-      return this.a3[var1][2];
+   public final int residentColorIndex(int resident) {
+      return this.residentLook[resident][2];
    }
 
-   public final int j(int var1) {
-      return this.b2[var1][this.k(var1)];
+   public final int residentLevelValue(int resident) {
+      return this.residentLevelValues[resident][this.residentLevel(resident)];
    }
 
-   public final int k(int var1) {
-      return this.k6[var1] / 65536;
+   public final int residentLevel(int resident) {
+      return this.residentGrowth[resident] / 65536;
    }
 
-   public final void c4(int var1) {
-      int[] var2 = this.k6;
-      int var3;
-      if ((var3 = this.k(var1)) < 5) {
-         var2[var1] += this.a2[var1][var3];
-         var2[var1] = Math.min(var2[var1], 65536 * (var3 + 1));
+   public final void addCareerPoints(int resident) {
+      int[] growth = this.residentGrowth;
+      int level;
+      if ((level = this.residentLevel(resident)) < 5) {
+         growth[resident] += this.residentGrowthSteps[resident][level];
+         growth[resident] = Math.min(growth[resident], 65536 * (level + 1));
       }
    }
 
-   private void m2() {
-      this.j3[0] = -1;
-      this.k3[0] = 0;
-      this.d8 = -1;
-      this.b7 = 0;
-      this.c9 = 0;
-      if (this.t2 == null) {
-         this.t2 = new byte[this.c.length];
+   private void resetSelection() {
+      this.simLots[0] = -1;
+      this.simHours[0] = 0;
+      this.lastVisitDay = -1;
+      this.tickCount = 0;
+      this.idleTicks = 0;
+      if (this.lotLastHour == null) {
+         this.lotLastHour = new byte[this.lotNameTextIds.length];
       }
 
-      com.ea.sims3.GameCanvas.a3(this.t2, 0);
-      this.e7 = -1;
-      this.n4 = 1440000;
+      com.ea.sims3.GameCanvas.fillBytes(this.lotLastHour, 0);
+      this.suggestedLot = -1;
+      this.suggestionTimer = 1440000;
    }
 
-   private void q2(int var1) {
-      this.n4 += var1;
-      if (this.n4 > 1440000) {
-         this.n4 = 0;
-         int var2 = this.c.length;
-         if (!this.a.j2) {
-            var2--;
+   private void updateSuggestion(int elapsed) {
+      this.suggestionTimer += elapsed;
+      if (this.suggestionTimer > 1440000) {
+         this.suggestionTimer = 0;
+         int range = this.lotNameTextIds.length;
+         if (!this.canvas.gameStarted) {
+            range--;
          }
 
-         this.e7 = (byte)(this.a.b(0, var2) - 1);
+         this.suggestedLot = (byte)(this.canvas.randomRange(0, range) - 1);
       }
    }
 
-   public final void c2(int var1, int var2) {
-      byte var3 = this.j3[0];
-      byte var4 = this.k3[0];
-      this.j3[0] = (byte)var1;
-      this.k3[0] = (byte)var2;
-      if (var1 != -1) {
-         this.t2[var1] = (byte)var2;
+   public final void selectLocation(int lot, int hour) {
+      byte previousLot = this.simLots[0];
+      byte previousHour = this.simHours[0];
+      this.simLots[0] = (byte)lot;
+      this.simHours[0] = (byte)hour;
+      if (lot != -1) {
+         this.lotLastHour[lot] = (byte)hour;
       }
 
-      this.b7 = 0;
-      this.c9 = 0;
-      if (var1 != -1) {
-         if (var3 != var1) {
-            this.d8 = (byte)this.b();
+      this.tickCount = 0;
+      this.idleTicks = 0;
+      if (lot != -1) {
+         if (previousLot != lot) {
+            this.lastVisitDay = (byte)this.dayOfWeek();
          }
 
-         GameCanvas var5 = this.a;
-         GameScreen var6 = this.a.a6();
-         int var7 = var3 == var1 ? (var2 > var4 ? 635 : 637) : 634;
-         int var9 = aa(this.n(0, this.d6));
-         int var10;
-         if (aa(this.d6 + 1440) == var9) {
-            var10 = 660;
+         GameCanvas canvas = this.canvas;
+         GameScreen screen = this.canvas.gameScreen();
+         int titleTextId = previousLot == lot ? (hour > previousHour ? 635 : 637) : 634;
+         int weekday = weekdayOf(this.nextOpenTime(0, this.gameTime));
+         int weekdayTextId;
+         if (weekdayOf(this.gameTime + 1440) == weekday) {
+            weekdayTextId = 660;
          } else {
-            var10 = c7[var9];
+            weekdayTextId = WEEKDAY_TEXT_IDS[weekday];
          }
 
-         SdkString var11 = var5.a4(var10);
-         SdkString var12 = var5.a2();
-         var5.h2(this.f2[var1][var2]);
-         SdkString var13 = var5.a4(var5.a24.i(this.e[var1]));
-         var5.a(-11, var7, var11, var12, var13);
-         byte var14 = 0;
-         if (var3 == var1 && var2 > var4) {
-            var14 = 4;
-         } else if (var1 != -1) {
-            var14 = 3;
+         SdkString title = canvas.getString(weekdayTextId);
+         SdkString body = canvas.beginString();
+         canvas.appendTime(this.lotHourStarts[lot][hour]);
+         SdkString subtitle = canvas.getString(canvas.lot.spriteIdAt(this.lotOccupantTypes[lot]));
+         canvas.formatStringWith3(-11, titleTextId, title, body, subtitle);
+         byte optionFlags = 0;
+         if (previousLot == lot && hour > previousHour) {
+            optionFlags = 4;
+         } else if (lot != -1) {
+            optionFlags = 3;
          }
 
-         int var15 = this.b(var1, var2);
-         var6.a4(-11, var15, var14);
+         int option = this.lotHourInteraction(lot, hour);
+         screen.openDialog(-11, option, optionFlags);
       }
    }
 
-   public final int h() {
-      int var1 = this.V(0);
-      int var2 = this.W(0);
-      int var3 = this.c(var1, var2);
-      this.a12(var3);
-      this.b7++;
-      if (this.b7 % 3 == 2 && this.c9 > 0) {
-         this.c9--;
+   public final int tick() {
+      int lot = this.simLot(0);
+      int hour = this.simHour(0);
+      int income = this.lotHourIncome(lot, hour);
+      this.addMoney(income);
+      this.tickCount++;
+      if (this.tickCount % 3 == 2 && this.idleTicks > 0) {
+         this.idleTicks--;
       }
 
-      return var3;
+      return income;
    }
 
-   public final void c2() {
-      this.c9++;
-      if (this.c9 >= 3) {
-         this.c2(-1, 0);
+   public final void idleTick() {
+      this.idleTicks++;
+      if (this.idleTicks >= 3) {
+         this.selectLocation(-1, 0);
       }
    }
 
-   public final int l(int var1) {
-      switch (var1) {
+   public final int statValue(int slot) {
+      switch (slot) {
          case 0:
          default:
-            return this.k(0);
+            return this.residentLevel(0);
          case 1:
-            return this.k(2);
+            return this.residentLevel(2);
          case 2:
-            return this.b7;
+            return this.tickCount;
          case 3:
-            int var2 = 0;
+            int working = 0;
 
-            for (int var3 = 1; var3 < this.b6; var3++) {
-               byte var4 = this.v2[var3];
-               if ((this.F(var4) & 16) != 0) {
-                  var2++;
+            for (int sim = 1; sim < this.simCount; sim++) {
+               byte state = this.simStates[sim];
+               if ((this.stateFlagsOf(state) & 16) != 0) {
+                  working++;
                }
             }
 
-            return var2;
+            return working;
          case 4:
-            return this.k(4);
+            return this.residentLevel(4);
          case 5:
-            return this.k(3);
+            return this.residentLevel(3);
       }
    }
 
-   public static int m(int var0) {
-      switch (var0) {
+   public static int statTextId(int slot) {
+      switch (slot) {
          case 0:
          default:
             return 486;
@@ -1201,245 +1201,245 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final boolean a5(int var1, int var2) {
-      byte[] var3;
-      byte var4 = (var3 = this.a5[var1][var2])[0];
-      byte var5 = var3[1];
-      if (var4 != -1 && this.l(var4) < var5) {
+   public final boolean canEnterLot(int lot, int hour) {
+      byte[] requirements;
+      byte firstStat = (requirements = this.lotHourRequirements[lot][hour])[0];
+      byte firstMin = requirements[1];
+      if (firstStat != -1 && this.statValue(firstStat) < firstMin) {
          return false;
       } else {
-         byte var6 = var3[2];
-         byte var7 = var3[3];
-         if (var6 != -1 && this.l(var6) < var7) {
+         byte secondStat = requirements[2];
+         byte secondMin = requirements[3];
+         if (secondStat != -1 && this.statValue(secondStat) < secondMin) {
             return false;
          } else {
-            int var8 = this.t(var1);
-            byte var9 = this.v2[var8];
-            return (this.F(var9) & 2) == 0;
+            int kind = this.lotKind(lot);
+            byte state = this.simStates[kind];
+            return (this.stateFlagsOf(state) & 2) == 0;
          }
       }
    }
 
-   public final boolean e3() {
-      int var1 = this.V(0);
-      int var2;
-      return (var2 = this.W(0)) < this.p(var1) - 1 && this.a5(var1, var2 + 1) && this.b7 >= 10;
+   public final boolean canAdvanceHour() {
+      int lot = this.simLot(0);
+      int hour;
+      return (hour = this.simHour(0)) < this.lotHourCount(lot) - 1 && this.canEnterLot(lot, hour + 1) && this.tickCount >= 10;
    }
 
-   public final int a(Entity var1) {
-      byte var2 = this.j3[0];
-      int var3 = -1;
-      if (var1 != null && var1.type != 77) {
-         var3 = com.ea.sims3.GameCanvas.a(var1.type, this.e);
+   public final int pickActionFor(Entity entity) {
+      byte currentLot = this.simLots[0];
+      int lot = -1;
+      if (entity != null && entity.type != 77) {
+         lot = com.ea.sims3.GameCanvas.indexOfShort(entity.type, this.lotOccupantTypes);
       } else {
-         int var4;
-         if ((var4 = this.a()) >= 450 && var4 <= 1110 && this.e7 != var2) {
-            var3 = this.e7;
+         int minute;
+         if ((minute = this.currentMinuteOfDay()) >= 450 && minute <= 1110 && this.suggestedLot != currentLot) {
+            lot = this.suggestedLot;
          }
       }
 
-      return var3;
+      return lot;
    }
 
-   public final int n(int var1) {
-      return var1 == -1 ? 0 : Math.max(this.t2[var1] - 1, 0);
+   public final int lastHourIndex(int lot) {
+      return lot == -1 ? 0 : Math.max(this.lotLastHour[lot] - 1, 0);
    }
 
-   private static boolean b3(int var0, int var1, int var2) {
-      var1 = (var1 + 1440) % 1440;
-      var2 = (var2 + 1440) % 1440;
-      return var1 < var2 ? var0 >= var1 && var0 <= var2 : var0 >= var1 || var0 <= var2;
+   private static boolean isTimeInRange(int time, int start, int end) {
+      start = (start + 1440) % 1440;
+      end = (end + 1440) % 1440;
+      return start < end ? time >= start && time <= end : time >= start || time <= end;
    }
 
-   public final int o(int var1) {
-      return this.a2(var1, this.d6);
+   public final int lotStateNow(int lot) {
+      return this.lotState(lot, this.gameTime);
    }
 
-   public final int a2(int var1, int var2) {
-      byte var3 = 0;
-      int var4 = aa(var2);
-      int var5 = Z(var2);
-      int var6;
-      int var7 = (var6 = this.ac(var1)) - 600;
-      byte var8;
-      if ((var8 = this.j3[var1]) == -1) {
-         var3 = 8;
+   public final int lotState(int lot, int time) {
+      byte state = 0;
+      int weekday = weekdayOf(time);
+      int minute = minuteOfDay(time);
+      int endMinutes;
+      int startMinutes = (endMinutes = this.defaultOpenMinutes(lot)) - 600;
+      byte activeLot;
+      if ((activeLot = this.simLots[lot]) == -1) {
+         state = 8;
       } else {
-         short var10;
+         short openTime;
          label51: {
-            byte var9 = this.k3[var1];
-            var10 = this.f2[var8][var9];
-            if (var1 != 0 || var4 != this.d8) {
-               if (var1 == 0) {
-                  this.d8 = -1;
+            byte hour = this.simHours[lot];
+            openTime = this.lotHourStarts[activeLot][hour];
+            if (lot != 0 || weekday != this.lastVisitDay) {
+               if (lot == 0) {
+                  this.lastVisitDay = -1;
                }
 
-               int var11 = a8[var4];
-               if ((this.e2[var8][var9] & var11) != 0) {
-                  short var13 = this.g2[var8][var9];
-                  if (var5 >= var10 - 30) {
-                     if (var5 < var10) {
-                        var3 = 1;
+               int dayBit = WEEKDAY_BITS[weekday];
+               if ((this.lotHourDayBits[activeLot][hour] & dayBit) != 0) {
+                  short closeTime = this.lotHourEnds[activeLot][hour];
+                  if (minute >= openTime - 30) {
+                     if (minute < openTime) {
+                        state = 1;
                         break label51;
                      }
 
-                     if (var5 < var10 + 60) {
-                        var3 = 2;
+                     if (minute < openTime + 60) {
+                        state = 2;
                         break label51;
                      }
 
-                     if (var5 < var13) {
-                        var3 = 4;
+                     if (minute < closeTime) {
+                        state = 4;
                         break label51;
                      }
                   }
 
-                  var3 = 8;
+                  state = 8;
                   break label51;
                }
             }
 
-            var3 = 8;
+            state = 8;
          }
 
-         var7 = var10 - 660;
-         var6 = var10 - 60;
+         startMinutes = openTime - 660;
+         endMinutes = openTime - 60;
       }
 
-      if (b3(var5, var7, var6)) {
-         var3 |= 16;
+      if (isTimeInRange(minute, startMinutes, endMinutes)) {
+         state |= 16;
       }
 
-      return var3;
+      return state;
    }
 
-   private int n(int var1, int var2) {
-      int var3 = this.V(var1);
-      int var4 = this.W(var1);
-      int var5 = this.d(var3, var4);
-      int var6 = this.e(var3, var4);
-      int var7 = Z(var2);
-      int var8;
-      int var9 = var8 = aa(var2);
+   private int nextOpenTime(int sim, int time) {
+      int lot = this.simLot(sim);
+      int hour = this.simHour(sim);
+      int dayBits = this.lotHourDays(lot, hour);
+      int startMinutes = this.lotHourStart(lot, hour);
+      int minute = minuteOfDay(time);
+      int weekday;
+      int candidateDay = weekday = weekdayOf(time);
 
-      for (int var10 = 0; var10 < 7; var10++) {
-         var9 = (var8 + var10) % 7;
-         if ((var5 & a8[var9]) != 0 && (var1 != 0 || var9 != this.d8) && (var9 != var8 || var7 < var6)) {
+      for (int offset = 0; offset < 7; offset++) {
+         candidateDay = (weekday + offset) % 7;
+         if ((dayBits & WEEKDAY_BITS[candidateDay]) != 0 && (sim != 0 || candidateDay != this.lastVisitDay) && (candidateDay != weekday || minute < startMinutes)) {
             break;
          }
       }
 
-      int var11 = ab(this.d6) + var6;
-      if (var9 != var8) {
-         var11 += (var9 - var8 + 7) % 7 * 1440;
+      int openTime = startOfWeek(this.gameTime) + startMinutes;
+      if (candidateDay != weekday) {
+         openTime += (candidateDay - weekday + 7) % 7 * 1440;
       }
 
-      return var11;
+      return openTime;
    }
 
-   private boolean b(Entity var1, int var2) {
-      byte var3;
-      if ((var3 = this.j3[var2]) == -1) {
+   private boolean isLotOccupant(Entity entity, int sim) {
+      byte lot;
+      if ((lot = this.simLots[sim]) == -1) {
          return false;
-      } else if (var1 != null) {
-         int var4 = this.s(var3);
-         return var1.type == var4;
+      } else if (entity != null) {
+         int type = this.lotOccupantType(lot);
+         return entity.type == type;
       } else {
          return false;
       }
    }
 
-   public final boolean a(Entity var1, int var2) {
-      return var1 != null && !this.b(var1, var2) ? false : (this.o(var2) & 3) != 0;
+   public final boolean canInteractAt(Entity entity, int sim) {
+      return entity != null && !this.isLotOccupant(entity, sim) ? false : (this.lotStateNow(sim) & 3) != 0;
    }
 
-   public final int p(int var1) {
-      return this.c2[var1].length;
+   public final int lotHourCount(int lot) {
+      return this.lotHourInteractions[lot].length;
    }
 
-   public final int q(int var1) {
-      return var1 == -1 ? 667 : this.c[var1];
+   public final int lotNameText(int lot) {
+      return lot == -1 ? 667 : this.lotNameTextIds[lot];
    }
 
-   public final int r(int var1) {
-      return this.d[var1];
+   public final int lotSubtitleText(int lot) {
+      return this.lotSubtitleTextIds[lot];
    }
 
-   public final int s(int var1) {
-      return this.e[var1];
+   public final int lotOccupantType(int lot) {
+      return this.lotOccupantTypes[lot];
    }
 
-   public final int t(int var1) {
-      return this.a4[var1];
+   public final int lotKind(int lot) {
+      return this.lotKinds[lot];
    }
 
-   public final int i() {
-      byte var1 = this.j3[0];
-      return this.a.d() < 50 ? this.f[var1] : this.g[var1];
+   public final int currentLotSprite() {
+      byte lot = this.simLots[0];
+      return this.canvas.randomPercent() < 50 ? this.lotSpritesLow[lot] : this.lotSpritesHigh[lot];
    }
 
-   public final int u(int var1) {
-      return this.h[var1];
+   public final int lotExtraSprite(int lot) {
+      return this.lotExtraSprites[lot];
    }
 
-   public final int b(int var1, int var2) {
-      return this.c2[var1][var2];
+   public final int lotHourInteraction(int lot, int hour) {
+      return this.lotHourInteractions[lot][hour];
    }
 
-   public final int c(int var1, int var2) {
-      return this.d2[var1][var2];
+   public final int lotHourIncome(int lot, int hour) {
+      return this.lotHourIncome[lot][hour];
    }
 
-   public final int d(int var1, int var2) {
-      return this.e2[var1][var2];
+   public final int lotHourDays(int lot, int hour) {
+      return this.lotHourDayBits[lot][hour];
    }
 
-   public final int e(int var1, int var2) {
-      return this.f2[var1][var2];
+   public final int lotHourStart(int lot, int hour) {
+      return this.lotHourStarts[lot][hour];
    }
 
-   public final int f(int var1, int var2) {
-      return this.g2[var1][var2];
+   public final int lotHourEnd(int lot, int hour) {
+      return this.lotHourEnds[lot][hour];
    }
 
-   public final byte[] a6(int var1, int var2) {
-      return this.a5[var1][var2];
+   public final byte[] lotHourRequirement(int lot, int hour) {
+      return this.lotHourRequirements[lot][hour];
    }
 
-   public final void d3(int var1) {
-      this.a11 = (byte)var1;
+   public final void setSelectedResident(int resident) {
+      this.selectedResident = (byte)resident;
    }
 
-   public final int j() {
-      return this.i.length;
+   public final int residentLabelCount() {
+      return this.residentLabelTextIds.length;
    }
 
-   public final short a11(int var1) {
-      return var1 == 1 && this.i(0, 0) == 1 ? 534 : this.i[var1];
+   public final short residentLabelText(int resident) {
+      return resident == 1 && this.simAttribute(0, 0) == 1 ? 534 : this.residentLabelTextIds[resident];
    }
 
-   public final short b6(int var1) {
-      return this.j[var1];
+   public final short residentInfoText(int resident) {
+      return this.residentInfoTextIds[resident];
    }
 
-   public final int k() {
-      return this.k[this.a11];
+   public final int selectedResidentSpriteA() {
+      return this.residentSpritesA[this.selectedResident];
    }
 
-   private int t() {
-      return this.l[this.a11];
+   private int selectedResidentSpriteB() {
+      return this.residentSpritesB[this.selectedResident];
    }
 
-   public final int l() {
-      return com.ea.sims3.GameCanvas.d(this.t(), this.n);
+   public final int selectedResidentFrame() {
+      return com.ea.sims3.GameCanvas.countAllFlags(this.selectedResidentSpriteB(), this.achievementFlags);
    }
 
-   public final int v(int var1) {
-      return com.ea.sims3.GameCanvas.c(var1, this.n, this.t());
+   public final int selectedResidentAnimFrame(int frameStep) {
+      return com.ea.sims3.GameCanvas.nthIndexWithFlag(frameStep, this.achievementFlags, this.selectedResidentSpriteB());
    }
 
-   private int u() {
-      switch (this.a11) {
+   private int selectedResidentMask() {
+      switch (this.selectedResident) {
          case 0:
             return 536870912;
          case 1:
@@ -1456,191 +1456,191 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final boolean f3() {
-      if (this.b8(1) && !this.b8(2)) {
-         this.r2(2);
+   public final boolean unlockSecondMilestone() {
+      if (this.hasMilestone(1) && !this.hasMilestone(2)) {
+         this.setMilestone(2);
          return true;
       } else {
          return false;
       }
    }
 
-   private void n2() {
-      this.b8 = -1;
-      this.d9 = (short)this.a.b(0, this.n.length - 1);
-      this.o4 = 115000;
-      if (this.u2 == null) {
-         this.u2 = new byte[4];
-         this.l5 = new int[this.b3.length];
-         this.m5 = new int[10];
+   private void resetAchievementState() {
+      this.pendingAchievementId = -1;
+      this.randomSeed = (short)this.canvas.randomRange(0, this.achievementFlags.length - 1);
+      this.achievementTimer = 115000;
+      if (this.achievementSlots == null) {
+         this.achievementSlots = new byte[4];
+         this.achievementTimes = new int[this.achievementTriggerIds.length];
+         this.recentTaskTimes = new int[10];
       }
 
-      com.ea.sims3.GameCanvas.a3(this.u2, -1);
-      this.p4 = 0;
-      this.q4 = 0;
-      com.ea.sims3.GameCanvas.a(this.l5, this.d6);
-      this.e8 = 0;
-      this.f7 = 0;
-      com.ea.sims3.GameCanvas.a(this.m5, -1);
-      this.r3 = 0;
+      com.ea.sims3.GameCanvas.fillBytes(this.achievementSlots, -1);
+      this.usedTaskBits = 0;
+      this.milestoneFlags = 0;
+      com.ea.sims3.GameCanvas.fillInts(this.achievementTimes, this.gameTime);
+      this.altEventCount = 0;
+      this.otherEventCount = 0;
+      com.ea.sims3.GameCanvas.fillInts(this.recentTaskTimes, -1);
+      this.visitedLotBits = 0;
    }
 
-   public final boolean b8(int var1) {
-      return (this.q4 & var1) != 0;
+   public final boolean hasMilestone(int flag) {
+      return (this.milestoneFlags & flag) != 0;
    }
 
-   private void r2(int var1) {
-      this.q4 |= var1;
+   private void setMilestone(int flag) {
+      this.milestoneFlags |= flag;
    }
 
-   private void s2(int var1) {
-      this.o4 += var1;
-      if (this.b8 != -1) {
-         if (this.o4 > 240000) {
-            this.a.a6().e3(this.b8);
-            this.b8 = -1;
-            this.o4 = 0;
+   private void updateAchievementTimers(int elapsed) {
+      this.achievementTimer += elapsed;
+      if (this.pendingAchievementId != -1) {
+         if (this.achievementTimer > 240000) {
+            this.canvas.gameScreen().showRelationshipDialog(this.pendingAchievementId);
+            this.pendingAchievementId = -1;
+            this.achievementTimer = 0;
          }
-      } else if (this.o4 > 120000) {
-         this.b8 = (byte)this.v();
-         this.o4 = 0;
-         this.a.a6().j2();
+      } else if (this.achievementTimer > 120000) {
+         this.pendingAchievementId = (byte)this.pickRandomAchievement();
+         this.achievementTimer = 0;
+         this.canvas.gameScreen().requestSleep();
       }
 
-      int var2 = this.d6;
+      int now = this.gameTime;
 
-      for (int var3 = 0; var3 < this.l5.length; var3++) {
-         int var4;
-         if ((var4 = this.l5[var3]) != -1 && var2 - var4 > 4320) {
-            this.l5[var3] = var2;
-            this.e3(this.b3[var3]);
+      for (int index = 0; index < this.achievementTimes.length; index++) {
+         int timestamp;
+         if ((timestamp = this.achievementTimes[index]) != -1 && now - timestamp > 4320) {
+            this.achievementTimes[index] = now;
+            this.unlockAchievement(this.achievementTriggerIds[index]);
          }
       }
    }
 
-   private int v() {
-      int var6 = this.n.length;
-      int var7 = -1;
-      int var8 = this.d9;
+   private int pickRandomAchievement() {
+      int count = this.achievementFlags.length;
+      int event = -1;
+      int seed = this.randomSeed;
 
-      for (int var9 = 0; var9 < var6; var9++) {
-         while ((var8 = (1543 * var8 + 3571) % 257) >= var6) {
+      for (int attempt = 0; attempt < count; attempt++) {
+         while ((seed = (1543 * seed + 3571) % 257) >= count) {
          }
 
-         short var11;
-         if (this.ad(var8) == -1 && ((var11 = this.n[var8]) & 8) == 0 && this.f4(var8) && (!this.a.e4(var8) || this.a.d() >= 70)) {
-            var7 = var8;
-            this.d9 = (short)var8;
+         short flags;
+         if (this.achievementSlotOf(seed) == -1 && ((flags = this.achievementFlags[seed]) & 8) == 0 && this.isAchievementAvailable(seed) && (!this.canvas.hasVisitedFlag(seed) || this.canvas.randomPercent() >= 70)) {
+            event = seed;
+            this.randomSeed = (short)seed;
             break;
          }
       }
 
-      switch (var7) {
+      switch (event) {
          case 44:
-            this.e8 = 0;
+            this.altEventCount = 0;
             break;
          case 45:
-            this.f7 = 0;
+            this.otherEventCount = 0;
             break;
          case 52:
-            this.y2(1536);
+            this.clearSimMilestones(1536);
       }
 
-      int var12;
-      if ((var12 = com.ea.sims3.GameCanvas.a(var7, this.b3)) != -1 && this.l5[var12] != -1) {
-         this.l5[var12] = this.d6;
+      int index;
+      if ((index = com.ea.sims3.GameCanvas.indexOfByte(event, this.achievementTriggerIds)) != -1 && this.achievementTimes[index] != -1) {
+         this.achievementTimes[index] = this.gameTime;
       }
 
-      this.a.o2(var7);
-      return var7;
+      this.canvas.addFlag(event);
+      return event;
    }
 
-   public final void d2() {
-      int var1;
-      if ((var1 = this.ad(-1)) != -1 && this.b8 != -1) {
-         this.u2[var1] = this.b8;
-         this.b8 = -1;
-         this.o4 = 0;
-         this.a.a6().f3(var1);
+   public final void assignAchievement() {
+      int slot;
+      if ((slot = this.achievementSlotOf(-1)) != -1 && this.pendingAchievementId != -1) {
+         this.achievementSlots[slot] = this.pendingAchievementId;
+         this.pendingAchievementId = -1;
+         this.achievementTimer = 0;
+         this.canvas.gameScreen().playSlotAnimator(slot);
       }
    }
 
-   public final boolean g3() {
-      return com.ea.sims3.GameCanvas.a(-1, this.u2) != -1;
+   public final boolean hasOpenAchievementSlot() {
+      return com.ea.sims3.GameCanvas.indexOfByte(-1, this.achievementSlots) != -1;
    }
 
-   private boolean f4(int var1) {
-      Lot var2 = this.a.a24;
-      switch (var1) {
+   private boolean isAchievementAvailable(int event) {
+      Lot lot = this.canvas.lot;
+      switch (event) {
          case 0:
-            if (!this.b8(4)) {
+            if (!this.hasMilestone(4)) {
                return true;
             }
 
             return false;
          case 1:
-            if (!this.b8(8)) {
+            if (!this.hasMilestone(8)) {
                return true;
             }
 
             return false;
          case 2:
-            if (this.c(2) == 0) {
+            if (this.itemCount(2) == 0) {
                return true;
             }
 
             return false;
          case 3:
-            if (this.c(3) == 0) {
+            if (this.itemCount(3) == 0) {
                return true;
             }
 
             return false;
          case 4:
-            if (this.c(1) == 0) {
+            if (this.itemCount(1) == 0) {
                return true;
             }
 
             return false;
          case 5:
-            if (!var2.a13(19)) {
+            if (!lot.hasObjectKind(19)) {
                return true;
             }
 
             return false;
          case 6:
-            if (!var2.a13(3)) {
+            if (!lot.hasObjectKind(3)) {
                return true;
             }
 
             return false;
          case 7:
-            if (this.k(0) < 5) {
+            if (this.residentLevel(0) < 5) {
                return true;
             }
 
             return false;
          case 8:
-            if (this.k(2) < 5) {
+            if (this.residentLevel(2) < 5) {
                return true;
             }
 
             return false;
          case 9:
-            if (this.k(1) < 5) {
+            if (this.residentLevel(1) < 5) {
                return true;
             }
 
             return false;
          case 10:
-            if (this.k(3) < 5) {
+            if (this.residentLevel(3) < 5) {
                return true;
             }
 
             return false;
          case 11:
          case 50:
-            if (com.ea.sims3.GameCanvas.b(0, this.v2) > 1) {
+            if (com.ea.sims3.GameCanvas.countEqualBytes(0, this.simStates) > 1) {
                return true;
             }
 
@@ -1648,10 +1648,10 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          case 12:
          case 13:
          case 14:
-            int var5 = var1 == 12 ? 16 : (var1 == 13 ? 4 : 8);
+            int flagMask = event == 12 ? 16 : (event == 13 ? 4 : 8);
 
-            for (int var4 = 1; var4 < this.b6; var4++) {
-               if ((this.F(this.v2[var4]) & var5) == 0) {
+            for (int sim = 1; sim < this.simCount; sim++) {
+               if ((this.stateFlagsOf(this.simStates[sim]) & flagMask) == 0) {
                   return true;
                }
             }
@@ -1693,365 +1693,365 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          default:
             return true;
          case 20:
-            if (this.V(0) == -1) {
+            if (this.simLot(0) == -1) {
                return true;
             }
 
             return false;
          case 27:
-            for (int var3 = 0; var3 < this.s2.length; var3++) {
-               if (this.s2[var3] == 0 && (var2.w(var3) & 2048) != 0) {
+            for (int item = 0; item < this.itemCounts.length; item++) {
+               if (this.itemCounts[item] == 0 && (lot.categoryMaskAt(item) & 2048) != 0) {
                   return true;
                }
             }
 
             return false;
          case 41:
-            if (var2.a13(9) && !var2.b8(43) && !var2.b8(44) && !var2.b8(45)) {
+            if (lot.hasObjectKind(9) && !lot.hasObject(43) && !lot.hasObject(44) && !lot.hasObject(45)) {
                return true;
             }
 
             return false;
          case 42:
-            if (var2.a13(22) && !var2.b8(95) && !var2.b8(96) && !var2.b8(97)) {
+            if (lot.hasObjectKind(22) && !lot.hasObject(95) && !lot.hasObject(96) && !lot.hasObject(97)) {
                return true;
             }
 
             return false;
          case 43:
-            if (this.e5 < 500) {
+            if (this.money < 500) {
                return true;
             }
 
             return false;
          case 54:
          case 55:
-            return this.V(0) != -1 && this.W(0) < this.p(this.V(0));
+            return this.simLot(0) != -1 && this.simHour(0) < this.lotHourCount(this.simLot(0));
       }
    }
 
-   private int ad(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.u2);
+   private int achievementSlotOf(int event) {
+      return com.ea.sims3.GameCanvas.indexOfByte(event, this.achievementSlots);
    }
 
-   public final int w(int var1) {
-      return this.u2[var1];
+   public final int achievementSlotValue(int slot) {
+      return this.achievementSlots[slot];
    }
 
-   public final int x(int var1) {
-      return var1 >= 0 && var1 < this.m.length ? this.m[var1] : 548;
+   public final int achievementText(int index) {
+      return index >= 0 && index < this.achievementTextIds.length ? this.achievementTextIds[index] : 548;
    }
 
-   public final int m() {
-      return this.m.length;
+   public final int achievementCount() {
+      return this.achievementTextIds.length;
    }
 
-   private int ae(int var1) {
-      return this.n[var1];
+   private int achievementFlagAt(int index) {
+      return this.achievementFlags[index];
    }
 
-   public final void e3(int var1) {
-      GameCanvas var2 = this.a;
-      GameScreen var3 = this.a.a6();
-      boolean var4 = false;
-      int var5;
-      if ((var5 = this.ad(var1)) != -1) {
-         var4 = true;
-         this.u2[var5] = -1;
-      } else if (this.b8 == var1) {
-         var4 = true;
-         this.b8 = -1;
-         this.o4 = 0;
+   public final void unlockAchievement(int event) {
+      GameCanvas canvas = this.canvas;
+      GameScreen screen = this.canvas.gameScreen();
+      boolean handled = false;
+      int slot;
+      if ((slot = this.achievementSlotOf(event)) != -1) {
+         handled = true;
+         this.achievementSlots[slot] = -1;
+      } else if (this.pendingAchievementId == event) {
+         handled = true;
+         this.pendingAchievementId = -1;
+         this.achievementTimer = 0;
       }
 
-      byte var6 = 0;
-      switch (var1) {
+      byte milestoneFlag = 0;
+      switch (event) {
          case 0:
-            var6 = 4;
+            milestoneFlag = 4;
             break;
          case 1:
-            var6 = 8;
+            milestoneFlag = 8;
       }
 
-      this.r2(var6);
-      int var7 = 0;
-      int var8 = 0;
-      int var9 = this.m();
-      int var10 = this.t();
+      this.setMilestone(milestoneFlag);
+      int bitIndex = 0;
+      int unlockedCount = 0;
+      int total = this.achievementCount();
+      int residentMask = this.selectedResidentSpriteB();
 
-      for (int var11 = 0; var11 < var9; var11++) {
-         if ((this.ae(var11) & var10) != 0) {
-            int var12 = 1 << var7;
-            if (var1 == var11 && (this.p4 & var12) == 0) {
-               this.p4 |= var12;
-               var4 = true;
+      for (int index = 0; index < total; index++) {
+         if ((this.achievementFlagAt(index) & residentMask) != 0) {
+            int bit = 1 << bitIndex;
+            if (event == index && (this.usedTaskBits & bit) == 0) {
+               this.usedTaskBits |= bit;
+               handled = true;
             }
 
-            if ((this.p4 & var12) != 0) {
-               var8++;
+            if ((this.usedTaskBits & bit) != 0) {
+               unlockedCount++;
             }
 
-            var7++;
+            bitIndex++;
          }
       }
 
-      if (var4) {
-         var2.p2(var1);
-         var3.f2(var1, var5);
+      if (handled) {
+         canvas.addVisitedFlag(event);
+         screen.playSlotAnimator2(event, slot);
       }
 
-      if (var8 == var7) {
-         this.r2(1);
+      if (unlockedCount == bitIndex) {
+         this.setMilestone(1);
       }
 
-      boolean var13 = var2.j2;
-      if (!var2.j2) {
-         int var14 = this.m.length;
-         if (var2.g() == var14) {
-            var3.k2();
+      boolean multiplayer = canvas.gameStarted;
+      if (!canvas.gameStarted) {
+         int achievementTotal = this.achievementTextIds.length;
+         if (canvas.visitedFlagCount() == achievementTotal) {
+            screen.requestNeighborhoodEvent();
          }
       }
 
-      switch (var1) {
+      switch (event) {
          case 22:
-            this.e8++;
-            if (this.e8 >= 15) {
-               this.e3(44);
+            this.altEventCount++;
+            if (this.altEventCount >= 15) {
+               this.unlockAchievement(44);
             }
       }
    }
 
-   public final void f3(int var1) {
-      Lot var2 = this.a.a24;
-      int var3;
-      if ((var3 = this.a.a24.h(var1)) == 3) {
-         this.e3(6);
-      } else if (var3 == 9) {
-         if (var1 != 42) {
-            this.e3(41);
+   public final void onItemPlaced(int item) {
+      Lot lot = this.canvas.lot;
+      int type;
+      if ((type = this.canvas.lot.objectKindAt(item)) == 3) {
+         this.unlockAchievement(6);
+      } else if (type == 9) {
+         if (item != 42) {
+            this.unlockAchievement(41);
          }
-      } else if (var3 == 19) {
-         this.e3(5);
-      } else if (var3 == 22 && var1 != 94) {
-         this.e3(42);
+      } else if (type == 19) {
+         this.unlockAchievement(5);
+      } else if (type == 22 && item != 94) {
+         this.unlockAchievement(42);
       }
 
-      if (var2.b5()) {
-         this.e3(64);
+      if (lot.allItemsPlaced()) {
+         this.unlockAchievement(64);
       }
 
-      this.e3(21);
+      this.unlockAchievement(21);
    }
 
-   public final void g2(int var1) {
-      this.e3(21);
-      if (var1 == 2) {
-         this.e3(2);
+   public final void onInteractionResult(int result) {
+      this.unlockAchievement(21);
+      if (result == 2) {
+         this.unlockAchievement(2);
       }
 
-      if (var1 == 3) {
-         this.e3(3);
+      if (result == 3) {
+         this.unlockAchievement(3);
       }
 
-      if (var1 == 1) {
-         this.e3(4);
-      }
-   }
-
-   public final void h2(int var1) {
-      this.f7 = (short)(this.f7 + var1);
-      if (this.f7 > 30) {
-         this.e3(45);
+      if (result == 1) {
+         this.unlockAchievement(4);
       }
    }
 
-   public final boolean h3() {
-      int[] var1 = this.m5;
-      int var2 = this.d6;
-      int var3 = 0;
-      int var4 = -1;
+   public final void onRepeatAction(int amount) {
+      this.otherEventCount = (short)(this.otherEventCount + amount);
+      if (this.otherEventCount > 30) {
+         this.unlockAchievement(45);
+      }
+   }
 
-      for (int var5 = 0; var5 < 10; var5++) {
-         int var6 = var1[var5];
-         if (var2 - var6 > 1440) {
-            var1[var5] = -1;
-            var6 = -1;
+   public final boolean canActToday() {
+      int[] times = this.recentTaskTimes;
+      int now = this.gameTime;
+      int count = 0;
+      int freeSlot = -1;
+
+      for (int index = 0; index < 10; index++) {
+         int time = times[index];
+         if (now - time > 1440) {
+            times[index] = -1;
+            time = -1;
          }
 
-         if (var6 == -1 && var4 == -1) {
-            var4 = var5;
-            var1[var5] = var2;
-            var6 = var2;
+         if (time == -1 && freeSlot == -1) {
+            freeSlot = index;
+            times[index] = now;
+            time = now;
          }
 
-         if (var6 != -1) {
-            var3++;
+         if (time != -1) {
+            count++;
          }
       }
 
-      if (var4 != -1 && var3 < 10) {
-         if (var3 >= 8) {
-            this.e3(61);
+      if (freeSlot != -1 && count < 10) {
+         if (count >= 8) {
+            this.unlockAchievement(61);
          }
 
-         this.e3(53);
+         this.unlockAchievement(53);
          return false;
       } else {
          return true;
       }
    }
 
-   public final boolean c5(int var1) {
-      return (this.p4 & 1 << var1) != 0;
+   public final boolean hasUsedTask(int index) {
+      return (this.usedTaskBits & 1 << index) != 0;
    }
 
-   public final boolean d4(int var1) {
-      int var2;
-      return (var2 = this.a.a24.s(var1)) != -1 ? (this.r3 & 1 << var2) != 0 : false;
+   public final boolean hasVisitedItem(int item) {
+      int lotIndex;
+      return (lotIndex = this.canvas.lot.indexOfKind(item)) != -1 ? (this.visitedLotBits & 1 << lotIndex) != 0 : false;
    }
 
-   public final void i2(int var1) {
-      int var2;
-      if ((var2 = this.a.a24.s(var1)) != -1) {
-         this.r3 |= 1 << var2;
+   public final void markItemVisited(int item) {
+      int lotIndex;
+      if ((lotIndex = this.canvas.lot.indexOfKind(item)) != -1) {
+         this.visitedLotBits |= 1 << lotIndex;
       }
    }
 
-   public final short c3(int var1) {
-      return this.o[var1];
+   public final short needId(int need) {
+      return this.needIds[need];
    }
 
-   public final short d2(int var1) {
-      return this.q[var1];
+   public final short needLabelText(int need) {
+      return this.needLabelTextIds[need];
    }
 
-   public final short e2(int var1) {
-      return this.r[var1];
+   public final short needHintText(int need) {
+      return this.needHintTextIds[need];
    }
 
-   public final int y(int var1) {
-      return this.n5[var1];
+   public final int needValue(int need) {
+      return this.needValues[need];
    }
 
-   private void o2() {
-      if (this.n5 == null) {
-         this.n5 = new int[this.a6];
-         this.o5 = new int[this.a6];
-         this.q5 = new int[this.a6];
-         this.p5 = new int[this.a6];
+   private void resetNeedValues() {
+      if (this.needValues == null) {
+         this.needValues = new int[this.needCount];
+         this.needDecay = new int[this.needCount];
+         this.needModifiers = new int[this.needCount];
+         this.needOffsets = new int[this.needCount];
       }
 
-      System.arraycopy(this.f3, 0, this.n5, 0, this.a6);
-      System.arraycopy(this.g3, 0, this.o5, 0, this.a6);
-      com.ea.sims3.GameCanvas.a(this.q5, 0);
-      com.ea.sims3.GameCanvas.a(this.p5, 65536);
-      this.s3 = 0;
+      System.arraycopy(this.needInitialValues, 0, this.needValues, 0, this.needCount);
+      System.arraycopy(this.needDecayRates, 0, this.needDecay, 0, this.needCount);
+      com.ea.sims3.GameCanvas.fillInts(this.needModifiers, 0);
+      com.ea.sims3.GameCanvas.fillInts(this.needOffsets, 65536);
+      this.needTimer = 0;
    }
 
-   private void t2(int var1) {
-      this.s3 += var1;
-      if (this.s3 > 500) {
-         this.s3 -= 500;
-         int[] var2 = this.o5;
-         int[] var3 = this.p5;
-         int[] var4 = this.q5;
+   private void updateNeeds(int elapsed) {
+      this.needTimer += elapsed;
+      if (this.needTimer > 500) {
+         this.needTimer -= 500;
+         int[] decay = this.needDecay;
+         int[] offsets = this.needOffsets;
+         int[] modifiers = this.needModifiers;
 
-         for (int var5 = 0; var5 < this.a6; var5++) {
-            int var6 = com.ea.sims3.FixedMath.mul(var3[var5], var2[var5]);
-            this.d2(var5, var6 + var4[var5] >> 1);
+         for (int need = 0; need < this.needCount; need++) {
+            int amount = com.ea.sims3.FixedMath.mul(offsets[need], decay[need]);
+            this.adjustNeed(need, amount + modifiers[need] >> 1);
          }
       }
    }
 
-   public final void d2(int var1, int var2) {
-      int[] var3 = this.n5;
-      this.n5[var1] = this.n5[var1] + var2;
-      var3[var1] = com.ea.sims3.FixedMath.clamp(var3[var1], 0, 6553600);
+   public final void adjustNeed(int need, int amount) {
+      int[] values = this.needValues;
+      this.needValues[need] = this.needValues[need] + amount;
+      values[need] = com.ea.sims3.FixedMath.clamp(values[need], 0, 6553600);
    }
 
-   private void c2(int var1, int var2, int var3) {
-      if (this.z(var3) == -1) {
-         this.d2(var1, var2);
+   private void adjustNeedIfIdle(int need, int amount, int task) {
+      if (this.activeTaskSlotOf(task) == -1) {
+         this.adjustNeed(need, amount);
       }
    }
 
-   public final void e2(int var1, int var2) {
-      this.q5[var1] = var2;
+   public final void setNeedModifier(int need, int modifier) {
+      this.needModifiers[need] = modifier;
    }
 
-   public final int n() {
-      short var1 = 0;
-      int[] var2 = this.n5;
-      short[] var3 = this.p;
-      int[] var4 = this.h2;
+   public final int moodFlags() {
+      short flags = 0;
+      int[] values = this.needValues;
+      short[] moodFlagBits = this.needMoodFlags;
+      int[] thresholds = this.needThresholds;
 
-      for (int var5 = 0; var5 < var2.length; var5++) {
-         if (var2[var5] < var4[var5]) {
-            var1 |= var3[var5];
+      for (int need = 0; need < values.length; need++) {
+         if (values[need] < thresholds[need]) {
+            flags |= moodFlagBits[need];
          }
       }
 
-      return var1;
+      return flags;
    }
 
-   private void p2() {
-      if (this.O == null) {
-         this.O = new short[6];
-         this.r4 = new int[6];
+   private void resetActiveTasks() {
+      if (this.activeTasks == null) {
+         this.activeTasks = new short[6];
+         this.taskTimers = new int[6];
       }
 
-      com.ea.sims3.GameCanvas.a2(this.O, -1);
-      com.ea.sims3.GameCanvas.a(this.r4, 0);
+      com.ea.sims3.GameCanvas.fillShorts(this.activeTasks, -1);
+      com.ea.sims3.GameCanvas.fillInts(this.taskTimers, 0);
    }
 
-   private void u2(int var1) {
-      GameCanvas var2 = this.a;
-      short[] var3 = this.O;
-      int[] var4 = this.r4;
-      byte[] var5 = this.e3;
-      int[] var6 = this.i2;
-      byte[] var7 = this.c3;
+   private void updateActiveTasks(int elapsed) {
+      GameCanvas canvas = this.canvas;
+      short[] tasks = this.activeTasks;
+      int[] timers = this.taskTimers;
+      byte[] flags = this.taskFlags;
+      int[] durations = this.taskDurations;
+      byte[] followUps = this.taskFollowUps;
 
-      for (int var8 = 0; var8 < 6; var8++) {
-         short var9;
-         if ((var9 = var3[var8]) != -1) {
-            if ((var5[var9] & 2) == 0 && !this.g3(var9)) {
-               this.w2(var9);
+      for (int slot = 0; slot < 6; slot++) {
+         short task;
+         if ((task = tasks[slot]) != -1) {
+            if ((flags[task] & 2) == 0 && !this.canRunTask(task)) {
+               this.stopTask(task);
             } else {
-               int var10 = var6[var9] * 1000;
-               var4[var8] += var1;
-               if (var4[var8] > var10) {
-                  var4[var8] = var10;
-                  if (var7[var9] != -1) {
-                     this.k2(var8, var7[var9]);
-                  } else if (!this.g3(var9)) {
-                     this.w2(var9);
+               int limit = durations[task] * 1000;
+               timers[slot] += elapsed;
+               if (timers[slot] > limit) {
+                  timers[slot] = limit;
+                  if (followUps[task] != -1) {
+                     this.setActiveTask(slot, followUps[task]);
+                  } else if (!this.canRunTask(task)) {
+                     this.stopTask(task);
                   } else {
-                     switch (var9) {
+                     switch (task) {
                         case 2:
-                           var2.a2(-11, 802, var2.b2());
-                           var2.a6().d3(-11);
-                           this.f2();
+                           canvas.formatStringWith(-11, 802, canvas.profileName());
+                           canvas.gameScreen().openStatsDialog(-11);
+                           this.celebrate();
                            return;
                         case 5:
-                           var2.a6().e2();
-                           this.f2();
-                           this.k2(var8, 4);
+                           canvas.gameScreen().cancelPlayerAction();
+                           this.celebrate();
+                           this.setActiveTask(slot, 4);
                            return;
                         case 10:
-                           this.d2(2, 3276800);
-                           this.w2(var9);
-                           GameScreen var11;
-                           if (!(var11 = var2.a6()).b5()) {
-                              Sim var12 = var11.a14;
-                              if (!var11.a14.l3()) {
-                                 var12.F();
+                           this.adjustNeed(2, 3276800);
+                           this.stopTask(task);
+                           GameScreen screen;
+                           if (!(screen = canvas.gameScreen()).isNewNeighborhood()) {
+                              Sim sim = screen.activePlayer;
+                              if (!screen.activePlayer.isFree()) {
+                                 sim.cancelAction();
                               }
 
-                              var12.a(4, null, 0, 0);
+                              sim.queueAction(4, null, 0, 0);
                            }
 
-                           this.f2();
+                           this.celebrate();
                            return;
                      }
                   }
@@ -2060,148 +2060,148 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          }
       }
 
-      int var13 = this.j2;
+      int count = this.taskCount;
 
-      for (int var14 = 0; var14 < var13; var14++) {
-         int var15 = var14;
-         if ((var5[var14] & 8) == 0 && this.g3(var14)) {
-            if (var14 == 3 && (this.a.a6().a14.h2 == 50 || this.z(6) != -1)) {
-               var15 = 6;
+      for (int taskIndex = 0; taskIndex < count; taskIndex++) {
+         int chosenTask = taskIndex;
+         if ((flags[taskIndex] & 8) == 0 && this.canRunTask(taskIndex)) {
+            if (taskIndex == 3 && (this.canvas.gameScreen().activePlayer.actionPhase == 50 || this.activeTaskSlotOf(6) != -1)) {
+               chosenTask = 6;
             }
 
-            int var16;
-            if ((var16 = this.z(var15)) == -1) {
-               this.v2(var15);
-               this.f2();
+            int activeSlot;
+            if ((activeSlot = this.activeTaskSlotOf(chosenTask)) == -1) {
+               this.startTask(chosenTask);
+               this.celebrate();
                return;
             }
 
-            if (var15 == 6) {
-               this.r4[var16] = 0;
+            if (chosenTask == 6) {
+               this.taskTimers[activeSlot] = 0;
             }
          }
       }
    }
 
-   private void q2() {
-      int[] var1 = this.s4;
-      com.ea.sims3.GameCanvas.a(this.s4, 0);
+   private void applyMoodDeltas() {
+      int[] deltas = this.moodDeltas;
+      com.ea.sims3.GameCanvas.fillInts(this.moodDeltas, 0);
 
-      for (int var2 = 0; var2 < 6; var2++) {
-         short var3;
-         if ((var3 = this.O[var2]) != -1) {
-            byte[] var4 = this.b5[var3];
-            byte[] var5 = this.c4[var3];
-            int var6 = var4.length;
+      for (int slot = 0; slot < 6; slot++) {
+         short task;
+         if ((task = this.activeTasks[slot]) != -1) {
+            byte[] indices = this.taskMoodIndices[task];
+            byte[] values = this.taskMoodDeltas[task];
+            int count = indices.length;
 
-            for (int var7 = 0; var7 < var6; var7++) {
-               var1[var4[var7]] = var1[var4[var7]] + (var5[var7] << 16);
+            for (int slotIndex = 0; slotIndex < count; slotIndex++) {
+               deltas[indices[slotIndex]] = deltas[indices[slotIndex]] + (values[slotIndex] << 16);
             }
          }
       }
 
-      for (int var8 = 0; var8 < 2; var8++) {
-         var1[var8] = com.ea.sims3.FixedMath.clamp(var1[var8], -6553600, 6553600);
+      for (int clampIndex = 0; clampIndex < 2; clampIndex++) {
+         deltas[clampIndex] = com.ea.sims3.FixedMath.clamp(deltas[clampIndex], -6553600, 6553600);
       }
 
-      this.s2();
+      this.updateMood();
    }
 
-   private void k2(int var1, int var2) {
-      short var3 = this.O[var1];
-      this.O[var1] = (short)var2;
-      this.r4[var1] = 0;
-      Sim var4;
-      (var4 = this.a.a6().a14).u2(var3);
-      var4.t2(var2);
-      byte[][] var5 = this.d4;
-      int[][] var6 = this.c5;
-      int[] var7 = this.p5;
-      if (var3 != -1) {
-         for (int var8 = 0; var8 < var5[var3].length; var8++) {
-            var7[var5[var3][var8]] = var7[var5[var3][var8]] + var6[var3][var8];
+   private void setActiveTask(int slot, int task) {
+      short previousTask = this.activeTasks[slot];
+      this.activeTasks[slot] = (short)task;
+      this.taskTimers[slot] = 0;
+      Sim sim;
+      (sim = this.canvas.gameScreen().activePlayer).clearLocomotionState(previousTask);
+      sim.setLocomotionState(task);
+      byte[][] linkIndices = this.taskLinkIndices;
+      int[][] linkDeltas = this.taskLinkDeltas;
+      int[] offsets = this.needOffsets;
+      if (previousTask != -1) {
+         for (int oldLinkIndex = 0; oldLinkIndex < linkIndices[previousTask].length; oldLinkIndex++) {
+            offsets[linkIndices[previousTask][oldLinkIndex]] = offsets[linkIndices[previousTask][oldLinkIndex]] + linkDeltas[previousTask][oldLinkIndex];
          }
       }
 
-      if (var2 != -1) {
-         for (int var9 = 0; var9 < var5[var2].length; var9++) {
-            var7[var5[var2][var9]] = var7[var5[var2][var9]] - var6[var2][var9];
+      if (task != -1) {
+         for (int newLinkIndex = 0; newLinkIndex < linkIndices[task].length; newLinkIndex++) {
+            offsets[linkIndices[task][newLinkIndex]] = offsets[linkIndices[task][newLinkIndex]] - linkDeltas[task][newLinkIndex];
          }
 
-         if (var2 == 9) {
-            this.w2(8);
-         } else if (var2 == 6) {
-            this.w2(3);
-            this.w2(7);
-         } else if (var2 == 3) {
-            this.w2(6);
-            this.w2(7);
+         if (task == 9) {
+            this.stopTask(8);
+         } else if (task == 6) {
+            this.stopTask(3);
+            this.stopTask(7);
+         } else if (task == 3) {
+            this.stopTask(6);
+            this.stopTask(7);
          }
 
-         GameScreen var10 = this.a.a6();
-         if (var2 == 2) {
-            var10.c2(801, 401);
-         } else if (var2 == 1) {
-            var10.a2((byte)10);
-         } else if (var2 == 4) {
-            var10.a2((byte)11);
-         } else if (var2 == 5) {
-            var10.a2((byte)12);
-         } else if (var2 == 10) {
-            var10.a2((byte)13);
-         } else if (var2 == 9) {
-            var10.a2((byte)14);
-         } else if (var2 == 11) {
-            var10.a2((byte)15);
+         GameScreen screen = this.canvas.gameScreen();
+         if (task == 2) {
+            screen.chooseDialogOptionAt(801, 401);
+         } else if (task == 1) {
+            screen.showNeighborhoodIntro((byte)10);
+         } else if (task == 4) {
+            screen.showNeighborhoodIntro((byte)11);
+         } else if (task == 5) {
+            screen.showNeighborhoodIntro((byte)12);
+         } else if (task == 10) {
+            screen.showNeighborhoodIntro((byte)13);
+         } else if (task == 9) {
+            screen.showNeighborhoodIntro((byte)14);
+         } else if (task == 11) {
+            screen.showNeighborhoodIntro((byte)15);
          }
       }
 
-      this.q2();
+      this.applyMoodDeltas();
    }
 
-   private void v2(int var1) {
-      byte var2;
-      if ((var2 = this.d3[var1]) != -1) {
-         this.l5[var2] = -1;
+   private void startTask(int task) {
+      byte achievement;
+      if ((achievement = this.taskAchievements[task]) != -1) {
+         this.achievementTimes[achievement] = -1;
       }
 
-      int var3 = com.ea.sims3.GameCanvas.a(-1, this.O);
-      this.k2(var3, var1);
+      int slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.activeTasks);
+      this.setActiveTask(slot, task);
    }
 
-   private void w2(int var1) {
-      byte var2;
-      if ((var2 = this.d3[var1]) != -1) {
-         this.l5[var2] = this.d6;
+   private void stopTask(int task) {
+      byte achievement;
+      if ((achievement = this.taskAchievements[task]) != -1) {
+         this.achievementTimes[achievement] = this.gameTime;
       }
 
-      int var3;
-      if ((var3 = com.ea.sims3.GameCanvas.a(var1, this.O)) != -1) {
-         this.k2(var3, -1);
+      int slot;
+      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(task, this.activeTasks)) != -1) {
+         this.setActiveTask(slot, -1);
       }
    }
 
-   private boolean g3(int var1) {
-      byte var2;
-      if ((var2 = this.c3[var1]) != -1 && this.z(var2) != -1) {
+   private boolean canRunTask(int task) {
+      byte followUp;
+      if ((followUp = this.taskFollowUps[task]) != -1 && this.activeTaskSlotOf(followUp) != -1) {
          return false;
       } else {
-         int[] var3 = this.n5;
-         byte[] var4 = this.a7[var1];
-         int[] var5 = this.b4[var1];
-         int var6;
-         if ((var6 = var4.length) == 0) {
+         int[] values = this.needValues;
+         byte[] indices = this.taskNeedIndices[task];
+         int[] deltas = this.taskNeedDeltas[task];
+         int count;
+         if ((count = indices.length) == 0) {
             return true;
          } else {
-            for (int var7 = 0; var7 < var6; var7++) {
-               byte var8 = var4[var7];
-               int var9 = var5[var7];
-               int var10 = var3[var8];
-               if (var9 > 0 && var10 > var9) {
+            for (int index = 0; index < count; index++) {
+               byte need = indices[index];
+               int delta = deltas[index];
+               int value = values[need];
+               if (delta > 0 && value > delta) {
                   return true;
                }
 
-               if (var9 < 0 && var10 < -var9) {
+               if (delta < 0 && value < -delta) {
                   return true;
                }
             }
@@ -2211,256 +2211,256 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final int z(int var1) {
-      short[] var2 = this.O;
+   public final int activeTaskSlotOf(int task) {
+      short[] tasks = this.activeTasks;
 
-      for (int var3 = 0; var3 < 6; var3++) {
-         if (var2[var3] == var1) {
-            return var3;
+      for (int slot = 0; slot < 6; slot++) {
+         if (tasks[slot] == task) {
+            return slot;
          }
       }
 
       return -1;
    }
 
-   public final int A(int var1) {
-      return this.O[var1];
+   public final int activeTaskAt(int slot) {
+      return this.activeTasks[slot];
    }
 
-   public final int B(int var1) {
-      return this.s[var1];
+   public final int taskId(int task) {
+      return this.taskIds[task];
    }
 
-   public final int C(int var1) {
-      return this.e3[var1];
+   public final int taskFlagsOf(int task) {
+      return this.taskFlags[task];
    }
 
-   public static int o() {
+   public static int initialScreenId() {
       return 17;
    }
 
-   public final short f2(int var1) {
-      return this.t[var1];
+   public final short itemNameText(int item) {
+      return this.itemNameTextIds[item];
    }
 
-   private void r2() {
-      if (this.s4 == null) {
-         this.s4 = new int[4];
+   private void resetMoodDeltas() {
+      if (this.moodDeltas == null) {
+         this.moodDeltas = new int[4];
       }
 
-      com.ea.sims3.GameCanvas.a(this.s4, 1638400);
+      com.ea.sims3.GameCanvas.fillInts(this.moodDeltas, 1638400);
    }
 
-   private void s2() {
-      int[] var1 = this.s4;
-      int var2 = Integer.MIN_VALUE;
-      int var3 = -1;
-      int var4 = Integer.MAX_VALUE;
+   private void updateMood() {
+      int[] deltas = this.moodDeltas;
+      int highest = Integer.MIN_VALUE;
+      int lowestIndex = -1;
+      int lowest = Integer.MAX_VALUE;
 
-      for (int var5 = 0; var5 < 4; var5++) {
-         if (var1[var5] > var2) {
-            var2 = var1[var5];
+      for (int index = 0; index < 4; index++) {
+         if (deltas[index] > highest) {
+            highest = deltas[index];
          }
 
-         if (var1[var5] < var4) {
-            var3 = var5;
-            var4 = var1[var5];
+         if (deltas[index] < lowest) {
+            lowestIndex = index;
+            lowest = deltas[index];
          }
       }
 
-      byte var7 = 3;
-      int var6 = var2;
-      if (var4 < -655360) {
-         if (var4 < -3276800) {
-            switch (var3) {
+      byte mood = 3;
+      int value = highest;
+      if (lowest < -655360) {
+         if (lowest < -3276800) {
+            switch (lowestIndex) {
                case 0:
                default:
-                  var7 = 5;
+                  mood = 5;
                   break;
                case 1:
-                  var7 = 7;
+                  mood = 7;
                   break;
                case 2:
-                  var7 = 9;
+                  mood = 9;
                   break;
                case 3:
-                  var7 = 11;
+                  mood = 11;
             }
          } else {
-            switch (var3) {
+            switch (lowestIndex) {
                case 0:
                default:
-                  var7 = 4;
+                  mood = 4;
                   break;
                case 1:
-                  var7 = 6;
+                  mood = 6;
                   break;
                case 2:
-                  var7 = 8;
+                  mood = 8;
                   break;
                case 3:
-                  var7 = 10;
+                  mood = 10;
             }
          }
 
-         var6 = var4;
-      } else if (var2 > 655360) {
-         if (var2 > 4915200) {
-            var7 = 0;
-         } else if (var2 > 2621440) {
-            var7 = 1;
+         value = lowest;
+      } else if (highest > 655360) {
+         if (highest > 4915200) {
+            mood = 0;
+         } else if (highest > 2621440) {
+            mood = 1;
          } else {
-            var7 = 2;
+            mood = 2;
          }
 
-         var6 = var2;
+         value = highest;
       }
 
-      this.t3 = var7;
-      this.h6 = var6;
+      this.moodIndex = mood;
+      this.moodValue = value;
    }
 
-   public final int p() {
-      return P[this.t3];
+   public final int moodTextId() {
+      return MOOD_TEXT_IDS[this.moodIndex];
    }
 
-   private void t2() {
-      int var1 = this.b6;
-      if (this.v2 == null) {
-         byte[] var2 = new byte[var1];
-         short[] var3 = new short[var1];
-         int[][] var4 = new int[var1][];
-         int[][] var5 = new int[var1][];
-         short[][] var6 = new short[var1][];
-         byte[][] var7 = new byte[var1][];
+   private void resetSimStates() {
+      int count = this.simCount;
+      if (this.simStates == null) {
+         byte[] states = new byte[count];
+         short[] milestones = new short[count];
+         int[][] needs = new int[count][];
+         int[][] needDecay = new int[count][];
+         short[][] history = new short[count][];
+         byte[][] repeatCounts = new byte[count][];
 
-         for (int var8 = 1; var8 < var1; var8++) {
-            var4[var8] = new int[this.k2];
-            var5[var8] = new int[this.A.length];
-            var6[var8] = new short[10];
-            var7[var8] = new byte[this.h5[var8].length];
+         for (int index = 1; index < count; index++) {
+            needs[index] = new int[this.simNeedCount];
+            needDecay[index] = new int[this.needTextIds.length];
+            history[index] = new short[10];
+            repeatCounts[index] = new byte[this.simKnownIds[index].length];
          }
 
-         this.v2 = var2;
-         this.Q = var3;
-         this.e9 = var4;
-         this.f8 = var5;
-         this.l6 = var6;
-         this.r5 = var7;
+         this.simStates = states;
+         this.simMilestones = milestones;
+         this.simNeeds = needs;
+         this.simNeedDecay = needDecay;
+         this.simActionHistory = history;
+         this.simRepeatCounts = repeatCounts;
       }
 
-      for (int var9 = 1; var9 < var1; var9++) {
-         this.v2[var9] = 0;
-         this.Q[var9] = 0;
-         com.ea.sims3.GameCanvas.a(this.e9[var9], 0);
-         com.ea.sims3.GameCanvas.a2(this.l6[var9], -1);
-         com.ea.sims3.GameCanvas.a3(this.r5[var9], 0);
+      for (int sim = 1; sim < count; sim++) {
+         this.simStates[sim] = 0;
+         this.simMilestones[sim] = 0;
+         com.ea.sims3.GameCanvas.fillInts(this.simNeeds[sim], 0);
+         com.ea.sims3.GameCanvas.fillShorts(this.simActionHistory[sim], -1);
+         com.ea.sims3.GameCanvas.fillBytes(this.simRepeatCounts[sim], 0);
       }
 
-      this.u3 = 0;
-      this.i6 = -1;
-      this.v3 = 0;
+      this.simTickTimer = 0;
+      this.watchedSim = -1;
+      this.watchedSimTimer = 0;
    }
 
-   private void x2(int var1) {
-      if (this.v3 < 10000) {
-         this.v3 = this.v3 + this.a.a6().b5;
-         if (this.v3 >= 10000) {
-            this.i6 = -1;
+   private void updateSims(int elapsed) {
+      if (this.watchedSimTimer < 10000) {
+         this.watchedSimTimer = this.watchedSimTimer + this.canvas.gameScreen().lastTickDuration;
+         if (this.watchedSimTimer >= 10000) {
+            this.watchedSim = -1;
          }
       }
 
-      this.u3 += var1;
-      if (this.u3 > 3000) {
-         this.u3 = 0;
+      this.simTickTimer += elapsed;
+      if (this.simTickTimer > 3000) {
+         this.simTickTimer = 0;
       }
 
-      int var2 = this.b6;
+      int count = this.simCount;
 
-      for (int var3 = 1; var3 < var2; var3++) {
-         this.i3(var3);
-         if (this.u3 == 0) {
-            int var4 = this.ag(var3);
-            this.l2(var3, 327680);
-            int var5 = this.ag(var3);
-            if (this.i6 == var3 && this.v3 < 10000 && var4 != var5) {
-               short var6 = this.A[var5];
-               int var7 = this.R(var3);
-               this.a.a4(-12, var6, var7);
-               this.a.a6().d2(-12, -1);
+      for (int sim = 1; sim < count; sim++) {
+         this.checkStateTransition(sim);
+         if (this.simTickTimer == 0) {
+            int previousNeed = this.dominantNeed(sim);
+            this.decaySimNeeds(sim, 327680);
+            int currentNeed = this.dominantNeed(sim);
+            if (this.watchedSim == sim && this.watchedSimTimer < 10000 && previousNeed != currentNeed) {
+               short textId = this.needTextIds[currentNeed];
+               int nameTextId = this.simNameText(sim);
+               this.canvas.formatString1(-12, textId, nameTextId);
+               this.canvas.gameScreen().showNotification(-12, -1);
             }
          }
       }
    }
 
-   public final void j2(int var1) {
-      this.i6 = var1;
-      this.v3 = 0;
+   public final void watchSim(int sim) {
+      this.watchedSim = sim;
+      this.watchedSimTimer = 0;
    }
 
-   public final boolean i3() {
-      return this.v3 < 10000;
+   public final boolean isWatchMode() {
+      return this.watchedSimTimer < 10000;
    }
 
-   private void l2(int var1, int var2) {
-      int[] var3 = this.f8[var1];
+   private void decaySimNeeds(int sim, int amount) {
+      int[] decay = this.simNeedDecay[sim];
 
-      for (int var4 = 0; var4 < var3.length; var4++) {
-         var3[var4] -= var2;
-         if (var3[var4] < 0) {
-            var3[var4] = 0;
+      for (int need = 0; need < decay.length; need++) {
+         decay[need] -= amount;
+         if (decay[need] < 0) {
+            decay[need] = 0;
          }
       }
    }
 
-   private boolean h3(int var1) {
-      if (this.v2[var1] == 0) {
-         byte var2 = 1;
-         if (this.e9[var1][0] < 0) {
-            var2 = 2;
+   private boolean advanceSimState(int sim) {
+      if (this.simStates[sim] == 0) {
+         byte state = 1;
+         if (this.simNeeds[sim][0] < 0) {
+            state = 2;
          }
 
-         this.m2(var1, var2);
+         this.setSimState(sim, state);
          return true;
       } else {
          return false;
       }
    }
 
-   public final void a4(int var1, int var2, int var3) {
-      int[] var4;
-      int var5 = (var4 = this.e9[var1])[0] + (var2 << 16);
-      int var6 = var4[1] + (var3 << 16);
-      var4[0] = com.ea.sims3.FixedMath.clamp(var5, -1966080, 1966080);
-      var4[1] = com.ea.sims3.FixedMath.clamp(var6, -327680, 1966080);
+   public final void moveSim(int sim, int dx, int dy) {
+      int[] needs;
+      int needX = (needs = this.simNeeds[sim])[0] + (dx << 16);
+      int needY = needs[1] + (dy << 16);
+      needs[0] = com.ea.sims3.FixedMath.clamp(needX, -1966080, 1966080);
+      needs[1] = com.ea.sims3.FixedMath.clamp(needY, -327680, 1966080);
    }
 
-   private boolean i3(int var1) {
-      byte var2 = this.v2[var1];
-      int[] var3 = this.e9[var1];
-      byte[] var4 = this.e4[var2];
-      byte[] var5 = this.f5[var2];
-      short[] var6 = this.h3[var2];
-      int var7 = var4.length;
+   private boolean checkStateTransition(int sim) {
+      byte state = this.simStates[sim];
+      int[] needs = this.simNeeds[sim];
+      byte[] nextStates = this.stateTransitionStates[state];
+      byte[] needIndices = this.stateTransitionNeeds[state];
+      short[] thresholds = this.stateTransitionThresholds[state];
+      int count = nextStates.length;
 
-      for (int var8 = 0; var8 < var7; var8++) {
-         boolean var9 = true;
-         byte var10 = var5[var8];
-         short var11 = var6[var8];
-         int var12 = var3[var10];
-         boolean var13 = var11 < 0;
-         int var14 = var11 << 16;
-         if (var13 && var12 > var14 || !var13 && var12 < var14) {
-            var9 = false;
+      for (int index = 0; index < count; index++) {
+         boolean matched = true;
+         byte need = needIndices[index];
+         short threshold = thresholds[index];
+         int value = needs[need];
+         boolean negative = threshold < 0;
+         int limit = threshold << 16;
+         if (negative && value > limit || !negative && value < limit) {
+            matched = false;
          }
 
-         if (var9) {
-            byte var15;
-            if ((var15 = var4[var8]) == 1 && var3[0] < 0) {
-               var15 = 2;
+         if (matched) {
+            byte nextState;
+            if ((nextState = nextStates[index]) == 1 && needs[0] < 0) {
+               nextState = 2;
             }
 
-            this.m2(var1, var15);
+            this.setSimState(sim, nextState);
             return true;
          }
       }
@@ -2468,746 +2468,746 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       return false;
    }
 
-   private void m2(int var1, int var2) {
-      byte[] var3 = this.v2;
-      byte var4 = this.v2[var1];
-      var3[var1] = (byte)var2;
-      com.ea.sims3.GameCanvas.a(this.e9[var1], 0);
-      if (var4 == 0) {
-         this.e3(11);
+   private void setSimState(int sim, int state) {
+      byte[] states = this.simStates;
+      byte previousState = this.simStates[sim];
+      states[sim] = (byte)state;
+      com.ea.sims3.GameCanvas.fillInts(this.simNeeds[sim], 0);
+      if (previousState == 0) {
+         this.unlockAchievement(11);
       }
 
-      if (var2 == 12) {
-         this.e3(65);
+      if (state == 12) {
+         this.unlockAchievement(65);
       }
 
-      if ((this.F(var4) & 16) == 0 && (this.F(var2) & 16) != 0) {
-         this.e3(12);
+      if ((this.stateFlagsOf(previousState) & 16) == 0 && (this.stateFlagsOf(state) & 16) != 0) {
+         this.unlockAchievement(12);
       }
 
-      if ((this.F(var4) & 8) == 0 && (this.F(var2) & 8) != 0) {
-         this.e3(14);
+      if ((this.stateFlagsOf(previousState) & 8) == 0 && (this.stateFlagsOf(state) & 8) != 0) {
+         this.unlockAchievement(14);
       }
 
-      if ((this.F(var4) & 4) == 0 && (this.F(var2) & 4) != 0) {
-         this.e3(13);
+      if ((this.stateFlagsOf(previousState) & 4) == 0 && (this.stateFlagsOf(state) & 4) != 0) {
+         this.unlockAchievement(13);
       }
 
-      if (com.ea.sims3.GameCanvas.a(0, var3, 1) == -1) {
-         this.e3(50);
+      if (com.ea.sims3.GameCanvas.indexOfByteFrom(0, states, 1) == -1) {
+         this.unlockAchievement(50);
       }
 
-      int var5 = 0;
-      boolean var6b = true;  // var6 is reused later for the short below
-      boolean var7 = true;
+      int relaxingCount = 0;
+      boolean allBusy = true;
+      boolean allSleeping = true;
 
-      for (int var8 = 1; var8 < var3.length; var8++) {
-         byte var9 = var3[var8];
-         var6b = var6b && (this.f4[var9] & 1) != 0;
-         var7 = var7 && (this.f4[var9] & 2) != 0;
-         if ((this.f4[var9] & 4) != 0) {
-            var5++;
+      for (int otherSim = 1; otherSim < states.length; otherSim++) {
+         byte simState = states[otherSim];
+         allBusy = allBusy && (this.stateFlags[simState] & 1) != 0;
+         allSleeping = allSleeping && (this.stateFlags[simState] & 2) != 0;
+         if ((this.stateFlags[simState] & 4) != 0) {
+            relaxingCount++;
          }
       }
 
-      if (var6b) {
-         this.e3(66);
+      if (allBusy) {
+         this.unlockAchievement(66);
       }
 
-      if (var7) {
-         this.e3(67);
+      if (allSleeping) {
+         this.unlockAchievement(67);
       }
 
-      if (var5 >= 3) {
-         this.e3(60);
+      if (relaxingCount >= 3) {
+         this.unlockAchievement(60);
       }
 
-      if (var2 == 12) {
-         this.a.a6().c2(1, -1, var1);
+      if (state == 12) {
+         this.canvas.gameScreen().openDialogPage(1, -1, sim);
       } else {
-         short var10 = this.x[var2];
-         short var6 = this.y[var1];
-         this.a.a4(-11, var10, var6);
-         this.a.a6().c2(-11, this.E(var2));
+         short labelTextId = this.stateLabelTextIds[state];
+         short nameTextId = this.simNameTextIds[sim];
+         this.canvas.formatString1(-11, labelTextId, nameTextId);
+         this.canvas.gameScreen().chooseDialogOptionAt(-11, this.stateSprite(state));
       }
    }
 
-   private boolean c3(int var1, int var2, int var3) {
-      GameScreen var4 = this.a.a6();
-      byte var6 = -1;
-      if (var2 == 85) {
-         var6 = 11;
-      } else if (var2 == 86) {
-         var6 = 12;
-      } else if (var2 == 96) {
-         var6 = 13;
-      } else if (var2 == 95) {
-         var6 = 14;
-      } else if (var2 == 97) {
-         this.g2(var1, 2);
-         var4.c2(769, 768);
-      } else if (var2 == 98) {
-         this.n2(var1, 2);
-         var4.c2(770, 765);
-      } else if (var2 == 99) {
-         if ((var3 & 4096) != 0) {
-            var4.c2(636, this.R(var1));
+   private boolean handleSpecialInteraction(int sim, int interaction, int flags) {
+      GameScreen screen = this.canvas.gameScreen();
+      byte nextState = -1;
+      if (interaction == 85) {
+         nextState = 11;
+      } else if (interaction == 86) {
+         nextState = 12;
+      } else if (interaction == 96) {
+         nextState = 13;
+      } else if (interaction == 95) {
+         nextState = 14;
+      } else if (interaction == 97) {
+         this.addSimMilestoneCount(sim, 2);
+         screen.chooseDialogOptionAt(769, 768);
+      } else if (interaction == 98) {
+         this.clearSimMilestone(sim, 2);
+         screen.chooseDialogOptionAt(770, 765);
+      } else if (interaction == 99) {
+         if ((flags & 4096) != 0) {
+            screen.chooseDialogOptionAt(636, this.simNameText(sim));
          } else {
-            byte var7 = this.j3[0];
-            byte var8;
-            if ((var8 = this.k3[0]) < this.e2[var7].length - 1) {
-               var4.a2(var7, var8 + 1, false);
+            byte lot = this.simLots[0];
+            byte hour;
+            if ((hour = this.simHours[0]) < this.lotHourDayBits[lot].length - 1) {
+               screen.selectFriend(lot, hour + 1, false);
             }
          }
-      } else if (var2 == 100) {
-         var4.i2();
+      } else if (interaction == 100) {
+         screen.confirmRequest();
       }
 
-      if (var6 != -1) {
-         this.m2(var1, var6);
+      if (nextState != -1) {
+         this.setSimState(sim, nextState);
          return true;
       } else {
          return false;
       }
    }
 
-   public static int D(int var0) {
-      return R[var0 & 15];
+   public static int reactionText(int index) {
+      return REACTION_TEXT_IDS[index & 15];
    }
 
-   public final void a(int[] var1, int var2, int var3, int var4) {
-      GameScreen var5 = this.a.a6();
-      int var6 = 0;
-      short var7 = -1;
-      short var8 = -1;
-      short var9 = 0;
-      boolean var10 = false;
-      int var11 = this.j5[var4];
-      if (var3 == 0) {
-         if ((var11 & 524288) == 0) {
-            if (var4 == 19) {
-               var6 = 35;
-               var7 = 11;
+   public final void resolveInteraction(int[] out, int sim, int otherSim, int interaction) {
+      GameScreen screen = this.canvas.gameScreen();
+      int resultFlags = 0;
+      short resultCode = -1;
+      short animationId = -1;
+      short conditionFlags = 0;
+      boolean interrupt = false;
+      int interactionFlags = this.interactionFlags[interaction];
+      if (otherSim == 0) {
+         if ((interactionFlags & 524288) == 0) {
+            if (interaction == 19) {
+               resultFlags = 35;
+               resultCode = 11;
             } else {
-               var6 = 19;
-               var7 = 10;
+               resultFlags = 19;
+               resultCode = 10;
             }
          }
 
-         this.g2(var2, 1);
-         this.g2(0, 1);
-         if (this.h3(var2)) {
-            var10 = true;
+         this.addSimMilestoneCount(sim, 1);
+         this.addSimMilestoneCount(0, 1);
+         if (this.advanceSimState(sim)) {
+            interrupt = true;
          }
-      } else if (var2 != 0) {
-         if ((var11 & 524288) == 0) {
-            var6 = 20;
-            var7 = 10;
+      } else if (sim != 0) {
+         if ((interactionFlags & 524288) == 0) {
+            resultFlags = 20;
+            resultCode = 10;
          }
       } else {
-         int var12;
-         if ((var12 = this.o(var3, var4)) == -1) {
-            if ((var11 & 2097152) != 0) {
-               var7 = -1;
+         int variant;
+         if ((variant = this.bestInteractionFor(otherSim, interaction)) == -1) {
+            if ((interactionFlags & 2097152) != 0) {
+               resultCode = -1;
             } else {
-               var7 = -1;
+               resultCode = -1;
             }
          } else {
-            boolean var13 = false;
-            byte var14;
-            if ((var14 = this.l3[var4][var12]) != -1) {
-               var13 = this.e3(var3, var14);
+            boolean recalled = false;
+            byte recalledInteraction;
+            if ((recalledInteraction = this.interactionNeedReqs[interaction][variant]) != -1) {
+               recalled = this.simRemember(otherSim, recalledInteraction);
             }
 
-            short[] var15 = this.l6[var3];
+            short[] history = this.simActionHistory[otherSim];
 
-            for (int var16 = 9; var16 > 0; var16--) {
-               var15[var16] = var15[var16 - 1];
+            for (int position = 9; position > 0; position--) {
+               history[position] = history[position - 1];
             }
 
-            var15[0] = (short)var4;
-            if ((var11 & 16) != 0) {
-               this.n2(var3, 1);
+            history[0] = (short)interaction;
+            if ((interactionFlags & 16) != 0) {
+               this.clearSimMilestone(otherSim, 1);
             } else {
-               this.g2(var3, 1);
-               this.g2(0, 1);
+               this.addSimMilestoneCount(otherSim, 1);
+               this.addSimMilestoneCount(0, 1);
             }
 
-            var7 = this.j6[var4][var12];
-            boolean var30 = true;
-            Sim var17 = var5.a7(var3);
-            if (var7 == -1 && var17 != null && var17.n3()) {
-               var30 = false;
+            resultCode = this.interactionResultTextIds[interaction][variant];
+            boolean applyEffects = true;
+            Sim partner = screen.findSimByIndex(otherSim);
+            if (resultCode == -1 && partner != null && partner.isSitting()) {
+               applyEffects = false;
             }
 
-            int var18 = 0;
-            if (var30) {
-               byte var19 = this.m2[var4][var12];
-               byte var20 = this.n2[var4][var12];
-               this.a4(var3, var19, var20);
-               var18 = var19 + var20;
-               if (var20 > 0) {
-                  var6 = 64;
+            int needSum = 0;
+            if (applyEffects) {
+               byte gainNeed = this.interactionNeedGains[interaction][variant];
+               byte lossNeed = this.interactionNeedLosses[interaction][variant];
+               this.moveSim(otherSim, gainNeed, lossNeed);
+               needSum = gainNeed + lossNeed;
+               if (lossNeed > 0) {
+                  resultFlags = 64;
                }
 
-               int var21 = this.ag(var3);
-               byte var22 = this.o2[var4][var12];
-               byte var23 = this.p2[var4][var12];
-               int[] var24 = this.f8[var3];
+               int previousNeed = this.dominantNeed(otherSim);
+               byte moodNeed = this.interactionMoodIndex[interaction][variant];
+               byte moodGain = this.interactionMoodGain[interaction][variant];
+               int[] simDecay = this.simNeedDecay[otherSim];
 
-               for (int var25 = 0; var25 < var24.length; var25++) {
-                  if (var25 == var22) {
-                     var24[var22] += var23 << 16;
-                     if (var24[var22] > 13107200) {
-                        var24[var22] = 13107200;
+               for (int need = 0; need < simDecay.length; need++) {
+                  if (need == moodNeed) {
+                     simDecay[moodNeed] += moodGain << 16;
+                     if (simDecay[moodNeed] > 13107200) {
+                        simDecay[moodNeed] = 13107200;
                      }
                   } else {
-                     var24[var25] -= 655360;
-                     if (var24[var25] < 0) {
-                        var24[var25] = 0;
+                     simDecay[need] -= 655360;
+                     if (simDecay[need] < 0) {
+                        simDecay[need] = 0;
                      }
                   }
                }
 
-               int var35;
-               if ((var35 = this.ag(var3)) != var21 && !var13) {
-                  short var26 = this.A[var35];
-                  int var27 = this.R(var3);
-                  this.a.a4(-12, var26, var27);
-                  var5.d2(-12, -1);
-                  if (var35 == 1 || var35 == 2 || var35 == 8) {
-                     this.e3(16);
-                     this.g2(var3, 16384);
+               int currentNeed;
+               if ((currentNeed = this.dominantNeed(otherSim)) != previousNeed && !recalled) {
+                  short textId = this.needTextIds[currentNeed];
+                  int nameTextId = this.simNameText(otherSim);
+                  this.canvas.formatString1(-12, textId, nameTextId);
+                  screen.showNotification(-12, -1);
+                  if (currentNeed == 1 || currentNeed == 2 || currentNeed == 8) {
+                     this.unlockAchievement(16);
+                     this.addSimMilestoneCount(otherSim, 16384);
                   }
 
-                  if (var35 == 2) {
-                     this.e3(17);
-                     this.g2(var3, 64);
+                  if (currentNeed == 2) {
+                     this.unlockAchievement(17);
+                     this.addSimMilestoneCount(otherSim, 64);
                   }
 
-                  if (var35 == 1) {
-                     this.e3(18);
-                     this.g2(var3, 128);
+                  if (currentNeed == 1) {
+                     this.unlockAchievement(18);
+                     this.addSimMilestoneCount(otherSim, 128);
                   }
                }
             }
 
-            if (((var9 = this.i5[var4][var12]) & 8) != 0) {
-               if (this.c3(var3, var4, var9)) {
-                  var10 = true;
+            if (((conditionFlags = this.interactionConditionFlags[interaction][variant]) & 8) != 0) {
+               if (this.handleSpecialInteraction(otherSim, interaction, conditionFlags)) {
+                  interrupt = true;
                }
-            } else if (var4 == 99) {
-               byte var31 = this.j3[0];
-               byte var34;
-               if ((var34 = this.k3[0]) < this.e2[var31].length - 1) {
-                  var5.e2(var31, var34 + 1);
+            } else if (interaction == 99) {
+               byte lot = this.simLots[0];
+               byte hour;
+               if ((hour = this.simHours[0]) < this.lotHourDayBits[lot].length - 1) {
+                  screen.selectRequest(lot, hour + 1);
                }
             }
 
-            if (this.i3(var3)) {
-               var10 = true;
-            } else if ((var11 & 2097152) == 0 && this.h3(var3)) {
-               var10 = true;
+            if (this.checkStateTransition(otherSim)) {
+               interrupt = true;
+            } else if ((interactionFlags & 2097152) == 0 && this.advanceSimState(otherSim)) {
+               interrupt = true;
             }
 
-            if (var10) {
-               var8 = this.w[this.v2[var3]];
+            if (interrupt) {
+               animationId = this.stateBadgeIds[this.simStates[otherSim]];
             }
 
-            if (var8 != -1) {
-               var6 |= 3;
+            if (animationId != -1) {
+               resultFlags |= 3;
             } else {
-               int var32;
-               var32 = com.ea.sims3.FixedMath.clamp(var32 = 3 + var18, 0, 6);
-               var6 |= var32;
+               int needFactor;
+               needFactor = com.ea.sims3.FixedMath.clamp(needFactor = 3 + needSum, 0, 6);
+               resultFlags |= needFactor;
             }
 
-            if (var6 < 3) {
-               var6 |= 32;
+            if (resultFlags < 3) {
+               resultFlags |= 32;
             } else {
-               var6 |= 16;
+               resultFlags |= 16;
             }
          }
       }
 
-      if (var7 != -1) {
-         int var29 = -1;
-         if (var2 == 0) {
-            var29 = var3;
-         } else if (var3 == 0) {
-            var29 = var2;
+      if (resultCode != -1) {
+         int targetSim = -1;
+         if (sim == 0) {
+            targetSim = otherSim;
+         } else if (otherSim == 0) {
+            targetSim = sim;
          }
 
-         if (var29 != -1) {
-            this.d2(4, 1310720);
-            this.j2(var29);
-         }
-      }
-
-      if (var2 == 0 && (var9 & 8192) != 0) {
-         this.a2(var3, var4, !var10);
-      }
-
-      var1[0] = var6;
-      var1[1] = var7;
-      var1[2] = var8;
-   }
-
-   public final int E(int var1) {
-      return this.v[var1];
-   }
-
-   public final int F(int var1) {
-      return this.f4[var1];
-   }
-
-   public final int G(int var1) {
-      return this.v2[var1];
-   }
-
-   public final void a2(int var1, int[] var2) {
-      int var3 = this.G(var1);
-      int[] var4 = this.e9[var1];
-      byte[] var5 = this.e4[var3];
-      byte[] var6 = this.f5[var3];
-      short[] var7 = this.h3[var3];
-      byte var8 = 0;
-      int var9 = var5.length;
-
-      for (int var10 = 0; var10 < var9; var10++) {
-         byte var11 = var6[var10];
-         short var12 = var7[var10];
-         int var13 = var4[var11] >> 16;
-         if (var12 > 0 && var13 > 0 || var12 < 0 && var13 < 0) {
-            var2[var8 + 0] = var5[var10];
-            var2[var8 + 1] = com.ea.sims3.FixedMath.div(var13 << 16, var12 << 16);
-            var8 += 2;
+         if (targetSim != -1) {
+            this.adjustNeed(4, 1310720);
+            this.watchSim(targetSim);
          }
       }
 
-      var2[var8] = -1;
+      if (sim == 0 && (conditionFlags & 8192) != 0) {
+         this.tryStartCard(otherSim, interaction, !interrupt);
+      }
+
+      out[0] = resultFlags;
+      out[1] = resultCode;
+      out[2] = animationId;
    }
 
-   public final boolean j3() {
-      if (!this.a.a6().a11()) {
+   public final int stateSprite(int state) {
+      return this.stateSpriteIds[state];
+   }
+
+   public final int stateFlagsOf(int state) {
+      return this.stateFlags[state];
+   }
+
+   public final int simState(int sim) {
+      return this.simStates[sim];
+   }
+
+   public final void collectNeedChanges(int sim, int[] out) {
+      int state = this.simState(sim);
+      int[] needs = this.simNeeds[sim];
+      byte[] nextStates = this.stateTransitionStates[state];
+      byte[] needIndices = this.stateTransitionNeeds[state];
+      short[] thresholds = this.stateTransitionThresholds[state];
+      byte outIndex = 0;
+      int count = nextStates.length;
+
+      for (int index = 0; index < count; index++) {
+         byte need = needIndices[index];
+         short threshold = thresholds[index];
+         int value = needs[need] >> 16;
+         if (threshold > 0 && value > 0 || threshold < 0 && value < 0) {
+            out[outIndex + 0] = nextStates[index];
+            out[outIndex + 1] = com.ea.sims3.FixedMath.div(value << 16, threshold << 16);
+            outIndex += 2;
+         }
+      }
+
+      out[outIndex] = -1;
+   }
+
+   public final boolean isFreeToLeave() {
+      if (!this.canvas.gameScreen().isNoSaveMode()) {
          return true;
       } else {
-         int var1 = this.a.a24.a();
-         int var2 = this.b6;
+         int lot = this.canvas.lot.areaId();
+         int count = this.simCount;
 
-         for (int var3 = 1; var3 < var2; var3++) {
-            if (this.U(var3) == var1) {
-               int var4 = this.G(var3);
-               if ((this.F(var4) & 32) != 0) {
+         for (int sim = 1; sim < count; sim++) {
+            if (this.simHomeLotOf(sim) == lot) {
+               int state = this.simState(sim);
+               if ((this.stateFlagsOf(state) & 32) != 0) {
                   return true;
                }
             }
          }
 
-         return var1 == 0;
+         return lot == 0;
       }
    }
 
-   private void y2(int var1) {
-      for (int var2 = 1; var2 < this.b6; var2++) {
-         this.Q[var2] = (short)(this.Q[var2] & ~var1);
+   private void clearSimMilestones(int mask) {
+      for (int sim = 1; sim < this.simCount; sim++) {
+         this.simMilestones[sim] = (short)(this.simMilestones[sim] & ~mask);
       }
    }
 
-   private int af(int var1) {
-      boolean var2 = true;
-      int var3 = 0;
+   private int countPendingMilestones(int mask) {
+      boolean all = true;
+      int count = 0;
 
-      for (int var4 = this.b6 - 1; var4 >= 1; var4--) {
-         int var5;
-         if ((var5 = this.U(var4)) != 0) {
-            boolean var6 = (this.Q[var4] & var1) != 0;
-            var2 = var2 && var6;
-            if (var6 && com.ea.sims3.GameCanvas.a(var5, this.z, var4 + 1) == -1) {
-               var3++;
+      for (int sim = this.simCount - 1; sim >= 1; sim--) {
+         int lot;
+         if ((lot = this.simHomeLotOf(sim)) != 0) {
+            boolean has = (this.simMilestones[sim] & mask) != 0;
+            all = all && has;
+            if (has && com.ea.sims3.GameCanvas.indexOfShortFrom(lot, this.simHomeLots, sim + 1) == -1) {
+               count++;
             }
          }
       }
 
-      return var2 ? -1 : var3;
+      return all ? -1 : count;
    }
 
-   public final void f2(int var1, int var2) {
-      for (int var3 = 1; var3 < this.b6; var3++) {
-         if (this.z[var3] == var1) {
-            this.Q[var3] = (short)(this.Q[var3] | var2);
+   public final void addSimMilestone(int lot, int flag) {
+      for (int sim = 1; sim < this.simCount; sim++) {
+         if (this.simHomeLots[sim] == lot) {
+            this.simMilestones[sim] = (short)(this.simMilestones[sim] | flag);
          }
       }
 
-      int var5;
-      if ((var5 = this.af(var2)) == -1) {
-         switch (var2) {
+      int pending;
+      if ((pending = this.countPendingMilestones(flag)) == -1) {
+         switch (flag) {
             case 4:
-               this.e3(56);
+               this.unlockAchievement(56);
                break;
             case 8:
-               this.e3(57);
+               this.unlockAchievement(57);
                break;
             case 16:
-               this.e3(70);
+               this.unlockAchievement(70);
          }
       }
 
-      if (var2 == 512 || var2 == 1024) {
-         if (var5 == -1) {
-            this.e3(52);
+      if (flag == 512 || flag == 1024) {
+         if (pending == -1) {
+            this.unlockAchievement(52);
             return;
          }
 
-         int var4 = var2 == 512 ? 1024 : 512;
-         if (var5 + this.af(var4) >= 3) {
-            this.e3(52);
+         int otherFlag = flag == 512 ? 1024 : 512;
+         if (pending + this.countPendingMilestones(otherFlag) >= 3) {
+            this.unlockAchievement(52);
          }
       }
    }
 
-   public final void g2(int var1, int var2) {
-      this.Q[var1] = (short)(this.Q[var1] | var2);
-      int var3 = com.ea.sims3.GameCanvas.d(var2, this.Q, 0);
-      switch (var2) {
+   public final void addSimMilestoneCount(int sim, int flag) {
+      this.simMilestones[sim] = (short)(this.simMilestones[sim] | flag);
+      int count = com.ea.sims3.GameCanvas.countAllFlagsFrom(flag, this.simMilestones, 0);
+      switch (flag) {
          case 32:
-            if (var3 >= 4) {
-               this.e3(68);
+            if (count >= 4) {
+               this.unlockAchievement(68);
                return;
             }
             break;
          case 64:
-            if (var3 >= 5) {
-               this.e3(69);
+            if (count >= 5) {
+               this.unlockAchievement(69);
                return;
             }
             break;
          case 128:
-            if (var3 >= 5) {
-               this.e3(58);
+            if (count >= 5) {
+               this.unlockAchievement(58);
                return;
             }
             break;
          case 256:
-            if (var3 >= 3) {
-               this.e3(59);
+            if (count >= 3) {
+               this.unlockAchievement(59);
             }
       }
    }
 
-   private void n2(int var1, int var2) {
-      this.Q[var1] = (short)(this.Q[var1] & ~var2);
+   private void clearSimMilestone(int sim, int flag) {
+      this.simMilestones[sim] = (short)(this.simMilestones[sim] & ~flag);
    }
 
-   public final boolean b3(int var1, int var2) {
-      return (this.Q[var1] & var2) != 0;
+   public final boolean hasSimMilestone(int sim, int flag) {
+      return (this.simMilestones[sim] & flag) != 0;
    }
 
-   public final int q() {
-      return this.v2.length - com.ea.sims3.GameCanvas.b(0, this.v2);
+   public final int idleSimCount() {
+      return this.simStates.length - com.ea.sims3.GameCanvas.countEqualBytes(0, this.simStates);
    }
 
-   public final int H(int var1) {
-      return com.ea.sims3.GameCanvas.b(var1, this.v2, 0);
+   public final int countSimsInState(int state) {
+      return com.ea.sims3.GameCanvas.nthIndexNotEqualByte(state, this.simStates, 0);
    }
 
-   public final int I(int var1) {
-      return this.D[var1];
+   public final int interactionAltText(int index) {
+      return this.interactionAltTextIds[index];
    }
 
-   public final int J(int var1) {
-      return this.B[var1];
+   public final int interactionText(int index) {
+      return this.interactionTextIds[index];
    }
 
-   public final int K(int var1) {
-      return this.j5[var1];
+   public final int interactionFlagsOf(int index) {
+      return this.interactionFlags[index];
    }
 
-   public final int L(int var1) {
-      return this.q2[var1].length;
+   public final int interactionVariantCount(int index) {
+      return this.interactionVariants[index].length;
    }
 
-   public final int g(int var1, int var2) {
-      return this.q2[var1][var2];
+   public final int interactionVariant(int index, int requirement) {
+      return this.interactionVariants[index][requirement];
    }
 
-   public final void a(Entity var1, short[] var2, short[] var3) {
-      if (var1.hasFlag(16384)) {
-         Sim var4 = (Sim)var1;
-         this.a(var4, var2, var3);
+   public final void fillInteractions(Entity entity, short[] labels, short[] commands) {
+      if (entity.hasFlag(16384)) {
+         Sim sim = (Sim)entity;
+         this.fillSimInteractions(sim, labels, commands);
       } else {
-         this.b(var1, var2, var3);
+         this.fillObjectInteractions(entity, labels, commands);
       }
    }
 
-   private void a(Sim var1, short[] var2, short[] var3) {
-      int var4 = this.l2;
-      short[] var5 = this.B;
-      int[] var6 = this.j5;
-      int var7 = var1.b;
-      boolean var8 = var1.n3();
-      this.j2(var7);
-      short var9 = this.y[var7];
-      com.ea.sims3.GameCanvas.b2(var2, var9);
-      com.ea.sims3.GameCanvas.b2(var3, var9);
-      if (this.a.a6().b5()) {
-         boolean var16 = false;
-         com.ea.sims3.GameCanvas.c2(var2, var5[155]);
-         com.ea.sims3.GameCanvas.c2(var3, 155);
+   private void fillSimInteractions(Sim sim, short[] labels, short[] commands) {
+      int count = this.interactionCount;
+      short[] textIds = this.interactionTextIds;
+      int[] flags = this.interactionFlags;
+      int simIndex = sim.variant;
+      boolean romantic = sim.isSitting();
+      this.watchSim(simIndex);
+      short titleId = this.simNameTextIds[simIndex];
+      com.ea.sims3.GameCanvas.initList(labels, titleId);
+      com.ea.sims3.GameCanvas.initList(commands, titleId);
+      if (this.canvas.gameScreen().isNewNeighborhood()) {
+         boolean partnerFlag = false;
+         com.ea.sims3.GameCanvas.addToList(labels, textIds[155]);
+         com.ea.sims3.GameCanvas.addToList(commands, 155);
       } else {
-         for (int var10 = 0; var10 < var4; var10++) {
-            if ((var6[var10] & 1) != 0 && ((var6[var10] & 4) != 0 || !var8) && ((var6[var10] & 4) == 0 || var8) && var5[var10] != 24) {
-               boolean var11 = true;
-               int var12;
-               if (((var12 = var6[var10]) & 8) != 0) {
-                  var11 = !this.b3(var7, 1);
-               } else if ((var12 & 16) != 0) {
-                  var11 = this.b3(var7, 1);
+         for (int interaction = 0; interaction < count; interaction++) {
+            if ((flags[interaction] & 1) != 0 && ((flags[interaction] & 4) != 0 || !romantic) && ((flags[interaction] & 4) == 0 || romantic) && textIds[interaction] != 24) {
+               boolean allowed = true;
+               int flagBits;
+               if (((flagBits = flags[interaction]) & 8) != 0) {
+                  allowed = !this.hasSimMilestone(simIndex, 1);
+               } else if ((flagBits & 16) != 0) {
+                  allowed = this.hasSimMilestone(simIndex, 1);
                }
 
-               if ((var12 & 1056964608) != 0) {
-                  int var13 = this.u();
-                  var11 = (var12 & var13) != 0;
+               if ((flagBits & 1056964608) != 0) {
+                  int residentMask = this.selectedResidentMask();
+                  allowed = (flagBits & residentMask) != 0;
                }
 
-               if (var11) {
-                  var11 = this.o(var7, var10) != -1;
+               if (allowed) {
+                  allowed = this.bestInteractionFor(simIndex, interaction) != -1;
                }
 
-               if (var11) {
-                  byte var17 = this.j3[0];
-                  if ((var12 & 16384) != 0) {
-                     if (var17 != -1) {
-                        var11 = this.t(var17) == var7;
+               if (allowed) {
+                  byte currentLot = this.simLots[0];
+                  if ((flagBits & 16384) != 0) {
+                     if (currentLot != -1) {
+                        allowed = this.lotKind(currentLot) == simIndex;
                      } else {
-                        var11 = false;
+                        allowed = false;
                      }
                   }
 
-                  if (var11 && (var12 & 32768) != 0) {
-                     if (var17 != -1) {
-                        var11 = this.V(var7) == var17;
+                  if (allowed && (flagBits & 32768) != 0) {
+                     if (currentLot != -1) {
+                        allowed = this.simLot(simIndex) == currentLot;
                      } else {
-                        var11 = false;
+                        allowed = false;
                      }
                   }
                }
 
                label146:
-               if (var11) {
-                  int var18 = this.a.a24.a();
-                  int var14 = this.U(var7);
-                  boolean var10000;
-                  if ((var12 & 196608) == 196608) {
-                     var10000 = this.b3(var7, 2);
+               if (allowed) {
+                  int lotIndex = this.canvas.lot.areaId();
+                  int homeLot = this.simHomeLotOf(simIndex);
+                  boolean tempResult;
+                  if ((flagBits & 196608) == 196608) {
+                     tempResult = this.hasSimMilestone(simIndex, 2);
                   } else {
-                     if ((var12 & 65536) != 0) {
-                        var11 = var18 == 0 && var14 != 0;
+                     if ((flagBits & 65536) != 0) {
+                        allowed = lotIndex == 0 && homeLot != 0;
                         break label146;
                      }
 
-                     if ((var12 & 131072) == 0) {
+                     if ((flagBits & 131072) == 0) {
                         break label146;
                      }
 
-                     var10000 = var18 != 0 && var14 == var18;
+                     tempResult = lotIndex != 0 && homeLot == lotIndex;
                   }
 
-                  var11 = var10000;
+                  allowed = tempResult;
                }
 
-               if (var11 && (var12 & 8388608) != 0) {
-                  int var19 = this.ai(var10);
-                  var11 = this.w2[var19] == var7 && this.k3(var19);
+               if (allowed && (flagBits & 8388608) != 0) {
+                  int card = this.cardRequirementId(interaction);
+                  allowed = this.cardPerformers[card] == simIndex && this.isCardUnlocked(card);
                }
 
-               if (var11) {
-                  switch (var10) {
+               if (allowed) {
+                  switch (interaction) {
                      case 85:
-                        var11 = com.ea.sims3.GameCanvas.a(12, this.v2) == -1;
+                        allowed = com.ea.sims3.GameCanvas.indexOfByte(12, this.simStates) == -1;
                         break;
                      case 94:
-                        Sim var20 = this.a.a6().a14;
-                        int var21 = Math.abs(var1.posX - var20.posX);
-                        int var15 = Math.abs(var1.posY - var20.posY);
-                        var11 = var21 + var15 > 2097152;
+                        Sim playerSim = this.canvas.gameScreen().activePlayer;
+                        int dx = Math.abs(sim.posX - playerSim.posX);
+                        int dy = Math.abs(sim.posY - playerSim.posY);
+                        allowed = dx + dy > 2097152;
                         break;
                      case 97:
-                        var11 = com.ea.sims3.GameCanvas.b(2, this.Q) == -1;
+                        allowed = com.ea.sims3.GameCanvas.indexOfAnyFlag(2, this.simMilestones) == -1;
                         break;
                      case 98:
-                        var11 = this.v2[var7] != 12;
+                        allowed = this.simStates[simIndex] != 12;
                   }
                }
 
-               if (var11) {
-                  com.ea.sims3.GameCanvas.c2(var2, var5[var10]);
-                  com.ea.sims3.GameCanvas.c2(var3, var10);
+               if (allowed) {
+                  com.ea.sims3.GameCanvas.addToList(labels, textIds[interaction]);
+                  com.ea.sims3.GameCanvas.addToList(commands, interaction);
                }
             }
          }
       }
    }
 
-   private void b(Entity var1, short[] var2, short[] var3) {
-      Sim var4 = this.a.a6().a14;
-      short[] var5 = this.B;
-      int[] var6 = this.j5;
-      int var7 = var1.b();
-      com.ea.sims3.GameCanvas.b2(var2, var7);
-      com.ea.sims3.GameCanvas.b2(var3, var7);
-      int var8 = var1.type;
-      Lot var9 = this.a.a24;
-      short[] var10 = this.a.a24.a16(var8);
-      int var11 = var9.k(var8);
-      int var12 = var10.length;
-      if ((var11 & 67108864) != 0 && var1.hasState(256)) {
-         com.ea.sims3.GameCanvas.c2(var2, var5[110]);
-         com.ea.sims3.GameCanvas.c2(var3, 110);
+   private void fillObjectInteractions(Entity entity, short[] labels, short[] commands) {
+      Sim playerSim = this.canvas.gameScreen().activePlayer;
+      short[] textIds = this.interactionTextIds;
+      int[] flags = this.interactionFlags;
+      int titleId = entity.typeAnimId();
+      com.ea.sims3.GameCanvas.initList(labels, titleId);
+      com.ea.sims3.GameCanvas.initList(commands, titleId);
+      int type = entity.type;
+      Lot lot = this.canvas.lot;
+      short[] interactionIds = this.canvas.lot.frameRefsAt(type);
+      int typeFlags = lot.objectFlagsAt(type);
+      int count = interactionIds.length;
+      if ((typeFlags & 67108864) != 0 && entity.hasState(256)) {
+         com.ea.sims3.GameCanvas.addToList(labels, textIds[110]);
+         com.ea.sims3.GameCanvas.addToList(commands, 110);
       }
 
-      if ((var11 & 134217728) != 0 && var1.hasState(512)) {
-         com.ea.sims3.GameCanvas.c2(var2, var5[109]);
-         com.ea.sims3.GameCanvas.c2(var3, 109);
+      if ((typeFlags & 134217728) != 0 && entity.hasState(512)) {
+         com.ea.sims3.GameCanvas.addToList(labels, textIds[109]);
+         com.ea.sims3.GameCanvas.addToList(commands, 109);
       }
 
-      for (int var13 = 0; var13 < var12; var13++) {
-         short var14 = var10[var13];
-         int var15;
-         if (((var15 = var6[var14]) & 1) == 0
-            && ((var15 & 32) == 0 || var1.hasState(64))
-            && ((var15 & 64) == 0 || !var1.hasState(64))
-            && ((var15 & 128) == 0 || var1.c3())
-            && ((var15 & 256) == 0 || var1.d3())
-            && ((var15 & 512) == 0 || !var1.hasState(256))
-            && ((var15 & 1024) == 0 || !var1.hasState(512))
-            && ((var15 & 4096) == 0 || this.b(var1, 0))
-            && ((var15 & 8192) == 0 || this.a(var1, 0))
-            && ((var15 & 2048) == 0 || !this.b(var1, 0))
-            && ((var15 & 131072) == 0 || var9.a() == 0)
-            && ((var15 & 65536) == 0 || var9.a() != 0)
-            && (var14 != 142 || var8 != 114 || this.a.j2)) {
-            if ((var15 & 1056964608) != 0) {
-               int var16 = this.u();
-               if ((var15 & var16) == 0) {
+      for (int index = 0; index < count; index++) {
+         short interaction = interactionIds[index];
+         int flagBits;
+         if (((flagBits = flags[interaction]) & 1) == 0
+            && ((flagBits & 32) == 0 || entity.hasState(64))
+            && ((flagBits & 64) == 0 || !entity.hasState(64))
+            && ((flagBits & 128) == 0 || entity.isIdleModeZero())
+            && ((flagBits & 256) == 0 || entity.isIdleModeOne())
+            && ((flagBits & 512) == 0 || !entity.hasState(256))
+            && ((flagBits & 1024) == 0 || !entity.hasState(512))
+            && ((flagBits & 4096) == 0 || this.isLotOccupant(entity, 0))
+            && ((flagBits & 8192) == 0 || this.canInteractAt(entity, 0))
+            && ((flagBits & 2048) == 0 || !this.isLotOccupant(entity, 0))
+            && ((flagBits & 131072) == 0 || lot.areaId() == 0)
+            && ((flagBits & 65536) == 0 || lot.areaId() != 0)
+            && (interaction != 142 || type != 114 || this.canvas.gameStarted)) {
+            if ((flagBits & 1056964608) != 0) {
+               int mask = this.selectedResidentMask();
+               if ((flagBits & mask) == 0) {
                   continue;
                }
             }
 
-            if ((var14 != 130 || !var1.hasState(16384))
-               && (var14 != 131 || !var1.hasState(32768))
-               && (var14 != 150 || this.b3(0, 1) || var9.a() == 0)
-               && (var14 != 153 || !this.b3(0, 1) && var9.a() != 0)) {
-               if (var14 == 152) {
-                  int var18 = com.ea.sims3.Lot.f(var4.posX);
-                  int var17 = com.ea.sims3.Lot.g(var4.posY);
-                  if ((var9.g(var18, var17) & 16) != 0) {
+            if ((interaction != 130 || !entity.hasState(16384))
+               && (interaction != 131 || !entity.hasState(32768))
+               && (interaction != 150 || this.hasSimMilestone(0, 1) || lot.areaId() == 0)
+               && (interaction != 153 || !this.hasSimMilestone(0, 1) && lot.areaId() != 0)) {
+               if (interaction == 152) {
+                  int gridX = com.ea.sims3.Lot.toTileX(playerSim.posX);
+                  int gridY = com.ea.sims3.Lot.toTileY(playerSim.posY);
+                  if ((lot.cellFlagsAt(gridX, gridY) & 16) != 0) {
                      continue;
                   }
                }
 
-               com.ea.sims3.GameCanvas.c2(var2, var5[var14]);
-               com.ea.sims3.GameCanvas.c2(var3, var14);
+               com.ea.sims3.GameCanvas.addToList(labels, textIds[interaction]);
+               com.ea.sims3.GameCanvas.addToList(commands, interaction);
             }
          }
       }
 
-      if ((var11 & 4096) != 0) {
-         com.ea.sims3.GameCanvas.c2(var2, var5[106]);
-         com.ea.sims3.GameCanvas.c2(var3, 106);
+      if ((typeFlags & 4096) != 0) {
+         com.ea.sims3.GameCanvas.addToList(labels, textIds[106]);
+         com.ea.sims3.GameCanvas.addToList(commands, 106);
       }
 
-      if (var2[0] == 0) {
-         com.ea.sims3.GameCanvas.c2(var2, 274);
-         com.ea.sims3.GameCanvas.c2(var3, -4);
+      if (labels[0] == 0) {
+         com.ea.sims3.GameCanvas.addToList(labels, 274);
+         com.ea.sims3.GameCanvas.addToList(commands, -4);
       }
    }
 
-   public final void a(short[] var1, short[] var2, short[] var3) {
-      com.ea.sims3.GameCanvas.b2(var1, var3[1]);
-      com.ea.sims3.GameCanvas.b2(var2, 24);
-      short[] var4 = this.B;
-      short[] var5 = this.C;
-      short var6 = var3[0];
+   public final void fillInventoryMenu(short[] labels, short[] commands, short[] inventory) {
+      com.ea.sims3.GameCanvas.initList(labels, inventory[1]);
+      com.ea.sims3.GameCanvas.initList(commands, 24);
+      short[] textIds = this.interactionTextIds;
+      short[] sprites = this.interactionSprites;
+      short count = inventory[0];
 
-      for (int var7 = 0; var7 < var6; var7++) {
-         short var8 = var3[5 + var7];
-         short var9;
-         if ((var9 = var5[var8]) == 24 || this.a(var3, var9) < 2) {
-            com.ea.sims3.GameCanvas.c2(var1, var4[var8]);
-            com.ea.sims3.GameCanvas.c2(var2, var8);
-         } else if (!com.ea.sims3.GameCanvas.a3(var1, var9)) {
-            com.ea.sims3.GameCanvas.c2(var1, var9);
-            com.ea.sims3.GameCanvas.c2(var2, -2);
+      for (int index = 0; index < count; index++) {
+         short item = inventory[5 + index];
+         short spriteId;
+         if ((spriteId = sprites[item]) == 24 || this.countMenuItems(inventory, spriteId) < 2) {
+            com.ea.sims3.GameCanvas.addToList(labels, textIds[item]);
+            com.ea.sims3.GameCanvas.addToList(commands, item);
+         } else if (!com.ea.sims3.GameCanvas.listContains(labels, spriteId)) {
+            com.ea.sims3.GameCanvas.addToList(labels, spriteId);
+            com.ea.sims3.GameCanvas.addToList(commands, -2);
          }
       }
    }
 
-   private int a(short[] var1, int var2) {
-      short[] var3 = this.C;
-      int var4 = 0;
-      short var5 = var1[0];
+   private int countMenuItems(short[] list, int spriteId) {
+      short[] sprites = this.interactionSprites;
+      int count = 0;
+      short size = list[0];
 
-      for (int var6 = 0; var6 < var5; var6++) {
-         short var7 = var1[var6 + 5];
-         short var8;
-         if ((var8 = var3[var7]) == var2) {
-            var4++;
+      for (int index = 0; index < size; index++) {
+         short item = list[index + 5];
+         short itemSprite;
+         if ((itemSprite = sprites[item]) == spriteId) {
+            count++;
          }
       }
 
-      return var4;
+      return count;
    }
 
-   public final void a(short[] var1, short[] var2, short[] var3, int var4) {
-      com.ea.sims3.GameCanvas.b2(var1, var4);
-      com.ea.sims3.GameCanvas.b2(var2, var4);
-      short[] var5 = this.B;
-      short[] var6 = this.C;
-      short var7 = var3[0];
+   public final void fillFilteredMenu(short[] labels, short[] commands, short[] source, int filter) {
+      com.ea.sims3.GameCanvas.initList(labels, filter);
+      com.ea.sims3.GameCanvas.initList(commands, filter);
+      short[] textIds = this.interactionTextIds;
+      short[] sprites = this.interactionSprites;
+      short count = source[0];
 
-      for (int var8 = 0; var8 < var7; var8++) {
-         short var9 = var3[5 + var8];
-         short var10;
-         if ((var10 = var6[var9]) == var4) {
-            com.ea.sims3.GameCanvas.c2(var1, var5[var9]);
-            com.ea.sims3.GameCanvas.c2(var2, var9);
-         }
-      }
-   }
-
-   public final void c(short[] var1, short[] var2, int var3) {
-      short var4 = this.B[var3];
-      com.ea.sims3.GameCanvas.b2(var1, var4);
-      com.ea.sims3.GameCanvas.b2(var2, var4);
-      int var5 = this.a.a24.a();
-
-      for (int var6 = 1; var6 < this.b6; var6++) {
-         if (this.v2[var6] != 0 && this.U(var6) != var5) {
-            com.ea.sims3.GameCanvas.c2(var1, this.y[var6]);
-            com.ea.sims3.GameCanvas.c2(var2, var3);
+      for (int index = 0; index < count; index++) {
+         short item = source[5 + index];
+         short spriteId;
+         if ((spriteId = sprites[item]) == filter) {
+            com.ea.sims3.GameCanvas.addToList(labels, textIds[item]);
+            com.ea.sims3.GameCanvas.addToList(commands, item);
          }
       }
    }
 
-   private int ag(int var1) {
-      int[] var2;
-      int var3 = (var2 = this.f8[var1]).length;
-      int var4 = 3;
-      int var5 = 0;
+   public final void fillResidentMenu(short[] labels, short[] commands, int interaction) {
+      short textId = this.interactionTextIds[interaction];
+      com.ea.sims3.GameCanvas.initList(labels, textId);
+      com.ea.sims3.GameCanvas.initList(commands, textId);
+      int lotIndex = this.canvas.lot.areaId();
 
-      for (int var6 = 0; var6 < var3; var6++) {
-         if (var2[var6] > var5) {
-            var5 = var2[var6];
-            var4 = var6;
+      for (int sim = 1; sim < this.simCount; sim++) {
+         if (this.simStates[sim] != 0 && this.simHomeLotOf(sim) != lotIndex) {
+            com.ea.sims3.GameCanvas.addToList(labels, this.simNameTextIds[sim]);
+            com.ea.sims3.GameCanvas.addToList(commands, interaction);
+         }
+      }
+   }
+
+   private int dominantNeed(int sim) {
+      int[] decay;
+      int count = (decay = this.simNeedDecay[sim]).length;
+      int need = 3;
+      int value = 0;
+
+      for (int index = 0; index < count; index++) {
+         if (decay[index] > value) {
+            value = decay[index];
+            need = index;
          }
       }
 
-      return var4;
+      return need;
    }
 
-   private static int ah(int var0) {
-      switch (var0) {
+   private static int stateNeedMask(int state) {
+      switch (state) {
          case 0:
          default:
             return 2;
@@ -3242,13 +3242,13 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   private boolean a3(int var1, int var2, int var3, int var4) {
-      short[] var5 = this.l6[var1];
-      int var6 = 0;
+   private boolean hasRecentAction(int sim, int interaction, int required, int historyLength) {
+      short[] history = this.simActionHistory[sim];
+      int foundCount = 0;
 
-      for (int var7 = 0; var7 < var4; var7++) {
-         if (var5[var7] == var2) {
-            if (++var6 >= var3) {
+      for (int index = 0; index < historyLength; index++) {
+         if (history[index] == interaction) {
+            if (++foundCount >= required) {
                return true;
             }
          }
@@ -3257,70 +3257,70 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       return false;
    }
 
-   private int o(int var1, int var2) {
-      int var3 = this.ag(var1);
-      byte var4;
-      int var5 = ah(var4 = this.v2[var1]);
-      byte[] var6 = this.k4[var2];
-      byte[] var7 = this.l3[var2];
-      int[] var8 = this.d5[var2];
-      short[] var9 = this.i5[var2];
+   private int bestInteractionFor(int sim, int interaction) {
+      int need = this.dominantNeed(sim);
+      byte state;
+      int stateMask = stateNeedMask(state = this.simStates[sim]);
+      byte[] stateReqs = this.interactionStateReqs[interaction];
+      byte[] needReqs = this.interactionNeedReqs[interaction];
+      int[] flagReqs = this.interactionFlagReqs[interaction];
+      short[] conditionFlags = this.interactionConditionFlags[interaction];
 
-      for (int var10 = var6.length - 1; var10 >= 0; var10--) {
-         byte var11;
-         byte var12;
-         int var13;
-         if (((var11 = var6[var10]) == -1 || var11 == var3)
-            && ((var12 = var7[var10]) == -1 || this.j(var1, var12) != -1)
-            && ((var13 = var8[var10]) == 0 || (var13 & var5) != 0)) {
-            short var14;
-            if (((var14 = var9[var10]) & 7) != 0) {
-               byte var15 = 3;
-               byte var16 = 6;
-               if ((var14 & 1) != 0) {
-                  var15 = 2;
-                  var16 = 4;
-               } else if ((var14 & 4) != 0) {
-                  var15 = 6;
-                  var16 = 10;
+      for (int variant = stateReqs.length - 1; variant >= 0; variant--) {
+         byte stateReq;
+         byte needReq;
+         int flagReq;
+         if (((stateReq = stateReqs[variant]) == -1 || stateReq == need)
+            && ((needReq = needReqs[variant]) == -1 || this.simKnownIndex(sim, needReq) != -1)
+            && ((flagReq = flagReqs[variant]) == 0 || (flagReq & stateMask) != 0)) {
+            short conditions;
+            if (((conditions = conditionFlags[variant]) & 7) != 0) {
+               byte requiredCount = 3;
+               byte historyLength = 6;
+               if ((conditions & 1) != 0) {
+                  requiredCount = 2;
+                  historyLength = 4;
+               } else if ((conditions & 4) != 0) {
+                  requiredCount = 6;
+                  historyLength = 10;
                }
 
-               if (!this.a3(var1, var2, var15, var16)) {
+               if (!this.hasRecentAction(sim, interaction, requiredCount, historyLength)) {
                   continue;
                }
             }
 
-            if ((var14 & 496) != 0) {
-               byte var19;
-               if ((var14 & 16) != 0) {
-                  var19 = 0;
-               } else if ((var14 & 32) != 0) {
-                  var19 = 1;
-               } else if ((var14 & 64) != 0) {
-                  var19 = 2;
-               } else if ((var14 & 128) != 0) {
-                  var19 = 3;
+            if ((conditions & 496) != 0) {
+               byte resident;
+               if ((conditions & 16) != 0) {
+                  resident = 0;
+               } else if ((conditions & 32) != 0) {
+                  resident = 1;
+               } else if ((conditions & 64) != 0) {
+                  resident = 2;
+               } else if ((conditions & 128) != 0) {
+                  resident = 3;
                } else {
-                  var19 = 4;
+                  resident = 4;
                }
 
-               int var17 = this.k6[var19];
-               int var18 = (var14 & 512) != 0 ? 196608 : 65536;
-               if (var17 < var18) {
+               int growth = this.residentGrowth[resident];
+               int threshold = (conditions & 512) != 0 ? 196608 : 65536;
+               if (growth < threshold) {
                   continue;
                }
             }
 
-            byte var20;
-            byte var21;
-            if (((var14 & 3072) == 0 || ((var14 & 2048) != 0 ? this.g3(4) : this.g3(1)))
+            byte lot;
+            byte hour;
+            if (((conditions & 3072) == 0 || ((conditions & 2048) != 0 ? this.canRunTask(4) : this.canRunTask(1)))
                && (
-                  var2 != 99
-                     || (var14 & 8) == 0
-                     || (var14 & 4096) != 0
-                     || (var20 = this.j3[0]) != -1 && (var21 = this.k3[0]) < this.c2[var20].length - 1 && this.a5(var20, var21 + 1)
+                  interaction != 99
+                     || (conditions & 8) == 0
+                     || (conditions & 4096) != 0
+                     || (lot = this.simLots[0]) != -1 && (hour = this.simHours[0]) < this.lotHourInteractions[lot].length - 1 && this.canEnterLot(lot, hour + 1)
                )) {
-               return var10;
+               return variant;
             }
          }
       }
@@ -3328,18 +3328,18 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       return -1;
    }
 
-   public final boolean a5(int var1, int var2, int var3) {
-      if (var1 == 0) {
-         int var4 = this.o(var2, var3);
-         return (this.i5[var3][var4] & 4096) == 0;
+   public final boolean canUseInteraction(int sim, int target, int interaction) {
+      if (sim == 0) {
+         int variant = this.bestInteractionFor(target, interaction);
+         return (this.interactionConditionFlags[interaction][variant] & 4096) == 0;
       } else {
          return true;
       }
    }
 
-   public final int M(int var1) {
-      short var2;
-      switch (var1) {
+   public final int commentText(int interaction) {
+      short categoryBits;
+      switch (interaction) {
          case 19:
          case 21:
          case 22:
@@ -3384,19 +3384,19 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          case 134:
          case 135:
          default:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 20:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 26:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 27:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 28:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 29:
          case 30:
@@ -3428,374 +3428,374 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          case 56:
          case 57:
          case 58:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 59:
-            var2 = 4;
+            categoryBits = 4;
             break;
          case 60:
-            var2 = 64;
+            categoryBits = 64;
             break;
          case 61:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 62:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 63:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 64:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 65:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 66:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 67:
-            var2 = 4;
+            categoryBits = 4;
             break;
          case 68:
-            var2 = 128;
+            categoryBits = 128;
             break;
          case 69:
-            var2 = 512;
+            categoryBits = 512;
             break;
          case 71:
-            var2 = 256;
+            categoryBits = 256;
             break;
          case 72:
-            var2 = 4;
+            categoryBits = 4;
             break;
          case 73:
-            var2 = 128;
+            categoryBits = 128;
             break;
          case 74:
-            var2 = 512;
+            categoryBits = 512;
             break;
          case 75:
-            var2 = 256;
+            categoryBits = 256;
             break;
          case 76:
-            var2 = 32;
+            categoryBits = 32;
             break;
          case 77:
-            var2 = 32;
+            categoryBits = 32;
             break;
          case 78:
-            var2 = 32;
+            categoryBits = 32;
             break;
          case 80:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 81:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 85:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 86:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 87:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 88:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 89:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 90:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 91:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 92:
-            var2 = 16;
+            categoryBits = 16;
             break;
          case 94:
-            var2 = 8;
+            categoryBits = 8;
             break;
          case 95:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 96:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 97:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 98:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 99:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 100:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 101:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 102:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 103:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 112:
-            var2 = -1;
+            categoryBits = -1;
             break;
          case 136:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 137:
-            var2 = 1;
+            categoryBits = 1;
             break;
          case 138:
-            var2 = 256;
+            categoryBits = 256;
             break;
          case 139:
-            var2 = 256;
+            categoryBits = 256;
             break;
          case 140:
-            var2 = 1;
+            categoryBits = 1;
       }
 
-      int var3 = 0;
+      int matched = 0;
 
-      for (byte var4 = 0; var4 < S.length; var4 += 2) {
-         if ((var2 & S[var4 + 1]) != 0) {
-            var3++;
+      for (byte scanIndex = 0; scanIndex < COMMENT_TEXT_IDS.length; scanIndex += 2) {
+         if ((categoryBits & COMMENT_TEXT_IDS[scanIndex + 1]) != 0) {
+            matched++;
          }
       }
 
-      int var7 = this.a.b(0, var3 - 1);
-      var3 = 0;
+      int chosen = this.canvas.randomRange(0, matched - 1);
+      matched = 0;
 
-      for (byte var5 = 0; var5 < S.length; var5 += 2) {
-         if ((var2 & S[var5 + 1]) != 0) {
-            if (var3 == var7) {
-               return S[var5];
+      for (byte pickIndex = 0; pickIndex < COMMENT_TEXT_IDS.length; pickIndex += 2) {
+         if ((categoryBits & COMMENT_TEXT_IDS[pickIndex + 1]) != 0) {
+            if (matched == chosen) {
+               return COMMENT_TEXT_IDS[pickIndex];
             }
 
-            var3++;
+            matched++;
          }
       }
 
       return 196;
    }
 
-   private boolean j3(int var1) {
-      byte var2 = this.p3[var1];
-      byte var3 = this.q3[var1];
-      byte var4 = this.n3[var1];
-      byte var5 = this.o3[var1];
-      int var6 = this.V(0);
-      int var7 = this.W(0);
-      if ((var2 == 2 || var3 == 2 || var4 == 2 || var5 == 2) && var7 == 0) {
+   private boolean canEnterCard(int card) {
+      byte leftAction = this.visitCardLeft[card];
+      byte rightAction = this.visitCardRight[card];
+      byte upAction = this.visitCardUp[card];
+      byte downAction = this.visitCardDown[card];
+      int lot = this.simLot(0);
+      int hour = this.simHour(0);
+      if ((leftAction == 2 || rightAction == 2 || upAction == 2 || downAction == 2) && hour == 0) {
          return false;
       } else {
-         int var8 = this.c2[var6].length - 1;
-         return var2 != 1 && var3 != 1 && var4 != 1 && var5 != 1 || var7 != var8;
+         int lastHour = this.lotHourInteractions[lot].length - 1;
+         return leftAction != 1 && rightAction != 1 && upAction != 1 && downAction != 1 || hour != lastHour;
       }
    }
 
-   public final int r() {
-      int var1;
+   public final int pickRandomCard() {
+      int card;
       do {
-         var1 = this.a.b(0, this.E.length - 1);
-         new StringBuffer().append("trying card: ").append(var1).toString();
-      } while (!this.j3(var1));
+         card = this.canvas.randomRange(0, this.visitCardTimeCosts.length - 1);
+         new StringBuffer().append("trying card: ").append(card).toString();
+      } while (!this.canEnterCard(card));
 
-      new StringBuffer().append("final card: ").append(var1).toString();
-      return var1;
+      new StringBuffer().append("final card: ").append(card).toString();
+      return card;
    }
 
-   public final int a(int var1, boolean var2) {
-      int var3 = this.a.d();
-      if (var2) {
-         return var3 < this.l4[var1] ? 0 : 1;
+   public final int visitOptionState(int card, boolean replay) {
+      int progress = this.canvas.randomPercent();
+      if (replay) {
+         return progress < this.visitCardMinuteLimits[card] ? 0 : 1;
       } else {
-         return var3 < this.m3[var1] ? 2 : 3;
+         return progress < this.visitCardOtherLimits[card] ? 2 : 3;
       }
    }
 
-   public final int N(int var1) {
-      return this.E[var1];
+   public final int cardTimeCost(int card) {
+      return this.visitCardTimeCosts[card];
    }
 
-   public final int h(int var1, int var2) {
-      switch (var2) {
+   public final int cardOptionText(int card, int option) {
+      switch (option) {
          case 0:
          default:
-            return this.F[var1];
+            return this.visitCardTextA[card];
          case 1:
-            return this.G[var1];
+            return this.visitCardTextB[card];
          case 2:
-            return this.H[var1];
+            return this.visitCardTextC[card];
          case 3:
-            return this.I[var1];
+            return this.visitCardTextD[card];
       }
    }
 
-   public final void h2(int var1, int var2) {
-      byte var3;
-      switch (var2) {
+   public final void applyCardDirection(int card, int direction) {
+      byte action;
+      switch (direction) {
          case 0:
          default:
-            var3 = this.n3[var1];
+            action = this.visitCardUp[card];
             break;
          case 1:
-            var3 = this.o3[var1];
+            action = this.visitCardDown[card];
             break;
          case 2:
-            var3 = this.p3[var1];
+            action = this.visitCardLeft[card];
             break;
          case 3:
-            var3 = this.q3[var1];
+            action = this.visitCardRight[card];
       }
 
-      byte var4 = this.j3[0];
-      byte var5 = this.k3[0];
-      switch (var3) {
+      byte lot = this.simLots[0];
+      byte hour = this.simHours[0];
+      switch (action) {
          case 0:
             return;
          case 1:
-            this.e3(54);
-            this.c2(var4, var5 + 1);
+            this.unlockAchievement(54);
+            this.selectLocation(lot, hour + 1);
             return;
          case 2:
-            this.c2(var4, var5 - 1);
+            this.selectLocation(lot, hour - 1);
             return;
          case 3:
-            this.c2(-1, 0);
+            this.selectLocation(-1, 0);
             return;
          case 4:
-            byte var6 = -1;
-            switch (var4) {
+            byte item = -1;
+            switch (lot) {
                case 0:
-                  var6 = 21;
+                  item = 21;
                   break;
                case 1:
-                  var6 = 10;
+                  item = 10;
                   break;
                case 2:
-                  var6 = 22;
+                  item = 22;
                   break;
                case 3:
-                  var6 = 32;
+                  item = 32;
                   break;
                case 4:
-                  var6 = 17;
+                  item = 17;
             }
 
-            this.b2(var6, 1);
+            this.addItem(item, 1);
             return;
          case 5:
-            this.a12(1000);
+            this.addMoney(1000);
       }
    }
 
-   private void u2() {
-      if (this.w2 == null) {
-         this.w2 = new byte[this.J.length];
-         this.t4 = new int[this.J.length];
+   private void resetCardSlots() {
+      if (this.cardPerformers == null) {
+         this.cardPerformers = new byte[this.cardLabelTextIds.length];
+         this.cardTimes = new int[this.cardLabelTextIds.length];
       }
 
-      com.ea.sims3.GameCanvas.a3(this.w2, -1);
-      com.ea.sims3.GameCanvas.a(this.t4, -1);
+      com.ea.sims3.GameCanvas.fillBytes(this.cardPerformers, -1);
+      com.ea.sims3.GameCanvas.fillInts(this.cardTimes, -1);
    }
 
-   public final int O(int var1) {
-      return this.J[var1];
+   public final int cardLabelText(int index) {
+      return this.cardLabelTextIds[index];
    }
 
-   public final int P(int var1) {
-      return this.K[var1];
+   public final int cardAltText(int index) {
+      return this.cardAltTextIds[index];
    }
 
-   public final int Q(int var1) {
-      return this.r2[var1];
+   public final int cardFlagsAt(int index) {
+      return this.cardFlags[index];
    }
 
-   private int ai(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.L);
+   private int cardRequirementId(int index) {
+      return com.ea.sims3.GameCanvas.indexOfShort(index, this.cardRequiredLots);
    }
 
-   private void a2(int var1, int var2, boolean var3) {
-      int var4 = this.d6;
-      byte[] var5 = this.i4[var1];
+   private void tryStartCard(int simIndex, int lotId, boolean allowNewCard) {
+      int now = this.gameTime;
+      byte[] cards = this.simCardList[simIndex];
 
-      for (int var6 = 0; var6 < var5.length; var6++) {
-         byte var7 = var5[var6];
-         int var8 = this.t4[var7];
-         boolean var9 = false;
-         if (this.w2[var7] == var1) {
-            if (this.L[var7] == var2) {
-               this.a.a6().j2(var7, var1);
+      for (int cardSlot = 0; cardSlot < cards.length; cardSlot++) {
+         byte cardIndex = cards[cardSlot];
+         int lastStarted = this.cardTimes[cardIndex];
+         boolean ownedBySim = false;
+         if (this.cardPerformers[cardIndex] == simIndex) {
+            if (this.cardRequiredLots[cardIndex] == lotId) {
+               this.canvas.gameScreen().openCareerGoalPage(cardIndex, simIndex);
                return;
             }
 
-            if (var4 - var8 < 1440) {
+            if (now - lastStarted < 1440) {
                continue;
             }
 
-            var9 = true;
-         } else if (this.w2[var7] != -1) {
+            ownedBySim = true;
+         } else if (this.cardPerformers[cardIndex] != -1) {
             continue;
          }
 
-         if (var3
-            && com.ea.sims3.GameCanvas.a(var2, this.k5[var7]) != -1
-            && (var9 || com.ea.sims3.GameCanvas.a(var1, this.w2) == -1 && (var8 == -1 || var4 - var8 >= 1440) && this.a.d() <= 30)) {
-            this.t4[var7] = this.d6;
-            this.o2(var7, var1);
+         if (allowNewCard
+            && com.ea.sims3.GameCanvas.indexOfShort(lotId, this.cardRequirementIds[cardIndex]) != -1
+            && (ownedBySim || com.ea.sims3.GameCanvas.indexOfByte(simIndex, this.cardPerformers) == -1 && (lastStarted == -1 || now - lastStarted >= 1440) && this.canvas.randomPercent() <= 30)) {
+            this.cardTimes[cardIndex] = this.gameTime;
+            this.startCard(cardIndex, simIndex);
             return;
          }
       }
    }
 
-   private void o2(int var1, int var2) {
-      this.w2[var1] = (byte)var2;
-      this.a.a6().i2(var1, var2);
-      switch (var1) {
+   private void startCard(int cardIndex, int simIndex) {
+      this.cardPerformers[cardIndex] = (byte)simIndex;
+      this.canvas.gameScreen().openSkillGoalPage(cardIndex, simIndex);
+      switch (cardIndex) {
          case 0:
-            this.n2(1, 4096);
+            this.clearSimMilestone(1, 4096);
             return;
          case 1:
-            this.n2(1, 2048);
+            this.clearSimMilestone(1, 2048);
             return;
          case 4:
-            this.n2(2, 8192);
+            this.clearSimMilestone(2, 8192);
             return;
          case 9:
-            this.n2(13, 4096);
+            this.clearSimMilestone(13, 4096);
             return;
          case 16:
-            this.n2(4, 4096);
+            this.clearSimMilestone(4, 4096);
             return;
          case 17:
-            this.n2(4, 16384);
+            this.clearSimMilestone(4, 16384);
             return;
          case 18:
-            this.n2(4, 2048);
+            this.clearSimMilestone(4, 2048);
             return;
          case 19:
-            this.n2(2, 4096);
+            this.clearSimMilestone(2, 4096);
             return;
          case 20:
-            this.n2(2, 16384);
+            this.clearSimMilestone(2, 16384);
             return;
          case 21:
-            this.n2(2, 2048);
+            this.clearSimMilestone(2, 2048);
             return;
          case 29:
-            this.n2(7, 4096);
+            this.clearSimMilestone(7, 4096);
          case 2:
          case 3:
          case 5:
@@ -3818,40 +3818,40 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final void k2(int var1) {
-      short var2;
-      if ((var2 = this.N[var1]) != 0) {
-         this.a12(var2);
+   public final void finishCard(int card) {
+      short rewardMoney;
+      if ((rewardMoney = this.cardRewardMoney[card]) != 0) {
+         this.addMoney(rewardMoney);
       }
 
-      short var3;
-      if ((var3 = this.M[var1]) != -1) {
-         this.b2(var3, -1);
+      short rewardItem;
+      if ((rewardItem = this.cardRewardItems[card]) != -1) {
+         this.addItem(rewardItem, -1);
       }
 
-      byte var4 = -1;
-      if ((this.r2[var1] & 1) != 0) {
-         var4 = -2;
+      byte performer = -1;
+      if ((this.cardFlags[card] & 1) != 0) {
+         performer = -2;
       }
 
-      this.w2[var1] = var4;
-      this.t4[var1] = this.d6;
-      if (var1 == 22) {
-         this.b2(48, 1);
+      this.cardPerformers[card] = performer;
+      this.cardTimes[card] = this.gameTime;
+      if (card == 22) {
+         this.addItem(48, 1);
       }
    }
 
-   private boolean k3(int var1) {
-      short[] var2 = this.Q;
-      switch (var1) {
+   private boolean isCardUnlocked(int card) {
+      short[] milestones = this.simMilestones;
+      switch (card) {
          case 0:
-            if ((var2[1] & 4096) != 0) {
+            if ((milestones[1] & 4096) != 0) {
                return true;
             }
 
             return false;
          case 1:
-            if ((var2[1] & 2048) != 0) {
+            if ((milestones[1] & 2048) != 0) {
                return true;
             }
 
@@ -3876,130 +3876,130 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          case 27:
          case 28:
          default:
-            if (this.c(this.M[var1]) > 0) {
+            if (this.itemCount(this.cardRewardItems[card]) > 0) {
                return true;
             }
 
             return false;
          case 4:
-            if ((var2[2] & 8192) != 0) {
+            if ((milestones[2] & 8192) != 0) {
                return true;
             }
 
             return false;
          case 9:
-            if ((var2[13] & 4096) != 0) {
+            if ((milestones[13] & 4096) != 0) {
                return true;
             }
 
             return false;
          case 16:
-            if ((var2[4] & 4096) != 0) {
+            if ((milestones[4] & 4096) != 0) {
                return true;
             }
 
             return false;
          case 17:
-            if ((var2[4] & 16384) != 0) {
+            if ((milestones[4] & 16384) != 0) {
                return true;
             }
 
             return false;
          case 18:
-            if ((var2[4] & 2048) != 0) {
+            if ((milestones[4] & 2048) != 0) {
                return true;
             }
 
             return false;
          case 19:
-            if ((var2[2] & 4096) != 0) {
+            if ((milestones[2] & 4096) != 0) {
                return true;
             }
 
             return false;
          case 20:
-            if ((var2[2] & 16384) != 0) {
+            if ((milestones[2] & 16384) != 0) {
                return true;
             }
 
             return false;
          case 21:
-            if ((var2[2] & 2048) != 0) {
+            if ((milestones[2] & 2048) != 0) {
                return true;
             }
 
             return false;
          case 29:
-            return (var2[7] & 4096) != 0;
+            return (milestones[7] & 4096) != 0;
       }
    }
 
-   private void v2() {
-      if (this.h5[0].length != 5) {
-         this.h5[0] = new byte[5];
-         com.ea.sims3.GameCanvas.a3(this.h5[0], -1);
+   private void normalizeTaskSlots() {
+      if (this.simKnownIds[0].length != 5) {
+         this.simKnownIds[0] = new byte[5];
+         com.ea.sims3.GameCanvas.fillBytes(this.simKnownIds[0], -1);
       }
    }
 
-   public final int R(int var1) {
-      return this.y[var1];
+   public final int simNameText(int sim) {
+      return this.simNameTextIds[sim];
    }
 
-   public final int S(int var1) {
-      return this.i3[var1];
+   public final int simPortrait(int sim) {
+      return this.simPortraitIds[sim];
    }
 
-   public final int T(int var1) {
-      return this.g4[var1];
+   public final int simSpareByte(int sim) {
+      return this.simSpareBytes[sim];
    }
 
-   public final int i(int var1, int var2) {
-      return this.g5[var1][var2];
+   public final int simAttribute(int sim, int index) {
+      return this.simAttributes[sim][index];
    }
 
-   public final int U(int var1) {
-      return this.b3(var1, 2) ? 0 : this.z[var1];
+   public final int simHomeLotOf(int sim) {
+      return this.hasSimMilestone(sim, 2) ? 0 : this.simHomeLots[sim];
    }
 
-   public final int V(int var1) {
-      return var1 == 10 && this.a.j2 ? 4 : this.j3[var1];
+   public final int simLot(int sim) {
+      return sim == 10 && this.canvas.gameStarted ? 4 : this.simLots[sim];
    }
 
-   public final int W(int var1) {
-      return var1 == 10 && this.a.j2 ? this.c2[4].length - 1 : this.k3[var1];
+   public final int simHour(int sim) {
+      return sim == 10 && this.canvas.gameStarted ? this.lotHourInteractions[4].length - 1 : this.simHours[sim];
    }
 
-   public final byte[] a14(int var1) {
-      return this.j4[var1];
+   public final byte[] portraitData(int index) {
+      return this.portraitData[index];
    }
 
-   public final void i2(int var1, int var2) {
-      this.g5[0][var1] = (byte)var2;
+   public final void setAttribute(int index, int value) {
+      this.simAttributes[0][index] = (byte)value;
    }
 
-   public final boolean c3(int var1, int var2) {
-      return (this.h4[var1] & var2) != 0;
+   public final boolean simHasFlag(int sim, int flag) {
+      return (this.simFlags[sim] & flag) != 0;
    }
 
-   public final int j(int var1, int var2) {
-      return com.ea.sims3.GameCanvas.a(var2, this.h5[var1]);
+   public final int simKnownIndex(int sim, int id) {
+      return com.ea.sims3.GameCanvas.indexOfByte(id, this.simKnownIds[sim]);
    }
 
-   public final boolean d3(int var1, int var2) {
-      int var3;
-      return (var3 = this.j(var1, var2)) != -1 ? this.r5[var1][var3] >= 3 : false;
+   public final boolean simKnowsWell(int sim, int id) {
+      int index;
+      return (index = this.simKnownIndex(sim, id)) != -1 ? this.simRepeatCounts[sim][index] >= 3 : false;
    }
 
-   public final boolean e3(int var1, int var2) {
-      byte[] var3 = this.r5[var1];
-      int var4 = this.j(var1, var2);
-      if (var3[var4] < 3) {
-         var3[var4]++;
-         if (var3[var4] == 3) {
-            int var5 = this.R(var1);
-            short var6 = this.t[var2];
-            this.a.a2(-12, 412, var5, var6);
-            this.a.a6().d2(-12, -1);
+   public final boolean simRemember(int sim, int interaction) {
+      byte[] counts = this.simRepeatCounts[sim];
+      int index = this.simKnownIndex(sim, interaction);
+      if (counts[index] < 3) {
+         counts[index]++;
+         if (counts[index] == 3) {
+            int nameTextId = this.simNameText(sim);
+            short labelTextId = this.itemNameTextIds[interaction];
+            this.canvas.formatString2(-12, 412, nameTextId, labelTextId);
+            this.canvas.gameScreen().showNotification(-12, -1);
             return true;
          }
       }
@@ -4007,479 +4007,479 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       return false;
    }
 
-   public final int X(int var1) {
-      return this.h5[var1].length;
+   public final int simKnownCount(int sim) {
+      return this.simKnownIds[sim].length;
    }
 
-   public final int k(int var1, int var2) {
-      return this.h5[var1][var2];
+   public final int simKnownId(int sim, int index) {
+      return this.simKnownIds[sim][index];
    }
 
-   public final int s() {
-      byte[] var1;
-      return (var1 = this.h5[0]).length - com.ea.sims3.GameCanvas.b(-1, var1);
+   public final int simKnownFreeSlot() {
+      byte[] ids;
+      return (ids = this.simKnownIds[0]).length - com.ea.sims3.GameCanvas.countEqualBytes(-1, ids);
    }
 
-   public final void l2(int var1) {
-      if (this.j(0, var1) == -1) {
-         short var2;
-         if ((var2 = this.u[var1]) != -1) {
-            this.m2(var2);
+   public final void addKnown(int id) {
+      if (this.simKnownIndex(0, id) == -1) {
+         short sprite;
+         if ((sprite = this.itemSpriteIds[id]) != -1) {
+            this.removeKnown(sprite);
          }
 
-         int var3;
-         if ((var3 = this.j(0, -1)) != -1) {
-            this.h5[0][var3] = (byte)var1;
+         int slot;
+         if ((slot = this.simKnownIndex(0, -1)) != -1) {
+            this.simKnownIds[0][slot] = (byte)id;
          }
       }
    }
 
-   public final void m2(int var1) {
-      int var2;
-      if ((var2 = this.j(0, var1)) != -1) {
-         this.h5[0][var2] = -1;
+   public final void removeKnown(int id) {
+      int slot;
+      if ((slot = this.simKnownIndex(0, id)) != -1) {
+         this.simKnownIds[0][slot] = -1;
       }
    }
 
-   public final int Y(int var1) {
-      return com.ea.sims3.GameCanvas.a(var1, this.y, 1);
+   public final int simIndexOf(int sim) {
+      return com.ea.sims3.GameCanvas.indexOfShortFrom(sim, this.simNameTextIds, 1);
    }
 
-   public final boolean e4(int var1) {
-      byte var2;
-      return (var2 = this.v2[var1]) != 2 && var2 != 3 && var2 != 4 && (this.o(var1) & 16) == 0 && (this.o(var1) & 8) != 0;
+   public final boolean isSimIdle(int sim) {
+      byte state;
+      return (state = this.simStates[sim]) != 2 && state != 3 && state != 4 && (this.lotStateNow(sim) & 16) == 0 && (this.lotStateNow(sim) & 8) != 0;
    }
 
-   public final void n2(int var1) {
-      this.p2(var1);
-      this.q2(var1);
-      if (!this.k3()) {
-         this.t2(var1);
-         this.u2(var1);
+   public final void update(int elapsed) {
+      this.advanceTime(elapsed);
+      this.updateSuggestion(elapsed);
+      if (!this.isCelebrating()) {
+         this.updateNeeds(elapsed);
+         this.updateActiveTasks(elapsed);
       }
 
-      if (!this.k3()) {
-         this.x2(var1);
+      if (!this.isCelebrating()) {
+         this.updateSims(elapsed);
       }
 
-      if (!this.k3()) {
-         this.s2(var1);
+      if (!this.isCelebrating()) {
+         this.updateAchievementTimers(elapsed);
       }
 
-      if (this.k3()) {
-         this.w3 = Math.max(this.w3 - var1, 0);
+      if (this.isCelebrating()) {
+         this.celebrationTimer = Math.max(this.celebrationTimer - elapsed, 0);
       }
    }
 
-   public final void e2() {
-      this.a9 = false;
-      this.j2(-1);
-      com.ea.sims3.GameCanvas.a(this.q5, 0);
+   public final void resetAll() {
+      this.paused = false;
+      this.watchSim(-1);
+      com.ea.sims3.GameCanvas.fillInts(this.needModifiers, 0);
 
-      for (int var1 = 1; var1 < this.b6; var1++) {
-         this.n2(var1, 1);
-         com.ea.sims3.GameCanvas.a(this.f8[var1], 0);
-         com.ea.sims3.GameCanvas.a2(this.l6[var1], -1);
+      for (int sim = 1; sim < this.simCount; sim++) {
+         this.clearSimMilestone(sim, 1);
+         com.ea.sims3.GameCanvas.fillInts(this.simNeedDecay[sim], 0);
+         com.ea.sims3.GameCanvas.fillShorts(this.simActionHistory[sim], -1);
       }
 
-      this.n2(0, 1);
-      this.f2();
+      this.clearSimMilestone(0, 1);
+      this.celebrate();
    }
 
-   public final void f2() {
-      this.w3 = 2500;
+   public final void celebrate() {
+      this.celebrationTimer = 2500;
    }
 
-   public final boolean k3() {
-      return this.w3 != 0;
+   public final boolean isCelebrating() {
+      return this.celebrationTimer != 0;
    }
 
-   public final void g2() {
-      int var1 = this.m();
-      int var2 = this.t();
+   public final void completeAllTips() {
+      int count = this.achievementCount();
+      int mask = this.selectedResidentSpriteB();
 
-      for (int var3 = 0; var3 < var1; var3++) {
-         if ((this.ae(var3) & var2) != 0) {
-            this.a.o2(var3);
+      for (int index = 0; index < count; index++) {
+         if ((this.achievementFlagAt(index) & mask) != 0) {
+            this.canvas.addFlag(index);
          }
       }
 
-      this.i2(99);
+      this.markItemVisited(99);
    }
 
-   private void w() {
-      if (this.T == null) {
-         this.T = new short[100];
-         this.u4 = new int[100];
-         this.v4 = new int[100];
+   private void resetTips() {
+      if (this.pendingTips == null) {
+         this.pendingTips = new short[100];
+         this.tipValues = new int[100];
+         this.tipTimes = new int[100];
       }
 
-      com.ea.sims3.GameCanvas.a2(this.T, -1);
-      com.ea.sims3.GameCanvas.a(this.u4, 0);
-      com.ea.sims3.GameCanvas.a(this.v4, 0);
+      com.ea.sims3.GameCanvas.fillShorts(this.pendingTips, -1);
+      com.ea.sims3.GameCanvas.fillInts(this.tipValues, 0);
+      com.ea.sims3.GameCanvas.fillInts(this.tipTimes, 0);
    }
 
-   public final void b2(int var1, int var2, int var3) {
-      int var4;
-      int var5 = com.ea.sims3.GameCanvas.a(var4 = var1 << 8 | var2, this.T);
-      if (var3 == 0 && var5 != -1) {
-         this.j2(var1, var2);
+   public final void pushTip(int key, int subKey, int value) {
+      int packedKey;
+      int slot = com.ea.sims3.GameCanvas.indexOfShort(packedKey = key << 8 | subKey, this.pendingTips);
+      if (value == 0 && slot != -1) {
+         this.removeTip(key, subKey);
       } else {
-         if (var5 == -1) {
-            var5 = com.ea.sims3.GameCanvas.a(-1, this.T);
+         if (slot == -1) {
+            slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.pendingTips);
          }
 
-         this.T[var5] = (short)var4;
-         this.u4[var5] = var3;
-         this.v4[var5] = this.d6;
+         this.pendingTips[slot] = (short)packedKey;
+         this.tipValues[slot] = value;
+         this.tipTimes[slot] = this.gameTime;
       }
    }
 
-   public final int l(int var1, int var2) {
-      int var4;
-      return (var4 = com.ea.sims3.GameCanvas.a(var1 << 8 | var2, this.T)) == -1 ? 0 : this.u4[var4];
+   public final int tipValue(int key, int subKey) {
+      int slot;
+      return (slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? 0 : this.tipValues[slot];
    }
 
-   public final int m(int var1, int var2) {
-      int var4;
-      return (var4 = com.ea.sims3.GameCanvas.a(var1 << 8 | var2, this.T)) == -1 ? -1 : this.v4[var4];
+   public final int tipTime(int key, int subKey) {
+      int slot;
+      return (slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? -1 : this.tipTimes[slot];
    }
 
-   public final void j2(int var1, int var2) {
-      int var4;
-      if ((var4 = com.ea.sims3.GameCanvas.a(var1 << 8 | var2, this.T)) != -1) {
-         this.T[var4] = -1;
-         this.u4[var4] = 0;
-         this.v4[var4] = 0;
+   public final void removeTip(int key, int subKey) {
+      int slot;
+      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) != -1) {
+         this.pendingTips[slot] = -1;
+         this.tipValues[slot] = 0;
+         this.tipTimes[slot] = 0;
       }
    }
 
-   public final void h2() {
-      this.j2();
-      this.k2();
-      this.l2();
-      this.m2();
-      this.a11 = -1;
-      com.ea.sims3.GameCanvas.a3(this.h5[0], -1);
-      this.n2();
-      this.o2();
-      this.p2();
-      this.r2();
-      this.u2();
-      this.v2();
-      this.t2();
-      this.w();
-      com.ea.sims3.GameCanvas.a3(this.g5[0], 0);
+   public final void resetAllState() {
+      this.resetProgress();
+      this.refreshItemCounts();
+      this.resetCareerLevels();
+      this.resetSelection();
+      this.selectedResident = -1;
+      com.ea.sims3.GameCanvas.fillBytes(this.simKnownIds[0], -1);
+      this.resetAchievementState();
+      this.resetNeedValues();
+      this.resetActiveTasks();
+      this.resetMoodDeltas();
+      this.resetCardSlots();
+      this.normalizeTaskSlots();
+      this.resetSimStates();
+      this.resetTips();
+      com.ea.sims3.GameCanvas.fillBytes(this.simAttributes[0], 0);
    }
 
-   public final void a2(DataInputStream var1) throws IOException {
-      for (int var2 = 0; var2 < 10; var2++) {
-         this.g5[0][var2] = var1.readByte();
+   public final void load(DataInputStream input) throws IOException {
+      for (int attrIndex = 0; attrIndex < 10; attrIndex++) {
+         this.simAttributes[0][attrIndex] = input.readByte();
       }
 
-      byte[] var8 = this.h5[0];
+      byte[] knownIds = this.simKnownIds[0];
 
-      for (int var3 = 0; var3 < 5; var3++) {
-         var8[var3] = var1.readByte();
+      for (int knownIndex = 0; knownIndex < 5; knownIndex++) {
+         knownIds[knownIndex] = input.readByte();
       }
 
-      this.m4 = var1.readInt();
-      this.d6 = var1.readInt();
-      this.e5 = var1.readInt();
-      this.f6 = var1.readInt();
-      this.c8 = var1.readByte();
-      this.a10 = var1.readShort();
+      this.timeAccumulator = input.readInt();
+      this.gameTime = input.readInt();
+      this.money = input.readInt();
+      this.moneySpent = input.readInt();
+      this.lastCareerLevel = input.readByte();
+      this.lastPromotionDay = input.readShort();
 
-      for (int var9 = 0; var9 < this.s2.length; var9++) {
-         this.s2[var9] = var1.readByte();
+      for (int itemIndex = 0; itemIndex < this.itemCounts.length; itemIndex++) {
+         this.itemCounts[itemIndex] = input.readByte();
       }
 
-      for (int var10 = 0; var10 < this.k6.length; var10++) {
-         this.k6[var10] = var1.readInt();
+      for (int growthIndex = 0; growthIndex < this.residentGrowth.length; growthIndex++) {
+         this.residentGrowth[growthIndex] = input.readInt();
       }
 
-      this.j3[0] = var1.readByte();
-      this.k3[0] = var1.readByte();
-      this.d8 = var1.readByte();
-      this.b7 = var1.readShort();
-      this.c9 = var1.readShort();
+      this.simLots[0] = input.readByte();
+      this.simHours[0] = input.readByte();
+      this.lastVisitDay = input.readByte();
+      this.tickCount = input.readShort();
+      this.idleTicks = input.readShort();
 
-      for (int var11 = 0; var11 < this.t2.length; var11++) {
-         this.t2[var11] = var1.readByte();
+      for (int hourIndex = 0; hourIndex < this.lotLastHour.length; hourIndex++) {
+         this.lotLastHour[hourIndex] = input.readByte();
       }
 
-      this.e7 = var1.readByte();
-      this.n4 = var1.readInt();
-      this.a11 = var1.readByte();
-      this.b8 = var1.readByte();
-      this.d9 = var1.readShort();
-      this.o4 = var1.readInt();
+      this.suggestedLot = input.readByte();
+      this.suggestionTimer = input.readInt();
+      this.selectedResident = input.readByte();
+      this.pendingAchievementId = input.readByte();
+      this.randomSeed = input.readShort();
+      this.achievementTimer = input.readInt();
 
-      for (int var12 = 0; var12 < this.u2.length; var12++) {
-         this.u2[var12] = var1.readByte();
+      for (int slotIndex = 0; slotIndex < this.achievementSlots.length; slotIndex++) {
+         this.achievementSlots[slotIndex] = input.readByte();
       }
 
-      this.p4 = var1.readInt();
-      this.q4 = var1.readInt();
+      this.usedTaskBits = input.readInt();
+      this.milestoneFlags = input.readInt();
 
-      for (int var13 = 0; var13 < this.l5.length; var13++) {
-         this.l5[var13] = var1.readInt();
+      for (int achievementIndex = 0; achievementIndex < this.achievementTimes.length; achievementIndex++) {
+         this.achievementTimes[achievementIndex] = input.readInt();
       }
 
-      this.e8 = var1.readShort();
-      this.f7 = var1.readShort();
+      this.altEventCount = input.readShort();
+      this.otherEventCount = input.readShort();
 
-      for (int var14 = 0; var14 < this.m5.length; var14++) {
-         this.m5[var14] = var1.readInt();
+      for (int taskTimeIndex = 0; taskTimeIndex < this.recentTaskTimes.length; taskTimeIndex++) {
+         this.recentTaskTimes[taskTimeIndex] = input.readInt();
       }
 
-      this.r3 = var1.readInt();
+      this.visitedLotBits = input.readInt();
 
-      for (int var15 = 0; var15 < this.n5.length; var15++) {
-         this.n5[var15] = var1.readInt();
+      for (int needIndex = 0; needIndex < this.needValues.length; needIndex++) {
+         this.needValues[needIndex] = input.readInt();
       }
 
-      for (int var16 = 0; var16 < 6; var16++) {
-         this.O[var16] = var1.readShort();
-         this.r4[var16] = var1.readInt();
+      for (int slot = 0; slot < 6; slot++) {
+         this.activeTasks[slot] = input.readShort();
+         this.taskTimers[slot] = input.readInt();
       }
 
-      this.q2();
-      int var17 = this.b6;
+      this.applyMoodDeltas();
+      int simTotal = this.simCount;
 
-      for (int var4 = 1; var4 < var17; var4++) {
-         this.v2[var4] = var1.readByte();
-         this.Q[var4] = var1.readShort();
-         int[] var5 = this.e9[var4];
+      for (int sim = 1; sim < simTotal; sim++) {
+         this.simStates[sim] = input.readByte();
+         this.simMilestones[sim] = input.readShort();
+         int[] needs = this.simNeeds[sim];
 
-         for (int var6 = 0; var6 < var5.length; var6++) {
-            var5[var6] = var1.readInt();
+         for (int need = 0; need < needs.length; need++) {
+            needs[need] = input.readInt();
          }
 
-         byte[] var20 = this.r5[var4];
+         byte[] counts = this.simRepeatCounts[sim];
 
-         for (int var7 = 0; var7 < var20.length; var7++) {
-            var20[var7] = var1.readByte();
-         }
-      }
-
-      for (int var18 = 0; var18 < 100; var18++) {
-         this.T[var18] = var1.readShort();
-         this.u4[var18] = var1.readInt();
-         this.v4[var18] = var1.readInt();
-      }
-
-      for (int var19 = 0; var19 < this.w2.length; var19++) {
-         this.w2[var19] = var1.readByte();
-         this.t4[var19] = var1.readInt();
-      }
-   }
-
-   public final void a(DataOutputStream var1) throws IOException {
-      for (int var2 = 0; var2 < 10; var2++) {
-         var1.writeByte(this.g5[0][var2]);
-      }
-
-      byte[] var8 = this.h5[0];
-
-      for (int var3 = 0; var3 < 5; var3++) {
-         var1.writeByte(var8[var3]);
-      }
-
-      var1.writeInt(this.m4);
-      var1.writeInt(this.d6);
-      var1.writeInt(this.e5);
-      var1.writeInt(this.f6);
-      var1.writeByte(this.c8);
-      var1.writeShort(this.a10);
-
-      for (int var9 = 0; var9 < this.s2.length; var9++) {
-         var1.writeByte(this.s2[var9]);
-      }
-
-      for (int var10 = 0; var10 < this.k6.length; var10++) {
-         var1.writeInt(this.k6[var10]);
-      }
-
-      var1.writeByte(this.j3[0]);
-      var1.writeByte(this.k3[0]);
-      var1.writeByte(this.d8);
-      var1.writeShort(this.b7);
-      var1.writeShort(this.c9);
-
-      for (int var11 = 0; var11 < this.t2.length; var11++) {
-         var1.writeByte(this.t2[var11]);
-      }
-
-      var1.writeByte(this.e7);
-      var1.writeInt(this.n4);
-      var1.writeByte(this.a11);
-      var1.writeByte(this.b8);
-      var1.writeShort(this.d9);
-      var1.writeInt(this.o4);
-
-      for (int var12 = 0; var12 < this.u2.length; var12++) {
-         var1.writeByte(this.u2[var12]);
-      }
-
-      var1.writeInt(this.p4);
-      var1.writeInt(this.q4);
-
-      for (int var13 = 0; var13 < this.l5.length; var13++) {
-         var1.writeInt(this.l5[var13]);
-      }
-
-      var1.writeShort(this.e8);
-      var1.writeShort(this.f7);
-
-      for (int var14 = 0; var14 < this.m5.length; var14++) {
-         var1.writeInt(this.m5[var14]);
-      }
-
-      var1.writeInt(this.r3);
-
-      for (int var15 = 0; var15 < this.n5.length; var15++) {
-         var1.writeInt(this.n5[var15]);
-      }
-
-      for (int var16 = 0; var16 < 6; var16++) {
-         var1.writeShort(this.O[var16]);
-         var1.writeInt(this.r4[var16]);
-      }
-
-      int var17 = this.b6;
-
-      for (int var4 = 1; var4 < var17; var4++) {
-         var1.writeByte(this.v2[var4]);
-         var1.writeShort(this.Q[var4]);
-         int[] var5 = this.e9[var4];
-
-         for (int var6 = 0; var6 < var5.length; var6++) {
-            var1.writeInt(var5[var6]);
-         }
-
-         byte[] var20 = this.r5[var4];
-
-         for (int var7 = 0; var7 < var20.length; var7++) {
-            var1.writeByte(var20[var7]);
+         for (int countIndex = 0; countIndex < counts.length; countIndex++) {
+            counts[countIndex] = input.readByte();
          }
       }
 
-      for (int var18 = 0; var18 < 100; var18++) {
-         var1.writeShort(this.T[var18]);
-         var1.writeInt(this.u4[var18]);
-         var1.writeInt(this.v4[var18]);
+      for (int tipIndex = 0; tipIndex < 100; tipIndex++) {
+         this.pendingTips[tipIndex] = input.readShort();
+         this.tipValues[tipIndex] = input.readInt();
+         this.tipTimes[tipIndex] = input.readInt();
       }
 
-      for (int var19 = 0; var19 < this.w2.length; var19++) {
-         var1.writeByte(this.w2[var19]);
-         var1.writeInt(this.t4[var19]);
+      for (int card = 0; card < this.cardPerformers.length; card++) {
+         this.cardPerformers[card] = input.readByte();
+         this.cardTimes[card] = input.readInt();
       }
    }
 
-   public final void o2(int var1) {
-      int var2 = this.i6;
-      int[] var3 = this.k6;
-      switch (var1) {
+   public final void save(DataOutputStream output) throws IOException {
+      for (int attrIndex = 0; attrIndex < 10; attrIndex++) {
+         output.writeByte(this.simAttributes[0][attrIndex]);
+      }
+
+      byte[] knownIds = this.simKnownIds[0];
+
+      for (int knownIndex = 0; knownIndex < 5; knownIndex++) {
+         output.writeByte(knownIds[knownIndex]);
+      }
+
+      output.writeInt(this.timeAccumulator);
+      output.writeInt(this.gameTime);
+      output.writeInt(this.money);
+      output.writeInt(this.moneySpent);
+      output.writeByte(this.lastCareerLevel);
+      output.writeShort(this.lastPromotionDay);
+
+      for (int itemIndex = 0; itemIndex < this.itemCounts.length; itemIndex++) {
+         output.writeByte(this.itemCounts[itemIndex]);
+      }
+
+      for (int growthIndex = 0; growthIndex < this.residentGrowth.length; growthIndex++) {
+         output.writeInt(this.residentGrowth[growthIndex]);
+      }
+
+      output.writeByte(this.simLots[0]);
+      output.writeByte(this.simHours[0]);
+      output.writeByte(this.lastVisitDay);
+      output.writeShort(this.tickCount);
+      output.writeShort(this.idleTicks);
+
+      for (int hourIndex = 0; hourIndex < this.lotLastHour.length; hourIndex++) {
+         output.writeByte(this.lotLastHour[hourIndex]);
+      }
+
+      output.writeByte(this.suggestedLot);
+      output.writeInt(this.suggestionTimer);
+      output.writeByte(this.selectedResident);
+      output.writeByte(this.pendingAchievementId);
+      output.writeShort(this.randomSeed);
+      output.writeInt(this.achievementTimer);
+
+      for (int slotIndex = 0; slotIndex < this.achievementSlots.length; slotIndex++) {
+         output.writeByte(this.achievementSlots[slotIndex]);
+      }
+
+      output.writeInt(this.usedTaskBits);
+      output.writeInt(this.milestoneFlags);
+
+      for (int achievementIndex = 0; achievementIndex < this.achievementTimes.length; achievementIndex++) {
+         output.writeInt(this.achievementTimes[achievementIndex]);
+      }
+
+      output.writeShort(this.altEventCount);
+      output.writeShort(this.otherEventCount);
+
+      for (int taskTimeIndex = 0; taskTimeIndex < this.recentTaskTimes.length; taskTimeIndex++) {
+         output.writeInt(this.recentTaskTimes[taskTimeIndex]);
+      }
+
+      output.writeInt(this.visitedLotBits);
+
+      for (int needIndex = 0; needIndex < this.needValues.length; needIndex++) {
+         output.writeInt(this.needValues[needIndex]);
+      }
+
+      for (int slot = 0; slot < 6; slot++) {
+         output.writeShort(this.activeTasks[slot]);
+         output.writeInt(this.taskTimers[slot]);
+      }
+
+      int simTotal = this.simCount;
+
+      for (int sim = 1; sim < simTotal; sim++) {
+         output.writeByte(this.simStates[sim]);
+         output.writeShort(this.simMilestones[sim]);
+         int[] needs = this.simNeeds[sim];
+
+         for (int need = 0; need < needs.length; need++) {
+            output.writeInt(needs[need]);
+         }
+
+         byte[] counts = this.simRepeatCounts[sim];
+
+         for (int countIndex = 0; countIndex < counts.length; countIndex++) {
+            output.writeByte(counts[countIndex]);
+         }
+      }
+
+      for (int tipIndex = 0; tipIndex < 100; tipIndex++) {
+         output.writeShort(this.pendingTips[tipIndex]);
+         output.writeInt(this.tipValues[tipIndex]);
+         output.writeInt(this.tipTimes[tipIndex]);
+      }
+
+      for (int card = 0; card < this.cardPerformers.length; card++) {
+         output.writeByte(this.cardPerformers[card]);
+         output.writeInt(this.cardTimes[card]);
+      }
+   }
+
+   public final void applyCommand(int command) {
+      int sim = this.watchedSim;
+      int[] growth = this.residentGrowth;
+      switch (command) {
          case 0:
-            this.p2(60000);
+            this.advanceTime(60000);
             return;
          case 1:
-            this.p2(1440000);
+            this.advanceTime(1440000);
             return;
          case 2:
-            int var8 = 3276800;
+            int fullValue = 3276800;
 
-            for (int var5 = 0; var5 < this.n5.length; var5++) {
-               this.n5[var5] = var8;
+            for (int need = 0; need < this.needValues.length; need++) {
+               this.needValues[need] = fullValue;
             }
 
             return;
          case 3:
-            this.m2(var2, 5);
+            this.setSimState(sim, 5);
             return;
          case 4:
-            this.m2(var2, 2);
+            this.setSimState(sim, 2);
             return;
          case 5:
-            this.m2(var2, 8);
+            this.setSimState(sim, 8);
             return;
          case 6:
-            this.m2(var2, 6);
+            this.setSimState(sim, 6);
             return;
          case 7:
-            this.m2(var2, 3);
+            this.setSimState(sim, 3);
             return;
          case 8:
-            this.m2(var2, 9);
+            this.setSimState(sim, 9);
             return;
          case 9:
-            this.m2(var2, 7);
+            this.setSimState(sim, 7);
             return;
          case 10:
-            this.m2(var2, 4);
+            this.setSimState(sim, 4);
             return;
          case 11:
-            this.m2(var2, 10);
+            this.setSimState(sim, 10);
             return;
          case 12:
-            for (int var7 = 1; var7 < this.b6; var7++) {
-               if (this.v2[var7] == 0) {
-                  this.m2(var7, 5);
+            for (int simIndex = 1; simIndex < this.simCount; simIndex++) {
+               if (this.simStates[simIndex] == 0) {
+                  this.setSimState(simIndex, 5);
                }
             }
 
             return;
          case 13:
-            var3[0] = Math.max(var3[0] - 65536, 0);
-            var3[0] = 327675;
+            growth[0] = Math.max(growth[0] - 65536, 0);
+            growth[0] = 327675;
             return;
          case 14:
-            var3[0] = Math.min(var3[0] + 65536, 327680);
+            growth[0] = Math.min(growth[0] + 65536, 327680);
             return;
          case 15:
-            var3[1] = Math.max(var3[1] - 65536, 0);
-            var3[1] = 327675;
+            growth[1] = Math.max(growth[1] - 65536, 0);
+            growth[1] = 327675;
             return;
          case 16:
-            var3[1] = Math.min(var3[1] + 65536, 327680);
+            growth[1] = Math.min(growth[1] + 65536, 327680);
             return;
          case 17:
-            var3[2] = Math.max(var3[2] - 65536, 0);
-            var3[2] = 327675;
+            growth[2] = Math.max(growth[2] - 65536, 0);
+            growth[2] = 327675;
             return;
          case 18:
-            var3[2] = Math.min(var3[2] + 65536, 327680);
+            growth[2] = Math.min(growth[2] + 65536, 327680);
             return;
          case 19:
-            var3[3] = Math.max(var3[3] - 65536, 0);
-            var3[3] = 327675;
+            growth[3] = Math.max(growth[3] - 65536, 0);
+            growth[3] = 327675;
             return;
          case 20:
-            var3[3] = Math.min(var3[3] + 65536, 327680);
+            growth[3] = Math.min(growth[3] + 65536, 327680);
             return;
          case 21:
-            var3[4] = Math.max(var3[4] - 65536, 0);
-            var3[4] = 327675;
+            growth[4] = Math.max(growth[4] - 65536, 0);
+            growth[4] = 327675;
             return;
          case 22:
-            var3[4] = Math.min(var3[4] + 65536, 327680);
+            growth[4] = Math.min(growth[4] + 65536, 327680);
             return;
          case 23:
-            this.b8 = (byte)this.v();
-            this.o4 = 0;
+            this.pendingAchievementId = (byte)this.pickRandomAchievement();
+            this.achievementTimer = 0;
             return;
          case 24:
-            for (int var6 = 0; var6 < this.m.length; var6++) {
-               this.a.o2(var6);
-               this.a.p2(var6);
+            for (int index = 0; index < this.achievementTextIds.length; index++) {
+               this.canvas.addFlag(index);
+               this.canvas.addVisitedFlag(index);
             }
 
-            this.a.t2();
+            this.canvas.markGameStarted();
             return;
          case 25:
-            for (int var4 = 0; var4 < this.s2.length; var4++) {
-               this.s2[var4] = (byte)this.a.a24.z(var4);
+            for (int item = 0; item < this.itemCounts.length; item++) {
+               this.itemCounts[item] = (byte)this.canvas.lot.categoryFlagAt(item);
             }
       }
    }

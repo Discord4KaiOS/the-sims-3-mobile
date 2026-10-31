@@ -462,11 +462,31 @@ public final class Rename {
         collectSupertypes(type, supertypes);
         for (TypeElement s : supertypes) {
             String found = METHODS.get(s.getSimpleName() + "#" + sig);
-            if (found != null && !found.equals(name)) {
-                System.out.println("WARN override mismatch: " + type.getSimpleName() + " " + sig
-                        + " -> " + name + " but " + s.getSimpleName() + " -> " + found);
+            if (found == null || found.equals(name)) {
+                continue;
+            }
+            ExecutableElement base = declaredMethod(s, sig);
+            if (base == null) {
+                continue;
+            }
+            // private and static methods are not inherited, so they cannot be overridden
+            if (base.getModifiers().contains(javax.lang.model.element.Modifier.PRIVATE)
+                    || base.getModifiers().contains(javax.lang.model.element.Modifier.STATIC)) {
+                continue;
+            }
+            System.out.println("WARN override mismatch: " + type.getSimpleName() + " " + sig
+                    + " -> " + name + " but " + s.getSimpleName() + " -> " + found);
+        }
+    }
+
+    /** The method named and typed by a mapping signature, declared by one type. */
+    private static ExecutableElement declaredMethod(TypeElement type, String sig) {
+        for (Element e : type.getEnclosedElements()) {
+            if (e instanceof ExecutableElement && signature((ExecutableElement) e).equals(sig)) {
+                return (ExecutableElement) e;
             }
         }
+        return null;
     }
 
     /** Finds a rename declared on a supertype for a method with the same signature. */

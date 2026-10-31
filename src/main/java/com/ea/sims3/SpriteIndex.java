@@ -1,7 +1,7 @@
 package com.ea.sims3;
 
 public interface SpriteIndex {
-   short[] a = new short[]{
+   short[] SPRITE_IDS = new short[]{
       5,
       55,
       29,

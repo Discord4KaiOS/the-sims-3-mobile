@@ -4,73 +4,73 @@ import javax.microedition.lcdui.Graphics;
 
 public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    public final GameCanvas canvas;
-   public final int[] a2;
-   public int d;
-   private int a3;
-   public int e;
-   public int f;
-   public int g;
-   public int h;
-   public int i;
-   private static final int[] c = new int[6];
-   private final short[] b = new short[11];
+   public final int[] hitRect;
+   public int listY;
+   private int visibleLineCount;
+   public int textLineHeight;
+   public int panelWidth;
+   public int dialogWidth;
+   public int panelHeight;
+   public int rowHeight;
+   private static final int[] rectScratch = new int[6];
+   private final short[] valueSlots = new short[11];
    public Animator leftArrowAnim;
    public Animator rightArrowAnim;
-   public int j;
-   private int b3;
-   public int k;
-   private int c2;
-   public int l;
-   private int m;
+   public int itemCount;
+   private int lineHeight;
+   public int scrollOffset;
+   private int visibleRowCount;
+   public int selectedIndex;
+   private int menuScroll;
 
-   public boolean matchesInput(int var1, int var2, int var3, int var4) {
-      if ((var2 & var4) == 0 && (var1 & var3) == 0) {
+   public boolean matchesInput(int keyState, int prevKeyState, int keyMask, int prevKeyMask) {
+      if ((prevKeyState & prevKeyMask) == 0 && (keyState & keyMask) == 0) {
          return false;
       } else {
-         this.canvas.h2();
-         this.canvas.c4(var3);
+         this.canvas.releaseSoftKeys();
+         this.canvas.clearAction(keyMask);
          return true;
       }
    }
 
-   public BaseScreen(GameCanvas var1) {
-      this.canvas = var1;
-      this.a2 = new int[4];
+   public BaseScreen(GameCanvas gameCanvas) {
+      this.canvas = gameCanvas;
+      this.hitRect = new int[4];
    }
 
-   public abstract void setLanguage(int var1);
+   public abstract void setLanguage(int language);
 
    public abstract void stop();
 
    public abstract void pause();
 
-   public abstract void render(Graphics var1);
+   public abstract void render(Graphics graphics);
 
-   public abstract void update(int var1, int var2);
+   public abstract void update(int delta, int flags);
 
-   public abstract void keyPressed(int var1);
+   public abstract void keyPressed(int keyCode);
 
-   public abstract void onTick(int var1);
+   public abstract void onTick(int delta);
 
-   public final void a(Graphics var1, int var2) {
-      GameCanvas var3 = this.canvas;
-      this.b(var1, var2, 0, 0, var3.getWidth(), var3.getHeight() - 15);
+   public final void drawPanel(Graphics graphics, int style) {
+      GameCanvas canvas = this.canvas;
+      this.drawTextBlock(graphics, style, 0, 0, canvas.getWidth(), canvas.getHeight() - 15);
    }
 
-   public final void b(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = this.canvas;
-      this.b(var1, var2, 0, var3, var4.getWidth(), var4.getHeight() - 15 - var3);
+   public final void drawPanelBelow(Graphics graphics, int style, int top) {
+      GameCanvas canvas = this.canvas;
+      this.drawTextBlock(graphics, style, 0, top, canvas.getWidth(), canvas.getHeight() - 15 - top);
    }
 
    public final void initLayout() {
-      GameCanvas var1 = this.canvas;
-      this.e = var1.b2(1);
-      this.f = 216;
-      this.g = this.f * 4 / 5;
-      this.d = this.f * 17 / 20 - b();
-      this.h = 192;
-      this.a3 = var1.getHeight() * 3 / 5 / var1.b2(1);
-      this.i = var1.b2(1) + 2;
+      GameCanvas canvas = this.canvas;
+      this.textLineHeight = canvas.lineHeight(1);
+      this.panelWidth = 216;
+      this.dialogWidth = this.panelWidth * 4 / 5;
+      this.listY = this.panelWidth * 17 / 20 - scrollbarWidth();
+      this.panelHeight = 192;
+      this.visibleLineCount = canvas.getHeight() * 3 / 5 / canvas.lineHeight(1);
+      this.rowHeight = canvas.lineHeight(1) + 2;
       this.leftArrowAnim = new Animator();
       this.rightArrowAnim = new Animator();
       this.leftArrowAnim.play(560, 4);
@@ -85,9 +85,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       this.rightArrowAnim.play(561, 16);
    }
 
-   public final void advanceArrows(int var1) {
-      this.leftArrowAnim.advance(var1);
-      this.rightArrowAnim.advance(var1);
+   public final void advanceArrows(int delta) {
+      this.leftArrowAnim.advance(delta);
+      this.rightArrowAnim.advance(delta);
       if (!this.leftArrowAnim.isRunning()) {
          this.leftArrowAnim.play(560, 20);
       }
@@ -97,173 +97,173 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       }
    }
 
-   public final void setValue(int var1, int var2) {
-      this.b[var1] = (short)var2;
+   public final void setValue(int index, int value) {
+      this.valueSlots[index] = (short)value;
    }
 
-   public final void b(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      this.a(var1, this.a16(var2), var3, var4, var5, var6);
+   public final void drawTextBlock(Graphics graphics, int textId, int x, int y, int width, int height) {
+      this.drawParagraphs(graphics, this.textBlock(textId), x, y, width, height);
    }
 
-   public final void a(Graphics var1, short[] var2, int var3, int var4, int var5, int var6) {
-      int[] var7 = c;
-      c[0] = var3;
-      var7[1] = var4;
-      var7[2] = var5;
-      var7[3] = 0;
-      this.a(null, var2, var7);
-      var7[0] = var3;
-      var7[2] = var5;
-      int var8 = var7[3];
-      if (this.a(var2) != 0) {
-         var7[1] = var4;
-         var7[3] = var6 - var8;
+   public final void drawParagraphs(Graphics graphics, short[] text, int x, int y, int width, int height) {
+      int[] cursor = rectScratch;
+      rectScratch[0] = x;
+      cursor[1] = y;
+      cursor[2] = width;
+      cursor[3] = 0;
+      this.layoutParagraphs(null, text, cursor);
+      cursor[0] = x;
+      cursor[2] = width;
+      int measuredHeight = cursor[3];
+      if (this.totalMeasurement(text) != 0) {
+         cursor[1] = y;
+         cursor[3] = height - measuredHeight;
       } else {
-         var7[1] = var4 + (var6 - var8 >> 1);
-         var7[3] = var8;
+         cursor[1] = y + (height - measuredHeight >> 1);
+         cursor[3] = measuredHeight;
       }
 
-      this.a(var1, var2, var7);
+      this.layoutParagraphs(graphics, text, cursor);
    }
 
-   private void a(Graphics var1, short[] var2, int[] var3) {
-      int var4 = var3[0];
-      int var5 = var3[1];
-      int var6 = var3[2];
-      int var7 = var3[3];
-      int var8 = 0;
-      int var9 = 0;
+   private void layoutParagraphs(Graphics graphics, short[] text, int[] cursor) {
+      int x = cursor[0];
+      int y = cursor[1];
+      int width = cursor[2];
+      int height = cursor[3];
+      int totalHeight = 0;
+      int totalExtra = 0;
 
-      for (byte var10 = 0; var10 < var2.length; var10 += 2) {
-         short var11 = var2[var10];
-         short var12 = var2[var10 + 1];
-         var3[4] = var12;
-         this.a(null, var11, var3);
-         int var13 = var3[3];
-         var9 += this.a2(var11, var12);
-         var8 += var13;
+      for (byte index = 0; index < text.length; index += 2) {
+         short kind = text[index];
+         short value = text[index + 1];
+         cursor[4] = value;
+         this.renderElement(null, kind, cursor);
+         int lineHeight = cursor[3];
+         totalExtra += this.measureParagraph(kind, value);
+         totalHeight += lineHeight;
       }
 
-      if (var1 != null) {
-         int var17 = var7;
-         if (var9 > 0) {
-            var17 = var7 + var8;
+      if (graphics != null) {
+         int limit = height;
+         if (totalExtra > 0) {
+            limit = height + totalHeight;
          }
 
-         var3[0] = var4;
-         var3[1] = var5;
-         var3[2] = var6;
-         int var18 = 0;
+         cursor[0] = x;
+         cursor[1] = y;
+         cursor[2] = width;
+         int used = 0;
 
-         for (byte var19 = 0; var19 < var2.length; var19 += 2) {
-            short var20 = var2[var19];
-            short var14 = var2[var19 + 1];
-            var3[4] = var14;
-            int var15;
-            if ((var15 = this.a2(var20, var14)) != 0) {
-               int var16 = var7 * var15 / var9;
-               var3[3] = var16;
-               this.a(var1, var20, var3);
+         for (byte row = 0; row < text.length; row += 2) {
+            short kind2 = text[row];
+            short value2 = text[row + 1];
+            cursor[4] = value2;
+            int extra;
+            if ((extra = this.measureParagraph(kind2, value2)) != 0) {
+               int allocated = height * extra / totalExtra;
+               cursor[3] = allocated;
+               this.renderElement(graphics, kind2, cursor);
             } else {
-               var3[3] = var17 - var18;
-               this.a(var1, var20, var3);
+               cursor[3] = limit - used;
+               this.renderElement(graphics, kind2, cursor);
             }
 
-            var18 += var3[3];
+            used += cursor[3];
          }
       }
 
-      if (var1 == null) {
-         var3[3] = var8;
+      if (graphics == null) {
+         cursor[3] = totalHeight;
       } else {
-         var3[3] = var7 + var8;
+         cursor[3] = height + totalHeight;
       }
    }
 
-   private final int a2(int var1, int var2) {
-      int var3 = 0;
-      if (var1 == 22) {
-         return var2;
+   private final int measureParagraph(int kind, int value) {
+      int result = 0;
+      if (kind == 22) {
+         return value;
       } else {
-         if (var1 == 27) {
-            var3 = 1;
-         } else if (var1 == 29) {
-            var3 = this.a(this.a16(var2));
+         if (kind == 27) {
+            result = 1;
+         } else if (kind == 29) {
+            result = this.totalMeasurement(this.textBlock(value));
          }
 
-         return var3;
+         return result;
       }
    }
 
-   private final int a(short[] var1) {
-      int var2 = 0;
+   private final int totalMeasurement(short[] text) {
+      int total = 0;
 
-      for (byte var3 = 0; var3 < var1.length; var3 += 2) {
-         short var4 = var1[var3];
-         short var5 = var1[var3 + 1];
-         var2 += this.a2(var4, var5);
+      for (byte index = 0; index < text.length; index += 2) {
+         short kind = text[index];
+         short value = text[index + 1];
+         total += this.measureParagraph(kind, value);
       }
 
-      return var2;
+      return total;
    }
 
-   private void a(Graphics var1, int var2, int[] var3) {
-      GameCanvas var4 = this.canvas;
-      int var5 = var3[0];
-      int var6 = var3[1];
-      int var7 = var3[2];
-      int var8 = var3[3];
-      int var9 = var3[4];
-      int var10 = 0;
-      switch (var2) {
+   private void renderElement(Graphics graphics, int elementType, int[] cursor) {
+      GameCanvas canvas = this.canvas;
+      int x = cursor[0];
+      int y = cursor[1];
+      int width = cursor[2];
+      int height = cursor[3];
+      int value = cursor[4];
+      int advance = 0;
+      switch (elementType) {
          case 0:
-            if (var1 != null) {
-               var1.setColor(0);
-               var1.drawRect(var5, var6, var7, var8);
+            if (graphics != null) {
+               graphics.setColor(0);
+               graphics.drawRect(x, y, width, height);
             }
             break;
          case 1:
          case 2:
          case 3:
          case 4:
-            if (var2 == 4) {
-               var7 = this.f;
-               var5 = this.canvas.getWidth() - var7 >> 1;
+            if (elementType == 4) {
+               width = this.panelWidth;
+               x = this.canvas.getWidth() - width >> 1;
             }
 
-            if (var1 != null) {
-               this.a2(var1, var5, var6, var7, var8, var9, var2);
+            if (graphics != null) {
+               this.drawDialogFrame(graphics, x, y, width, height, value, elementType);
             }
 
-            var5 += 5;
-            var6 += 22;
-            var7 -= 10;
-            var10 = 27;
+            x += 5;
+            y += 22;
+            width -= 10;
+            advance = 27;
             break;
          case 5:
-            if (var1 != null) {
-               f(var1, var5, var6, var7, var8);
+            if (graphics != null) {
+               drawThickBorder(graphics, x, y, width, height);
             }
             break;
          case 6:
-            if (var1 != null) {
-               this.g(var1, var5, var6, var7, var8);
+            if (graphics != null) {
+               this.drawWindowBox(graphics, x, y, width, height);
             }
 
-            var5 += 8;
-            var6 += 8;
-            var7 -= 16;
-            var10 = 16;
+            x += 8;
+            y += 8;
+            width -= 16;
+            advance = 16;
             break;
          case 7:
-            if (var1 != null) {
-               this.j(var1, var5, var6, var7, var8);
+            if (graphics != null) {
+               this.drawRaisedBox(graphics, x, y, width, height);
             }
 
-            var5 += 4;
-            var6 += 4;
-            var7 -= 8;
-            var10 = 8;
+            x += 4;
+            y += 4;
+            width -= 8;
+            advance = 8;
          case 8:
          default:
             break;
@@ -273,606 +273,606 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
          case 12:
          case 13:
          case 14:
-            SdkString var20;
-            if (var1 != null && (var20 = this.a4(var9)) != null) {
-               int var24 = var5;
-               int var27 = var6 + 1;
-               byte var28 = 20;
-               if (var2 == 10 || var2 == 13) {
-                  var24 = var5 + var7;
-                  var28 = 24;
-               } else if (var2 == 11 || var2 == 14) {
-                  var24 = var5 + (var7 >> 1);
-                  var28 = 17;
+            SdkString label;
+            if (graphics != null && (label = this.textFor(value)) != null) {
+               int anchorX = x;
+               int anchorY = y + 1;
+               byte anchor = 20;
+               if (elementType == 10 || elementType == 13) {
+                  anchorX = x + width;
+                  anchor = 24;
+               } else if (elementType == 11 || elementType == 14) {
+                  anchorX = x + (width >> 1);
+                  anchor = 17;
                }
 
-               int var30 = var2 != 12 && var2 != 13 && var2 != 14 ? 1 : 0;
-               var4.a(var20, var30, var24, var27, var28);
+               int alignFlag = elementType != 12 && elementType != 13 && elementType != 14 ? 1 : 0;
+               canvas.drawString(label, alignFlag, anchorX, anchorY, anchor);
             }
             break;
          case 15:
-            var10 = this.i;
-            var6 += var10;
+            advance = this.rowHeight;
+            y += advance;
             break;
          case 16:
          case 17:
-            var10 = Math.max(var9, var4.c()) * this.e;
-            if (var1 != null) {
-               if (var2 == 17) {
-                  var10 = var8;
+            advance = Math.max(value, canvas.wrappedLineCount()) * this.textLineHeight;
+            if (graphics != null) {
+               if (elementType == 17) {
+                  advance = height;
                }
 
-               var4.b2(1, var5 + (var7 >> 1), var6 + (var10 >> 1), 3);
+               canvas.drawWrappedText(1, x + (width >> 1), y + (advance >> 1), 3);
             }
 
-            var6 += var10;
+            y += advance;
             break;
          case 18:
-            var10 = 1;
-            if (var1 != null) {
-               int var23 = var5 + 1;
-               int var26 = var7 - 3;
-               SpriteRenderer.setColor(var1, var9);
-               var1.fillRect(var23, var6, var26, 1);
+            advance = 1;
+            if (graphics != null) {
+               int rectX = x + 1;
+               int rectW = width - 3;
+               SpriteRenderer.setColor(graphics, value);
+               graphics.fillRect(rectX, y, rectW, 1);
             }
 
-            var6++;
+            y++;
             break;
          case 19:
-            int var19 = var4.getWidth();
-            int var22 = var6 + 3;
-            int var14 = var4.getHeight() - 15 - 3 - var22;
-            if (var1 != null) {
-               SpriteRenderer.setColor(var1, 77);
-               var1.fillRect(0, var6, var19, 3);
-               SpriteRenderer.setColor(var1, 76);
-               var1.fillRect(0, var22, var19, var14);
-               var6 = var22;
-               var10 = var8 - var14;
+            int fullW = canvas.getWidth();
+            int topY = y + 3;
+            int innerH = canvas.getHeight() - 15 - 3 - topY;
+            if (graphics != null) {
+               SpriteRenderer.setColor(graphics, 77);
+               graphics.fillRect(0, y, fullW, 3);
+               SpriteRenderer.setColor(graphics, 76);
+               graphics.fillRect(0, topY, fullW, innerH);
+               y = topY;
+               advance = height - innerH;
             } else {
-               var10 = var8;
-               var6 = var22;
+               advance = height;
+               y = topY;
             }
 
-            var5 = 0;
-            var7 = var19;
+            x = 0;
+            width = fullW;
             break;
          case 20:
-            if (var1 != null) {
-               int var18 = this.i + 2;
-               int var21 = var4.getWidth();
-               int var25 = var6 - 2;
-               SpriteRenderer.setColor(var1, 77);
-               var1.fillRect(0, var25, var21, 1);
-               var1.fillRect(0, var25 + var18 - 1, var4.getWidth(), 1);
-               SpriteRenderer.setColor(var1, 1);
-               var1.fillRect(0, var25 + 1, var21, var18 - 2);
-               int var29 = var5 + var7 - 25 + 3;
-               int var31 = var5 + var7 + 3;
-               SpriteRenderer.drawFrame(var1, 660, 0, var29, var6);
-               SpriteRenderer.drawFrame(var1, 659, 0, var31, var6);
+            if (graphics != null) {
+               int barHeight = this.rowHeight + 2;
+               int panelW = canvas.getWidth();
+               int lineY = y - 2;
+               SpriteRenderer.setColor(graphics, 77);
+               graphics.fillRect(0, lineY, panelW, 1);
+               graphics.fillRect(0, lineY + barHeight - 1, canvas.getWidth(), 1);
+               SpriteRenderer.setColor(graphics, 1);
+               graphics.fillRect(0, lineY + 1, panelW, barHeight - 2);
+               int arrowX1 = x + width - 25 + 3;
+               int arrowX2 = x + width + 3;
+               SpriteRenderer.drawFrame(graphics, 660, 0, arrowX1, y);
+               SpriteRenderer.drawFrame(graphics, 659, 0, arrowX2, y);
             }
             break;
          case 21:
-            int var17 = this.i + 8;
-            if (var1 != null) {
-               int var12 = var7 * 4 / 5;
-               int var13 = var5 + (var7 - var12 >> 1);
-               this.g(var1, var13, var6, var12, var17);
-               int var15 = var13 + (var12 >> 1);
-               int var16 = var6 + (var17 >> 1) + 2;
-               var4.a(this.a4(var9), 0, var15, var16, 3);
+            int rowHeight = this.rowHeight + 8;
+            if (graphics != null) {
+               int innerW = width * 4 / 5;
+               int innerX = x + (width - innerW >> 1);
+               this.drawWindowBox(graphics, innerX, y, innerW, rowHeight);
+               int labelX = innerX + (innerW >> 1);
+               int labelY = y + (rowHeight >> 1) + 2;
+               canvas.drawString(this.textFor(value), 0, labelX, labelY, 3);
             }
 
-            var10 = var17;
-            var6 += var17;
+            advance = rowHeight;
+            y += rowHeight;
             break;
          case 22:
-            if (var1 != null) {
-               var10 = var8;
-               var6 += var8;
+            if (graphics != null) {
+               advance = height;
+               y += height;
             }
             break;
          case 23:
-            var5 += var9;
-            var7 -= var9 << 1;
-            var6 += var9;
-            var10 = var9 << 1;
+            x += value;
+            width -= value << 1;
+            y += value;
+            advance = value << 1;
             break;
          case 24:
-            var5 += var9;
-            var7 -= var9 << 1;
+            x += value;
+            width -= value << 1;
             break;
          case 25:
-            var6 += var9;
-            var10 = var9 << 1;
+            y += value;
+            advance = value << 1;
             break;
          case 26:
-            var10 = var9;
-            var6 += var9;
+            advance = value;
+            y += value;
             break;
          case 27:
-            if (var1 != null) {
-               this.e(var1, var5, var6, var7, var8, var9);
-               var10 = var8;
-               var6 += var8;
+            if (graphics != null) {
+               this.drawScrollList(graphics, x, y, width, height, value);
+               advance = height;
+               y += height;
             }
             break;
          case 28:
-            this.b(var1, var3);
-            var10 = var3[3];
-            var6 += var10;
+            this.drawTextBox(graphics, cursor);
+            advance = cursor[3];
+            y += advance;
             break;
          case 29:
-            short[] var11 = this.a16(var9);
-            this.a(var1, var11, var3);
-            var10 = var3[3];
-            var6 += var10;
+            short[] textBlock = this.textBlock(value);
+            this.layoutParagraphs(graphics, textBlock, cursor);
+            advance = cursor[3];
+            y += advance;
             break;
          case 30:
-            var10 = ((TitleScreen)this).a(var1, var5, var6, var7);
-            var6 += var10;
+            advance = ((TitleScreen)this).drawTextBox(graphics, x, y, width);
+            y += advance;
             break;
          case 31:
          case 33:
          case 36:
-            var10 = this.d(var1, var5, var6, var7, var2);
-            var6 += var10;
+            advance = this.drawMenuList(graphics, x, y, width, elementType);
+            y += advance;
             break;
          case 32:
-            var10 = ((GameScreen)this).a(var1, var5, var6, var7);
-            var6 += var10;
+            advance = ((GameScreen)this).drawSkillHeader(graphics, x, y, width);
+            y += advance;
             break;
          case 34:
-            var10 = ((GameScreen)this).a(var1, var5, var6, var7, var9);
-            var6 += var10;
+            advance = ((GameScreen)this).drawSkillRow(graphics, x, y, width, value);
+            y += advance;
             break;
          case 35:
-            var10 = ((GameScreen)this).b(var1, var5, var6, var7);
-            var6 += var10;
+            advance = ((GameScreen)this).drawFieldRow(graphics, x, y, width);
+            y += advance;
             break;
          case 37:
-            ((GameScreen)this).a(var1, var3);
+            ((GameScreen)this).drawMenuIcon(graphics, cursor);
             return;
          case 38:
-            var10 = ((GameScreen)this).c(var1, var5, var6, var7);
-            var6 += var10;
+            advance = ((GameScreen)this).drawObjectIconRow(graphics, x, y, width);
+            y += advance;
       }
 
-      var3[0] = var5;
-      var3[1] = var6;
-      var3[2] = var7;
-      var3[3] = var10;
+      cursor[0] = x;
+      cursor[1] = y;
+      cursor[2] = width;
+      cursor[3] = advance;
    }
 
-   public final void a2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      GameCanvas var8 = this.canvas;
-      if (var7 == 4) {
-         this.i(var1, var2, var3, var4, var5);
+   public final void drawDialogFrame(Graphics graphics, int x, int y, int width, int height, int titleId, int style) {
+      GameCanvas canvas = this.canvas;
+      if (style == 4) {
+         this.drawListBox(graphics, x, y, width, height);
       }
 
-      int var9 = var1.getClipX();
-      int var10 = var1.getClipY();
-      int var11 = var1.getClipWidth();
-      int var12 = var1.getClipHeight();
-      int var13 = SpriteRenderer.frameWidth(582, 0);
-      int var14 = SpriteRenderer.frameHeight(582, 0);
-      SpriteRenderer.drawFrame(var1, 582, 0, var2, var3);
-      SpriteRenderer.drawFrame(var1, 582, 2, var2 + var4 - var13, var3);
-      var1.setClip(var2 + var13, var10, var4 - (var13 << 1), var12);
-      SpriteRenderer.drawFrame(var1, 582, 1, var2 + var13, var3);
-      var1.setClip(var9, var10, var11, var12);
-      if (var7 != 4) {
-         SpriteRenderer.setColor(var1, 0);
-         var1.fillRect(var2, var3 + var14, 1, var5 - var14);
-         var1.fillRect(var2 + var4 - 1, var3 + var14, 1, var5 - var14);
-         var1.fillRect(var2, var3 + var5 - 1, var4, 1);
-         SpriteRenderer.setColor(var1, 76);
-         var1.fillRect(var2 + 1, var3 + var14, var4 - 2, var5 - var14 - 1);
+      int clipX = graphics.getClipX();
+      int clipY = graphics.getClipY();
+      int clipW = graphics.getClipWidth();
+      int clipH = graphics.getClipHeight();
+      int capW = SpriteRenderer.frameWidth(582, 0);
+      int capH = SpriteRenderer.frameHeight(582, 0);
+      SpriteRenderer.drawFrame(graphics, 582, 0, x, y);
+      SpriteRenderer.drawFrame(graphics, 582, 2, x + width - capW, y);
+      graphics.setClip(x + capW, clipY, width - (capW << 1), clipH);
+      SpriteRenderer.drawFrame(graphics, 582, 1, x + capW, y);
+      graphics.setClip(clipX, clipY, clipW, clipH);
+      if (style != 4) {
+         SpriteRenderer.setColor(graphics, 0);
+         graphics.fillRect(x, y + capH, 1, height - capH);
+         graphics.fillRect(x + width - 1, y + capH, 1, height - capH);
+         graphics.fillRect(x, y + height - 1, width, 1);
+         SpriteRenderer.setColor(graphics, 76);
+         graphics.fillRect(x + 1, y + capH, width - 2, height - capH - 1);
       }
 
-      if (var6 != -1) {
-         int var15 = var2 + (var4 >> 1);
-         int var16 = var3 + 5;
-         var8.a(this.a4(var6), 0, var15, var16, 17);
+      if (titleId != -1) {
+         int titleX = x + (width >> 1);
+         int titleY = y + 5;
+         canvas.drawString(this.textFor(titleId), 0, titleX, titleY, 17);
       }
 
-      if (var7 == 2) {
-         int var19 = var3 + 3;
-         int var21 = var2 + 4;
-         int var17 = var2 + var4 - 4;
-         if (GameCanvas.b) {
-            var21 = var2 + 56;
-            var17 = var2 + var4 - 56;
+      if (style == 2) {
+         int arrowY = y + 3;
+         int leftArrowX = x + 4;
+         int rightArrowX = x + width - 4;
+         if (GameCanvas.landscape) {
+            leftArrowX = x + 56;
+            rightArrowX = x + width - 56;
          }
 
-         if (((GameScreen)this).c9 != 0 || GameScreen.a5 != 11 && GameScreen.a5 != 10) {
-            this.leftArrowAnim.draw(var1, var21, var19);
-            this.rightArrowAnim.draw(var1, var17, var19);
+         if (((GameScreen)this).friendLevel != 0 || GameScreen.screenState != 11 && GameScreen.screenState != 10) {
+            this.leftArrowAnim.draw(graphics, leftArrowX, arrowY);
+            this.rightArrowAnim.draw(graphics, rightArrowX, arrowY);
          }
       }
 
-      if (var7 == 3) {
-         var6 = this.a3(var6);
-         short var20 = -1;
-         if (var6 == 209) {
-            var20 = 666;
-         } else if (var6 == 205) {
-            var20 = 668;
-         } else if (var6 == 208) {
-            var20 = 667;
-         } else if (var6 == 204) {
-            var20 = 669;
+      if (style == 3) {
+         titleId = this.valueSlotIndex(titleId);
+         short cornerFrame = -1;
+         if (titleId == 209) {
+            cornerFrame = 666;
+         } else if (titleId == 205) {
+            cornerFrame = 668;
+         } else if (titleId == 208) {
+            cornerFrame = 667;
+         } else if (titleId == 204) {
+            cornerFrame = 669;
          }
 
-         if (var20 != -1) {
-            int[] var22 = this.a2;
-            SpriteRenderer.hitTestMirrored(this.a2, var20, 0, 0);
-            var1.setClip(var2 + var22[0], var3 + var22[1], var22[2], var22[3]);
-            SpriteRenderer.drawFrame(var1, var20, 0, var2, var3);
-            var1.setClip(var2 + var4 - var22[2] + var22[0], var3 + var22[1], var22[2], var22[3]);
-            SpriteRenderer.drawFrame(var1, var20, 0, var2 + var4 - var22[2], var3);
-            var1.setClip(var9, var10, var11, var12);
+         if (cornerFrame != -1) {
+            int[] hitRect = this.hitRect;
+            SpriteRenderer.hitTestMirrored(this.hitRect, cornerFrame, 0, 0);
+            graphics.setClip(x + hitRect[0], y + hitRect[1], hitRect[2], hitRect[3]);
+            SpriteRenderer.drawFrame(graphics, cornerFrame, 0, x, y);
+            graphics.setClip(x + width - hitRect[2] + hitRect[0], y + hitRect[1], hitRect[2], hitRect[3]);
+            SpriteRenderer.drawFrame(graphics, cornerFrame, 0, x + width - hitRect[2], y);
+            graphics.setClip(clipX, clipY, clipW, clipH);
          }
       }
    }
 
-   public static void f(Graphics var0, int var1, int var2, int var3, int var4) {
-      SpriteRenderer.setColor(var0, 77);
-      var0.fillRect(var1, var2, var3, 6);
-      var0.fillRect(var1, var2 + var4 - 6, var3, 6);
-      var0.fillRect(var1, var2 + 6, 6, var4 - 12);
-      var0.fillRect(var1 + var3 - 6, var2 + 6, 6, var4 - 12);
+   public static void drawThickBorder(Graphics graphics, int x, int y, int width, int height) {
+      SpriteRenderer.setColor(graphics, 77);
+      graphics.fillRect(x, y, width, 6);
+      graphics.fillRect(x, y + height - 6, width, 6);
+      graphics.fillRect(x, y + 6, 6, height - 12);
+      graphics.fillRect(x + width - 6, y + 6, 6, height - 12);
    }
 
-   public static void b2(Graphics var0, int var1, int var2, int var3, int var4, int var5, int var6) {
-      int var7 = var0.getClipX();
-      int var8 = var0.getClipY();
-      int var9 = var0.getClipWidth();
-      int var10 = var0.getClipHeight();
-      int var11 = SpriteRenderer.frameWidth(var5, 0);
-      int var12 = SpriteRenderer.frameHeight(var5, 0);
-      int var13 = var1 + var11;
-      int var14 = var1 + var3 - var11;
-      int var15 = var3 - (var11 << 1);
-      int var16 = var2 + var12;
-      int var17 = var2 + var4 - var12;
-      int var18 = var4 - (var12 << 1);
-      SpriteRenderer.drawFrame(var0, var5, 0, var1, var2);
-      SpriteRenderer.drawFrame(var0, var5, 2, var14, var2);
-      SpriteRenderer.drawFrame(var0, var5, 6, var1, var17);
-      SpriteRenderer.drawFrame(var0, var5, 4, var14, var17);
-      var0.setClip(var7, var16, var9, var18);
-      SpriteRenderer.drawFrame(var0, var5, 7, var1, var16);
-      SpriteRenderer.drawFrame(var0, var5, 3, var14, var16);
-      var0.setClip(var13, var8, var15, var10);
-      SpriteRenderer.drawFrame(var0, var5, 1, var13, var2);
-      SpriteRenderer.drawFrame(var0, var5, 5, var13, var17);
-      var0.setClip(var7, var8, var9, var10);
-      if (var6 != -1) {
-         SpriteRenderer.setColor(var0, var6);
-         var0.fillRect(var13, var16, var15, var18);
+   public static void drawNineSlice(Graphics graphics, int x, int y, int width, int height, int spriteId, int fillColor) {
+      int clipX = graphics.getClipX();
+      int clipY = graphics.getClipY();
+      int clipW = graphics.getClipWidth();
+      int clipH = graphics.getClipHeight();
+      int capW = SpriteRenderer.frameWidth(spriteId, 0);
+      int capH = SpriteRenderer.frameHeight(spriteId, 0);
+      int innerX = x + capW;
+      int rightX = x + width - capW;
+      int innerW = width - (capW << 1);
+      int innerY = y + capH;
+      int bottomY = y + height - capH;
+      int innerH = height - (capH << 1);
+      SpriteRenderer.drawFrame(graphics, spriteId, 0, x, y);
+      SpriteRenderer.drawFrame(graphics, spriteId, 2, rightX, y);
+      SpriteRenderer.drawFrame(graphics, spriteId, 6, x, bottomY);
+      SpriteRenderer.drawFrame(graphics, spriteId, 4, rightX, bottomY);
+      graphics.setClip(clipX, innerY, clipW, innerH);
+      SpriteRenderer.drawFrame(graphics, spriteId, 7, x, innerY);
+      SpriteRenderer.drawFrame(graphics, spriteId, 3, rightX, innerY);
+      graphics.setClip(innerX, clipY, innerW, clipH);
+      SpriteRenderer.drawFrame(graphics, spriteId, 1, innerX, y);
+      SpriteRenderer.drawFrame(graphics, spriteId, 5, innerX, bottomY);
+      graphics.setClip(clipX, clipY, clipW, clipH);
+      if (fillColor != -1) {
+         SpriteRenderer.setColor(graphics, fillColor);
+         graphics.fillRect(innerX, innerY, innerW, innerH);
       }
    }
 
-   public final void g(Graphics var1, int var2, int var3, int var4, int var5) {
-      b2(var1, var2, var3, var4, var5, 576, 1);
+   public final void drawWindowBox(Graphics graphics, int x, int y, int width, int height) {
+      drawNineSlice(graphics, x, y, width, height, 576, 1);
    }
 
-   public final void h(Graphics var1, int var2, int var3, int var4, int var5) {
-      b2(var1, var2, var3, var4, var5, 580, 81);
+   public final void drawSunkenBox(Graphics graphics, int x, int y, int width, int height) {
+      drawNineSlice(graphics, x, y, width, height, 580, 81);
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, int var7) {
-      this.a(var1, var2, var3, var4, var5, var6, this.canvas.a4(var7));
+   public final void drawButton(Graphics graphics, int x, int y, int width, int height, boolean pressed, int textId) {
+      this.drawButtonLabel(graphics, x, y, width, height, pressed, this.canvas.getString(textId));
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, SdkString var7) {
-      byte var8;
-      if (var6) {
-         var8 = 0;
-         b2(var1, var2 - 1, var3 - 1, var4 + 2, var5 + 2, 578, 94);
+   public final void drawButtonLabel(Graphics graphics, int x, int y, int width, int height, boolean pressed, SdkString label) {
+      byte colorIndex;
+      if (pressed) {
+         colorIndex = 0;
+         drawNineSlice(graphics, x - 1, y - 1, width + 2, height + 2, 578, 94);
       } else {
-         var8 = 1;
-         b2(var1, var2, var3, var4, var5, 579, 90);
+         colorIndex = 1;
+         drawNineSlice(graphics, x, y, width, height, 579, 90);
       }
 
-      this.canvas.a(var7, var8, var2 + (var4 >> 1), var3 + (var5 >> 1) + 2, 3);
+      this.canvas.drawString(label, colorIndex, x + (width >> 1), y + (height >> 1) + 2, 3);
    }
 
-   public final void i(Graphics var1, int var2, int var3, int var4, int var5) {
-      b2(var1, var2, var3, var4, var5, 577, 76);
+   public final void drawListBox(Graphics graphics, int x, int y, int width, int height) {
+      drawNineSlice(graphics, x, y, width, height, 577, 76);
    }
 
-   public static void c(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.setColor(var0, var5);
-      var0.drawRect(var1, var2, var3 - 1, var4 - 1);
-      SpriteRenderer.setColor(var0, 73);
-      var0.fillRect(var1 + 1, var2 + 1, var3 - 2, 1);
-      var0.fillRect(var1 + 1, var2 + 2, 1, var4 - 3);
-      SpriteRenderer.setColor(var0, 74);
-      var0.fillRect(var1 + 2, var2 + 2, var3 - 3, var4 - 3);
+   public static void drawInsetRect(Graphics graphics, int x, int y, int width, int height, int color) {
+      SpriteRenderer.setColor(graphics, color);
+      graphics.drawRect(x, y, width - 1, height - 1);
+      SpriteRenderer.setColor(graphics, 73);
+      graphics.fillRect(x + 1, y + 1, width - 2, 1);
+      graphics.fillRect(x + 1, y + 2, 1, height - 3);
+      SpriteRenderer.setColor(graphics, 74);
+      graphics.fillRect(x + 2, y + 2, width - 3, height - 3);
    }
 
-   public final void j(Graphics var1, int var2, int var3, int var4, int var5) {
-      c(var1, var2, var3, var4, var5, 77);
+   public final void drawRaisedBox(Graphics graphics, int x, int y, int width, int height) {
+      drawInsetRect(graphics, x, y, width, height, 77);
    }
 
-   public final void k(Graphics var1, int var2, int var3, int var4, int var5) {
-      c(var1, var2, var3, var4, var5, 0);
+   public final void drawPlainBox(Graphics graphics, int x, int y, int width, int height) {
+      drawInsetRect(graphics, x, y, width, height, 0);
    }
 
-   public final void b(Graphics var1, int[] var2) {
-      GameCanvas var3 = this.canvas;
-      int var4 = this.canvas.b2(1);
-      int var5 = Math.max(5, Math.min(var3.c(), this.a3));
-      int var6 = var4 * var5 + 16;
-      if (var1 == null) {
-         var2[3] = var6;
+   public final void drawTextBox(Graphics graphics, int[] cursor) {
+      GameCanvas canvas = this.canvas;
+      int lineHeight = this.canvas.lineHeight(1);
+      int lineCount = Math.max(5, Math.min(canvas.wrappedLineCount(), this.visibleLineCount));
+      int height = lineHeight * lineCount + 16;
+      if (graphics == null) {
+         cursor[3] = height;
       } else {
-         int var7 = var2[0];
-         int var8 = var2[2] - b();
-         int var9 = var2[1];
-         int var10 = var7 + 8;
-         int var11 = var9 + 8;
-         int var12 = var7 + var8;
-         this.g(var1, var7, var9, var8, var6);
-         var3.a(1, var10, var11, 20, this.m, this.a3);
-         this.a(var1, var12, var9, var6, this.m, this.a3, var3.c(), true);
+         int x = cursor[0];
+         int width = cursor[2] - scrollbarWidth();
+         int y = cursor[1];
+         int iconX = x + 8;
+         int iconY = y + 8;
+         int rightX = x + width;
+         this.drawWindowBox(graphics, x, y, width, height);
+         canvas.drawWrappedTextClipped(1, iconX, iconY, 20, this.menuScroll, this.visibleLineCount);
+         this.drawScrollbar(graphics, rightX, y, height, this.menuScroll, this.visibleLineCount, canvas.wrappedLineCount(), true);
       }
    }
 
-   public final int b(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = this.canvas;
-      int var7 = var4 - 3 - 3;
-      int var9 = 6 + var7 + 3;
-      this.i(var1, var2, -3, var3, var9);
-      int var11 = var3 - 6;
-      int var12 = var2 + (var3 - var11 >> 1);
-      this.h(var1, var12, 3, var11, var7);
-      var6.a2(var5, 0, var12 + (var11 >> 1), 3 + (var7 >> 1) + 2, 3);
-      return var9 - 3;
+   public final int drawIconBar(Graphics graphics, int x, int y, int width, int iconId) {
+      GameCanvas canvas = this.canvas;
+      int innerH = width - 3 - 3;
+      int height = 6 + innerH + 3;
+      this.drawListBox(graphics, x, -3, y, height);
+      int innerW = y - 6;
+      int innerX = x + (y - innerW >> 1);
+      this.drawSunkenBox(graphics, innerX, 3, innerW, innerH);
+      canvas.drawStringById(iconId, 0, innerX + (innerW >> 1), 3 + (innerH >> 1) + 2, 3);
+      return height - 3;
    }
 
-   public final int d(Graphics var1, int var2, int var3, int var4) {
-      return this.b(var1, var2, var3, 25, var4);
+   public final int drawIconRow(Graphics graphics, int x, int y, int iconId) {
+      return this.drawIconBar(graphics, x, y, 25, iconId);
    }
 
-   public final int c(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = this.canvas;
-      this.i(var1, var2, -3, var3, 47);
-      int var9 = var3 - 6;
-      int var10 = var2 + (var3 - var9 >> 1);
-      this.h(var1, var10, 3, var9, 19);
-      var6.a2(var4, 0, var10 + (var9 >> 1), 14, 3);
-      this.g(var1, var10, 25, var9, 16);
-      if (var5 != -1) {
-         var6.a2(var5, 1, var10 + (var9 >> 1), 34, 3);
+   public final int drawIconPanel(Graphics graphics, int x, int y, int iconId, int subIconId) {
+      GameCanvas canvas = this.canvas;
+      this.drawListBox(graphics, x, -3, y, 47);
+      int innerW = y - 6;
+      int innerX = x + (y - innerW >> 1);
+      this.drawSunkenBox(graphics, innerX, 3, innerW, 19);
+      canvas.drawStringById(iconId, 0, innerX + (innerW >> 1), 14, 3);
+      this.drawWindowBox(graphics, innerX, 25, innerW, 16);
+      if (subIconId != -1) {
+         canvas.drawStringById(subIconId, 1, innerX + (innerW >> 1), 34, 3);
       }
 
       return 44;
    }
 
-   public final void c(Graphics var1, int var2, int var3) {
-      this.a(var1, var2, var3, 0, false, 0);
+   public final void drawCenteredLabel(Graphics graphics, int x, int y) {
+      this.drawIcon(graphics, x, y, 0, false, 0);
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, boolean var5, int var6) {
-      GameCanvas var7 = this.canvas;
-      Neighborhood var8 = this.canvas.a23;
-      int var9 = this.canvas.a23.i(var4, 0) == 0 ? (var5 ? 595 : 594) : (var5 ? 593 : 592);
-      int var10 = var8.i(var4, 2);
-      SpriteRenderer.setRecolorIndex(var6);
-      SpriteRenderer.drawFrame(var1, var9, var10, var2, var3 + 0);
+   public final void drawIcon(Graphics graphics, int x, int y, int iconId, boolean highlighted, int recolor) {
+      GameCanvas canvas = this.canvas;
+      Neighborhood neighborhood = this.canvas.neighborhood;
+      int frame = this.canvas.neighborhood.simAttribute(iconId, 0) == 0 ? (highlighted ? 595 : 594) : (highlighted ? 593 : 592);
+      int frameIndex = neighborhood.simAttribute(iconId, 2);
+      SpriteRenderer.setRecolorIndex(recolor);
+      SpriteRenderer.drawFrame(graphics, frame, frameIndex, x, y + 0);
       SpriteRenderer.setRecolorIndex(0);
    }
 
-   public static void d(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      int var7 = var4 - var5 - var5;
-      var0.fillRect(var1, var2, var3, var5);
-      var0.fillRect(var1, var2 + var4 - var5, var3, var5);
-      var0.fillRect(var1, var2 + var5, var5, var7);
-      var0.fillRect(var1 + var3 - var5, var2 + var5, var5, var7);
+   public static void drawFrameBorder(Graphics graphics, int x, int y, int width, int height, int thickness) {
+      int innerH = height - thickness - thickness;
+      graphics.fillRect(x, y, width, thickness);
+      graphics.fillRect(x, y + height - thickness, width, thickness);
+      graphics.fillRect(x, y + thickness, thickness, innerH);
+      graphics.fillRect(x + width - thickness, y + thickness, thickness, innerH);
    }
 
-   public final SdkString a4(int var1) {
-      GameCanvas var2 = this.canvas;
-      if (var1 >= -12) {
-         return var2.a4(var1);
+   public final SdkString textFor(int textId) {
+      GameCanvas canvas = this.canvas;
+      if (textId >= -12) {
+         return canvas.getString(textId);
       } else {
-         int var3;
-         return (var3 = this.a3(var1)) == 24 ? null : var2.a4(var3);
+         int mappedId;
+         return (mappedId = this.valueSlotIndex(textId)) == 24 ? null : canvas.getString(mappedId);
       }
    }
 
-   private int a3(int var1) {
-      return this.b[-13 - var1];
+   private int valueSlotIndex(int textId) {
+      return this.valueSlots[-13 - textId];
    }
 
-   public final short[] a16(int var1) {
-      return this.canvas.a16(var1);
+   public final short[] textBlock(int textId) {
+      return this.canvas.tileGroup(textId);
    }
 
-   public final void d(int var1, int var2, int var3) {
-      this.j = var1;
-      this.b3 = var2;
-      this.k = 0;
-      this.c2 = -1;
-      this.l = var3;
+   public final void beginList(int count, int lineHeight, int selected) {
+      this.itemCount = count;
+      this.lineHeight = lineHeight;
+      this.scrollOffset = 0;
+      this.visibleRowCount = -1;
+      this.selectedIndex = selected;
    }
 
-   public final boolean a5(int var1, int var2) {
-      if (this.c2 != -1) {
-         int var3 = this.l;
-         int var4;
-         if (this.l == -1) {
-            var4 = this.k;
+   public final boolean scrollList(int keyState, int prevKeyState) {
+      if (this.visibleRowCount != -1) {
+         int previous = this.selectedIndex;
+         int target;
+         if (this.selectedIndex == -1) {
+            target = this.scrollOffset;
          } else {
-            var4 = this.l;
+            target = this.selectedIndex;
          }
 
-         if (this.matchesInput(var1, var2, 16640, 0)) {
-            var4++;
-         } else if (this.matchesInput(var1, var2, 8196, 0)) {
-            var4--;
+         if (this.matchesInput(keyState, prevKeyState, 16640, 0)) {
+            target++;
+         } else if (this.matchesInput(keyState, prevKeyState, 8196, 0)) {
+            target--;
          }
 
-         if (this.l == -1) {
-            this.k = Math.max(0, Math.min(var4, this.j - this.c2));
+         if (this.selectedIndex == -1) {
+            this.scrollOffset = Math.max(0, Math.min(target, this.itemCount - this.visibleRowCount));
          } else {
-            this.l = Math.max(0, Math.min(var4, this.j - 1));
+            this.selectedIndex = Math.max(0, Math.min(target, this.itemCount - 1));
          }
 
-         return var3 != this.l;
+         return previous != this.selectedIndex;
       } else {
          return false;
       }
    }
 
-   public final void e(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      GameCanvas var7 = this.canvas;
-      int var8 = var4 - b();
-      int var9 = var2 + 2;
-      int var10 = var3 + 2;
-      int var11 = var8 - 2 - 1;
-      int var12 = var5 - 2 - 1;
-      this.g(var1, var2, var3, var8, var5);
-      int var13 = var12 / this.b3;
-      int var14 = this.j;
-      this.c2 = var13;
-      if (this.l != -1) {
-         int var15 = this.l;
-         int var16 = this.k;
-         if (var15 < var16) {
-            var16 = var15;
-         } else if (var15 >= var16 + var13) {
-            var16 = Math.max(0, var15 - var13 + 1);
+   public final void drawScrollList(Graphics graphics, int x, int y, int width, int height, int listKind) {
+      GameCanvas canvas = this.canvas;
+      int innerW = width - scrollbarWidth();
+      int clipX = x + 2;
+      int clipY = y + 2;
+      int clipW = innerW - 2 - 1;
+      int clipH = height - 2 - 1;
+      this.drawWindowBox(graphics, x, y, innerW, height);
+      int rowsVisible = clipH / this.lineHeight;
+      int count = this.itemCount;
+      this.visibleRowCount = rowsVisible;
+      if (this.selectedIndex != -1) {
+         int selected = this.selectedIndex;
+         int newOffset = this.scrollOffset;
+         if (selected < newOffset) {
+            newOffset = selected;
+         } else if (selected >= newOffset + rowsVisible) {
+            newOffset = Math.max(0, selected - rowsVisible + 1);
          }
 
-         this.k = var16;
+         this.scrollOffset = newOffset;
       }
 
-      int var22 = var2 + var8;
-      this.a(var1, var22, var3, var5, this.k, var13, var14, true);
-      int var23 = var1.getClipX();
-      int var17 = var1.getClipY();
-      int var18 = var1.getClipWidth();
-      int var19 = var1.getClipHeight();
-      var1.setClip(var9, var10, var11, var12);
-      TitleScreen var20 = var7.a9();
-      GameScreen var21 = var7.a6();
-      switch (var6) {
+      int scrollbarX = x + innerW;
+      this.drawScrollbar(graphics, scrollbarX, y, height, this.scrollOffset, rowsVisible, count, true);
+      int oldClipX = graphics.getClipX();
+      int oldClipY = graphics.getClipY();
+      int oldClipW = graphics.getClipWidth();
+      int oldClipH = graphics.getClipHeight();
+      graphics.setClip(clipX, clipY, clipW, clipH);
+      TitleScreen titleScreen = canvas.titleScreen();
+      GameScreen gameScreen = canvas.gameScreen();
+      switch (listKind) {
          case 0:
-            var20.a2(var1, var9, var10, var11, var12);
+            titleScreen.drawPersonaRows(graphics, clipX, clipY, clipW, clipH);
             break;
          case 1:
-            var20.b2(var1, var9, var10, var11, var12);
+            titleScreen.drawTraitRows(graphics, clipX, clipY, clipW, clipH);
             break;
          case 2:
          case 4:
          case 8:
-            this.h(var1, var9, var10, var11, var12, var6);
+            this.drawItemList(graphics, clipX, clipY, clipW, clipH, listKind);
             break;
          case 3:
-            var21.c2(var1, var9, var10, var11, var12);
+            gameScreen.drawCareerList(graphics, clipX, clipY, clipW, clipH);
             break;
          case 5:
          case 6:
          case 9:
-            var21.a(var1, var9, var10, var11, var12, var6);
+            gameScreen.drawObjectRows(graphics, clipX, clipY, clipW, clipH, listKind);
             break;
          case 7:
-            var21.b2(var1, var9, var10, var11, var12);
+            gameScreen.drawRosterList(graphics, clipX, clipY, clipW, clipH);
             break;
          case 10:
-            var21.a2(var1, var9, var10, var11, var12);
+            gameScreen.drawObjectListRow(graphics, clipX, clipY, clipW, clipH);
       }
 
-      var1.setClip(var23, var17, var18, var19);
+      graphics.setClip(oldClipX, oldClipY, oldClipW, oldClipH);
    }
 
-   public static void a2(Graphics var0, int var1, int var2, int var3) {
-      SpriteRenderer.setColor(var0, 75);
-      var0.fillRect(var1, var2, var3, 1);
+   public static void drawHLine(Graphics graphics, int x, int y, int width) {
+      SpriteRenderer.setColor(graphics, 75);
+      graphics.fillRect(x, y, width, 1);
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7, int var8) {
-      if (var8 == this.k) {
-         f(var1, var2, var3, var4, var5, var7);
-      } else if (var3 + var5 >= var6) {
-         g(var1, var2, var3, var4, var6 - var3, var7);
+   public final void drawClippedRow(Graphics graphics, int x, int y, int width, int height, int clipBottom, int color, int rowIndex) {
+      if (rowIndex == this.scrollOffset) {
+         fillRowFirst(graphics, x, y, width, height, color);
+      } else if (y + height >= clipBottom) {
+         fillRowLast(graphics, x, y, width, clipBottom - y, color);
       } else {
-         a(var1, var2, var3, var4, var5, var7);
+         fillRowTop(graphics, x, y, width, height, color);
       }
    }
 
-   private static void a(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.setColor(var0, var5);
-      var0.fillRect(var1, var2 + 1, var3, var4 - 1);
+   private static void fillRowTop(Graphics graphics, int x, int y, int width, int height, int color) {
+      SpriteRenderer.setColor(graphics, color);
+      graphics.fillRect(x, y + 1, width, height - 1);
    }
 
-   private static void f(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.setColor(var0, var5);
-      var0.fillRect(var1 + 1, var2, var3 - 2, 1);
-      var0.fillRect(var1, var2 + 1, var3, var4 - 1);
+   private static void fillRowFirst(Graphics graphics, int x, int y, int width, int height, int color) {
+      SpriteRenderer.setColor(graphics, color);
+      graphics.fillRect(x + 1, y, width - 2, 1);
+      graphics.fillRect(x, y + 1, width, height - 1);
    }
 
-   private static void g(Graphics var0, int var1, int var2, int var3, int var4, int var5) {
-      SpriteRenderer.setColor(var0, var5);
-      var0.fillRect(var1, var2 + 1, var3, var4 - 1 - 1);
-      var0.fillRect(var1 + 1, var2 + var4 - 1, var3 - 2, 1);
+   private static void fillRowLast(Graphics graphics, int x, int y, int width, int height, int color) {
+      SpriteRenderer.setColor(graphics, color);
+      graphics.fillRect(x, y + 1, width, height - 1 - 1);
+      graphics.fillRect(x + 1, y + height - 1, width - 2, 1);
    }
 
-   public final void b(Graphics var1, int var2) {
-      GameCanvas var3 = this.canvas;
-      int var4 = this.canvas.a23.m();
-      SdkString var5 = var3.a2();
-      var3.e3(551);
-      var3.f3(var3.g());
-      var3.e3(27);
-      var3.f3(var4);
-      var3.a2(-9, var5);
+   public final void drawHeader(Graphics graphics, int y) {
+      GameCanvas canvas = this.canvas;
+      int levelCount = this.canvas.neighborhood.achievementCount();
+      SdkString text = canvas.beginString();
+      canvas.appendStringId(551);
+      canvas.appendInt(canvas.visitedFlagCount());
+      canvas.appendStringId(27);
+      canvas.appendInt(levelCount);
+      canvas.setString(-9, text);
       this.setValue(1, -9);
-      var5 = var3.a2();
-      var3.e3(550);
-      var3.f3(var3.f());
-      var3.e3(27);
-      var3.f3(var4);
-      var3.a2(-8, var5);
+      text = canvas.beginString();
+      canvas.appendStringId(550);
+      canvas.appendInt(canvas.flagCount());
+      canvas.appendStringId(27);
+      canvas.appendInt(levelCount);
+      canvas.setString(-8, text);
       this.setValue(2, -8);
-      this.a(var1, var2);
+      this.drawPanel(graphics, y);
    }
 
-   public final void q2() {
-      this.d(this.canvas.a23.m(), 27, -1);
+   public final void resetList() {
+      this.beginList(this.canvas.neighborhood.achievementCount(), 27, -1);
    }
 
-   private int b2(int var1) {
-      GameCanvas var2 = this.canvas;
-      int var3 = this.canvas.a23.m();
-      int var4 = var2.f();
-      int var5 = var2.g();
-      int var6 = 0;
-      int var7 = 0;
+   private int itemIndexAt(int offset) {
+      GameCanvas canvas = this.canvas;
+      int simCount = this.canvas.neighborhood.achievementCount();
+      int firstSectionCount = canvas.flagCount();
+      int secondSectionBase = canvas.visitedFlagCount();
+      int firstSectionIndex = 0;
+      int secondSectionIndex = 0;
 
-      for (int var8 = 0; var8 < var3; var8++) {
-         if (!var2.d4(var8) && var1 >= var4) {
-            return var8;
+      for (int index = 0; index < simCount; index++) {
+         if (!canvas.hasFlag(index) && offset >= firstSectionCount) {
+            return index;
          }
 
-         if (var2.d4(var8)) {
-            if (var2.e4(var8)) {
-               if (var6 == var1) {
-                  return var8;
+         if (canvas.hasFlag(index)) {
+            if (canvas.hasVisitedFlag(index)) {
+               if (firstSectionIndex == offset) {
+                  return index;
                }
 
-               var6++;
+               firstSectionIndex++;
             } else {
-               if (var7 == var1 - var5 && var1 >= var5) {
-                  return var8;
+               if (secondSectionIndex == offset - secondSectionBase && offset >= secondSectionBase) {
+                  return index;
                }
 
-               var7++;
+               secondSectionIndex++;
             }
          }
       }
@@ -880,388 +880,388 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       return -1;
    }
 
-   private void h(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      GameCanvas var7 = this.canvas;
-      Neighborhood var8 = this.canvas.a23;
-      int var9 = var2 + 3;
-      int var10 = SpriteRenderer.frameHeight(565, 0);
-      int var11 = 13 - (var10 >> 1);
-      int var12;
-      int var13 = (var12 = var2 + 3 + var10 + 3) + 3;
-      int var14 = var2 + var4 - var13 - 3;
-      SpriteRenderer.setColor(var1, 75);
-      var1.fillRect(var12, var3, 1, var5);
-      int var15 = var3;
-      int var16 = 0;
-      int var17 = this.k;
+   private void drawItemList(Graphics graphics, int x, int y, int width, int height, int listKind) {
+      GameCanvas canvas = this.canvas;
+      Neighborhood neighborhood = this.canvas.neighborhood;
+      int iconX = x + 3;
+      int iconH = SpriteRenderer.frameHeight(565, 0);
+      int iconY = 13 - (iconH >> 1);
+      int dividerX;
+      int textX = (dividerX = x + 3 + iconH + 3) + 3;
+      int rowW = x + width - textX - 3;
+      SpriteRenderer.setColor(graphics, 75);
+      graphics.fillRect(dividerX, y, 1, height);
+      int rowY = y;
+      int rowIndex = 0;
+      int itemIndex = this.scrollOffset;
 
-      while (var15 < var3 + var5 && var17 < this.j) {
-         int var19;
-         short var20;
-         byte var21;
+      while (rowY < y + height && itemIndex < this.itemCount) {
+         int iconId;
+         short frameSprite;
+         byte frameIndex;
          label39: {
-            byte var10000;
+            byte frameIndexTemp;
             label38: {
-               var21 = 0;
-               if (var6 == 2) {
-                  int var18 = this.b2(var17);
-                  if (!var7.d4(var18)) {
-                     var19 = 549;
-                     var20 = 565;
-                     var10000 = 2;
+               frameIndex = 0;
+               if (listKind == 2) {
+                  int entityIndex = this.itemIndexAt(itemIndex);
+                  if (!canvas.hasFlag(entityIndex)) {
+                     iconId = 549;
+                     frameSprite = 565;
+                     frameIndexTemp = 2;
                      break label38;
                   }
 
-                  var19 = var8.x(var18);
-                  if (var7.e4(var18)) {
-                     var20 = 565;
-                     var10000 = 1;
+                  iconId = neighborhood.achievementText(entityIndex);
+                  if (canvas.hasVisitedFlag(entityIndex)) {
+                     frameSprite = 565;
+                     frameIndexTemp = 1;
                      break label38;
                   }
 
-                  var20 = 565;
+                  frameSprite = 565;
                } else {
-                  if (var6 == 8) {
-                     int var23 = var8.w(var17);
-                     var19 = var8.x(var23);
-                     var20 = 589;
-                     if (var23 == -1) {
-                        var20 = 196;
+                  if (listKind == 8) {
+                     int levelIndex = neighborhood.achievementSlotValue(itemIndex);
+                     iconId = neighborhood.achievementText(levelIndex);
+                     frameSprite = 589;
+                     if (levelIndex == -1) {
+                        frameSprite = 196;
                      }
                      break label39;
                   }
 
-                  int var22 = var8.v(var17);
-                  var19 = var8.x(var22);
-                  var20 = 565;
-                  if (var8.c5(var17)) {
-                     var10000 = 1;
+                  int simIndex = neighborhood.selectedResidentAnimFrame(itemIndex);
+                  iconId = neighborhood.achievementText(simIndex);
+                  frameSprite = 565;
+                  if (neighborhood.hasUsedTask(itemIndex)) {
+                     frameIndexTemp = 1;
                      break label38;
                   }
                }
 
-               var10000 = 0;
+               frameIndexTemp = 0;
             }
 
-            var21 = var10000;
+            frameIndex = frameIndexTemp;
          }
 
-         var7.a(var16, var19, 1, var14, var13, var15 + 13, 6);
-         SpriteRenderer.drawFrame(var1, var20, var21, var9, var15 + var11);
-         var16++;
-         var15 += 27;
-         var17++;
-         a2(var1, var2, var15, var4);
+         canvas.drawSlotText(rowIndex, iconId, 1, rowW, textX, rowY + 13, 6);
+         SpriteRenderer.drawFrame(graphics, frameSprite, frameIndex, iconX, rowY + iconY);
+         rowIndex++;
+         rowY += 27;
+         itemIndex++;
+         drawHLine(graphics, x, rowY, width);
       }
    }
 
-   public final int d(Graphics var1, int var2, int var3, int var4, int var5) {
-      int var6 = 8 + 6 * this.e;
-      if (var1 != null) {
-         GameCanvas var7 = this.canvas;
-         Neighborhood var8 = this.canvas.a23;
-         int var9 = 0;
-         int var10 = 5;
-         if (var5 == 36) {
-            var9 = ((GameScreen)this).a();
-            var10 = var8.X(var9);
+   public final int drawMenuList(Graphics graphics, int x, int y, int width, int listKind) {
+      int height = 8 + 6 * this.textLineHeight;
+      if (graphics != null) {
+         GameCanvas canvas = this.canvas;
+         Neighborhood neighborhood = this.canvas.neighborhood;
+         int category = 0;
+         int itemCount = 5;
+         if (listKind == 36) {
+            category = ((GameScreen)this).currentSimId();
+            itemCount = neighborhood.simKnownCount(category);
          }
 
-         this.j(var1, var2, var3, var4, var6);
-         int var11 = var2 + 4;
-         int var12 = var3 + 4;
-         int var13 = var11 + 12;
-         int var14 = var12 + this.e + 2;
-         int var15 = this.e - 2;
-         int var16 = var4 >> 1;
-         short var17 = 644;
-         if (var5 == 31) {
-            var17 = 745;
+         this.drawRaisedBox(graphics, x, y, width, height);
+         int iconX = x + 4;
+         int iconY = y + 4;
+         int labelX = iconX + 12;
+         int rowY = iconY + this.textLineHeight + 2;
+         int rowH = this.textLineHeight - 2;
+         int halfW = width >> 1;
+         short headerSprite = 644;
+         if (listKind == 31) {
+            headerSprite = 745;
          }
 
-         var7.a2(var17, 1, var11, var12, 20);
-         var7.a2();
-         Object var18 = null;
-         int var19 = var14;
+         canvas.drawStringById(headerSprite, 1, iconX, iconY, 20);
+         canvas.beginString();
+         Object text = null;
+         int textY = rowY;
 
-         for (int var20 = 0; var20 < var10; var20++) {
-            var18 = var7.a2();
-            var7.f3(var20 + 1);
-            var7.e3(29);
-            var7.a((SdkString)var18, 1, var11, var19, 20);
-            int var21 = var8.k(var9, var20);
-            if (var5 == 36 && !var8.d3(var9, var21)) {
-               var21 = -1;
+         for (int index = 0; index < itemCount; index++) {
+            text = canvas.beginString();
+            canvas.appendInt(index + 1);
+            canvas.appendStringId(29);
+            canvas.drawString((SdkString)text, 1, iconX, textY, 20);
+            int itemId = neighborhood.simKnownId(category, index);
+            if (listKind == 36 && !neighborhood.simKnowsWell(category, itemId)) {
+               itemId = -1;
             }
 
-            if (var21 != -1) {
-               short var22 = var8.f2(var21);
-               var7.a2(var22, 1, var13, var19, 20);
+            if (itemId != -1) {
+               short iconId = neighborhood.itemNameText(itemId);
+               canvas.drawStringById(iconId, 1, labelX, textY, 20);
             } else {
-               SpriteRenderer.setColor(var1, 0);
-               var1.fillRect(var13, var19 + var15, var4 - var16, 1);
+               SpriteRenderer.setColor(graphics, 0);
+               graphics.fillRect(labelX, textY + rowH, width - halfW, 1);
             }
 
-            var19 += this.e;
+            textY += this.textLineHeight;
          }
 
-         if (var5 == 36) {
-            ((GameScreen)this).d2(var1, var2, var3, var4, var6);
-         } else if (var5 == 33) {
-            ((GameScreen)this).e(var1, var2, var3, var4, var6);
+         if (listKind == 36) {
+            ((GameScreen)this).drawScrollBar(graphics, x, y, width, height);
+         } else if (listKind == 33) {
+            ((GameScreen)this).drawScrollHint(graphics, x, y, width, height);
          }
       }
 
-      return var6;
+      return height;
    }
 
-   public final void l2(int var1, int var2) {
-      this.setValue(0, var2);
-      this.canvas.a(var1, 1, this.g);
+   public final void showInfoPanel(int textId, int value) {
+      this.setValue(0, value);
+      this.canvas.setWrappedString(textId, 1, this.dialogWidth);
    }
 
-   public final void b(Graphics var1) {
-      this.a(var1, 1);
+   public final void drawPageOne(Graphics graphics) {
+      this.drawPanel(graphics, 1);
    }
 
-   public final void m2(int var1, int var2) {
-      this.setValue(0, var2);
-      this.canvas.a(var1, 1, this.d);
-      this.m = 0;
+   public final void showPanelTwo(int textId, int value) {
+      this.setValue(0, value);
+      this.canvas.setWrappedString(textId, 1, this.listY);
+      this.menuScroll = 0;
    }
 
-   public final void c(Graphics var1) {
-      this.a(var1, 2);
+   public final void drawPageTwo(Graphics graphics) {
+      this.drawPanel(graphics, 2);
    }
 
-   public final void j2(int var1) {
-      if (this.matchesInput(var1, 0, 8196, 0)) {
-         this.m = Math.max(0, this.m - 1);
+   public final void scrollMenu(int keyState) {
+      if (this.matchesInput(keyState, 0, 8196, 0)) {
+         this.menuScroll = Math.max(0, this.menuScroll - 1);
       }
 
-      if (this.matchesInput(var1, 0, 16640, 0) && this.canvas.c() > this.m + this.a3) {
-         this.m++;
+      if (this.matchesInput(keyState, 0, 16640, 0) && this.canvas.wrappedLineCount() > this.menuScroll + this.visibleLineCount) {
+         this.menuScroll++;
       }
    }
 
-   public final void a(Graphics var1, short[] var2, int var3) {
-      this.a(var1, var2, var3, null);
+   public final void drawCaption(Graphics graphics, short[] text, int align) {
+      this.drawTwoColumnList(graphics, text, align, null);
    }
 
-   public final void a(Graphics var1, short[] var2, int var3, SdkString[] var4) {
-      GameCanvas var5 = this.canvas;
-      Lot var6 = this.canvas.a24;
-      short var7 = var2[0];
-      short var8 = var2[3];
-      short var9 = var2[2];
-      short var10;
-      int var11 = (var10 = var2[4]) != -1 ? Math.min((int)var10, (int)var7) : var7;
-      int var12 = var5.getWidth();
-      int var13 = var5.getHeight();
-      int var14 = (var3 & 1) != 0 ? 4 : 0;
-      int var15;
-      boolean var16;
-      if (var16 = (var3 & 6) != 0) {
-         var15 = var12 >> 1;
-      } else if ((var3 & 8) != 0) {
-         var15 = var12 >> 1;
+   public final void drawTwoColumnList(Graphics graphics, short[] data, int flags, SdkString[] labels) {
+      GameCanvas canvas = this.canvas;
+      Lot lot = this.canvas.lot;
+      short rowCount = data[0];
+      short firstIndex = data[3];
+      short selectedIndex = data[2];
+      short maxRows;
+      int rowsShown = (maxRows = data[4]) != -1 ? Math.min((int)maxRows, (int)rowCount) : rowCount;
+      int screenW = canvas.getWidth();
+      int screenH = canvas.getHeight();
+      int border = (flags & 1) != 0 ? 4 : 0;
+      int panelW;
+      boolean centered;
+      if (centered = (flags & 6) != 0) {
+         panelW = screenW >> 1;
+      } else if ((flags & 8) != 0) {
+         panelW = screenW >> 1;
       } else {
-         var15 = var12 * 4 / 5;
+         panelW = screenW * 4 / 5;
       }
 
-      int var17;
-      int var18 = (var17 = (var3 & 16) == 0 ? 14 : 0) + 7 + 15 * var11 + 1 + (var14 << 1);
-      int var19;
-      if ((var3 & 2) != 0) {
-         var19 = var6.a6 + 3;
-      } else if ((var3 & 4) != 0) {
-         var19 = var6.a6 + var5.getWidth() - var15 - 3;
-      } else if ((var3 & 8) != 0) {
-         var19 = 3;
+      int headerH;
+      int panelH = (headerH = (flags & 16) == 0 ? 14 : 0) + 7 + 15 * rowsShown + 1 + (border << 1);
+      int panelX;
+      if ((flags & 2) != 0) {
+         panelX = lot.boundsX + 3;
+      } else if ((flags & 4) != 0) {
+         panelX = lot.boundsX + canvas.getWidth() - panelW - 3;
+      } else if ((flags & 8) != 0) {
+         panelX = 3;
       } else {
-         var19 = var12 - var15 >> 1;
+         panelX = screenW - panelW >> 1;
       }
 
-      int var20;
-      if (var16) {
-         var20 = (var6.b5 + var6.d6 - var18 >> 1) - ((var3 & 2) != 0 ? 15 : 0);
+      int panelY;
+      if (centered) {
+         panelY = (lot.boundsY + lot.boundsHeight - panelH >> 1) - ((flags & 2) != 0 ? 15 : 0);
       } else {
-         var20 = var13 - 15 - var18 >> 1;
+         panelY = screenH - 15 - panelH >> 1;
       }
 
-      if (var14 != 0) {
-         boolean var21 = false;
-         byte var22 = 61;
-         if ((var3 & 32) != 0) {
-            var22 = 76;
+      if (border != 0) {
+         boolean unusedFlag = false;
+         byte shadeColor = 61;
+         if ((flags & 32) != 0) {
+            shadeColor = 76;
          }
 
-         SpriteRenderer.setColor(var1, 77);
-         var1.drawRect(var19, var20, var15, var18);
-         SpriteRenderer.setColor(var1, var22);
-         d(var1, var19 + 1, var20 + 1, var15 - 1, var18 - 1, var14 - 1);
-         var19 += var14;
-         var20 += var14;
-         var15 -= var14 << 1;
-         var18 -= var14 << 1;
+         SpriteRenderer.setColor(graphics, 77);
+         graphics.drawRect(panelX, panelY, panelW, panelH);
+         SpriteRenderer.setColor(graphics, shadeColor);
+         drawFrameBorder(graphics, panelX + 1, panelY + 1, panelW - 1, panelH - 1, border - 1);
+         panelX += border;
+         panelY += border;
+         panelW -= border << 1;
+         panelH -= border << 1;
       }
 
-      boolean var35 = var11 != var7;
-      int var36 = var19 + 3;
-      int var23 = var15 - 6 + (var35 ? -9 : 1);
-      int var24 = var36 + (var23 >> 1);
-      SpriteRenderer.setColor(var1, 76);
-      var1.fillRect(var19, var20, var15, var18);
-      SpriteRenderer.setColor(var1, 77);
-      var1.drawRect(var19, var20, var15, var18);
-      if ((var3 & 16) == 0) {
-         var1.fillRect(var19, var20 + var17, var15, 1);
-         var5.a(0, var1, var2[1], 0, var19 + 3, var20 + 0, var15 - 6, 17);
+      boolean scrollable = rowsShown != rowCount;
+      int textX = panelX + 3;
+      int rowW = panelW - 6 + (scrollable ? -9 : 1);
+      int centerX = textX + (rowW >> 1);
+      SpriteRenderer.setColor(graphics, 76);
+      graphics.fillRect(panelX, panelY, panelW, panelH);
+      SpriteRenderer.setColor(graphics, 77);
+      graphics.drawRect(panelX, panelY, panelW, panelH);
+      if ((flags & 16) == 0) {
+         graphics.fillRect(panelX, panelY + headerH, panelW, 1);
+         canvas.drawMarqueeId(0, graphics, data[1], 0, panelX + 3, panelY + 0, panelW - 6, 17);
       }
 
-      if (var35) {
-         int var25 = var19 + var15 - b();
-         int var26 = var20 + var17 + 2;
-         int var27 = var18 - var17 - 4;
-         this.a(var1, var25, var26, var27, var8, var11, var7, false);
+      if (scrollable) {
+         int scrollbarX = panelX + panelW - scrollbarWidth();
+         int scrollbarY = panelY + headerH + 2;
+         int scrollbarH = panelH - headerH - 4;
+         this.drawScrollbar(graphics, scrollbarX, scrollbarY, scrollbarH, firstIndex, rowsShown, rowCount, false);
       }
 
-      int var37 = var20 + var17 + 7;
+      int rowY = panelY + headerH + 7;
 
-      for (int var38 = 0; var38 < var11; var38++) {
-         int var39 = var8 + var38;
-         byte var28 = 1;
-         short var29 = -1;
-         if (var4 == null) {
-            var29 = var2[5 + var39];
+      for (int row = 0; row < rowsShown; row++) {
+         int index = firstIndex + row;
+         byte colorIndex = 1;
+         short iconId = -1;
+         if (labels == null) {
+            iconId = data[5 + index];
          }
 
-         if (var9 == var39 && var29 != 274 && var29 != 275) {
-            var28 = 0;
-            if ((var3 & 32) != 0) {
-               SpriteRenderer.setColor(var1, 1);
-               var1.fillRect(var36, var37, var23, 15);
-            } else if (var16) {
-               SpriteRenderer.setColor(var1, 77);
-               var1.fillRect(var36, var37, var23, 15);
+         if (selectedIndex == index && iconId != 274 && iconId != 275) {
+            colorIndex = 0;
+            if ((flags & 32) != 0) {
+               SpriteRenderer.setColor(graphics, 1);
+               graphics.fillRect(textX, rowY, rowW, 15);
+            } else if (centered) {
+               SpriteRenderer.setColor(graphics, 77);
+               graphics.fillRect(textX, rowY, rowW, 15);
             } else {
-               l(var1, var36, var37, var23, 15);
+               drawSeparator(graphics, textX, rowY, rowW, 15);
             }
          }
 
-         int var30;
-         if ((var30 = var5.c(var29)) != -1) {
-            int var31 = var5.a2(var29, var28) + var5.a3(var28);
-            int var32 = var5.a2(var30, var28);
-            int var33;
-            int var34 = (var33 = var24 - (var31 + var32 >> 1)) + var31;
-            var5.a2(var29, var28, var33, var37, 20);
-            var5.a2(var30, var28, var34, var37, 20);
-         } else if (var29 != -1) {
-            if (var9 == var39) {
-               var5.a(1, var1, var29, var28, var36, var37, var23, 17);
+         int secondIcon;
+         if ((secondIcon = canvas.optionStringId(iconId)) != -1) {
+            int iconW = canvas.stringWidthById(iconId, colorIndex) + canvas.spaceWidth(colorIndex);
+            int secondW = canvas.stringWidthById(secondIcon, colorIndex);
+            int secondX;
+            int labelX = (secondX = centerX - (iconW + secondW >> 1)) + iconW;
+            canvas.drawStringById(iconId, colorIndex, secondX, rowY, 20);
+            canvas.drawStringById(secondIcon, colorIndex, labelX, rowY, 20);
+         } else if (iconId != -1) {
+            if (selectedIndex == index) {
+               canvas.drawMarqueeId(1, graphics, iconId, colorIndex, textX, rowY, rowW, 17);
             } else {
-               var5.a2(var1, var29, var28, var36, var37, var23, 17);
+               canvas.drawTextById(graphics, iconId, colorIndex, textX, rowY, rowW, 17);
             }
          } else {
-            SdkString var40 = var4[var39];
-            if (var9 == var39) {
-               var5.a(1, var1, var40, var28, var36, var37, var23, 17);
+            SdkString text = labels[index];
+            if (selectedIndex == index) {
+               canvas.drawMarqueeText(1, graphics, text, colorIndex, textX, rowY, rowW, 17);
             } else {
-               var5.a(var1, var40, var28, var36, var37, var23, 17);
+               canvas.drawTextClipped(graphics, text, colorIndex, textX, rowY, rowW, 17);
             }
          }
 
-         var37 += 15;
+         rowY += 15;
       }
    }
 
-   public static void l(Graphics var0, int var1, int var2, int var3, int var4) {
-      SpriteRenderer.setColor(var0, 62);
-      var0.fillRect(var1, var2, var3, 1);
-      SpriteRenderer.setColor(var0, 63);
-      var0.fillRect(var1, var2 + 1, var3, var4 - 3);
-      SpriteRenderer.setColor(var0, 64);
-      var0.fillRect(var1, var2 + var4 - 2, var3, 1);
+   public static void drawSeparator(Graphics graphics, int x, int y, int width, int height) {
+      SpriteRenderer.setColor(graphics, 62);
+      graphics.fillRect(x, y, width, 1);
+      SpriteRenderer.setColor(graphics, 63);
+      graphics.fillRect(x, y + 1, width, height - 3);
+      SpriteRenderer.setColor(graphics, 64);
+      graphics.fillRect(x, y + height - 2, width, 1);
    }
 
-   public final void a(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7, boolean var8) {
-      var2 += 3;
-      int var9 = SpriteRenderer.frameHeight(599, 0);
-      int var10 = var3 + var9 + 1 + 2;
-      int var11 = var4 - (var9 + 1 + 2 << 1);
-      int var12;
-      int var13;
-      byte var14;
-      int var15;
-      int var16;
-      if (var6 >= var7) {
-         var12 = 0;
-         var13 = 0;
-         var14 = 0;
-         var15 = var10;
-         var16 = var11;
+   public final void drawScrollbar(Graphics graphics, int x, int y, int height, int offset, int visibleCount, int totalCount, boolean drawTrack) {
+      x += 3;
+      int capH = SpriteRenderer.frameHeight(599, 0);
+      int trackY = y + capH + 1 + 2;
+      int trackH = height - (capH + 1 + 2 << 1);
+      int topCapFrame;
+      int bottomCapFrame;
+      byte thumbFrame;
+      int thumbY;
+      int thumbH;
+      if (visibleCount >= totalCount) {
+         topCapFrame = 0;
+         bottomCapFrame = 0;
+         thumbFrame = 0;
+         thumbY = trackY;
+         thumbH = trackH;
       } else {
-         var12 = var5 > 0 ? 1 : 0;
-         var13 = var5 + var6 < var7 ? 1 : 0;
-         var14 = 2;
-         var16 = Math.max(18, var11 * var6 / var7);
-         var15 = var10 + (var11 - var16) * var5 / (var7 - var6);
+         topCapFrame = offset > 0 ? 1 : 0;
+         bottomCapFrame = offset + visibleCount < totalCount ? 1 : 0;
+         thumbFrame = 2;
+         thumbH = Math.max(18, trackH * visibleCount / totalCount);
+         thumbY = trackY + (trackH - thumbH) * offset / (totalCount - visibleCount);
       }
 
-      int var17 = var3 + 2;
-      int var18 = var3 + var4 - 2 - var9;
-      SpriteRenderer.drawFrame(var1, 599, var12, var2, var17);
-      SpriteRenderer.drawFrame(var1, 598, var13, var2, var18);
-      if (var14 == 2) {
-         a2(var1, var2, var10, var11, 1);
+      int topY = y + 2;
+      int bottomY = y + height - 2 - capH;
+      SpriteRenderer.drawFrame(graphics, 599, topCapFrame, x, topY);
+      SpriteRenderer.drawFrame(graphics, 598, bottomCapFrame, x, bottomY);
+      if (thumbFrame == 2) {
+         drawScrollThumb(graphics, x, trackY, trackH, 1);
       }
 
-      a2(var1, var2, var15, var16, var14);
-      if (var8) {
-         SpriteRenderer.setColor(var1, 77);
-         int var19 = var2 - 2;
-         int var20 = SpriteRenderer.frameWidth(602, 0) + 4;
-         var1.fillRect(var19, var3, var20, 1);
-         var1.fillRect(var19, var3 + var4 - 1, var20, 1);
-         var1.fillRect(var19 + var20, var3, 1, var4);
+      drawScrollThumb(graphics, x, thumbY, thumbH, thumbFrame);
+      if (drawTrack) {
+         SpriteRenderer.setColor(graphics, 77);
+         int lineX = x - 2;
+         int lineW = SpriteRenderer.frameWidth(602, 0) + 4;
+         graphics.fillRect(lineX, y, lineW, 1);
+         graphics.fillRect(lineX, y + height - 1, lineW, 1);
+         graphics.fillRect(lineX + lineW, y, 1, height);
       }
    }
 
-   private static void a2(Graphics var0, int var1, int var2, int var3, int var4) {
-      int var5 = SpriteRenderer.frameHeight(601, var4);
-      int var6 = SpriteRenderer.frameHeight(600, var4);
-      int var7 = var0.getClipX();
-      int var8 = var0.getClipY();
-      int var9 = var0.getClipWidth();
-      int var10 = var0.getClipHeight();
-      var0.setClip(var7, var2, var9, var3);
-      SpriteRenderer.drawFrame(var0, 601, var4, var1, var2);
-      SpriteRenderer.drawFrame(var0, 600, var4, var1, var2 + var3 - var6);
-      var2 += var5;
-      var3 -= var5 + var6;
-      var0.setClip(var7, var2, var9, var3);
-      SpriteRenderer.drawFrame(var0, 602, var4, var1, var2);
-      var0.setClip(var7, var8, var9, var10);
+   private static void drawScrollThumb(Graphics graphics, int x, int y, int height, int frame) {
+      int capH = SpriteRenderer.frameHeight(601, frame);
+      int bottomCapH = SpriteRenderer.frameHeight(600, frame);
+      int clipX = graphics.getClipX();
+      int clipY = graphics.getClipY();
+      int clipW = graphics.getClipWidth();
+      int clipH = graphics.getClipHeight();
+      graphics.setClip(clipX, y, clipW, height);
+      SpriteRenderer.drawFrame(graphics, 601, frame, x, y);
+      SpriteRenderer.drawFrame(graphics, 600, frame, x, y + height - bottomCapH);
+      y += capH;
+      height -= capH + bottomCapH;
+      graphics.setClip(clipX, y, clipW, height);
+      SpriteRenderer.drawFrame(graphics, 602, frame, x, y);
+      graphics.setClip(clipX, clipY, clipW, clipH);
    }
 
-   public static int b() {
+   public static int scrollbarWidth() {
       return SpriteRenderer.frameWidth(602, 0) + 6;
    }
 
-   public static int a(int var0, int var1, int var2, int var3) {
-      if (var0 != var1) {
-         int var4;
-         int var5;
-         if ((var5 = (var4 = var1 - var0) * var2 >> var3) == 0) {
-            var5 = FixedMath.sign(var4);
-         } else if (var4 > 0 && var0 + var5 > var1 || var4 < 0 && var0 + var5 < var1) {
-            var5 = var4;
+   public static int approach(int current, int target, int numerator, int shift) {
+      if (current != target) {
+         int delta;
+         int step;
+         if ((step = (delta = target - current) * numerator >> shift) == 0) {
+            step = FixedMath.sign(delta);
+         } else if (delta > 0 && current + step > target || delta < 0 && current + step < target) {
+            step = delta;
          }
 
-         var0 += var5;
+         current += step;
       }
 
-      return var0;
+      return current;
    }
 }

@@ -47,9 +47,9 @@ public final class SdkSound implements PlayerListener {
             this.player.realize();
             this.player.prefetch();
             this.player.addPlayerListener(this);
-         } catch (MediaException var4) {
-         } catch (IllegalStateException var5) {
-         } catch (SecurityException var6) {
+         } catch (MediaException mediaError) {
+         } catch (IllegalStateException stateError) {
+         } catch (SecurityException securityError) {
          }
       }
    }
@@ -122,7 +122,7 @@ public final class SdkSound implements PlayerListener {
 
    public final void vibrate(int duration) {
       duration = duration * com.ea.sims3.SdkConfig.vibrateScaleDen() / com.ea.sims3.SdkConfig.vibrateScaleNum();
-      this.display = Display.getDisplay(GameCanvas.a7().a);
+      this.display = Display.getDisplay(GameCanvas.instance().app);
       this.display.vibrate(duration);
    }
 

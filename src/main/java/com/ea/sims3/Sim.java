@@ -3,1116 +3,1116 @@ package com.ea.sims3;
 import javax.microedition.lcdui.Graphics;
 
 public final class Sim extends Entity {
-   private int j2;
-   private int k2;
-   public int f2;
-   private int l2;
-   private int m2;
-   private int n2;
-   private int o2;
-   public Entity a10;
-   public int g2;
-   private int p2;
-   public int h2;
-   public Entity b6;
-   private int q;
-   private int r;
-   private int s;
-   private Entity c3;
-   private int t;
-   private int u;
-   private int v;
-   private int w;
-   private Entity d3;
-   private int x;
-   private int y;
-   private int z;
-   private int[] c4;
-   private int A;
-   private boolean b7;
-   private int B;
-   private int C;
-   private int D;
-   private int E;
-   private int F;
-   private int G;
-   private boolean c5;
-   private boolean d4;
-   public int i2;
-   private int H;
-   private boolean e2;
-   private int I;
-   private int J = -551;
-   private static final int[] d5 = new int[]{4, 2, 8, 16, 64};
+   private int spriteVariant;
+   private int poseId;
+   public int recolorIndex;
+   private int motionState;
+   private int stateTime;
+   private int poseIndex;
+   private int targetPose;
+   public Entity interactionTarget;
+   public int actionId;
+   private int actionStep;
+   public int actionPhase;
+   public Entity actionTarget;
+   private int actionObjectId;
+   private int actionValue;
+   private int queuedActionId;
+   private Entity queuedTarget;
+   private int queuedObjectId;
+   private int queuedValue;
+   private int behaviourFlags;
+   private int autonomyTimer;
+   private Entity reservedTarget;
+   private int reservedSlot;
+   private int destX;
+   private int destY;
+   private int[] path;
+   private int pathIndex;
+   private boolean detourPath;
+   private int targetLastX;
+   private int targetLastY;
+   private int partnerId;
+   private int partnerTimer;
+   private int partnerCooldown;
+   private int poseAnimId;
+   private boolean useTimer;
+   private boolean waitForTargetTime;
+   public int timer;
+   private int overlayPoseAnimId;
+   private boolean fadeOverlay;
+   private int overlaySpriteId;
+   private int lastFacing = -551;
+   private static final int[] AUTONOMY_FLAGS = new int[]{4, 2, 8, 16, 64};
 
-   public Sim(GameScreen var1) {
-      super(var1);
+   public Sim(GameScreen screen) {
+      super(screen);
    }
 
-   public final void a2(int var1, int var2, int var3, int var4, int var5) {
-      super.a2(var1, var2, var3, var4, var5);
-      this.l2 = 0;
-      this.m2 = 0;
-      this.n2 = 0;
-      this.o2 = 0;
-      this.a10 = null;
-      this.g2 = 0;
-      this.p2 = 0;
-      this.h2 = 0;
-      this.b6 = null;
-      this.q = 0;
-      this.r = 0;
-      this.s = -1;
-      this.c3 = null;
-      this.t = 0;
-      this.u = 0;
-      this.v = 0;
-      this.w = 0;
-      this.d3 = null;
-      this.x = -1;
-      this.y = super.posX;
-      this.z = super.posY;
-      this.c4 = null;
-      this.A = 0;
-      this.b7 = false;
-      this.B = 0;
-      this.C = 0;
-      this.D = -1;
-      this.E = 0;
-      this.F = -1;
-      this.G = -1;
-      this.c5 = true;
-      this.i2 = 0;
-      this.e2 = false;
-      this.I = -1;
+   public final void place(int type, int startX, int startY, int facing, int simId) {
+      super.place(type, startX, startY, facing, simId);
+      this.motionState = 0;
+      this.stateTime = 0;
+      this.poseIndex = 0;
+      this.targetPose = 0;
+      this.interactionTarget = null;
+      this.actionId = 0;
+      this.actionStep = 0;
+      this.actionPhase = 0;
+      this.actionTarget = null;
+      this.actionObjectId = 0;
+      this.actionValue = 0;
+      this.queuedActionId = -1;
+      this.queuedTarget = null;
+      this.queuedObjectId = 0;
+      this.queuedValue = 0;
+      this.behaviourFlags = 0;
+      this.autonomyTimer = 0;
+      this.reservedTarget = null;
+      this.reservedSlot = -1;
+      this.destX = super.posX;
+      this.destY = super.posY;
+      this.path = null;
+      this.pathIndex = 0;
+      this.detourPath = false;
+      this.targetLastX = 0;
+      this.targetLastY = 0;
+      this.partnerId = -1;
+      this.partnerTimer = 0;
+      this.partnerCooldown = -1;
+      this.poseAnimId = -1;
+      this.useTimer = true;
+      this.timer = 0;
+      this.fadeOverlay = false;
+      this.overlaySpriteId = -1;
       this.animatorFor(2);
       this.animatorFor(1);
-      this.j2 = -1;
-      this.k2 = 0;
-      Neighborhood var6 = this.neighborhood();
-      if (super.screen.b5()) {
-         this.f2 = var6.T(var5);
-         this.v2(2);
+      this.spriteVariant = -1;
+      this.poseId = 0;
+      Neighborhood neighborhood = this.neighborhood();
+      if (super.screen.isNewNeighborhood()) {
+         this.recolorIndex = neighborhood.simSpareByte(simId);
+         this.setSpriteVariant(2);
       } else {
-         if (var6.i(var5, 0) == 0) {
-            this.v2(0);
+         if (neighborhood.simAttribute(simId, 0) == 0) {
+            this.setSpriteVariant(0);
          } else {
-            this.v2(1);
+            this.setSpriteVariant(1);
          }
 
-         this.f2 = -1;
+         this.recolorIndex = -1;
       }
 
-      if (var5 == 0) {
-         for (int var7 = 0; var7 < 6; var7++) {
-            int var8;
-            if ((var8 = var6.A(var7)) != -1) {
-               this.t2(var8);
+      if (simId == 0) {
+         for (int stateIndex = 0; stateIndex < 6; stateIndex++) {
+            int locomotionState;
+            if ((locomotionState = neighborhood.activeTaskAt(stateIndex)) != -1) {
+               this.setLocomotionState(locomotionState);
             }
          }
       }
 
-      this.w2(1);
+      this.setMotionState(1);
    }
 
-   public final void advanceTime(int var1) {
-      if (this.m2 < 3000000) {
-         this.m2 += var1;
+   public final void advanceTime(int delta) {
+      if (this.stateTime < 3000000) {
+         this.stateTime += delta;
       }
 
-      if (this.D != -1) {
-         this.E += var1;
-         if (this.E > 20000) {
-            this.Q();
+      if (this.partnerId != -1) {
+         this.partnerTimer += delta;
+         if (this.partnerTimer > 20000) {
+            this.unlinkPartner();
          }
-      } else if (this.F >= 0) {
-         this.F += var1;
-         if (this.F > 20000) {
-            this.F = -1;
+      } else if (this.partnerCooldown >= 0) {
+         this.partnerCooldown += delta;
+         if (this.partnerCooldown > 20000) {
+            this.partnerCooldown = -1;
          }
       }
 
-      switch (this.l2) {
+      switch (this.motionState) {
          case 1:
-            this.x2(var1);
+            this.updateIdle(delta);
             return;
          case 2:
-            this.y2(var1);
+            this.updateInteraction(delta);
             return;
          case 3:
-            this.z2(var1);
+            this.updateWalking(delta);
             return;
          case 4:
-            this.A2(var1);
+            this.updateTimedAction(delta);
             return;
          case 5:
-            this.B2(var1);
+            this.updateSocial(delta);
             return;
          case 6:
-            this.C2(var1);
+            this.updateApproach(delta);
             return;
          case 7:
-            this.D2(var1);
+            this.updateDiningPartner(delta);
             return;
          case 8:
-            this.E2(var1);
+            this.updateWaiting(delta);
       }
    }
 
-   public final void a(Graphics var1) {
-      if (this.l2 != 8 && this.f2 != -1) {
-         Lot var2;
-         int var3 = (var2 = this.lot()).d();
-         int var4 = var2.e();
-         int var5 = var3 + var2.c(super.posX, super.posY);
-         int var6 = var4 + var2.d(super.posX, super.posY);
-         Animator var7 = null;
-         if (this.k2 != 50) {
-            if (!super.screen.b5() && !super.screen.e3() && (this.o2 == 0 || this.o2 == 6)) {
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, 33, 0, var5, var6);
+   public final void render(Graphics gfx) {
+      if (this.motionState != 8 && this.recolorIndex != -1) {
+         Lot lot;
+         int lotOriginX = (lot = this.lot()).viewCenterX();
+         int lotOriginY = lot.viewCenterY();
+         int screenX = lotOriginX + lot.toScreenX(super.posX, super.posY);
+         int screenY = lotOriginY + lot.toScreenY(super.posX, super.posY);
+         Animator bodyAnimator = null;
+         if (this.poseId != 50) {
+            if (!super.screen.isNewNeighborhood() && !super.screen.isGoalPageActive() && (this.targetPose == 0 || this.targetPose == 6)) {
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 33, 0, screenX, screenY);
             }
 
-            com.ea.sims3.SpriteRenderer.setRecolorIndex(this.f2);
-            var7 = this.animatorAt(0);
-            if (!super.screen.b5()) {
-               int var8 = var7.animId;
-               int var9 = var7.frame;
-               this.a2(var1, var8, var9, var5, var6);
+            com.ea.sims3.SpriteRenderer.setRecolorIndex(this.recolorIndex);
+            bodyAnimator = this.animatorAt(0);
+            if (!super.screen.isNewNeighborhood()) {
+               int animId = bodyAnimator.animId;
+               int frame = bodyAnimator.frame;
+               this.drawSprite(gfx, animId, frame, screenX, screenY);
             } else {
-               var7.draw(var1, var5, var6);
-               if (super.b == 0) {
-                  super.screen.a(var1, var5, var6 - 16);
+               bodyAnimator.draw(gfx, screenX, screenY);
+               if (super.variant == 0) {
+                  super.screen.drawCursorAnimator(gfx, screenX, screenY - 16);
                }
             }
 
-            if (this.a4() != null && this.a4().a10 == null) {
-               this.a4().b(var1);
+            if (this.partnerSim() != null && this.partnerSim().interactionTarget == null) {
+               this.partnerSim().drawBody(gfx);
             }
 
             com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
          }
 
-         Animator var17 = this.animatorAt(2);
-         if (this.i2 > 0 && var17.isRunning()) {
-            int[] var18 = com.ea.sims3.Entity.a;
-            int var13 = (this.e2 ? com.ea.sims3.FixedMath.smoothStep(1000, 2000, this.i2) : 65536) * 10;
-            int var15 = var6 + (var13 >> 16) - 60 - 10;
-            com.ea.sims3.SpriteRenderer.drawAnimator(var1, var17, var5, var15);
-            if (this.h2 == 5) {
-               var17.matchesFrame(var18, 0);
-               com.ea.sims3.SpriteRenderer.drawFrame(var1, this.I, 0, var5 + var18[0], var15 + var18[1]);
+         Animator overlayAnimator = this.animatorAt(2);
+         if (this.timer > 0 && overlayAnimator.isRunning()) {
+            int[] frameOffsets = com.ea.sims3.Entity.boundsScratch;
+            int bubbleOffset = (this.fadeOverlay ? com.ea.sims3.FixedMath.smoothStep(1000, 2000, this.timer) : 65536) * 10;
+            int bubbleY = screenY + (bubbleOffset >> 16) - 60 - 10;
+            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, overlayAnimator, screenX, bubbleY);
+            if (this.actionPhase == 5) {
+               overlayAnimator.matchesFrame(frameOffsets, 0);
+               com.ea.sims3.SpriteRenderer.drawFrame(gfx, this.overlaySpriteId, 0, screenX + frameOffsets[0], bubbleY + frameOffsets[1]);
             }
          }
       }
    }
 
-   public final void b(Graphics var1) {
-      Lot var2;
-      int var3;
-      int var4;
-      if ((var3 = (var2 = this.lot()).a(this.j2, this.k2, true)) != 0 && (var4 = var2.i(var3, super.facing)) != 196) {
-         int var5 = var2.d();
-         int var6 = var2.e();
-         int var7;
-         int var8;
-         if (this.k2 == 50) {
-            int[] var9 = com.ea.sims3.Entity.a;
-            this.b6.b(var9);
-            var7 = var5 + var9[0];
-            var8 = var6 + var9[1];
+   public final void drawBody(Graphics gfx) {
+      Lot lot;
+      int spriteId;
+      int animId;
+      if ((spriteId = (lot = this.lot()).framePartAt(this.spriteVariant, this.poseId, true)) != 0 && (animId = lot.frameDataAt(spriteId, super.facing)) != 196) {
+         int lotOriginX = lot.viewCenterX();
+         int lotOriginY = lot.viewCenterY();
+         int screenX;
+         int screenY;
+         if (this.poseId == 50) {
+            int[] offsets = com.ea.sims3.Entity.boundsScratch;
+            this.actionTarget.computeFootprintOffset(offsets);
+            screenX = lotOriginX + offsets[0];
+            screenY = lotOriginY + offsets[1];
          } else {
-            var7 = var5 + var2.c(super.posX, super.posY);
-            var8 = var6 + var2.d(super.posX, super.posY);
+            screenX = lotOriginX + lot.toScreenX(super.posX, super.posY);
+            screenY = lotOriginY + lot.toScreenY(super.posX, super.posY);
          }
 
-         int var10 = this.animatorAt(0).frame;
-         com.ea.sims3.SpriteRenderer.setRecolorIndex(this.f2);
-         this.a2(var1, var4, var10, var7, var8);
+         int frame = this.animatorAt(0).frame;
+         com.ea.sims3.SpriteRenderer.setRecolorIndex(this.recolorIndex);
+         this.drawSprite(gfx, animId, frame, screenX, screenY);
          com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
       }
    }
 
-   private void a2(Graphics var1, int var2, int var3, int var4, int var5) {
-      int var6 = this.j2 == 0 ? 489 : 382;
-      int var7 = this.neighborhood().i(super.b, 2) + 1;
-      int[] var8 = null;
-      boolean var9;
-      if (var9 = super.b == 0) {
-         var8 = com.ea.sims3.Entity.a;
+   private void drawSprite(Graphics gfx, int animId, int frame, int screenX, int screenY) {
+      int bodyBase = this.spriteVariant == 0 ? 489 : 382;
+      int skinTone = this.neighborhood().simAttribute(super.variant, 2) + 1;
+      int[] frameOffsets = null;
+      boolean isPlayer;
+      if (isPlayer = super.variant == 0) {
+         frameOffsets = com.ea.sims3.Entity.boundsScratch;
       }
 
-      boolean var10 = com.ea.sims3.SpriteRenderer.drawParts(var1, var2, var3, var4, var5, var6, var7, var8);
-      if (var9 && var10) {
-         super.screen.a(var1, var8[0], var8[1]);
-      }
-   }
-
-   public final int c() {
-      return this.neighborhood().R(super.b);
-   }
-
-   private final void v2(int var1) {
-      if (this.j2 != var1) {
-         this.j2 = var1;
-         int var2 = this.k2;
-         this.k2 = -1;
-         this.r2(var2);
+      boolean drawn = com.ea.sims3.SpriteRenderer.drawParts(gfx, animId, frame, screenX, screenY, bodyBase, skinTone, frameOffsets);
+      if (isPlayer && drawn) {
+         super.screen.drawCursorAnimator(gfx, frameOffsets[0], frameOffsets[1]);
       }
    }
 
-   public final void r2(int var1) {
-      boolean var2 = super.facing == 0 || super.facing == 1;
-      var1 = this.lot().a(var1, var2);
-      if (this.k2 != var1) {
-         this.k2 = var1;
-         int var3 = this.lot().a(this.j2, var1, false);
-         this.setValueB(var3);
+   public final int interactionAnimId() {
+      return this.neighborhood().simNameText(super.variant);
+   }
+
+   private final void setSpriteVariant(int variant) {
+      if (this.spriteVariant != variant) {
+         this.spriteVariant = variant;
+         int previousPose = this.poseId;
+         this.poseId = -1;
+         this.setPose(previousPose);
       }
    }
 
-   private final void w2(int var1) {
-      if (var1 == 1 && this.l2 == 4 && this.n2 == 2 && super.b == 0 && this.J != -551) {
-         this.n2(this.J);
+   public final void setPose(int animId) {
+      boolean horizontal = super.facing == 0 || super.facing == 1;
+      animId = this.lot().resolveObjectId(animId, horizontal);
+      if (this.poseId != animId) {
+         this.poseId = animId;
+         int spriteId = this.lot().framePartAt(this.spriteVariant, animId, false);
+         this.setValueB(spriteId);
+      }
+   }
+
+   private final void setMotionState(int newState) {
+      if (newState == 1 && this.motionState == 4 && this.poseIndex == 2 && super.variant == 0 && this.lastFacing != -551) {
+         this.setFacing(this.lastFacing);
       }
 
-      GameScreen var2 = super.screen;
-      switch (this.l2) {
+      GameScreen screen = super.screen;
+      switch (this.motionState) {
          case 2:
-            if (this.a10 != null && this.n2 == 0) {
-               this.a10.c(this);
-               this.a10 = null;
+            if (this.interactionTarget != null && this.poseIndex == 0) {
+               this.interactionTarget.clearOwner(this);
+               this.interactionTarget = null;
             }
             break;
          case 3:
-            this.J = -551;
-            if (var1 != 3 && var2.b5()) {
-               this.v2(2);
-               if (var2.a11 == this) {
-                  var2.c((Entity) null);
+            this.lastFacing = -551;
+            if (newState != 3 && screen.isNewNeighborhood()) {
+               this.setSpriteVariant(2);
+               if (screen.cameraTarget == this) {
+                  screen.setCameraTarget((Entity) null);
                }
             }
       }
 
       this.addState(128);
-      int var3 = this.l2;
-      this.l2 = var1;
-      this.m2 = 0;
-      switch (var1) {
+      int oldState = this.motionState;
+      this.motionState = newState;
+      this.stateTime = 0;
+      switch (newState) {
          case 1:
-            int var14 = this.n2 == 4
+            int defaultPose = this.poseIndex == 4
                ? 15
-               : (this.n2 == 5 ? 54 : (this.n2 == 1 ? 19 : (this.n2 == 2 ? 19 : (this.n2 == 3 ? 28 : (this.n2 == 6 ? 43 : (this.n2 == 7 ? 36 : 0))))));
-            this.r2(var14);
+               : (this.poseIndex == 5 ? 54 : (this.poseIndex == 1 ? 19 : (this.poseIndex == 2 ? 19 : (this.poseIndex == 3 ? 28 : (this.poseIndex == 6 ? 43 : (this.poseIndex == 7 ? 36 : 0))))));
+            this.setPose(defaultPose);
             break;
          case 2:
-            byte var13 = -1;
-            int var15 = this.n2;
-            Entity var16 = this.b6;
-            switch (this.n2) {
+            byte pose = -1;
+            int newPoseIndex = this.poseIndex;
+            Entity target = this.actionTarget;
+            switch (this.poseIndex) {
                case 0:
                default:
-                  if (this.o2 == 7) {
-                     var13 = 34;
-                     var15 = 7;
-                     this.a10 = var16;
-                     var16.w();
-                  } else if (this.o2 == 3) {
-                     var13 = 27;
-                     var15 = 3;
+                  if (this.targetPose == 7) {
+                     pose = 34;
+                     newPoseIndex = 7;
+                     this.interactionTarget = target;
+                     target.playModeOneAnimation();
+                  } else if (this.targetPose == 3) {
+                     pose = 27;
+                     newPoseIndex = 3;
                   } else {
-                     if (this.o2 != 1 && this.o2 != 4 && this.o2 != 5) {
-                        if (this.o2 == 6) {
-                           var13 = 44;
-                           var15 = 6;
+                     if (this.targetPose != 1 && this.targetPose != 4 && this.targetPose != 5) {
+                        if (this.targetPose == 6) {
+                           pose = 44;
+                           newPoseIndex = 6;
                         } else {
-                           var16.b(this);
-                           this.a10 = var16;
-                           int var7 = 0;
-                           int var8 = 0;
+                           target.setOwner(this);
+                           this.interactionTarget = target;
+                           int offsetX = 0;
+                           int offsetY = 0;
                            switch (super.facing) {
                               case 0:
                               default:
-                                 var7 = 524288;
+                                 offsetX = 524288;
                                  break;
                               case 1:
-                                 var8 = 524288;
+                                 offsetY = 524288;
                                  break;
                               case 2:
-                                 var7 = -524288;
+                                 offsetX = -524288;
                                  break;
                               case 3:
-                                 var8 = -524288;
+                                 offsetY = -524288;
                            }
 
-                           int var9 = var16.facing;
-                           this.n2(var9);
-                           int var10 = 0;
-                           int var11 = 0;
-                           switch (var9) {
+                           int targetFacing = target.facing;
+                           this.setFacing(targetFacing);
+                           int targetShiftX = 0;
+                           int targetShiftY = 0;
+                           switch (targetFacing) {
                               case 0:
                               default:
-                                 var10 = -196608;
-                                 var7 += 131072;
+                                 targetShiftX = -196608;
+                                 offsetX += 131072;
                                  break;
                               case 1:
-                                 var11 = -196608;
-                                 var8 += 131072;
+                                 targetShiftY = -196608;
+                                 offsetY += 131072;
                                  break;
                               case 2:
-                                 var10 = 196608;
-                                 var7 -= 131072;
+                                 targetShiftX = 196608;
+                                 offsetX -= 131072;
                                  break;
                               case 3:
-                                 var11 = 196608;
-                                 var8 -= 131072;
+                                 targetShiftY = 196608;
+                                 offsetY -= 131072;
                            }
 
-                           if (var16.f3()) {
-                              var16.moveTo(var16.posX + var10, var16.posY + var11);
-                              var16.addState(131072);
+                           if (target.isPassable()) {
+                              target.moveTo(target.posX + targetShiftX, target.posY + targetShiftY);
+                              target.addState(131072);
                            } else {
-                              var7 -= var10;
-                              var8 -= var11;
+                              offsetX -= targetShiftX;
+                              offsetY -= targetShiftY;
                            }
 
-                           this.moveTo(super.posX + var7, super.posY + var8);
-                           var13 = 20;
-                           var15 = 2;
+                           this.moveTo(super.posX + offsetX, super.posY + offsetY);
+                           pose = 20;
+                           newPoseIndex = 2;
                         }
                         break;
                      }
 
-                     this.a10 = var16;
-                     var16.b(this);
-                     var13 = 20;
-                     var15 = 1;
+                     this.interactionTarget = target;
+                     target.setOwner(this);
+                     pose = 20;
+                     newPoseIndex = 1;
                   }
                   break;
                case 1:
-                  if (this.o2 == 0) {
-                     var13 = 18;
-                     var15 = 0;
-                  } else if (this.o2 == 4) {
-                     var13 = 17;
-                     var15 = 4;
-                  } else if (this.o2 == 5) {
-                     var13 = 53;
-                     var15 = 5;
+                  if (this.targetPose == 0) {
+                     pose = 18;
+                     newPoseIndex = 0;
+                  } else if (this.targetPose == 4) {
+                     pose = 17;
+                     newPoseIndex = 4;
+                  } else if (this.targetPose == 5) {
+                     pose = 53;
+                     newPoseIndex = 5;
                   }
                   break;
                case 2:
-                  var13 = 18;
-                  var15 = 0;
+                  pose = 18;
+                  newPoseIndex = 0;
                   break;
                case 3:
-                  var13 = 30;
-                  var15 = 0;
+                  pose = 30;
+                  newPoseIndex = 0;
                   break;
                case 4:
-                  var13 = 16;
-                  var15 = 1;
+                  pose = 16;
+                  newPoseIndex = 1;
                   break;
                case 5:
-                  var13 = 55;
-                  var15 = 1;
+                  pose = 55;
+                  newPoseIndex = 1;
                   break;
                case 6:
-                  var13 = 42;
-                  var15 = 0;
+                  pose = 42;
+                  newPoseIndex = 0;
                   break;
                case 7:
-                  var13 = 35;
-                  var15 = 0;
-                  this.a10.x();
+                  pose = 35;
+                  newPoseIndex = 0;
+                  this.interactionTarget.playModeZeroAnimation();
             }
 
-            this.n2 = var15;
+            this.poseIndex = newPoseIndex;
             this.clearState(128);
-            this.r2(var13);
+            this.setPose(pose);
             break;
          case 3:
-            this.r2(1);
-            if (super.b == 0 && var2.b5()) {
-               if (!super.a7 && var3 != 3) {
-                  var2.c(this);
+            this.setPose(1);
+            if (super.variant == 0 && screen.isNewNeighborhood()) {
+               if (!super.reservedFlag && oldState != 3) {
+                  screen.setCameraTarget(this);
                }
 
-               var2.d2();
+               screen.startMusic();
             }
             break;
          case 4:
-            Neighborhood var12 = this.neighborhood();
-            if (this.H != -1) {
-               this.animatorAt(2).play(this.H, 20);
-               if (this.h2 == 5) {
-                  this.I = var12.M(this.g2);
+            Neighborhood neighborhood = this.neighborhood();
+            if (this.overlayPoseAnimId != -1) {
+               this.animatorAt(2).play(this.overlayPoseAnimId, 20);
+               if (this.actionPhase == 5) {
+                  this.overlaySpriteId = neighborhood.commentText(this.actionId);
                }
             } else {
                this.animatorAt(2).setRunning(false);
             }
 
-            if (this.G == -1) {
-               this.G = var12.I(this.g2);
+            if (this.poseAnimId == -1) {
+               this.poseAnimId = neighborhood.interactionAltText(this.actionId);
             }
 
-            Sim var5 = this.a4();
-            if (this.g2 != 82 && this.g2 != 83) {
-               if (this.g2 == 93) {
-                  var5.clearState(128);
-                  var5.r2(32);
-               } else if (this.g2 == 84) {
-                  int var6 = var5.b;
-                  if (var12.a5(super.b, var6, this.g2)) {
-                     var2.c2(3, -1, var6);
+            Sim partner = this.partnerSim();
+            if (this.actionId != 82 && this.actionId != 83) {
+               if (this.actionId == 93) {
+                  partner.clearState(128);
+                  partner.setPose(32);
+               } else if (this.actionId == 84) {
+                  int partnerId = partner.variant;
+                  if (neighborhood.canUseInteraction(super.variant, partnerId, this.actionId)) {
+                     screen.openDialogPage(3, -1, partnerId);
                   }
                }
-            } else if (var12.a5(super.b, var5.b, this.g2)) {
-               var5.clearState(128);
-               var5.r2(38);
-               this.G = 41;
+            } else if (neighborhood.canUseInteraction(super.variant, partner.variant, this.actionId)) {
+               partner.clearState(128);
+               partner.setPose(38);
+               this.poseAnimId = 41;
             } else {
-               var5.clearState(128);
-               var5.r2(40);
-               this.G = 39;
+               partner.clearState(128);
+               partner.setPose(40);
+               this.poseAnimId = 39;
             }
 
-            if (!this.c5) {
+            if (!this.useTimer) {
                this.clearState(128);
             }
 
-            this.r2(this.G);
+            this.setPose(this.poseAnimId);
             break;
          case 5:
          case 6:
-            this.r2(0);
+            this.setPose(0);
             break;
          case 7:
-            this.a2(this.b6);
-            byte var4 = 7;
-            if (this.a4() != null && (this.a4().g2 == 82 || this.a4().g2 == 83)) {
-               var4 = 0;
+            this.faceEntity(this.actionTarget);
+            byte poseAfterAction = 7;
+            if (this.partnerSim() != null && (this.partnerSim().actionId == 82 || this.partnerSim().actionId == 83)) {
+               poseAfterAction = 0;
             }
 
-            this.r2(var4);
+            this.setPose(poseAfterAction);
          case 8:
          default:
             break;
          case 9:
-            this.a10();
+            this.despawn();
       }
 
-      if (this.l2 == 1 && this.n2 == 2 && super.b == 0) {
-         this.J = super.facing;
+      if (this.motionState == 1 && this.poseIndex == 2 && super.variant == 0) {
+         this.lastFacing = super.facing;
       }
    }
 
-   private final void a(int var1, int var2, int var3, boolean var4, boolean var5) {
-      this.G = var1;
-      this.c5 = var2 >= 0;
-      this.i2 = var2;
-      this.H = var3;
-      this.e2 = var4;
-      this.d4 = var5;
-      this.w2(4);
+   private final void startTimedAction(int idleAnim, int duration, int overlayAnim, boolean fadeOverlay, boolean waitForTargetTime) {
+      this.poseAnimId = idleAnim;
+      this.useTimer = duration >= 0;
+      this.timer = duration;
+      this.overlayPoseAnimId = overlayAnim;
+      this.fadeOverlay = fadeOverlay;
+      this.waitForTargetTime = waitForTargetTime;
+      this.setMotionState(4);
    }
 
-   private final void H() {
-      this.G = -1;
-      this.c5 = false;
-      this.i2 = -1;
-      this.H = -1;
-      this.e2 = false;
-      this.d4 = true;
+   private final void clearTimedAction() {
+      this.poseAnimId = -1;
+      this.useTimer = false;
+      this.timer = -1;
+      this.overlayPoseAnimId = -1;
+      this.fadeOverlay = false;
+      this.waitForTargetTime = true;
    }
 
-   private final void b(int var1, boolean var2) {
-      this.i2 = var1;
-      this.d4 = var2;
-      this.w2(8);
+   private final void waitForTimer(int duration, boolean waitForTargetTime) {
+      this.timer = duration;
+      this.waitForTargetTime = waitForTargetTime;
+      this.setMotionState(8);
    }
 
-   private final void x2(int var1) {
-      this.g2(var1);
-      this.w += var1;
+   private final void updateIdle(int delta) {
+      this.advanceAnimations(delta);
+      this.autonomyTimer += delta;
       if (super.type == 0) {
-         if (this.m2 > 3000 && this.neighborhood().z(10) != -1) {
-            this.a(3, (Entity) null);
+         if (this.stateTime > 3000 && this.neighborhood().activeTaskSlotOf(10) != -1) {
+            this.queueAction(3, (Entity) null);
             return;
          }
 
-         if (this.m2 > 3500 && this.n2 == 0) {
-            int var2;
-            if ((var2 = this.neighborhood().h6) > 4915200) {
-               this.a(5, (Entity) null);
+         if (this.stateTime > 3500 && this.poseIndex == 0) {
+            int balance;
+            if ((balance = this.neighborhood().moodValue) > 4915200) {
+               this.queueAction(5, (Entity) null);
                return;
             }
 
-            if (var2 < -3276800) {
-               this.a(6, (Entity) null);
+            if (balance < -3276800) {
+               this.queueAction(6, (Entity) null);
                return;
             }
          }
       }
 
-      Entity var8;
-      if (this.n2 == 1 && this.a10.a() == 9 && (var8 = super.screen.b4(22)) != null && var8.hasState(64) && this.m2 > 1000) {
-         if (super.b == 0) {
-            this.neighborhood().e3(36);
+      Entity nearbyEntity;
+      if (this.poseIndex == 1 && this.interactionTarget.behaviorClass() == 9 && (nearbyEntity = super.screen.findEntityByObjectType(22)) != null && nearbyEntity.hasState(64) && this.stateTime > 1000) {
+         if (super.variant == 0) {
+            this.neighborhood().unlockAchievement(36);
          }
 
-         byte var10 = 16;
-         if (var8.hasState(32768)) {
-            var10 = 15;
+         byte interactionId = 16;
+         if (nearbyEntity.hasState(32768)) {
+            interactionId = 15;
          }
 
-         this.a(var10, (Entity) null);
+         this.queueAction(interactionId, (Entity) null);
       } else {
-         if (this.n2 == 0 && this.m2 > 5000 && (var8 = super.screen.b4(18)) != null && var8.hasState(64)) {
-            Object var3 = null;
-            int var4 = com.ea.sims3.Lot.f(var8.posX);
-            int var5 = com.ea.sims3.Lot.g(var8.posY);
-            int var6 = com.ea.sims3.Lot.f(super.posX);
-            int var7 = com.ea.sims3.Lot.g(super.posY);
-            if (Math.abs(var6 - var4) + Math.abs(var7 - var5) < 8) {
-               this.a(17, (Entity) null);
+         if (this.poseIndex == 0 && this.stateTime > 5000 && (nearbyEntity = super.screen.findEntityByObjectType(18)) != null && nearbyEntity.hasState(64)) {
+            Object ignored = null;
+            int targetTileX = com.ea.sims3.Lot.toTileX(nearbyEntity.posX);
+            int targetTileY = com.ea.sims3.Lot.toTileY(nearbyEntity.posY);
+            int selfTileX = com.ea.sims3.Lot.toTileX(super.posX);
+            int selfTileY = com.ea.sims3.Lot.toTileY(super.posY);
+            if (Math.abs(selfTileX - targetTileX) + Math.abs(selfTileY - targetTileY) < 8) {
+               this.queueAction(17, (Entity) null);
                return;
             }
          }
 
-         if (this.w > 2500 && this.a11()) {
-            this.w = 0;
-            this.O();
+         if (this.autonomyTimer > 2500 && this.canOccupySlot()) {
+            this.autonomyTimer = 0;
+            this.chooseAutonomousAction();
          }
       }
    }
 
-   private final void y2(int var1) {
-      this.g2(var1);
+   private final void updateInteraction(int delta) {
+      this.advanceAnimations(delta);
       if (!this.isAnimating()) {
-         if (this.n2 == 0 && this.a10 != null && this.a10.a() == 6) {
-            int var2 = 131072;
-            byte var3 = 0;
-            byte var4 = 0;
+         if (this.poseIndex == 0 && this.interactionTarget != null && this.interactionTarget.behaviorClass() == 6) {
+            int standOffset = 131072;
+            byte stepX = 0;
+            byte stepY = 0;
             switch (super.facing) {
                case 0:
                default:
-                  var3 = 1;
+                  stepX = 1;
                   break;
                case 1:
-                  var4 = 1;
+                  stepY = 1;
                   break;
                case 2:
-                  var3 = -1;
+                  stepX = -1;
                   break;
                case 3:
-                  var4 = -1;
+                  stepY = -1;
             }
 
-            Entity var5 = this.a10;
-            if (this.a10.hasState(131072)) {
-               var5.clearState(131072);
-               var5.moveTo(var5.posX + var3 * 196608, var5.posY + var4 * 196608);
+            Entity target = this.interactionTarget;
+            if (this.interactionTarget.hasState(131072)) {
+               target.clearState(131072);
+               target.moveTo(target.posX + stepX * 196608, target.posY + stepY * 196608);
             } else {
-               var2 += 196608;
+               standOffset += 196608;
             }
 
-            Lot var6 = this.lot();
-            int var7 = super.posX + var4 * 524288 + var3 * -var2;
-            int var8 = super.posY + var3 * 524288 + var4 * -var2;
-            boolean var9 = var6.b3(var7, var8);
-            int var10 = super.posX + var4 * -524288 + var3 * -var2;
-            int var11 = super.posY + var3 * -524288 + var4 * -var2;
-            boolean var12 = var6.b3(var10, var11);
-            boolean var13 = super.screen.a5(0, var10, var11);
-            if (!var9 || !var13 && var12) {
-               this.moveTo(var10, var11);
+            Lot lot = this.lot();
+            int standX = super.posX + stepY * 524288 + stepX * -standOffset;
+            int standY = super.posY + stepX * 524288 + stepY * -standOffset;
+            boolean standOk = lot.isWalkableAt(standX, standY);
+            int altX = super.posX + stepY * -524288 + stepX * -standOffset;
+            int altY = super.posY + stepX * -524288 + stepY * -standOffset;
+            boolean altOk = lot.isWalkableAt(altX, altY);
+            boolean altFree = super.screen.isEntityAtTile(0, altX, altY);
+            if (!standOk || !altFree && altOk) {
+               this.moveTo(altX, altY);
             } else {
-               this.moveTo(var7, var8);
+               this.moveTo(standX, standY);
             }
          }
 
-         if (this.n2 == this.o2) {
-            this.E();
+         if (this.poseIndex == this.targetPose) {
+            this.finishPhase();
             return;
          }
 
-         this.w2(2);
+         this.setMotionState(2);
       }
    }
 
-   private final void z2(int var1) {
-      Lot var2 = this.lot();
-      int var3 = super.posX;
-      int var4 = super.posY;
-      int var5 = this.y;
-      int var6 = this.z;
-      int var7 = com.ea.sims3.Lot.f(var3);
-      int var8 = com.ea.sims3.Lot.g(var4);
-      int var9 = var2.g(var7, var8);
-      int var10;
-      int var11 = (var10 = com.ea.sims3.FixedMath.sign(var5 - var3)) != 0 ? 0 : com.ea.sims3.FixedMath.sign(var6 - var4);
-      short var12 = 2048;
-      short var13 = 1024;
+   private final void updateWalking(int delta) {
+      Lot lot = this.lot();
+      int posX = super.posX;
+      int posY = super.posY;
+      int destX = this.destX;
+      int destY = this.destY;
+      int tileX = com.ea.sims3.Lot.toTileX(posX);
+      int tileY = com.ea.sims3.Lot.toTileY(posY);
+      int tileFlags = lot.cellFlagsAt(tileX, tileY);
+      int dirX;
+      int dirY = (dirX = com.ea.sims3.FixedMath.sign(destX - posX)) != 0 ? 0 : com.ea.sims3.FixedMath.sign(destY - posY);
+      short speedX = 2048;
+      short speedY = 1024;
       if (this.hasState(2048)) {
-         var12 = 2621;
-         var13 = 1310;
+         speedX = 2621;
+         speedY = 1310;
       } else if (this.hasState(4096)) {
-         var12 = 1638;
-         var13 = 786;
+         speedX = 1638;
+         speedY = 786;
       }
 
-      if (super.screen.b5()) {
-         var12 = var13;
-         if (this.p3()) {
-            int var14 = com.ea.sims3.Lot.f(var3);
-            int var15 = com.ea.sims3.Lot.g(var4);
-            boolean var17;
-            if (var17 = (var2.g(var14, var15) & 32) != 0) {
-               int var16;
-               if (var11 == 0) {
-                  int var18 = com.ea.sims3.Lot.d(var14);
-                  if ((var10 >= 0 || var3 > var18) && (var10 <= 0 || var3 < var18)) {
-                     var16 = var2.g(var14 - var10, var15);
+      if (super.screen.isNewNeighborhood()) {
+         speedX = speedY;
+         if (this.isNearWater()) {
+            int selfTileX = com.ea.sims3.Lot.toTileX(posX);
+            int selfTileY = com.ea.sims3.Lot.toTileY(posY);
+            boolean inWater;
+            if (inWater = (lot.cellFlagsAt(selfTileX, selfTileY) & 32) != 0) {
+               int neighborFlags;
+               if (dirY == 0) {
+                  int tileCentreX = com.ea.sims3.Lot.toFixedX(selfTileX);
+                  if ((dirX >= 0 || posX > tileCentreX) && (dirX <= 0 || posX < tileCentreX)) {
+                     neighborFlags = lot.cellFlagsAt(selfTileX - dirX, selfTileY);
                   } else {
-                     var16 = var2.g(var14 + var10, var15);
+                     neighborFlags = lot.cellFlagsAt(selfTileX + dirX, selfTileY);
                   }
                } else {
-                  int var28 = com.ea.sims3.Lot.e(var15);
-                  if ((var11 >= 0 || var4 > var28) && (var11 <= 0 || var4 < var28)) {
-                     var16 = var2.g(var14, var15 - var11);
+                  int tileCentreY = com.ea.sims3.Lot.toFixedY(selfTileY);
+                  if ((dirY >= 0 || posY > tileCentreY) && (dirY <= 0 || posY < tileCentreY)) {
+                     neighborFlags = lot.cellFlagsAt(selfTileX, selfTileY - dirY);
                   } else {
-                     var16 = var2.g(var14, var15 + var11);
+                     neighborFlags = lot.cellFlagsAt(selfTileX, selfTileY + dirY);
                   }
                }
 
-               var17 = (var16 & 32) != 0;
+               inWater = (neighborFlags & 32) != 0;
             }
 
-            if (var17) {
-               var12 = 2048;
-               this.v2(3);
+            if (inWater) {
+               speedX = 2048;
+               this.setSpriteVariant(3);
             } else {
-               this.v2(2);
+               this.setSpriteVariant(2);
             }
          }
       }
 
-      int var21 = var12 * var1;
-      var3 += var10 * var21;
-      var4 += var11 * var21;
-      if (var10 > 0 && var3 > var5 || var10 < 0 && var3 < var5) {
-         var3 = var5;
+      int step = speedX * delta;
+      posX += dirX * step;
+      posY += dirY * step;
+      if (dirX > 0 && posX > destX || dirX < 0 && posX < destX) {
+         posX = destX;
       }
 
-      if (var11 > 0 && var4 > var6 || var11 < 0 && var4 < var6) {
-         var4 = var6;
+      if (dirY > 0 && posY > destY || dirY < 0 && posY < destY) {
+         posY = destY;
       }
 
-      this.d2(var10, var11);
-      this.moveTo(var3, var4);
-      if (!super.screen.b5()) {
-         int var22 = com.ea.sims3.Lot.f(var3);
-         int var24 = com.ea.sims3.Lot.g(var4);
-         int var26 = var2.g(var22, var24);
-         Entity var29;
-         if ((var9 & 32) == 0 && (var26 & 32) != 0 && (var29 = super.screen.b4(10)) != null && !var29.hasState(64)) {
-            var29.a(150, this);
+      this.faceDirection(dirX, dirY);
+      this.moveTo(posX, posY);
+      if (!super.screen.isNewNeighborhood()) {
+         int newTileX = com.ea.sims3.Lot.toTileX(posX);
+         int newTileY = com.ea.sims3.Lot.toTileY(posY);
+         int newTileFlags = lot.cellFlagsAt(newTileX, newTileY);
+         Entity blockingEntity;
+         if ((tileFlags & 32) == 0 && (newTileFlags & 32) != 0 && (blockingEntity = super.screen.findEntityByObjectType(10)) != null && !blockingEntity.hasState(64)) {
+            blockingEntity.handleAction(150, this);
          }
       }
 
-      this.g2(var1);
-      if (var3 == var5 && var4 == var6) {
-         if (!this.a11() && super.type != 0) {
-            this.c(true);
+      this.advanceAnimations(delta);
+      if (posX == destX && posY == destY) {
+         if (!this.canOccupySlot() && super.type != 0) {
+            this.abortAction(true);
             return;
          }
 
-         if (this.b6 != null && (this.b6.posX != this.B || this.b6.posY != this.C)) {
-            this.a(this.b6, 0, 0);
+         if (this.actionTarget != null && (this.actionTarget.posX != this.targetLastX || this.actionTarget.posY != this.targetLastY)) {
+            this.walkTo(this.actionTarget, 0, 0);
             return;
          }
 
-         boolean var23 = !this.a3(this.b6);
-         boolean var25 = this.b7 || var23;
-         int[] var27 = this.c4;
-         int var30;
-         if ((var30 = this.c4 != null ? (var27.length >> 1) - this.A : -1) > (var25 ? 2 : 1)) {
-            if (this.b6 != null && ((var30 & 3) == 0 || var30 < 4)) {
-               if (!var23) {
-                  this.a3(null);
-                  this.a3(this.b6);
+         boolean cannotReserve = !this.reserveTarget(this.actionTarget);
+         boolean needsDetour = this.detourPath || cannotReserve;
+         int[] pathPoints = this.path;
+         int remainingPoints;
+         if ((remainingPoints = this.path != null ? (pathPoints.length >> 1) - this.pathIndex : -1) > (needsDetour ? 2 : 1)) {
+            if (this.actionTarget != null && ((remainingPoints & 3) == 0 || remainingPoints < 4)) {
+               if (!cannotReserve) {
+                  this.reserveTarget(null);
+                  this.reserveTarget(this.actionTarget);
                }
 
-               this.a(this.b6, 0, 0);
+               this.walkTo(this.actionTarget, 0, 0);
                return;
             }
 
-            this.A++;
-            this.y = var27[(this.A << 1) + 0];
-            this.z = var27[(this.A << 1) + 1];
+            this.pathIndex++;
+            this.destX = pathPoints[(this.pathIndex << 1) + 0];
+            this.destY = pathPoints[(this.pathIndex << 1) + 1];
             return;
          }
 
-         this.c4 = null;
-         if (var23) {
-            this.F2(9);
+         this.path = null;
+         if (cannotReserve) {
+            this.runActionPhase(9);
             return;
          }
 
-         this.E();
+         this.finishPhase();
       }
    }
 
-   private final void a(Entity var1, int var2, int var3) {
-      Lot var4 = this.lot();
-      boolean var6 = false;
-      int var7 = var2;
-      int var8 = var3;
-      if (var1 != null) {
-         var6 = !this.a3(var1);
-         int var9 = this.x;
-         if (this.x == -1) {
-            var9 = var1.a(super.posX, super.posY, false, null);
+   private final void walkTo(Entity target, int toX, int toY) {
+      Lot lot = this.lot();
+      boolean cannotReserve = false;
+      int targetX = toX;
+      int targetY = toY;
+      if (target != null) {
+         cannotReserve = !this.reserveTarget(target);
+         int slot = this.reservedSlot;
+         if (this.reservedSlot == -1) {
+            slot = target.findNearestSlot(super.posX, super.posY, false, null);
          }
 
-         int[] var10 = com.ea.sims3.Entity.a;
-         var1.a(var10, var9);
-         var7 = var10[0];
-         var8 = var10[1];
-         this.B = var1.posX;
-         this.C = var1.posY;
+         int[] slotOffsets = com.ea.sims3.Entity.boundsScratch;
+         target.computeSlotPosition(slotOffsets, slot);
+         targetX = slotOffsets[0];
+         targetY = slotOffsets[1];
+         this.targetLastX = target.posX;
+         this.targetLastY = target.posY;
       }
 
-      var7 = com.ea.sims3.Lot.d(com.ea.sims3.Lot.f(var7));
-      var8 = com.ea.sims3.Lot.e(com.ea.sims3.Lot.g(var8));
-      if ((var7 != super.posX || var8 != super.posY) && this.n2 != 0) {
-         this.p2--;
-         this.F2(30);
+      targetX = com.ea.sims3.Lot.toFixedX(com.ea.sims3.Lot.toTileX(targetX));
+      targetY = com.ea.sims3.Lot.toFixedY(com.ea.sims3.Lot.toTileY(targetY));
+      if ((targetX != super.posX || targetY != super.posY) && this.poseIndex != 0) {
+         this.actionStep--;
+         this.runActionPhase(30);
       } else {
-         if (super.screen.a11() && var4.a() != 0 && super.b == 0 && this.g2 != 153 && !this.hasState(32) && !this.neighborhood().b3(0, 1)) {
-            int var18 = com.ea.sims3.Lot.f(super.posX);
-            int var20 = com.ea.sims3.Lot.g(super.posY);
-            int var11 = com.ea.sims3.Lot.f(var7);
-            int var12 = com.ea.sims3.Lot.g(var8);
-            if ((var4.g(var18, var20) & 16) == 0 && (var4.g(var11, var12) & 16) != 0) {
-               this.s = this.g2;
-               this.c3 = this.b6;
-               this.t = this.q;
-               this.u = this.r;
+         if (super.screen.isNoSaveMode() && lot.areaId() != 0 && super.variant == 0 && this.actionId != 153 && !this.hasState(32) && !this.neighborhood().hasSimMilestone(0, 1)) {
+            int selfTileX = com.ea.sims3.Lot.toTileX(super.posX);
+            int selfTileY = com.ea.sims3.Lot.toTileY(super.posY);
+            int targetTileX = com.ea.sims3.Lot.toTileX(targetX);
+            int targetTileY = com.ea.sims3.Lot.toTileY(targetY);
+            if ((lot.cellFlagsAt(selfTileX, selfTileY) & 16) == 0 && (lot.cellFlagsAt(targetTileX, targetTileY) & 16) != 0) {
+               this.queuedActionId = this.actionId;
+               this.queuedTarget = this.actionTarget;
+               this.queuedObjectId = this.actionObjectId;
+               this.queuedValue = this.actionValue;
                this.addState(16);
-               this.a(153, super.screen.b4(10));
+               this.queueAction(153, super.screen.findEntityByObjectType(10));
                return;
             }
          }
 
          this.clearState(32);
-         byte var19;
-         if (super.screen.b5()) {
-            if (this.p3()) {
-               var19 = 2;
+         byte pathFlags;
+         if (super.screen.isNewNeighborhood()) {
+            if (this.isNearWater()) {
+               pathFlags = 2;
             } else {
-               var19 = 4;
+               pathFlags = 4;
             }
          } else {
-            var19 = 8;
-            Sim[] var21;
-            if ((var21 = super.screen.a13()).length > 1) {
-               var4.d2();
+            pathFlags = 8;
+            Sim[] sims;
+            if ((sims = super.screen.getSims()).length > 1) {
+               lot.clearWaypoints();
 
-               for (int var23 = 0; var23 < var21.length; var23++) {
-                  Sim var25;
-                  if ((var25 = var21[var23]) != this) {
-                     int var13 = com.ea.sims3.Lot.f(var25.posX);
-                     int var14 = com.ea.sims3.Lot.g(var25.posY);
-                     var4.c2(var13, var14);
+               for (int simIndex = 0; simIndex < sims.length; simIndex++) {
+                  Sim otherSim;
+                  if ((otherSim = sims[simIndex]) != this) {
+                     int otherTileX = com.ea.sims3.Lot.toTileX(otherSim.posX);
+                     int otherTileY = com.ea.sims3.Lot.toTileY(otherSim.posY);
+                     lot.addWaypoint(otherTileX, otherTileY);
                   }
                }
 
-               var19 = 9;
+               pathFlags = 9;
             }
          }
 
-         int var22 = super.posX;
-         int var24 = super.posY;
-         int[] var26 = var4.a4(var22, var24, var7, var8, var19);
-         if (var6 && var26.length == 2) {
-            this.F2(9);
-         } else if (var26.length >= 2) {
-            this.c4 = var26;
-            this.A = 0;
-            this.b7 = false;
-            this.y = var26[(this.A << 1) + 0];
-            this.z = var26[(this.A << 1) + 1];
-            this.w2(3);
+         int startX = super.posX;
+         int startY = super.posY;
+         int[] pathPoints = lot.findPath(startX, startY, targetX, targetY, pathFlags);
+         if (cannotReserve && pathPoints.length == 2) {
+            this.runActionPhase(9);
+         } else if (pathPoints.length >= 2) {
+            this.path = pathPoints;
+            this.pathIndex = 0;
+            this.detourPath = false;
+            this.destX = pathPoints[(this.pathIndex << 1) + 0];
+            this.destY = pathPoints[(this.pathIndex << 1) + 1];
+            this.setMotionState(3);
          } else {
-            int var27 = var22 - var7;
-            int var28 = var24 - var8;
-            int var15;
-            if ((var15 = Math.abs(var27) + Math.abs(var28)) <= 524288) {
-               if (var15 != 0) {
-                  this.c4 = var26;
-                  this.A = 0;
-                  this.b7 = false;
-                  this.y = var7;
-                  this.z = var8;
-                  this.w2(3);
+            int diffX = startX - targetX;
+            int diffY = startY - targetY;
+            int distance;
+            if ((distance = Math.abs(diffX) + Math.abs(diffY)) <= 524288) {
+               if (distance != 0) {
+                  this.path = pathPoints;
+                  this.pathIndex = 0;
+                  this.detourPath = false;
+                  this.destX = targetX;
+                  this.destY = targetY;
+                  this.setMotionState(3);
                } else {
-                  this.E();
+                  this.finishPhase();
                }
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
          }
       }
    }
 
-   private final void A2(int var1) {
-      int var2 = this.animatorAt(0).frame;
-      this.g2(var1);
-      int var3 = this.animatorAt(0).frame;
-      Animator var4 = this.animatorAt(0);
-      if (var2 != var3) {
-         if (this.g2 == 147 && var3 == 2) {
-            this.b6.a(this);
+   private final void updateTimedAction(int delta) {
+      int previousFrame = this.animatorAt(0).frame;
+      this.advanceAnimations(delta);
+      int frame = this.animatorAt(0).frame;
+      Animator animator = this.animatorAt(0);
+      if (previousFrame != frame) {
+         if (this.actionId == 147 && frame == 2) {
+            this.actionTarget.interactWith(this);
          }
 
-         if (this.g2 == 93 && var3 == 2 && (super.b == 0 || this.a4() != null && this.a4().b == 0)) {
-            super.canvas.n2();
+         if (this.actionId == 93 && frame == 2 && (super.variant == 0 || this.partnerSim() != null && this.partnerSim().variant == 0)) {
+            super.canvas.vibrateShort();
          }
 
-         int var5 = super.facing != 0 && super.facing != 1 ? 3 : 2;
-         if (this.g2 == 83 && this.k2 == 41 && var3 == var5) {
-            super.screen.c2(2, 789, this.b6.b);
+         int turnFrame = super.facing != 0 && super.facing != 1 ? 3 : 2;
+         if (this.actionId == 83 && this.poseId == 41 && frame == turnFrame) {
+            super.screen.openDialogPage(2, 789, this.actionTarget.variant);
          }
 
-         if (this.g2 == 4 && var3 == 15 && super.canvas.d() < 5) {
-            super.screen.d3(803);
+         if (this.actionId == 4 && frame == 15 && super.canvas.randomPercent() < 5) {
+            super.screen.openStatsDialog(803);
          }
       }
 
-      this.animatorAt(2).advance(var1);
-      boolean var6;
-      if (this.c5) {
-         if (this.d4) {
-            var6 = this.i2 <= this.neighborhood().d6;
+      this.animatorAt(2).advance(delta);
+      boolean finished;
+      if (this.useTimer) {
+         if (this.waitForTargetTime) {
+            finished = this.timer <= this.neighborhood().gameTime;
          } else {
-            if (!com.ea.sims3.GameScreen.f3()) {
-               this.i2 -= var1;
+            if (!com.ea.sims3.GameScreen.isDialogOpen()) {
+               this.timer -= delta;
             }
 
-            var6 = this.i2 <= 0;
+            finished = this.timer <= 0;
          }
       } else {
-         var6 = !var4.isRunning();
+         finished = !animator.isRunning();
       }
 
-      if (this.h2 == 49 && this.b6.isModeTwo()) {
-         this.E();
+      if (this.actionPhase == 49 && this.actionTarget.isModeTwo()) {
+         this.finishPhase();
       }
 
-      if (var6) {
-         this.G = -1;
-         this.i2 = -1;
-         this.c5 = true;
-         this.E();
+      if (finished) {
+         this.poseAnimId = -1;
+         this.timer = -1;
+         this.useTimer = true;
+         this.finishPhase();
       } else {
-         if (super.b == 0 && this.h2 == 20 && this.m2 > 4000 && this.d4 && this.i2 - this.neighborhood().d6 > 60 && this.a11() && !super.screen.c3()) {
-            super.screen.g2();
+         if (super.variant == 0 && this.actionPhase == 20 && this.stateTime > 4000 && this.waitForTargetTime && this.timer - this.neighborhood().gameTime > 60 && this.canOccupySlot() && !super.screen.hasFade()) {
+            super.screen.syncFadeWithAction();
          }
 
-         if (this.h2 == 17 && this.b6.a() == 3 && this.k2 != 50 && this.b6.isModeOne()) {
-            if (super.b == 0) {
-               this.neighborhood().e2(3, 655360);
+         if (this.actionPhase == 17 && this.actionTarget.behaviorClass() == 3 && this.poseId != 50 && this.actionTarget.isModeOne()) {
+            if (super.variant == 0) {
+               this.neighborhood().setNeedModifier(3, 655360);
             }
 
-            this.r2(50);
+            this.setPose(50);
          }
       }
    }
 
-   private final void B2(int var1) {
-      this.g2(var1);
-      Sim var2 = this.a4();
-      if (this.g2 != 94) {
-         int var3 = var2.posX - super.posX;
-         int var4 = var2.posY - super.posY;
-         if (Math.abs(var3) + Math.abs(var4) > 524288) {
-            this.c(false);
+   private final void updateSocial(int delta) {
+      this.advanceAnimations(delta);
+      Sim partner = this.partnerSim();
+      if (this.actionId != 94) {
+         int diffX = partner.posX - super.posX;
+         int diffY = partner.posY - super.posY;
+         if (Math.abs(diffX) + Math.abs(diffY) > 524288) {
+            this.abortAction(false);
             return;
          }
       }
 
-      if (this.m2 > 4000) {
-         this.c(false);
+      if (this.stateTime > 4000) {
+         this.abortAction(false);
       } else {
-         if (var2.c3()) {
-            var2.a(2, (Entity) this);
-            this.E();
+         if (partner.isIdleModeZero()) {
+            partner.queueAction(2, (Entity) this);
+            this.finishPhase();
          }
       }
    }
 
-   private final void C2(int var1) {
-      this.g2(var1);
-      if (this.m2 > 4000) {
-         this.c(false);
+   private final void updateApproach(int delta) {
+      this.advanceAnimations(delta);
+      if (this.stateTime > 4000) {
+         this.abortAction(false);
       } else {
-         if (this.a3(this.b6)) {
-            this.F2(1);
+         if (this.reserveTarget(this.actionTarget)) {
+            this.runActionPhase(1);
          }
       }
    }
 
-   private final void D2(int var1) {
-      this.g2(var1);
-      Sim var2;
-      if ((var2 = this.a4()) != null && !var2.c3()) {
-         if (var2 != null && var2.hasState(1024)) {
-            Neighborhood var3;
-            if ((var3 = this.neighborhood()).j(super.b, 12) != -1) {
+   private final void updateDiningPartner(int delta) {
+      this.advanceAnimations(delta);
+      Sim partner;
+      if ((partner = this.partnerSim()) != null && !partner.isIdleModeZero()) {
+         if (partner != null && partner.hasState(1024)) {
+            Neighborhood neighborhood;
+            if ((neighborhood = this.neighborhood()).simKnownIndex(super.variant, 12) != -1) {
                if (!this.hasState(262144)) {
-                  var3.e3(super.b, 12);
+                  neighborhood.simRemember(super.variant, 12);
                   this.addState(262144);
                   return;
                }
             } else {
-               var2.F();
-               this.Q();
-               byte var4 = 0;
-               if (var3.j(super.b, 13) != -1) {
-                  var4 = 34;
-                  var3.e3(super.b, 13);
-                  var3.a4(super.b, -1, -1);
+               partner.cancelAction();
+               this.unlinkPartner();
+               byte actionId = 0;
+               if (neighborhood.simKnownIndex(super.variant, 13) != -1) {
+                  actionId = 34;
+                  neighborhood.simRemember(super.variant, 13);
+                  neighborhood.moveSim(super.variant, -1, -1);
                }
 
-               this.b(14, var2, var4, 0);
+               this.startAction(14, partner, actionId, 0);
             }
          }
       } else {
-         this.E();
+         this.finishPhase();
       }
    }
 
-   private final void E2(int var1) {
-      if (this.g2 != 159) {
-         if (this.d4) {
-            if (this.i2 <= this.neighborhood().d6) {
-               this.E();
+   private final void updateWaiting(int delta) {
+      if (this.actionId != 159) {
+         if (this.waitForTargetTime) {
+            if (this.timer <= this.neighborhood().gameTime) {
+               this.finishPhase();
                return;
             }
-         } else if (this.i2 > 0) {
-            this.i2 -= var1;
-            if (this.i2 <= 0) {
-               this.E();
+         } else if (this.timer > 0) {
+            this.timer -= delta;
+            if (this.timer <= 0) {
+               this.finishPhase();
             }
          }
       }
    }
 
-   public final Sim a4() {
-      return this.b6 instanceof Sim ? (Sim)this.b6 : null;
+   public final Sim partnerSim() {
+      return this.actionTarget instanceof Sim ? (Sim)this.actionTarget : null;
    }
 
-   public final boolean c3() {
-      return (this.neighborhood().K(this.g2) & 2) != 0;
+   public final boolean isIdleModeZero() {
+      return (this.neighborhood().interactionFlagsOf(this.actionId) & 2) != 0;
    }
 
-   public final boolean l3() {
-      return this.c3() || this.h2 == 8 || this.h2 == 9 || this.h2 == 1;
+   public final boolean isFree() {
+      return this.isIdleModeZero() || this.actionPhase == 8 || this.actionPhase == 9 || this.actionPhase == 1;
    }
 
-   public final boolean m3() {
-      return this.h2 == 26;
+   public final boolean isLeavingLot() {
+      return this.actionPhase == 26;
    }
 
-   public final boolean n3() {
-      return (this.g2 == 122 || this.g2 == 121) && this.n2 == 4;
+   public final boolean isSitting() {
+      return (this.actionId == 122 || this.actionId == 121) && this.poseIndex == 4;
    }
 
-   public final void a(int var1, Entity var2, int var3, int var4) {
-      if (this.l3()) {
-         this.b(var1, var2, var3, var4);
+   public final void queueAction(int actionId, Entity target, int objectId, int value) {
+      if (this.isFree()) {
+         this.startAction(actionId, target, objectId, value);
       } else {
-         this.s = var1;
-         this.c3 = var2;
-         this.t = var3;
-         this.u = var4;
+         this.queuedActionId = actionId;
+         this.queuedTarget = target;
+         this.queuedObjectId = objectId;
+         this.queuedValue = value;
       }
    }
 
-   public final void a(int var1, Entity var2) {
-      this.b(var1, var2, 0, 0);
+   public final void queueAction(int actionId, Entity target) {
+      this.startAction(actionId, target, 0, 0);
    }
 
-   public final void b(int var1, Entity var2, int var3, int var4) {
-      Neighborhood var5 = this.neighborhood();
-      if (this.h2 != 0) {
-         this.b(true);
+   public final void startAction(int actionId, Entity target, int objectId, int value) {
+      Neighborhood neighborhood = this.neighborhood();
+      if (this.actionPhase != 0) {
+         this.endCurrentPhase(true);
       }
 
       this.clearState(262146);
-      if (var1 == 119 && this.j2 == 0 && super.canvas.d() < 50) {
-         var1 = 120;
+      if (actionId == 119 && this.spriteVariant == 0 && super.canvas.randomPercent() < 50) {
+         actionId = 120;
       }
 
-      this.g2 = var1;
-      this.b6 = var2;
-      this.q = var3;
-      this.r = var4;
-      if (var2 != null || var1 == 106) {
-         this.a3(var2);
+      this.actionId = actionId;
+      this.actionTarget = target;
+      this.actionObjectId = objectId;
+      this.actionValue = value;
+      if (target != null || actionId == 106) {
+         this.reserveTarget(target);
       }
 
-      Sim var6;
-      if ((var6 = this.a4()) != null && (var5.K(var1) & 1) != 0) {
-         this.d(var6);
+      Sim partner;
+      if ((partner = this.partnerSim()) != null && (neighborhood.interactionFlagsOf(actionId) & 1) != 0) {
+         this.linkPartners(partner);
       }
 
-      int var7 = var5.g(var1, 0);
-      this.p2 = 0;
-      this.F2(var7);
+      int phase = neighborhood.interactionVariant(actionId, 0);
+      this.actionStep = 0;
+      this.runActionPhase(phase);
    }
 
-   public final void b(Entity var1) {
-      if (var1 != this && (this.v & 32) != 0) {
-         Sim var2 = super.screen.a14.a4();
-         if (this.D == 0 || var2 != null && this.D == var2.b) {
-            this.Q();
+   public final void onBumped(Entity other) {
+      if (other != this && (this.behaviourFlags & 32) != 0) {
+         Sim playerPartner = super.screen.activePlayer.partnerSim();
+         if (this.partnerId == 0 || playerPartner != null && this.partnerId == playerPartner.variant) {
+            this.unlinkPartner();
          }
       }
    }
 
-   public final boolean a3(Entity var1) {
-      if (var1 == this.d3) {
+   public final boolean reserveTarget(Entity target) {
+      if (target == this.reservedTarget) {
          return true;
       } else {
-         if (this.d3 != null) {
-            this.d3.d3(this.x);
-            this.d3 = null;
-            this.x = -1;
+         if (this.reservedTarget != null) {
+            this.reservedTarget.releaseSlot(this.reservedSlot);
+            this.reservedTarget = null;
+            this.reservedSlot = -1;
          }
 
-         if (var1 == null) {
+         if (target == null) {
             return true;
          } else {
-            if (var1.b5()) {
-               int var2 = 0;
-               if (var1.a() == 10) {
-                  Lot var3 = this.lot();
-                  int var4 = com.ea.sims3.Lot.f(super.posX);
-                  int var5 = com.ea.sims3.Lot.g(super.posY);
-                  if ((var3.g(var4, var5) & 16) != 0) {
-                     var2 = 0;
+            if (target.hasFreeSlot()) {
+               int slot = 0;
+               if (target.behaviorClass() == 10) {
+                  Lot lot = this.lot();
+                  int tileX = com.ea.sims3.Lot.toTileX(super.posX);
+                  int tileY = com.ea.sims3.Lot.toTileY(super.posY);
+                  if ((lot.cellFlagsAt(tileX, tileY) & 16) != 0) {
+                     slot = 0;
                   } else {
-                     var2 = 1;
+                     slot = 1;
                   }
                } else {
-                  var2 = var1.a(super.posX, super.posY, true, this);
+                  slot = target.findNearestSlot(super.posX, super.posY, true, this);
                }
 
-               if (var2 != -1 && var1.c5(var2)) {
-                  this.d3 = var1;
-                  this.x = var2;
+               if (slot != -1 && target.tryOccupySlot(slot)) {
+                  this.reservedTarget = target;
+                  this.reservedSlot = slot;
                   return true;
                }
             }
@@ -1122,163 +1122,163 @@ public final class Sim extends Entity {
       }
    }
 
-   private final void I() {
-      boolean var1 = this.hasState(4);
-      Neighborhood var2 = this.neighborhood();
+   private final void completeAction() {
+      boolean alreadyCompleted = this.hasState(4);
+      Neighborhood neighborhood = this.neighborhood();
       this.clearState(12);
-      int var3 = this.g2;
-      Entity var4 = this.b6;
-      Sim var5 = this.a4();
-      boolean var6 = super.b == 0;
-      this.a(0, (Entity) null);
-      int var7 = var2.K(var3);
-      if (!var1 && var5 != null && (var7 & 1) != 0) {
-         this.a3(null);
-         var5.a3(null);
-         if (var5.a(var3, this)) {
-            this.Q();
+      int actionId = this.actionId;
+      Entity target = this.actionTarget;
+      Sim partner = this.partnerSim();
+      boolean isPlayer = super.variant == 0;
+      this.queueAction(0, (Entity) null);
+      int actionFlags = neighborhood.interactionFlagsOf(actionId);
+      if (!alreadyCompleted && partner != null && (actionFlags & 1) != 0) {
+         this.reserveTarget(null);
+         partner.reserveTarget(null);
+         if (partner.handleAction(actionId, this)) {
+            this.unlinkPartner();
          }
 
-         if (var6) {
-            int var9 = var5.b;
-            if (var3 == 93) {
-               var2.e3(19);
-               var2.g2(var9, 32);
-               var2.g2(var9, 2048);
-            } else if (var3 == 105) {
-               var2.g2(var9, 256);
+         if (isPlayer) {
+            int partnerId = partner.variant;
+            if (actionId == 93) {
+               neighborhood.unlockAchievement(19);
+               neighborhood.addSimMilestoneCount(partnerId, 32);
+               neighborhood.addSimMilestoneCount(partnerId, 2048);
+            } else if (actionId == 105) {
+               neighborhood.addSimMilestoneCount(partnerId, 256);
             }
          }
-      } else if (!var1) {
-         switch (var3) {
+      } else if (!alreadyCompleted) {
+         switch (actionId) {
             case 4:
-               if (var6) {
-                  var2.d2(3, -6553600);
+               if (isPlayer) {
+                  neighborhood.adjustNeed(3, -6553600);
                }
 
-               if (!super.screen.a5(1, super.posX, super.posY)) {
-                  int var8 = -1;
-                  if (this.lot().a() == 0) {
-                     var8 = this.lot().a(9, super.posX, super.posY, super.facing);
+               if (!super.screen.isEntityAtTile(1, super.posX, super.posY)) {
+                  int slot = -1;
+                  if (this.lot().areaId() == 0) {
+                     slot = this.lot().addObject(9, super.posX, super.posY, super.facing);
                   }
 
-                  super.screen.a(9, super.posX, super.posY, super.facing, var8);
+                  super.screen.createEntity(9, super.posX, super.posY, super.facing, slot);
                }
                break;
             case 107:
-               super.screen.f2();
+               super.screen.startTutorialGame();
                break;
             case 111:
             case 113:
-               super.screen.h2(4);
+               super.screen.raiseSkillLevel(4);
                break;
             case 121:
             case 122:
-               this.v &= -5;
+               this.behaviourFlags &= -5;
                break;
             case 143:
-               super.screen.i2();
+               super.screen.confirmRequest();
                break;
             case 147:
-               if (var6) {
-                  var2.e3(37);
-                  var2.f2(this.lot().a(), 16);
-                  var2.f2(this.lot().a(), 4096);
+               if (isPlayer) {
+                  neighborhood.unlockAchievement(37);
+                  neighborhood.addSimMilestone(this.lot().areaId(), 16);
+                  neighborhood.addSimMilestone(this.lot().areaId(), 4096);
                }
                break;
             case 152:
-               if (!var6) {
-                  this.m2 = 0;
-                  super.screen.g2(super.b);
+               if (!isPlayer) {
+                  this.stateTime = 0;
+                  super.screen.showSimProfile(super.variant);
                }
                break;
             case 155:
             case 156:
             case 160:
-               super.screen.a2(var4);
+               super.screen.selectEntity(target);
                break;
             case 158:
-               var2.e3(21);
-               var2.d2(0, 2621440);
+               neighborhood.unlockAchievement(21);
+               neighborhood.adjustNeed(0, 2621440);
          }
       }
 
-      if (var3 == 153) {
+      if (actionId == 153) {
          this.clearState(16);
-         if (var1) {
-            this.s = -1;
-            this.c3 = null;
+         if (alreadyCompleted) {
+            this.queuedActionId = -1;
+            this.queuedTarget = null;
          } else {
             this.addState(32);
          }
       }
 
-      if (var4 != null && var5 == null && !var1) {
-         var4.a(var3, this);
-         if (var6) {
-            var2.i2(var4.type);
+      if (target != null && partner == null && !alreadyCompleted) {
+         target.handleAction(actionId, this);
+         if (isPlayer) {
+            neighborhood.markItemVisited(target.type);
          }
       }
 
-      if (this.s != -1 && this.c3()) {
-         this.b(this.s, this.c3, this.t, this.u);
-         this.s = -1;
-         this.c3 = null;
+      if (this.queuedActionId != -1 && this.isIdleModeZero()) {
+         this.startAction(this.queuedActionId, this.queuedTarget, this.queuedObjectId, this.queuedValue);
+         this.queuedActionId = -1;
+         this.queuedTarget = null;
       }
    }
 
-   public final boolean a(int var1, Sim var2) {
-      Neighborhood var3 = this.neighborhood();
-      int var4 = var2.b;
-      int var5 = super.b;
-      int[] var6 = com.ea.sims3.Entity.a;
-      var3.a(var6, var4, var5, var1);
-      int var7 = var6[0];
-      int var8 = var6[1];
-      int var9 = var6[2];
-      if ((var7 & 64) != 0) {
-         super.screen.a(25, var2, this);
+   public final boolean handleAction(int actionId, Sim otherSim) {
+      Neighborhood neighborhood = this.neighborhood();
+      int otherSimId = otherSim.variant;
+      int selfId = super.variant;
+      int[] result = com.ea.sims3.Entity.boundsScratch;
+      neighborhood.resolveInteraction(result, otherSimId, selfId, actionId);
+      int replyFlags = result[0];
+      int replyActionId = result[1];
+      int soundId = result[2];
+      if ((replyFlags & 64) != 0) {
+         super.screen.notifySimsOfAction(25, otherSim, this);
       }
 
-      if (var1 == 103 || var1 == 98) {
-         this.a(0, (Entity) null);
-         this.s2(256);
-      } else if (var8 != -1) {
-         if ((var3.K(var8) & 1) == 0 && var8 != 106) {
-            var2 = null;
+      if (actionId == 103 || actionId == 98) {
+         this.queueAction(0, (Entity) null);
+         this.addBehaviourFlags(256);
+      } else if (replyActionId != -1) {
+         if ((neighborhood.interactionFlagsOf(replyActionId) & 1) == 0 && replyActionId != 106) {
+            otherSim = null;
          }
 
-         if (var4 == 0 && var8 == 13) {
-            var3.e3(15);
-            var3.g2(var5, 8192);
+         if (otherSimId == 0 && replyActionId == 13) {
+            neighborhood.unlockAchievement(15);
+            neighborhood.addSimMilestoneCount(selfId, 8192);
          }
 
-         this.b(var8, var2, var7, 0);
-         if (var9 != -1) {
-            super.screen.a2(super.posX, super.posY, var9, 0);
+         this.startAction(replyActionId, otherSim, replyFlags, 0);
+         if (soundId != -1) {
+            super.screen.createRoomObject(super.posX, super.posY, soundId, 0);
          }
       }
 
-      return (var7 & 32) != 0;
+      return (replyFlags & 32) != 0;
    }
 
-   public final boolean a2(int var1, Sim var2, Entity var3) {
-      Neighborhood var4 = this.neighborhood();
-      if (this.n3()) {
+   public final boolean tryInteraction(int actionId, Sim otherSim, Entity object) {
+      Neighborhood neighborhood = this.neighborhood();
+      if (this.isSitting()) {
          return false;
-      } else if (var1 == 25 && var4.S(super.b) != var3.b) {
+      } else if (actionId == 25 && neighborhood.simPortrait(super.variant) != object.variant) {
          return false;
       } else {
-         int[] var5 = com.ea.sims3.Entity.a;
-         var4.a(var5, var2.b, super.b, var1);
-         int var6;
-         if ((var6 = var5[1]) != -1) {
-            int var7;
-            Object var8 = ((var7 = var5[0]) & 16384) != 0 ? var3 : var2;
-            this.F();
-            this.a(var6, (Entity)var8, 0, 0);
-            if (var1 == 25 && var2.b == 0) {
-               var4.e3(51);
+         int[] result = com.ea.sims3.Entity.boundsScratch;
+         neighborhood.resolveInteraction(result, otherSim.variant, super.variant, actionId);
+         int replyActionId;
+         if ((replyActionId = result[1]) != -1) {
+            int replyFlags;
+            Object target = ((replyFlags = result[0]) & 16384) != 0 ? object : otherSim;
+            this.cancelAction();
+            this.queueAction(replyActionId, (Entity)target, 0, 0);
+            if (actionId == 25 && otherSim.variant == 0) {
+               neighborhood.unlockAchievement(51);
             }
 
             this.addState(8);
@@ -1289,236 +1289,236 @@ public final class Sim extends Entity {
       }
    }
 
-   private final void F2(int var1) {
-      GameScreen var2 = super.screen;
-      Neighborhood var3 = this.neighborhood();
-      this.h2 = var1;
-      int var4 = this.g2;
-      Entity var5 = this.b6;
-      Sim var6 = this.a4();
-      int var7 = this.q;
-      int var8 = this.r;
-      boolean var9;
-      if ((var9 = super.b == 0) && var6 != null) {
-         var3.j2(var6.b);
+   private final void runActionPhase(int phase) {
+      GameScreen screen = super.screen;
+      Neighborhood neighborhood = this.neighborhood();
+      this.actionPhase = phase;
+      int actionId = this.actionId;
+      Entity target = this.actionTarget;
+      Sim partner = this.partnerSim();
+      int objectId = this.actionObjectId;
+      int value = this.actionValue;
+      boolean isPlayer;
+      if ((isPlayer = super.variant == 0) && partner != null) {
+         neighborhood.watchSim(partner.variant);
       }
 
-      boolean var10 = false;
-      switch (var1) {
+      boolean handled = false;
+      switch (phase) {
          case 0:
-            if (this.n2 != 7 && this.n2 != 6) {
-               this.w2(1);
+            if (this.poseIndex != 7 && this.poseIndex != 6) {
+               this.setMotionState(1);
             } else {
-               this.p2--;
-               this.F2(30);
+               this.actionStep--;
+               this.runActionPhase(30);
             }
             break;
          case 1:
-            this.a(var5, var7, var8);
+            this.walkTo(target, objectId, value);
             break;
          case 2:
          case 3:
-            if (var5 != null) {
-               this.a2(var5);
+            if (target != null) {
+               this.faceEntity(target);
             } else {
-               this.d2(var7 - super.posX, var8 - super.posY);
+               this.faceDirection(objectId - super.posX, value - super.posY);
             }
 
-            if (var1 == 3) {
-               this.n2(super.facing + 2 & 3);
+            if (phase == 3) {
+               this.setFacing(super.facing + 2 & 3);
             }
 
-            this.E();
+            this.finishPhase();
             break;
          case 4:
-            this.n2(var5.facing);
-            this.E();
+            this.setFacing(target.facing);
+            this.finishPhase();
             break;
          case 5:
          case 6:
          case 7:
-            this.e2(var4, var1);
-            var10 = true;
+            this.runTimedPhase(actionId, phase);
+            handled = true;
             break;
          case 8:
-            this.w2(5);
+            this.setMotionState(5);
             break;
          case 9:
-            this.w2(6);
+            this.setMotionState(6);
             break;
          case 10:
-            this.a4().F();
-            this.E();
+            this.partnerSim().cancelAction();
+            this.finishPhase();
             break;
          case 11:
-            this.w2(7);
+            this.setMotionState(7);
             break;
          case 12:
-            if (var3.a13(var7)) {
-               var2.a(0, var5);
-               var5.A();
-               this.a(4, 1000, -1, false, false);
+            if (neighborhood.purchaseUpgrade(objectId)) {
+               screen.openMiniGame(0, target);
+               target.startModeOne();
+               this.startTimedAction(4, 1000, -1, false, false);
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
             break;
          case 13:
-            if (var3.b5()) {
-               var2.a(1, var5);
-               if (var5.type == 5) {
-                  this.n2(0);
+            if (neighborhood.hasItemC()) {
+               screen.openMiniGame(1, target);
+               if (target.type == 5) {
+                  this.setFacing(0);
                } else {
-                  this.n2(1);
+                  this.setFacing(1);
                }
 
                this.setValueC(20);
-               this.a(24, 1000, -1, false, false);
+               this.startTimedAction(24, 1000, -1, false, false);
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
             break;
          case 14:
-            if (var3.c3()) {
-               var2.a(2, var5);
-               this.a(4, 1000, -1, false, false);
+            if (neighborhood.hasItemB()) {
+               screen.openMiniGame(2, target);
+               this.startTimedAction(4, 1000, -1, false, false);
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
             break;
          case 15:
-            if (var3.d3()) {
-               var2.a(3, var5);
-               this.a(4, 1000, -1, false, false);
+            if (neighborhood.hasItemA()) {
+               screen.openMiniGame(3, target);
+               this.startTimedAction(4, 1000, -1, false, false);
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
             break;
          case 16:
-            short var18 = 5000;
-            if (var9) {
-               int var19 = 458752;
-               if (var4 == 126) {
-                  var19 = this.lot().C(var7);
+            short duration = 5000;
+            if (isPlayer) {
+               int amount = 458752;
+               if (actionId == 126) {
+                  amount = this.lot().volumeOf(objectId);
                }
 
-               var3.e2(0, var19);
+               neighborhood.setNeedModifier(0, amount);
             }
 
-            if (var5.a() == 13) {
-               var5.r2();
-               var18 = 3500;
+            if (target.behaviorClass() == 13) {
+               target.playFirstModeAnimation();
+               duration = 3500;
             }
 
-            byte var20 = 4;
-            if (this.n2 == 2 || this.n2 == 1) {
-               var20 = 60;
+            byte idleAnimForPose = 4;
+            if (this.poseIndex == 2 || this.poseIndex == 1) {
+               idleAnimForPose = 60;
             }
 
-            this.a(var20, var18, -1, false, false);
-            var10 = true;
+            this.startTimedAction(idleAnimForPose, duration, -1, false, false);
+            handled = true;
             break;
          case 17:
-            int var17;
-            if ((var17 = var5.a()) == 17) {
-               if (var9) {
-                  var3.e2(3, 655360);
+            int targetType;
+            if ((targetType = target.behaviorClass()) == 17) {
+               if (isPlayer) {
+                  neighborhood.setNeedModifier(3, 655360);
                }
 
-               var5.y();
-               this.b(5000, false);
-               var10 = true;
-            } else if (var17 == 3) {
-               var5.n2();
-               var5.b(this);
-               this.a(4, 8000, -1, false, false);
-               var10 = true;
-            } else if (var17 == 2) {
-               if (var9 && !this.hasState(1024)) {
-                  var3.e2(3, 655360);
+               target.activateModeOne();
+               this.waitForTimer(5000, false);
+               handled = true;
+            } else if (targetType == 3) {
+               target.enterModeTwoIfIdle();
+               target.setOwner(this);
+               this.startTimedAction(4, 8000, -1, false, false);
+               handled = true;
+            } else if (targetType == 2) {
+               if (isPlayer && !this.hasState(1024)) {
+                  neighborhood.setNeedModifier(3, 655360);
                }
 
-               var5.l2();
-               this.a(4, 1500, -1, false, false);
+               target.enterModeOne();
+               this.startTimedAction(4, 1500, -1, false, false);
             }
             break;
          case 18:
-            if (var9) {
-               var3.e2(2, 3276800);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(2, 3276800);
             }
 
-            int var16 = var4 == 119 ? 28 : 29;
-            this.a(var16, 2000, -1, false, false);
+            int idleAnim = actionId == 119 ? 28 : 29;
+            this.startTimedAction(idleAnim, 2000, -1, false, false);
             break;
          case 19:
          case 20:
-            this.G2(var1);
-            var10 = true;
+            this.runSleepPhase(phase);
+            handled = true;
             break;
          case 21:
-            var5.j2();
-            this.E();
-            var10 = true;
+            target.markActive();
+            this.finishPhase();
+            handled = true;
             break;
          case 22:
-            var5.k2();
-            this.E();
-            var10 = true;
+            target.markInactive();
+            this.finishPhase();
+            handled = true;
             break;
          case 23:
-            if (var9) {
-               var3.e3(36);
+            if (isPlayer) {
+               neighborhood.unlockAchievement(36);
             }
 
-            Entity var15;
-            if ((var15 = var2.b4(9)) != null) {
-               this.b(144, var15, 0, 0);
+            Entity spareEntity;
+            if ((spareEntity = screen.findEntityByObjectType(9)) != null) {
+               this.startAction(144, spareEntity, 0, 0);
             } else {
-               this.b(106, var5, 0, 0);
+               this.startAction(106, target, 0, 0);
             }
 
-            var10 = true;
+            handled = true;
             break;
          case 24:
-            Entity var14;
-            if ((var14 = var2.c2(128)) != null) {
-               this.b6 = var14;
-               this.E();
+            Entity freedEntity;
+            if ((freedEntity = screen.findFreeEntityForFlag(128)) != null) {
+               this.actionTarget = freedEntity;
+               this.finishPhase();
             } else {
-               this.c(false);
+               this.abortAction(false);
             }
             break;
          case 25:
-            if (var9) {
-               var3.e2(5, 196608);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(5, 196608);
             }
 
-            this.a(58, 10000, -1, false, false);
+            this.startTimedAction(58, 10000, -1, false, false);
             break;
          case 26:
-            if (var9) {
-               this.w2(8);
-               var2.g2();
+            if (isPlayer) {
+               this.setMotionState(8);
+               screen.syncFadeWithAction();
             } else {
-               if (var2.a13().length == 2 && !var3.j3()) {
-                  var2.b2(767, var3.R(super.b));
+               if (screen.getSims().length == 2 && !neighborhood.isFreeToLeave()) {
+                  screen.chooseDialogOption(767, neighborhood.simNameText(super.variant));
                }
 
-               this.w2(9);
+               this.setMotionState(9);
             }
             break;
          case 27:
-            var2.g2(var4, var7);
-            this.E();
+            screen.handleRelationshipCommand(actionId, objectId);
+            this.finishPhase();
             break;
          case 28:
-            int var13 = var3.a(var5);
-            int var12 = var3.n(var13);
-            var2.a2(var13, var12, true);
-            this.E();
+            int soundGroup = neighborhood.pickActionFor(target);
+            int soundIndex = neighborhood.lastHourIndex(soundGroup);
+            screen.selectFriend(soundGroup, soundIndex, true);
+            this.finishPhase();
             break;
          case 29:
-            var2.b2(766, 765);
-            this.E();
+            screen.chooseDialogOption(766, 765);
+            this.finishPhase();
             break;
          case 30:
          case 31:
@@ -1529,274 +1529,274 @@ public final class Sim extends Entity {
          case 36:
          case 37:
          case 38:
-            this.H2(var1);
+            this.startPosePhase(phase);
             break;
          case 39:
-            if (var9) {
-               this.J();
+            if (isPlayer) {
+               this.runPurchasePhase();
             } else {
-               this.E();
+               this.finishPhase();
             }
             break;
          case 40:
-            if (var9) {
-               this.K();
+            if (isPlayer) {
+               this.runLeaveCheckPhase();
             } else {
-               this.E();
+               this.finishPhase();
             }
             break;
          case 41:
-            if (var9) {
-               this.L();
+            if (isPlayer) {
+               this.runVisitPhase();
             } else {
-               this.E();
+               this.finishPhase();
             }
             break;
          case 42:
-            var2.g(var5);
-            this.E();
+            screen.openVehicleInfo(target);
+            this.finishPhase();
             break;
          case 43:
-            var2.l2();
-            this.E();
+            screen.openBuildMenu();
+            this.finishPhase();
             break;
          case 44:
-            var2.m2();
-            this.E();
+            screen.openBuyMenu();
+            this.finishPhase();
             break;
          case 45:
-            this.M();
+            this.runTakeItemPhase();
             break;
          case 46:
-            this.N();
+            this.runBuyFoodPhase();
             break;
          case 47:
-            var5.u2();
-            this.E();
+            target.completeUpgrade();
+            this.finishPhase();
             break;
          case 48:
-            var5.v2();
-            this.E();
+            target.transformToCompleted();
+            this.finishPhase();
             break;
          case 49:
-            var5.p2();
-            this.a(0, 60000, -1, false, false);
-            var10 = true;
+            target.setModeOne();
+            this.startTimedAction(0, 60000, -1, false, false);
+            handled = true;
             break;
          case 50:
-            if (var9) {
-               var3.e2(2, -327680);
-               var3.e2(1, 655360);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(2, -327680);
+               neighborhood.setNeedModifier(1, 655360);
             }
 
-            this.a(4, 2000, -1, false, false);
+            this.startTimedAction(4, 2000, -1, false, false);
             break;
          case 51:
-            Entity var11 = var5.b3();
-            this.b6 = var11;
-            this.a2(var11);
-            this.F2(31);
+            Entity replacementTarget = target.occupant();
+            this.actionTarget = replacementTarget;
+            this.faceEntity(replacementTarget);
+            this.runActionPhase(31);
             break;
          case 52:
-            if (var9) {
-               var3.e2(5, 393216);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(5, 393216);
             }
 
-            this.b6 = this.b6.a3();
-            this.b6.j2();
-            this.a(60, 15000, -1, false, false);
+            this.actionTarget = this.actionTarget.container();
+            this.actionTarget.markActive();
+            this.startTimedAction(60, 15000, -1, false, false);
       }
 
-      if (var9 && var10 && (var3.K(var4) & 1048576) != 0) {
-         var2.a(22, this, this.b6);
+      if (isPlayer && handled && (neighborhood.interactionFlagsOf(actionId) & 1048576) != 0) {
+         screen.notifySimsOfAction(22, this, this.actionTarget);
       }
 
       if (this.hasState(2)) {
-         this.c(true);
+         this.abortAction(true);
       }
    }
 
-   private void e2(int var1, int var2) {
-      Neighborhood var3 = this.neighborhood();
-      Entity var4;
-      if (var1 == 152 && (var4 = super.screen.b4(10)) != null && var4.hasState(64)) {
-         this.E();
+   private void runTimedPhase(int actionId, int motionState) {
+      Neighborhood neighborhood = this.neighborhood();
+      Entity entity;
+      if (actionId == 152 && (entity = super.screen.findEntityByObjectType(10)) != null && entity.hasState(64)) {
+         this.finishPhase();
       } else {
-         boolean var9 = false;
-         int var5 = -1;
-         if (var2 == 5) {
-            var5 = super.facing != 3 && super.facing != 0 ? 662 : 661;
-            byte var6;
-            byte var7;
-            if (var3.i(super.b, 0) == 1) {
-               var6 = 4;
-               var7 = 6;
+         boolean ignored = false;
+         int soundId = -1;
+         if (motionState == 5) {
+            soundId = super.facing != 3 && super.facing != 0 ? 662 : 661;
+            byte soundA;
+            byte soundB;
+            if (neighborhood.simAttribute(super.variant, 0) == 1) {
+               soundA = 4;
+               soundB = 6;
             } else {
-               var6 = 7;
-               var7 = 9;
+               soundA = 7;
+               soundB = 9;
             }
 
-            GameCanvas var8;
-            (var8 = com.ea.sims3.GameCanvas.a7()).a7.pendingSound = var8.b(var6, (int)var7);
+            GameCanvas canvas;
+            (canvas = com.ea.sims3.GameCanvas.instance()).sound.pendingSound = canvas.randomRange(soundA, (int)soundB);
          }
 
-         boolean var10 = false;
-         if (var1 != 136 && var1 != 137 && var1 != 111 && this.q != 0) {
-            var5 = com.ea.sims3.Neighborhood.D(this.q);
-            var10 = true;
+         boolean objectSound = false;
+         if (actionId != 136 && actionId != 137 && actionId != 111 && this.actionObjectId != 0) {
+            soundId = com.ea.sims3.Neighborhood.reactionText(this.actionObjectId);
+            objectSound = true;
          }
 
-         int var11 = var2 == 7 ? -1 : 2000;
-         if (var1 == 17) {
-            var11 = 5000;
+         int duration = motionState == 7 ? -1 : 2000;
+         if (actionId == 17) {
+            duration = 5000;
          }
 
-         this.a(-1, var11, var5, var10, false);
-         if (super.b == 0) {
-            if (var1 == 148) {
-               var3.e2(3, -1310720);
+         this.startTimedAction(-1, duration, soundId, objectSound, false);
+         if (super.variant == 0) {
+            if (actionId == 148) {
+               neighborhood.setNeedModifier(3, -1310720);
                return;
             }
 
-            if (var1 == 15 || var1 == 16) {
-               var3.e2(5, 196608);
+            if (actionId == 15 || actionId == 16) {
+               neighborhood.setNeedModifier(5, 196608);
                return;
             }
 
-            if (var1 == 17) {
-               var3.e2(5, 196608);
+            if (actionId == 17) {
+               neighborhood.setNeedModifier(5, 196608);
             }
          }
       }
    }
 
-   private void G2(int var1) {
-      Neighborhood var2;
-      int var3 = (var2 = this.neighborhood()).d6;
-      int var4 = var2.b2(super.b);
-      if (var1 == 19) {
-         var4 = Math.min(var4, var3 + 120);
+   private void runSleepPhase(int phase) {
+      Neighborhood neighborhood;
+      int hour = (neighborhood = this.neighborhood()).gameTime;
+      int wakeHour = neighborhood.lotClosingTime(super.variant);
+      if (phase == 19) {
+         wakeHour = Math.min(wakeHour, hour + 120);
       }
 
-      int var5 = var4 - var3;
-      if (super.b == 0) {
-         var2.a9 = true;
-         var2.e2(1, 65536);
+      int sleepTime = wakeHour - hour;
+      if (super.variant == 0) {
+         neighborhood.paused = true;
+         neighborhood.setNeedModifier(1, 65536);
       }
 
-      this.C();
+      this.stopAnimation();
       this.setValueA(super.facing == 0 ? 36 : 35);
-      int var6 = var3 + var5;
-      this.a(15, var6, -1, false, true);
+      int targetHour = hour + sleepTime;
+      this.startTimedAction(15, targetHour, -1, false, true);
    }
 
-   private void H2(int var1) {
-      if (var1 == 31) {
-         if (this.b6.a() == 6) {
-            var1 = 33;
+   private void startPosePhase(int phase) {
+      if (phase == 31) {
+         if (this.actionTarget.behaviorClass() == 6) {
+            phase = 33;
          } else {
-            this.n2(super.facing + 2 & 3);
-            var1 = 32;
+            this.setFacing(super.facing + 2 & 3);
+            phase = 32;
          }
       }
 
-      int var2 = var1 == 30 ? 0 : (var1 == 32 ? 1 : (var1 == 33 ? 2 : (var1 == 34 ? 3 : (var1 == 37 ? 6 : (var1 == 35 ? 4 : (var1 == 36 ? 5 : 7))))));
-      if (this.n2 == var2) {
-         this.E();
+      int pose = phase == 30 ? 0 : (phase == 32 ? 1 : (phase == 33 ? 2 : (phase == 34 ? 3 : (phase == 37 ? 6 : (phase == 35 ? 4 : (phase == 36 ? 5 : 7))))));
+      if (this.poseIndex == pose) {
+         this.finishPhase();
       } else {
-         this.o2 = var2;
-         this.w2(2);
+         this.targetPose = pose;
+         this.setMotionState(2);
       }
    }
 
-   private void J() {
-      Neighborhood var1;
-      int var2 = (var1 = this.neighborhood()).a3(this.g2);
-      int var3 = var1.e5;
-      if (var1.e5 >= var2) {
-         var1.a12(-var2);
-         super.screen.b2(super.posX, super.posY, var2);
-         this.E();
+   private void runPurchasePhase() {
+      Neighborhood neighborhood;
+      int cost = (neighborhood = this.neighborhood()).eventTimeCost(this.actionId);
+      int funds = neighborhood.money;
+      if (neighborhood.money >= cost) {
+         neighborhood.addMoney(-cost);
+         super.screen.createObjectWithParam(super.posX, super.posY, cost);
+         this.finishPhase();
       } else {
-         this.c(false);
+         this.abortAction(false);
       }
    }
 
-   private void K() {
-      Neighborhood var1 = this.neighborhood();
-      boolean var2 = true;
-      if (super.screen.a13().length > 1) {
-         var2 = false;
-      } else if (var1.V(0) == 4) {
-         var2 = false;
-      } else if (var1.j3()) {
-         var2 = false;
+   private void runLeaveCheckPhase() {
+      Neighborhood neighborhood = this.neighborhood();
+      boolean canLeave = true;
+      if (super.screen.getSims().length > 1) {
+         canLeave = false;
+      } else if (neighborhood.simLot(0) == 4) {
+         canLeave = false;
+      } else if (neighborhood.isFreeToLeave()) {
+         canLeave = false;
       }
 
-      if (var2) {
-         this.c(false);
+      if (canLeave) {
+         this.abortAction(false);
       } else {
-         this.E();
+         this.finishPhase();
       }
    }
 
-   private void L() {
-      Neighborhood var1;
-      if ((var1 = this.neighborhood()).z(12) == -1 && var1.z(11) == -1) {
-         this.E();
+   private void runVisitPhase() {
+      Neighborhood neighborhood;
+      if ((neighborhood = this.neighborhood()).activeTaskSlotOf(12) == -1 && neighborhood.activeTaskSlotOf(11) == -1) {
+         this.finishPhase();
       } else {
-         byte var2 = 7;
-         if (super.canvas.d() < 50) {
-            var2 = 14;
+         byte actionId = 7;
+         if (super.canvas.randomPercent() < 50) {
+            actionId = 14;
          }
 
-         this.a(var2, this.b6);
+         this.queueAction(actionId, this.actionTarget);
       }
    }
 
-   private void M() {
-      Neighborhood var1 = this.neighborhood();
-      int var2 = this.q;
-      if (var1.c(var2) > 0) {
-         var1.b2(var2, -1);
-         this.b6.k2(var2);
-         this.E();
+   private void runTakeItemPhase() {
+      Neighborhood neighborhood = this.neighborhood();
+      int itemId = this.actionObjectId;
+      if (neighborhood.itemCount(itemId) > 0) {
+         neighborhood.addItem(itemId, -1);
+         this.actionTarget.setUpgradedType(itemId);
+         this.finishPhase();
       } else {
-         this.c(false);
+         this.abortAction(false);
       }
    }
 
-   private void N() {
-      Neighborhood var1;
-      if ((var1 = this.neighborhood()).c(3) > 0 && var1.c(4) > 0) {
-         var1.b2(4, -1);
-         this.b6.t2();
-         this.E();
+   private void runBuyFoodPhase() {
+      Neighborhood neighborhood;
+      if ((neighborhood = this.neighborhood()).itemCount(3) > 0 && neighborhood.itemCount(4) > 0) {
+         neighborhood.addItem(4, -1);
+         this.actionTarget.toggleAlternate();
+         this.finishPhase();
       } else {
-         this.c(false);
+         this.abortAction(false);
       }
    }
 
-   public final void E() {
-      this.b(false);
+   public final void finishPhase() {
+      this.endCurrentPhase(false);
    }
 
-   private final void b(boolean var1) {
-      Neighborhood var2 = this.neighborhood();
-      int var4 = this.lot().a();
-      int var5 = var2.L(this.g2);
-      boolean var6 = super.b == 0;
-      Entity var7 = this.b6;
-      switch (this.h2) {
+   private final void endCurrentPhase(boolean force) {
+      Neighborhood neighborhood = this.neighborhood();
+      int lotType = this.lot().areaId();
+      int stepCount = neighborhood.interactionVariantCount(this.actionId);
+      boolean isPlayer = super.variant == 0;
+      Entity target = this.actionTarget;
+      switch (this.actionPhase) {
          case 5:
          case 6:
          case 7:
-            this.H();
-            if (var6) {
-               if (this.g2 == 148) {
-                  var2.e2(3, 0);
-               } else if (this.g2 == 15 || this.g2 == 16 || this.g2 == 17) {
-                  var2.e2(5, 0);
+            this.clearTimedAction();
+            if (isPlayer) {
+               if (this.actionId == 148) {
+                  neighborhood.setNeedModifier(3, 0);
+               } else if (this.actionId == 15 || this.actionId == 16 || this.actionId == 17) {
+                  neighborhood.setNeedModifier(5, 0);
                }
             }
          case 8:
@@ -1836,116 +1836,116 @@ public final class Sim extends Entity {
          default:
             break;
          case 12:
-            var7.B();
+            target.activateModeZero();
             break;
          case 13:
             this.setValueC(0);
             break;
          case 16:
-            if (var6) {
-               var2.e2(0, 0);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(0, 0);
             }
 
-            if (var7 != null && var7.a() == 13) {
-               var7.s2();
+            if (target != null && target.behaviorClass() == 13) {
+               target.playZeroModeAndTick();
             }
             break;
          case 17:
-            if (var6) {
-               var2.e2(3, 0);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(3, 0);
             }
 
-            if (var7 != null) {
-               int var9;
-               if ((var9 = var7.a()) == 17) {
-                  var7.z();
-                  if (var6 && var4 != 0) {
-                     var2.e3(39);
-                     var2.f2(var4, 8);
+            if (target != null) {
+               int targetType;
+               if ((targetType = target.behaviorClass()) == 17) {
+                  target.resetStateTimerToIdle();
+                  if (isPlayer && lotType != 0) {
+                     neighborhood.unlockAchievement(39);
+                     neighborhood.addSimMilestone(lotType, 8);
                   }
-               } else if (var9 == 2) {
-                  var7.m2();
-               } else if (var9 == 3) {
-                  var7.o2();
-                  var7.c(this);
+               } else if (targetType == 2) {
+                  target.enterModeZero();
+               } else if (targetType == 3) {
+                  target.enterModeThreeIfBusy();
+                  target.clearOwner(this);
                }
             }
             break;
          case 18:
-            if (var6) {
-               var2.e2(2, 0);
-               if (var4 != 0) {
-                  var2.e3(40);
-                  var2.f2(var4, 4);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(2, 0);
+               if (lotType != 0) {
+                  neighborhood.unlockAchievement(40);
+                  neighborhood.addSimMilestone(lotType, 4);
                }
             }
             break;
          case 19:
          case 20:
-            if (var6) {
-               var2.e2(1, 0);
-               var2.a9 = false;
-               if (this.h2 == 20 && var4 != 0) {
-                  var2.e3(38);
-                  int var8 = var7.d();
-                  var2.f2(var4, var8);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(1, 0);
+               neighborhood.paused = false;
+               if (this.actionPhase == 20 && lotType != 0) {
+                  neighborhood.unlockAchievement(38);
+                  int partnerType = target.doorOffset();
+                  neighborhood.addSimMilestone(lotType, partnerType);
                }
             }
 
             this.setValueA(-1);
-            this.P();
+            this.refreshLocomotionState();
             break;
          case 25:
-            if (var6) {
-               var2.e2(5, 0);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(5, 0);
             }
             break;
          case 49:
-            if (var7 != null) {
-               var7.q2();
+            if (target != null) {
+               target.setModeZero();
             }
             break;
          case 50:
-            if (var6) {
-               var2.e2(2, 0);
-               var2.e2(1, 0);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(2, 0);
+               neighborhood.setNeedModifier(1, 0);
             }
             break;
          case 52:
-            if (var6) {
-               var2.e2(5, 0);
+            if (isPlayer) {
+               neighborhood.setNeedModifier(5, 0);
             }
 
-            var7.k2();
+            target.markInactive();
       }
 
-      if (!var1) {
-         if (this.p2 < var5 - 1) {
-            this.p2++;
-            int var10 = var2.g(this.g2, this.p2);
-            this.F2(var10);
+      if (!force) {
+         if (this.actionStep < stepCount - 1) {
+            this.actionStep++;
+            int nextPhase = neighborhood.interactionVariant(this.actionId, this.actionStep);
+            this.runActionPhase(nextPhase);
             return;
          }
 
-         this.I();
+         this.completeAction();
       }
    }
 
-   public final void F() {
-      int var1;
-      if (((var1 = this.neighborhood().K(this.g2)) & 1) != 0 && (var1 & 524288) == 0 && this.a4() != null) {
-         this.a4().F();
+   public final void cancelAction() {
+      int actionFlags;
+      if (((actionFlags = this.neighborhood().interactionFlagsOf(this.actionId)) & 1) != 0 && (actionFlags & 524288) == 0 && this.partnerSim() != null) {
+         this.partnerSim().cancelAction();
       }
 
       this.addState(2);
-      this.c(true);
+      this.abortAction(true);
    }
 
-   private final void c(boolean var1) {
+   private final void abortAction(boolean silent) {
       this.addState(4);
-      short var2 = -1;
-      int var3 = 273;
-      switch (this.h2) {
+      short messageId = -1;
+      int messageArg = 273;
+      switch (this.actionPhase) {
          case 0:
          case 2:
          case 3:
@@ -1973,7 +1973,7 @@ public final class Sim extends Entity {
          default:
             break;
          case 1:
-            var2 = 278;
+            messageId = 278;
             break;
          case 5:
          case 6:
@@ -1989,181 +1989,181 @@ public final class Sim extends Entity {
          case 28:
          case 49:
          case 50:
-            this.b(true);
-            this.I();
+            this.endCurrentPhase(true);
+            this.completeAction();
             break;
          case 12:
-            var2 = 779;
-            var3 = this.lot().G(this.q);
+            messageId = 779;
+            messageArg = this.lot().categoryIdOfRef(this.actionObjectId);
             break;
          case 13:
-            var2 = 336;
+            messageId = 336;
             break;
          case 14:
-            var2 = 283;
+            messageId = 283;
             break;
          case 15:
-            var2 = 281;
+            messageId = 281;
             break;
          case 17:
          case 18:
          case 19:
          case 20:
          case 52:
-            this.E();
+            this.finishPhase();
             break;
          case 24:
-            if (this.g2 == 146) {
-               var2 = 315;
+            if (this.actionId == 146) {
+               messageId = 315;
             } else {
-               var2 = 301;
+               messageId = 301;
             }
             break;
          case 39:
-            var2 = 299;
+            messageId = 299;
             break;
          case 40:
-            var2 = 323;
+            messageId = 323;
             break;
          case 45:
-            var2 = 285;
+            messageId = 285;
             break;
          case 46:
-            var2 = 288;
+            messageId = 288;
       }
 
-      if (var2 != -1) {
-         if (!var1 && super.b == 0) {
-            super.screen.c2(var2, var3);
+      if (messageId != -1) {
+         if (!silent && super.variant == 0) {
+            super.screen.chooseDialogOptionAt(messageId, messageArg);
          }
 
-         this.I();
+         this.completeAction();
       }
    }
 
-   private final void O() {
-      GameCanvas var1 = super.canvas;
-      int var2 = this.v;
-      if ((this.v & 257) != 0) {
-         Entity var11 = super.screen.a5(4);
-         this.a(159, var11);
-      } else if (super.screen.b9 != this && (super.type != 0 || super.screen.b9 == null)) {
-         if (this.F != -1 || (this.v & 32) == 0 || super.b == 0 && (!var1.h2 || !super.screen.d3()) || super.b != 0 && (this.v & 4) != 0 || !this.o3()) {
-            if ((var2 & 94) != 0) {
-               int var3 = var1.b(0, d5.length - 1);
-               if ((var2 & 4) != 0) {
-                  var3 = com.ea.sims3.GameCanvas.a(4, d5);
+   private final void chooseAutonomousAction() {
+      GameCanvas canvas = super.canvas;
+      int flags = this.behaviourFlags;
+      if ((this.behaviourFlags & 257) != 0) {
+         Entity spareEntity = super.screen.findEntityByType(4);
+         this.queueAction(159, spareEntity);
+      } else if (super.screen.menuTarget != this && (super.type != 0 || super.screen.menuTarget == null)) {
+         if (this.partnerCooldown != -1 || (this.behaviourFlags & 32) == 0 || super.variant == 0 && (!canvas.autonomousEnabled || !super.screen.isIdleTooLong()) || super.variant != 0 && (this.behaviourFlags & 4) != 0 || !this.tryAutonomousBehaviour()) {
+            if ((flags & 94) != 0) {
+               int index = canvas.randomRange(0, AUTONOMY_FLAGS.length - 1);
+               if ((flags & 4) != 0) {
+                  index = com.ea.sims3.GameCanvas.indexOfInt(4, AUTONOMY_FLAGS);
                }
 
-               for (int var4 = 0; var4 < d5.length; var4++) {
-                  int var5 = d5[var3];
-                  Entity var6;
-                  if ((var2 & var5) != 0 && (var6 = super.screen.c2(var5)) != null) {
-                     Lot var7 = this.lot();
-                     int var8 = var6.type;
-                     short var9 = var7.a16(var8)[0];
-                     this.a(var9, var6);
-                     int var10 = var7.l(var8);
-                     this.v &= ~var10;
+               for (int flagIndex = 0; flagIndex < AUTONOMY_FLAGS.length; flagIndex++) {
+                  int flag = AUTONOMY_FLAGS[index];
+                  Entity entity;
+                  if ((flags & flag) != 0 && (entity = super.screen.findFreeEntityForFlag(flag)) != null) {
+                     Lot lot = this.lot();
+                     int entityType = entity.type;
+                     short actionId = lot.frameRefsAt(entityType)[0];
+                     this.queueAction(actionId, entity);
+                     int clearMask = lot.linkedIdAt(entityType);
+                     this.behaviourFlags &= ~clearMask;
                      return;
                   }
 
-                  var3 = (var3 + 1) % d5.length;
+                  index = (index + 1) % AUTONOMY_FLAGS.length;
                }
             }
          }
       }
    }
 
-   private final boolean o3() {
-      GameCanvas var1 = super.canvas;
-      Neighborhood var2 = this.neighborhood();
-      Sim var3 = null;
-      if (this.D != -1) {
-         var3 = super.screen.a7(this.D);
-         if (!this.a2(var3)) {
-            var3 = null;
+   private final boolean tryAutonomousBehaviour() {
+      GameCanvas canvas = super.canvas;
+      Neighborhood neighborhood = this.neighborhood();
+      Sim targetSim = null;
+      if (this.partnerId != -1) {
+         targetSim = super.screen.findSimByIndex(this.partnerId);
+         if (!this.isValidInteractionTarget(targetSim)) {
+            targetSim = null;
          }
       }
 
-      int var4 = super.b;
-      if (var2.U(var4) != this.lot().a() && !var2.b3(var4, 1) && (var4 != 0 || var1.h2)) {
-         if ((this.v & 512) != 0) {
-            if (var4 != 0) {
-               if (this.m2 > 30000) {
-                  this.v |= 256;
+      int simId = super.variant;
+      if (neighborhood.simHomeLotOf(simId) != this.lot().areaId() && !neighborhood.hasSimMilestone(simId, 1) && (simId != 0 || canvas.autonomousEnabled)) {
+         if ((this.behaviourFlags & 512) != 0) {
+            if (simId != 0) {
+               if (this.stateTime > 30000) {
+                  this.behaviourFlags |= 256;
                }
             } else {
-               this.v &= -513;
+               this.behaviourFlags &= -513;
             }
 
             return true;
          }
 
-         Entity var5;
-         if ((var5 = super.screen.b4(10)) != null) {
-            this.a(152, var5);
-            this.v |= 512;
+         Entity spareEntity;
+         if ((spareEntity = super.screen.findEntityByObjectType(10)) != null) {
+            this.queueAction(152, spareEntity);
+            this.behaviourFlags |= 512;
             return true;
          }
       } else {
-         this.v &= -513;
+         this.behaviourFlags &= -513;
       }
 
-      if (var3 == null) {
-         Sim[] var10;
-         int var6 = (var10 = super.screen.a13()).length;
-         int var7 = var1.b(0, var6 - 1);
+      if (targetSim == null) {
+         Sim[] sims;
+         int count = (sims = super.screen.getSims()).length;
+         int index = canvas.randomRange(0, count - 1);
 
-         for (int var8 = 0; var8 < var6; var8++) {
-            Sim var9 = var10[var7];
-            var7 = (var7 + 1) % var10.length;
-            if (this.a2(var9)) {
-               var3 = var9;
+         for (int simIndex = 0; simIndex < count; simIndex++) {
+            Sim otherSim = sims[index];
+            index = (index + 1) % sims.length;
+            if (this.isValidInteractionTarget(otherSim)) {
+               targetSim = otherSim;
                break;
             }
          }
       }
 
-      if (var3 != null) {
-         int var11;
-         int var12 = (var11 = var1.d()) < 30 ? 63 : (var11 < 70 ? 90 : 76);
-         this.a(var12, (Entity)var3);
+      if (targetSim != null) {
+         int timeOfDay;
+         int actionId = (timeOfDay = canvas.randomPercent()) < 30 ? 63 : (timeOfDay < 70 ? 90 : 76);
+         this.queueAction(actionId, (Entity)targetSim);
          return true;
       } else {
          return false;
       }
    }
 
-   private final boolean a2(Sim var1) {
-      if (var1 != this && var1 != null) {
-         Entity var2 = super.screen.b9;
-         if (var1 == var2) {
+   private final boolean isValidInteractionTarget(Sim other) {
+      if (other != this && other != null) {
+         Entity playerEntity = super.screen.menuTarget;
+         if (other == playerEntity) {
             return false;
-         } else if (var1.b == 0 && var2 != null) {
+         } else if (other.variant == 0 && playerEntity != null) {
             return false;
-         } else if (var1.n3()) {
+         } else if (other.isSitting()) {
             return false;
-         } else if (var1.D != -1 && var1.D != super.b) {
+         } else if (other.partnerId != -1 && other.partnerId != super.variant) {
             return false;
          } else {
-            return var1.hasState(8) ? false : !var1.hasState(1024) || this.neighborhood().j(super.b, 12) != -1;
+            return other.hasState(8) ? false : !other.hasState(1024) || this.neighborhood().simKnownIndex(super.variant, 12) != -1;
          }
       } else {
          return false;
       }
    }
 
-   public final void G() {
-      this.v = 0;
+   public final void clearBehaviourFlags() {
+      this.behaviourFlags = 0;
    }
 
-   public final void s2(int var1) {
-      this.v |= var1;
+   public final void addBehaviourFlags(int flags) {
+      this.behaviourFlags |= flags;
    }
 
-   public final void t2(int var1) {
-      switch (var1) {
+   public final void setLocomotionState(int state) {
+      switch (state) {
          case 4:
          case 5:
          case 7:
@@ -2177,7 +2177,7 @@ public final class Sim extends Entity {
             break;
          case 9:
             this.addState(1024);
-            if (!super.screen.b5()) {
+            if (!super.screen.isNewNeighborhood()) {
                this.setValueA(43);
                this.playAnimation(40, 20);
                return;
@@ -2185,8 +2185,8 @@ public final class Sim extends Entity {
       }
    }
 
-   public final void u2(int var1) {
-      switch (var1) {
+   public final void clearLocomotionState(int state) {
+      switch (state) {
          case 4:
          case 5:
          case 7:
@@ -2200,72 +2200,72 @@ public final class Sim extends Entity {
             break;
          case 9:
             this.clearState(1024);
-            if (!super.screen.b5()) {
+            if (!super.screen.isNewNeighborhood()) {
                this.setValueA(-1);
-               this.C();
+               this.stopAnimation();
                return;
             }
       }
    }
 
-   private void P() {
+   private void refreshLocomotionState() {
       if (this.hasState(1024)) {
-         this.t2(9);
+         this.setLocomotionState(9);
       }
    }
 
-   private void d(Sim var1) {
-      this.D = var1.b;
-      this.F = -1;
-      this.s2(32);
-      var1.D = super.b;
-      var1.F = -1;
-      var1.s2(32);
+   private void linkPartners(Sim other) {
+      this.partnerId = other.variant;
+      this.partnerCooldown = -1;
+      this.addBehaviourFlags(32);
+      other.partnerId = super.variant;
+      other.partnerCooldown = -1;
+      other.addBehaviourFlags(32);
    }
 
-   private final void Q() {
-      Sim var1;
-      if ((var1 = super.screen.a7(this.D)) != null) {
-         var1.v &= -33;
-         var1.D = -1;
-         var1.E = 0;
-         var1.F = 0;
+   private final void unlinkPartner() {
+      Sim other;
+      if ((other = super.screen.findSimByIndex(this.partnerId)) != null) {
+         other.behaviourFlags &= -33;
+         other.partnerId = -1;
+         other.partnerTimer = 0;
+         other.partnerCooldown = 0;
       }
 
-      this.v &= -33;
-      this.D = -1;
-      this.E = 0;
-      this.F = 0;
+      this.behaviourFlags &= -33;
+      this.partnerId = -1;
+      this.partnerTimer = 0;
+      this.partnerCooldown = 0;
    }
 
-   private final boolean p3() {
-      Neighborhood var1;
-      int var2;
-      if ((var2 = (var1 = this.neighborhood()).V(super.b)) != -1) {
-         int var3 = var1.W(super.b);
-         if ((var1.d(var2, var3) & 1) != 0) {
+   private final boolean isNearWater() {
+      Neighborhood neighborhood;
+      int areaId;
+      if ((areaId = (neighborhood = this.neighborhood()).simLot(super.variant)) != -1) {
+         int areaValue = neighborhood.simHour(super.variant);
+         if ((neighborhood.lotHourDays(areaId, areaValue) & 1) != 0) {
             return true;
          }
       }
 
-      return super.type == 0 && var1.c(35) != 0 ? true : var1.c3(super.b, 1);
+      return super.type == 0 && neighborhood.itemCount(35) != 0 ? true : neighborhood.simHasFlag(super.variant, 1);
    }
 
-   public final void c(Entity var1) {
-      this.a3(var1);
-      int[] var3 = com.ea.sims3.Entity.a;
-      var1.a(var3, this.x);
-      this.moveTo(var3[0], var3[1]);
-      this.a2(var1);
-      this.n2((super.facing + 2) % 4);
-      this.n2 = 4;
-      this.o2 = 4;
-      this.a10 = var1;
-      var1.b(this);
-      if (super.b == 0) {
-         super.screen.d(var1);
+   public final void sitDown(Entity target) {
+      this.reserveTarget(target);
+      int[] slotOffsets = com.ea.sims3.Entity.boundsScratch;
+      target.computeSlotPosition(slotOffsets, this.reservedSlot);
+      this.moveTo(slotOffsets[0], slotOffsets[1]);
+      this.faceEntity(target);
+      this.setFacing((super.facing + 2) % 4);
+      this.poseIndex = 4;
+      this.targetPose = 4;
+      this.interactionTarget = target;
+      target.setOwner(this);
+      if (super.variant == 0) {
+         super.screen.placeCameraOnEntity(target);
       }
 
-      this.a(122, var1);
+      this.queueAction(122, target);
    }
 }

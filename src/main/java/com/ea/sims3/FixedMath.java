@@ -59,182 +59,182 @@ public abstract class FixedMath {
    private FixedMath() {
    }
 
-   public static final int sign(int var0) {
-      if (var0 > 0) {
+   public static final int sign(int value) {
+      if (value > 0) {
          return 1;
       } else {
-         return var0 < 0 ? -1 : 0;
+         return value < 0 ? -1 : 0;
       }
    }
 
-   public static final int clamp(int var0, int var1, int var2) {
-      return Math.max(var1, Math.min(var2, var0));
+   public static final int clamp(int value, int min, int max) {
+      return Math.max(min, Math.min(max, value));
    }
 
-   public static final int mul(int var0, int var1) {
-      return (int)((long)var0 * var1 >> 16);
+   public static final int mul(int left, int right) {
+      return (int)((long)left * right >> 16);
    }
 
-   public static final int div(int var0, int var1) {
-      return (int)(((long)var0 << 16) / var1);
+   public static final int div(int dividend, int divisor) {
+      return (int)(((long)dividend << 16) / divisor);
    }
 
-   public static final int length(int var0, int var1) {
-      long var2 = var0;
-      long var4 = var1;
-      return sqrt((int)(var2 * var2 + var4 * var4 >> 16));
+   public static final int length(int x, int y) {
+      long wideX = x;
+      long wideY = y;
+      return sqrt((int)(wideX * wideX + wideY * wideY >> 16));
    }
 
-   public static final int wrapAngle(int var0) {
-      if (var0 > 205887) {
-         var0 -= Math.max(1, var0 / 411775) * 411775;
-      } else if (var0 < -205887) {
-         var0 += Math.max(1, -var0 / 411775) * 411775;
+   public static final int wrapAngle(int angle) {
+      if (angle > 205887) {
+         angle -= Math.max(1, angle / 411775) * 411775;
+      } else if (angle < -205887) {
+         angle += Math.max(1, -angle / 411775) * 411775;
       }
 
-      return var0;
+      return angle;
    }
 
-   public static final int cos(int var0) {
-      int var1;
-      int var2;
-      int var3 = (var2 = mul((var1 = var0 >= 0 ? 1 : -1) * var0 << 1, 20861) & 262143) >> 16 & 3;
-      var2 &= 65535;
-      var1 = 1;
-      if ((var3 & 1) != 0) {
-         var1 = -1;
-         var2 = 65536 - var2;
+   public static final int cos(int angle) {
+      int sign;
+      int angle16;
+      int quadrant = (angle16 = mul((sign = angle >= 0 ? 1 : -1) * angle << 1, 20861) & 262143) >> 16 & 3;
+      angle16 &= 65535;
+      sign = 1;
+      if ((quadrant & 1) != 0) {
+         sign = -1;
+         angle16 = 65536 - angle16;
       }
 
-      if ((var3 & 2) != 0) {
-         var1 = -var1;
+      if ((quadrant & 2) != 0) {
+         sign = -sign;
       }
 
-      var2 = mul(var2, 205887) >> 1;
-      int var4 = 262144;
-      int var5;
-      int var6 = (var5 = mul(var2, var2)) << 1;
-      var4 -= var6;
-      var6 = mul(mul(var5, var6), 5461);
-      var4 += var6;
-      var6 = mul(mul(var5, var6), 2185);
-      var4 -= var6;
-      var6 = mul(mul(var5, var6), 1170);
-      int var13;
-      return (var13 = var4 + var6) * var1 >> 2;
+      angle16 = mul(angle16, 205887) >> 1;
+      int series = 262144;
+      int square;
+      int term = (square = mul(angle16, angle16)) << 1;
+      series -= term;
+      term = mul(mul(square, term), 5461);
+      series += term;
+      term = mul(mul(square, term), 2185);
+      series -= term;
+      term = mul(mul(square, term), 1170);
+      int result;
+      return (result = series + term) * sign >> 2;
    }
 
-   public static final int sin(int var0) {
-      if (var0 <= -65536) {
+   public static final int sin(int angle) {
+      if (angle <= -65536) {
          return 205887;
-      } else if (65535 + var0 < sinTableNegative.length) {
-         return sinTableNegative[65535 + var0];
-      } else if (var0 >= 65536) {
+      } else if (65535 + angle < sinTableNegative.length) {
+         return sinTableNegative[65535 + angle];
+      } else if (angle >= 65536) {
          return 0;
-      } else if (65535 - var0 < sinTablePositive.length) {
-         return sinTablePositive[65535 - var0];
+      } else if (65535 - angle < sinTablePositive.length) {
+         return sinTablePositive[65535 - angle];
       } else {
-         long var1 = (long)var0 * var0;
-         if (var0 > 46661) {
-            return 102944 - sin(sqrt((int)(4294967296L - var1 + 32768L >> 16)));
-         } else if (var0 < -46661) {
-            return 102944 + sin(sqrt((int)(4294967296L - var1 + 32768L >> 16)));
+         long angleSquared = (long)angle * angle;
+         if (angle > 46661) {
+            return 102944 - sin(sqrt((int)(4294967296L - angleSquared + 32768L >> 16)));
+         } else if (angle < -46661) {
+            return 102944 + sin(sqrt((int)(4294967296L - angleSquared + 32768L >> 16)));
          } else {
-            int var3 = (int)(var1 + 32768L >> 16);
-            int var5 = -var0;
-            int var4 = mul(var0, var3);
-            var5 -= mul(10923, var4);
-            var4 = mul(var4, var3);
-            var5 -= mul(4915, var4);
-            var4 = mul(var4, var3);
-            var5 -= mul(2926, var4);
-            return 102944 + var5;
+            int square = (int)(angleSquared + 32768L >> 16);
+            int series = -angle;
+            int term = mul(angle, square);
+            series -= mul(10923, term);
+            term = mul(term, square);
+            series -= mul(4915, term);
+            term = mul(term, square);
+            series -= mul(2926, term);
+            return 102944 + series;
          }
       }
    }
 
-   public static final int sinShifted(int var0) {
-      return cos(var0 - 102944);
+   public static final int sinShifted(int angle) {
+      return cos(angle - 102944);
    }
 
-   public static final int atan2(int var0, int var1) {
-      if (var0 == 0) {
-         return var1 < 0 ? 205887 : 0;
-      } else if (var1 == 0) {
-         return var0 < 0 ? -102944 : 102944;
+   public static final int atan2(int y, int x) {
+      if (y == 0) {
+         return x < 0 ? 205887 : 0;
+      } else if (x == 0) {
+         return y < 0 ? -102944 : 102944;
       } else {
-         int var2 = length(var0, var1);
-         int var3 = var1 < 0 ? -var1 : var1;
-         int var5 = sin(var2 > 0 ? div(var3, var2) : var3);
-         if (var0 < 0 && var1 < 0) {
-            var5 -= 205887;
-         } else if (var0 < 0 && var1 > 0) {
-            var5 = -var5;
-         } else if (var0 > 0 && var1 < 0) {
-            var5 = 205887 - var5;
+         int length = length(y, x);
+         int absX = x < 0 ? -x : x;
+         int angle = sin(length > 0 ? div(absX, length) : absX);
+         if (y < 0 && x < 0) {
+            angle -= 205887;
+         } else if (y < 0 && x > 0) {
+            angle = -angle;
+         } else if (y > 0 && x < 0) {
+            angle = 205887 - angle;
          }
 
-         return var5;
+         return angle;
       }
    }
 
-   public static final int sqrt(int var0) {
-      if (var0 < 0) {
+   public static final int sqrt(int value) {
+      if (value < 0) {
          return 0;
-      } else if (var0 < sqrtTableLength) {
-         return sqrtTable[var0];
+      } else if (value < sqrtTableLength) {
+         return sqrtTable[value];
       } else {
-         int var1 = var0;
-         if (var0 < sqrtTableMax) {
-            var1 = var0 << 2;
-         } else if (var0 > 4194304) {
-            var1 = var0 >> 2;
+         int adjusted = value;
+         if (value < sqrtTableMax) {
+            adjusted = value << 2;
+         } else if (value > 4194304) {
+            adjusted = value >> 2;
          }
 
-         int var2;
-         if (var1 > 65200 && var1 < 65800) {
-            var2 = var1 + 65536 >> 1;
+         int result;
+         if (adjusted > 65200 && adjusted < 65800) {
+            result = adjusted + 65536 >> 1;
          } else {
-            int var3;
-            if ((var3 = (var1 >> 3) + 131072) > 8388608) {
-               var3 = 8388608;
+            int low;
+            if ((low = (adjusted >> 3) + 131072) > 8388608) {
+               low = 8388608;
             }
 
-            int var4 = sqrtTableMax;
-            var2 = var3 + var4 >> 1;
+            int high = sqrtTableMax;
+            result = low + high >> 1;
 
-            for (int var5 = 0; var5 < 13; var5++) {
-               if (mul(var2, var2) > var1) {
-                  var3 = var2;
+            for (int step = 0; step < 13; step++) {
+               if (mul(result, result) > adjusted) {
+                  low = result;
                } else {
-                  var4 = var2;
+                  high = result;
                }
 
-               var2 = var3 + var4 >> 1;
+               result = low + high >> 1;
             }
          }
 
-         if (var0 < sqrtTableMax) {
-            var2 >>= 1;
-         } else if (var0 > 4194304) {
-            var2 <<= 1;
+         if (value < sqrtTableMax) {
+            result >>= 1;
+         } else if (value > 4194304) {
+            result <<= 1;
          }
 
-         return var2;
+         return result;
       }
    }
 
-   public static final int smoothStep(int var0, int var1, int var2) {
-      if (var2 < var0) {
+   public static final int smoothStep(int edge0, int edge1, int x) {
+      if (x < edge0) {
          return 0;
-      } else if (var2 >= var1) {
+      } else if (x >= edge1) {
          return 65536;
       } else {
-         int var3 = var2 - var0;
-         int var4 = var1 - var0;
-         int var5;
-         int var6 = mul(var5 = div(var3, var4), var5);
-         return -2 * mul(var6, var5) + 3 * var6;
+         int deltaX = x - edge0;
+         int deltaEdge = edge1 - edge0;
+         int ratio;
+         int squared = mul(ratio = div(deltaX, deltaEdge), ratio);
+         return -2 * mul(squared, ratio) + 3 * squared;
       }
    }
 }

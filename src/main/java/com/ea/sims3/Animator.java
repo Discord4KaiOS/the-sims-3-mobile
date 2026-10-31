@@ -15,11 +15,11 @@ public final class Animator {
       this.flags = 0;
    }
 
-   public final boolean advance(int var1) {
+   public final boolean advance(int deltaMs) {
       if ((this.flags & 2) == 0) {
          return false;
       } else {
-         this.frameTime += var1;
+         this.frameTime += deltaMs;
          if (this.frameTime > SpriteRenderer.frameDuration(this.animId, this.frame)) {
             if ((this.flags & 8) != 0) {
                this.stepBackward();
@@ -70,16 +70,16 @@ public final class Animator {
       }
    }
 
-   public final void play(int var1, int var2) {
-      boolean var3;
-      if (!(var3 = (var2 & 16) != 0) && this.animId == var1) {
+   public final void play(int newAnimId, int playFlags) {
+      boolean preserveFrame;
+      if (!(preserveFrame = (playFlags & 16) != 0) && this.animId == newAnimId) {
          if (this.frame >= SpriteRenderer.frameCount(this.animId)) {
             this.frame = 0;
          } else if (this.frame < 0) {
             this.frame = SpriteRenderer.frameCount(this.animId) - 1;
          }
       } else {
-         this.animId = var1;
+         this.animId = newAnimId;
          if ((this.flags & 8) != 0) {
             this.frame = SpriteRenderer.frameCount(this.animId) - 1;
          } else {
@@ -89,12 +89,12 @@ public final class Animator {
          this.frameTime = 0;
       }
 
-      this.flags = 3 | var2 & 4;
+      this.flags = 3 | playFlags & 4;
    }
 
-   public final void draw(Graphics var1, int var2, int var3) {
+   public final void draw(Graphics gfx, int x, int y) {
       if (this.animId >= 0) {
-         SpriteRenderer.drawFrame(var1, this.animId, this.frame, var2, var3);
+         SpriteRenderer.drawFrame(gfx, this.animId, this.frame, x, y);
       }
    }
 
@@ -106,8 +106,8 @@ public final class Animator {
       return SpriteRenderer.countSpecialParts(this.animId, this.frame);
    }
 
-   public final boolean matchesFrame(int[] var1, int var2) {
-      return SpriteRenderer.hitTest(var1, this.animId, this.frame, var2);
+   public final boolean matchesFrame(int[] hitMask, int x) {
+      return SpriteRenderer.hitTest(hitMask, this.animId, this.frame, x);
    }
 
    public final boolean isRunning() {
@@ -118,8 +118,8 @@ public final class Animator {
       return (this.flags & 4) != 0;
    }
 
-   public final void setRunning(boolean var1) {
-      if (var1) {
+   public final void setRunning(boolean running) {
+      if (running) {
          this.flags |= 2;
       } else {
          this.flags &= -3;
