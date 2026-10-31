@@ -373,7 +373,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int areaId() {
-      return com.ea.sims3.GameCanvas.indexOfByte(this.areaId, STAGES) != -1 ? 0 : this.areaId;
+      return GameCanvas.indexOfByte(this.areaId, STAGES) != -1 ? 0 : this.areaId;
    }
 
    public final int lotIdAt(int lotId) {
@@ -381,7 +381,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int indexOfLotId(int lotId) {
-      return com.ea.sims3.GameCanvas.indexOfShort(lotId, this.lotIds);
+      return GameCanvas.indexOfShort(lotId, this.lotIds);
    }
 
    private void resetLiveObjects() {
@@ -393,7 +393,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          this.liveObjectFacing = new byte[150];
       }
 
-      com.ea.sims3.GameCanvas.fillShorts(this.liveObjectIds, -1);
+      GameCanvas.fillShorts(this.liveObjectIds, -1);
       byte[] levelX = this.levelObjectX[0];
       byte[] levelY = this.levelObjectY[0];
       short[] levelIds = this.levelObjectIds[0];
@@ -429,12 +429,12 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       for (int slotIndex = ids.length - 1; slotIndex >= 0; slotIndex--) {
          short id;
-         if ((id = ids[slotIndex]) != -1 && (flags[id] & 131072) != 0 && com.ea.sims3.GameCanvas.indexOfShortFrom(id, ids, slotIndex + 1) == -1) {
+         if ((id = ids[slotIndex]) != -1 && (flags[id] & 131072) != 0 && GameCanvas.indexOfShortFrom(id, ids, slotIndex + 1) == -1) {
             placedCount++;
          }
       }
 
-      int expectedCount = com.ea.sims3.GameCanvas.countAnyFlagInt(131072, flags);
+      int expectedCount = GameCanvas.countAnyFlagInt(131072, flags);
       return placedCount == expectedCount;
    }
 
@@ -456,7 +456,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          byte y = levelY[slotIndex];
          if (id != ids[slotIndex]) {
             if (ids[slotIndex] != -1) {
-               int freeSlot = com.ea.sims3.GameCanvas.indexOfShort(-1, ids);
+               int freeSlot = GameCanvas.indexOfShort(-1, ids);
                ids[freeSlot] = ids[slotIndex];
                liveXs[freeSlot] = liveXs[slotIndex];
                liveYs[freeSlot] = liveYs[slotIndex];
@@ -513,7 +513,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int addObject(int objectTypeId, int worldX, int worldY, int facing) {
-      int slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.liveObjectIds);
+      int slot = GameCanvas.indexOfShort(-1, this.liveObjectIds);
       this.liveObjectIds[slot] = (short)objectTypeId;
       this.liveObjectX[slot] = (byte)toTileX(worldX);
       this.liveObjectY[slot] = (byte)toTileY(worldY);
@@ -554,7 +554,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean hasObject(int objectId) {
-      return com.ea.sims3.GameCanvas.indexOfShort(objectId, this.liveObjectIds) != -1;
+      return GameCanvas.indexOfShort(objectId, this.liveObjectIds) != -1;
    }
 
    public final void resetStages() {
@@ -604,7 +604,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          this.cellFlags = new byte[this.gridWidth * this.gridHeight];
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.cellFlags, 0);
+      GameCanvas.fillBytes(this.cellFlags, 0);
    }
 
    public final void loadArea(int area) {
@@ -660,7 +660,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       this.buildRoomEdges();
       int spawnMode = this.areaId() == 0 ? 2 : 3;
-      spawnX = com.ea.sims3.GameCanvas.indexOfShort(spawnMode, ids);
+      spawnX = GameCanvas.indexOfShort(spawnMode, ids);
       int playerSlot = xRow[spawnX];
       byte playerY = yRow[spawnX];
       byte playerFacing = facings[spawnX];
@@ -672,7 +672,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       for (int simIndex = 1; simIndex < simCount; simIndex++) {
          int simFlags;
          if (neighborhood.simHomeLotOf(simIndex) == level && ((simFlags = neighborhood.lotStateNow(simIndex)) & 8) != 0) {
-            playerSlot = com.ea.sims3.GameCanvas.indexOfShortFrom(2, ids, playerSlot + 1);
+            playerSlot = GameCanvas.indexOfShortFrom(2, ids, playerSlot + 1);
             byte simX = xRow[playerSlot];
             byte simY = yRow[playerSlot];
             byte simFacing = facings[playerSlot];
@@ -843,7 +843,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    public final void openHouse(int imageId) {
       this.initGrid();
       GameCanvas canvas = this.canvas;
-      Image image = com.ea.sims3.ResourceLoader.loadImage(0);
+      Image image = ResourceLoader.loadImage(0);
       Tile tile;
       (tile = new Tile(imageId, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
       tile.setBackingEnabled(true);
@@ -866,7 +866,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    public final void openArea(boolean resetView) {
       this.initGrid();
       GameCanvas canvas = this.canvas;
-      Image image = com.ea.sims3.ResourceLoader.loadImage(1);
+      Image image = ResourceLoader.loadImage(1);
       Tile tile;
       (tile = new Tile(40, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
       tile.setBackingEnabled(true);
@@ -1085,7 +1085,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void buildGroundTiles(int level) {
       if (this.groundTile == null) {
-         Image image = com.ea.sims3.ResourceLoader.loadImage(0);
+         Image image = ResourceLoader.loadImage(0);
          Tile tile;
          (tile = new Tile(64, 64, image)).setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
          tile.setBackingEnabled(true);
@@ -1093,7 +1093,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
 
       if (this.overlayTile == null) {
-         Image overlayImage = com.ea.sims3.ResourceLoader.loadImage(2);
+         Image overlayImage = ResourceLoader.loadImage(2);
          Tile overlay = new Tile(64, 64, overlayImage);
          this.overlayTile = overlay;
          overlay.setBounds(this.boundsX, this.boundsY, this.boundsWidth, this.boundsHeight);
@@ -1136,8 +1136,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          }
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.groundTile.cellIndices, 16);
-      com.ea.sims3.GameCanvas.fillBytes(this.overlayTile.cellIndices, 60);
+      GameCanvas.fillBytes(this.groundTile.cellIndices, 16);
+      GameCanvas.fillBytes(this.overlayTile.cellIndices, 60);
       int halfWidth = this.gridHalfWidth;
 
       for (int floorSlot = 0; floorSlot < floorCount; floorSlot++) {
@@ -1416,14 +1416,14 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          for (int rowIndex = 0; row + rowIndex < rows && rowIndex < pattern.length; rowIndex++) {
             byte id = pattern[rowIndex];
             int index;
-            if ((col & 1) == 0 && (index = com.ea.sims3.GameCanvas.indexOfByte(id, mirrorTable)) != -1) {
+            if ((col & 1) == 0 && (index = GameCanvas.indexOfByte(id, mirrorTable)) != -1) {
                id = mapTable[index];
             }
 
             index = row + rowIndex;
             cells[col + index * stride] = id;
-            int worldX = com.ea.sims3.Tile.toWorld16(col);
-            int worldY = com.ea.sims3.Tile.toWorld8(index);
+            int worldX = Tile.toWorld16(col);
+            int worldY = Tile.toWorld8(index);
             int fixedX = this.toWorldX(worldX, worldY);
             int fixedY = this.toWorldY(worldX, worldY);
             int tileX = toTileX(fixedX);
@@ -1467,7 +1467,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                overlayBelow = table8[0];
             }
 
-            if ((this.indexInTable(overlayAbove, 27) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table20) != -1) && overlayBelow == 60) {
+            if ((this.indexInTable(overlayAbove, 27) != -1 || GameCanvas.indexOfByte(overlayAbove, table20) != -1) && overlayBelow == 60) {
                overlayBelow = table14[0];
                int indexA = index + stride;
                if (overlayCells[indexA] == 60) {
@@ -1475,7 +1475,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                }
             }
 
-            if ((com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table26) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table21) != -1) && overlayBelow == 60) {
+            if ((GameCanvas.indexOfByte(overlayAbove, table26) != -1 || GameCanvas.indexOfByte(overlayAbove, table21) != -1) && overlayBelow == 60) {
                overlayBelow = table8[0];
                int indexB = index + stride;
                if (overlayCells[indexB] == 60) {
@@ -1484,27 +1484,27 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
             }
 
             int indexC;
-            if ((indexC = com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table14)) != -1) {
-               if (com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20) != -1) {
+            if ((indexC = GameCanvas.indexOfByte(overlayAbove, table14)) != -1) {
+               if (GameCanvas.indexOfByte(overlayBelow, table8) != -1 || GameCanvas.indexOfByte(overlayBelow, table20) != -1) {
                   overlayAbove = table21[indexC];
-               } else if (com.ea.sims3.GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
+               } else if (GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
                   overlayBelow = this.tableValueAt(18, indexC);
                }
             }
 
-            if ((indexC = com.ea.sims3.GameCanvas.indexOfByte(overlayAbove, table8)) != -1) {
-               if (com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14) != -1 || com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21) != -1) {
+            if ((indexC = GameCanvas.indexOfByte(overlayAbove, table8)) != -1) {
+               if (GameCanvas.indexOfByte(overlayBelow, table14) != -1 || GameCanvas.indexOfByte(overlayBelow, table21) != -1) {
                   overlayAbove = table20[indexC];
-               } else if (com.ea.sims3.GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
+               } else if (GameCanvas.indexOfByte(groundBelow, table5) != -1 && overlayBelow == 60) {
                   overlayBelow = this.tableValueAt(12, indexC);
                }
             }
 
             int indexD;
-            if ((indexD = com.ea.sims3.GameCanvas.indexOfByte(groundAbove, table5)) != -1) {
+            if ((indexD = GameCanvas.indexOfByte(groundAbove, table5)) != -1) {
                int indexE;
-               if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8)) == -1 && (indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20)) == -1) {
-                  if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14)) == -1 && (indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21)) == -1) {
+               if ((indexE = GameCanvas.indexOfByte(overlayBelow, table8)) == -1 && (indexE = GameCanvas.indexOfByte(overlayBelow, table20)) == -1) {
+                  if ((indexE = GameCanvas.indexOfByte(overlayBelow, table14)) == -1 && (indexE = GameCanvas.indexOfByte(overlayBelow, table21)) == -1) {
                      byte[] table24 = this.tableAt(24);
                      if (indexD == 3) {
                         int randomIdx = this.canvas.randomRange(0, table4.length - 1);
@@ -1512,7 +1512,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                      }
 
                      byte overlayRight;
-                     if (com.ea.sims3.GameCanvas.indexOfByte(overlayRight = overlayCells[x + 1 + y * stride], table20) != -1) {
+                     if (GameCanvas.indexOfByte(overlayRight = overlayCells[x + 1 + y * stride], table20) != -1) {
                         if (joined) {
                            if (overlayAbove == 60) {
                               overlayAbove = this.tableValueAt(22, 0);
@@ -1538,16 +1538,16 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                      }
 
                      byte overlayLeft;
-                     if (com.ea.sims3.GameCanvas.indexOfByte(overlayLeft = overlayCells[x - 1 + y * stride], table21) != -1) {
+                     if (GameCanvas.indexOfByte(overlayLeft = overlayCells[x - 1 + y * stride], table21) != -1) {
                         if (overlayAbove == 60) {
                            byte overlayDiag;
-                           int idxDiag = com.ea.sims3.GameCanvas.indexOfByte(overlayDiag = overlayCells[x - 1 + (y + 1) * stride], table8);
+                           int idxDiag = GameCanvas.indexOfByte(overlayDiag = overlayCells[x - 1 + (y + 1) * stride], table8);
                            overlayAbove = table24[idxDiag];
                            overlayBelow = this.tableValueAt(25, idxDiag);
                         }
                      } else {
                         int idx8;
-                        if ((idx8 = com.ea.sims3.GameCanvas.indexOfByte(overlayLeft, table26)) != -1) {
+                        if ((idx8 = GameCanvas.indexOfByte(overlayLeft, table26)) != -1) {
                            if (!joined) {
                               idx8 = 0;
                               byte endId2 = this.tableValueAt(33, 0);
@@ -1598,9 +1598,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                         overlayCells[rowIndex3] = 48;
                      }
 
-                     if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table14)) != -1) {
+                     if ((indexE = GameCanvas.indexOfByte(overlayBelow, table14)) != -1) {
                         overlayBelow = this.tableValueAt(19, indexE);
-                     } else if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table21)) != -1) {
+                     } else if ((indexE = GameCanvas.indexOfByte(overlayBelow, table21)) != -1) {
                         overlayBelow = table26[indexE];
                      }
 
@@ -1629,9 +1629,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                      overlayCells[rowIndex4] = 48;
                   }
 
-                  if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table8)) != -1) {
+                  if ((indexE = GameCanvas.indexOfByte(overlayBelow, table8)) != -1) {
                      overlayBelow = this.tableValueAt(13, indexE);
-                  } else if ((indexE = com.ea.sims3.GameCanvas.indexOfByte(overlayBelow, table20)) != -1) {
+                  } else if ((indexE = GameCanvas.indexOfByte(overlayBelow, table20)) != -1) {
                      overlayBelow = this.tableValueAt(27, indexE);
                   }
 
@@ -1678,8 +1678,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
                || this.indexInTable(id, 14) != -1
                || this.indexInTable(id, 16) != -1
                || this.indexInTable(id, 15) != -1) {
-               int worldX = com.ea.sims3.Tile.toWorld16(x);
-               int worldY = com.ea.sims3.Tile.toWorld8(y);
+               int worldX = Tile.toWorld16(x);
+               int worldY = Tile.toWorld8(y);
                int fixedX = this.toWorldX(worldX, worldY);
                int fixedY = this.toWorldY(worldX, worldY);
                int tileX = toTileX(fixedX);
@@ -1696,14 +1696,14 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       int stride = tile.columns;
       int rows = tile.rowCountValue;
       byte[] table = this.tableAt(34);
-      com.ea.sims3.GameCanvas.fillBytes(this.cellFlags, 128);
+      GameCanvas.fillBytes(this.cellFlags, 128);
 
       for (int x = 0; x < stride; x++) {
          for (int y = 0; y < rows; y++) {
             byte id;
-            if (com.ea.sims3.GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1) {
-               int worldX = com.ea.sims3.Tile.toWorld16(x);
-               int worldY = com.ea.sims3.Tile.toWorld8(y);
+            if (GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1) {
+               int worldX = Tile.toWorld16(x);
+               int worldY = Tile.toWorld8(y);
                int fixedX = this.toWorldX(worldX, worldY);
                int fixedY = this.toWorldY(worldX, worldY);
                int tileX = toTileX(fixedX);
@@ -1744,15 +1744,15 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       for (int x = 0; x < stride; x++) {
          for (int y = 0; y < rows; y++) {
             byte id;
-            boolean matched = com.ea.sims3.GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1;
+            boolean matched = GameCanvas.indexOfByte(id = cells[x + y * stride], table) != -1;
             if (x == 0 || x == stride - 1 || y == 0 || y == rows - 1 || matched) {
                int xAdj = x;
                if (!matched && x == stride - 1) {
                   xAdj = x + 1;
                }
 
-               int worldX = com.ea.sims3.Tile.toWorld16(xAdj);
-               int worldY = com.ea.sims3.Tile.toWorld8(y);
+               int worldX = Tile.toWorld16(xAdj);
+               int worldY = Tile.toWorld8(y);
                int fixedX = this.toWorldX(worldX, worldY);
                int fixedY = this.toWorldY(worldX, worldY);
                int tileX = toTileX(fixedX);
@@ -2064,11 +2064,11 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int itemCount() {
-      return this.objectIds.length - com.ea.sims3.GameCanvas.countEqualShorts(-1, this.objectIds);
+      return this.objectIds.length - GameCanvas.countEqualShorts(-1, this.objectIds);
    }
 
    public final int indexOfItem(int value) {
-      return com.ea.sims3.GameCanvas.nthIndexNotEqualShort(value, this.objectIds, -1);
+      return GameCanvas.nthIndexNotEqualShort(value, this.objectIds, -1);
    }
 
    private final byte[] tableAt(int tableId) {
@@ -2080,7 +2080,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    private final int indexInTable(int value, int tableId) {
-      return com.ea.sims3.GameCanvas.indexOfByte(value, this.layoutTables[tableId]);
+      return GameCanvas.indexOfByte(value, this.layoutTables[tableId]);
    }
 
    public final int categoryCount() {
@@ -2112,7 +2112,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int indexOfCategoryId(int categoryId) {
-      return com.ea.sims3.GameCanvas.indexOfShort(categoryId, this.categoryIds);
+      return GameCanvas.indexOfShort(categoryId, this.categoryIds);
    }
 
    private static int soundMask(int soundId) {
@@ -2137,16 +2137,16 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int countBySoundMask(int soundId) {
-      return com.ea.sims3.GameCanvas.countAnyFlagInt(soundMask(soundId), this.categoryMasks);
+      return GameCanvas.countAnyFlagInt(soundMask(soundId), this.categoryMasks);
    }
 
    public final int bitForSound(int soundId, int mask) {
       int bit = soundMask(soundId);
-      return com.ea.sims3.GameCanvas.nthIndexWithFlagInt(mask, this.categoryMasks, bit);
+      return GameCanvas.nthIndexWithFlagInt(mask, this.categoryMasks, bit);
    }
 
    public final int volumeOf(int categoryId) {
-      return com.ea.sims3.FixedMath.mul(this.categoryVolumes[categoryId] << 16, 22937);
+      return FixedMath.mul(this.categoryVolumes[categoryId] << 16, 22937);
    }
 
    public final int refAt(int categoryId) {
@@ -2162,7 +2162,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int indexOfRef(int ref) {
-      return com.ea.sims3.GameCanvas.indexOfByte(ref, this.categoryRefs);
+      return GameCanvas.indexOfByte(ref, this.categoryRefs);
    }
 
    public final int categoryIdOfRef(int ref) {
@@ -2552,9 +2552,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    private void resetPathfinder() {
       this.closedCount = 0;
       this.openCount = 0;
-      com.ea.sims3.GameCanvas.fillShortMatrix(this.parentLinks, 0);
-      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathCost, 0);
-      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathScore, 0);
-      com.ea.sims3.GameCanvas.fillIntMatrix(this.pathHeuristic, 0);
+      GameCanvas.fillShortMatrix(this.parentLinks, 0);
+      GameCanvas.fillIntMatrix(this.pathCost, 0);
+      GameCanvas.fillIntMatrix(this.pathScore, 0);
+      GameCanvas.fillIntMatrix(this.pathHeuristic, 0);
    }
 }

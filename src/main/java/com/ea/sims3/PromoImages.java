@@ -14,7 +14,7 @@ public final class PromoImages extends SdkMoreGames implements SpriteIndex {
          if (name.equals(PROMO_IMAGE_NAMES[promoIndex])) {
             int variant = 0;
             if (promoIndex == 2) {
-               variant = com.ea.sims3.GameCanvas.instance().language;
+               variant = GameCanvas.instance().language;
             }
 
             return SpriteRenderer.getTileImage(195, promoIndex, variant);

@@ -222,7 +222,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    public final void setTipValue(int tipKey, int tipValue) {
       int tipKeyCopy;
       int slot;
-      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(tipKeyCopy = 0 | tipKey, this.pendingTips)) != -1) {
+      if ((slot = GameCanvas.indexOfShort(tipKeyCopy = 0 | tipKey, this.pendingTips)) != -1) {
          int highBits = this.pendingTips[slot] & '\uff00';
          this.pendingTips[slot] = (short)(highBits | tipValue);
       }
@@ -872,8 +872,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       int closing;
       if (sim == 0) {
          int needAmount = this.needValues[1];
-         int factor = 65536 - com.ea.sims3.FixedMath.div(needAmount, 6553600);
-         closing = now + com.ea.sims3.FixedMath.mul(factor, 600);
+         int factor = 65536 - FixedMath.div(needAmount, 6553600);
+         closing = now + FixedMath.mul(factor, 600);
       } else {
          closing = now + 600;
       }
@@ -926,7 +926,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.itemCounts = new byte[count];
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.itemCounts, 0);
+      GameCanvas.fillBytes(this.itemCounts, 0);
    }
 
    public final int itemCount(int item) {
@@ -934,11 +934,11 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int ownedItemCount() {
-      return this.itemCounts.length - com.ea.sims3.GameCanvas.countEqualBytes(0, this.itemCounts);
+      return this.itemCounts.length - GameCanvas.countEqualBytes(0, this.itemCounts);
    }
 
    public final int itemCountOf(int item) {
-      return com.ea.sims3.GameCanvas.nthIndexNotEqualByte(item, this.itemCounts, 0);
+      return GameCanvas.nthIndexNotEqualByte(item, this.itemCounts, 0);
    }
 
    public final void addItem(int item, int delta) {
@@ -954,30 +954,30 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
    public final void buildItemMenu(short[] labels, short[] commands, int interaction) {
       short textId = this.interactionTextIds[interaction];
-      com.ea.sims3.GameCanvas.initList(labels, textId);
-      com.ea.sims3.GameCanvas.initList(commands, textId);
+      GameCanvas.initList(labels, textId);
+      GameCanvas.initList(commands, textId);
       Lot lot = this.canvas.lot;
       byte[] counts = this.itemCounts;
 
       for (int item = 0; item < counts.length; item++) {
          if (counts[item] > 0 && (lot.categoryMaskAt(item) & 64) != 0) {
-            com.ea.sims3.GameCanvas.addToList(labels, lot.categoryIdAt(item));
-            com.ea.sims3.GameCanvas.addToList(commands, interaction);
+            GameCanvas.addToList(labels, lot.categoryIdAt(item));
+            GameCanvas.addToList(commands, interaction);
          }
       }
    }
 
    public final void buildUseMenu(short[] labels, short[] commands, int interaction) {
       short textId = this.interactionTextIds[interaction];
-      com.ea.sims3.GameCanvas.initList(labels, textId);
-      com.ea.sims3.GameCanvas.initList(commands, textId);
+      GameCanvas.initList(labels, textId);
+      GameCanvas.initList(commands, textId);
       Lot lot = this.canvas.lot;
       byte[] counts = this.itemCounts;
 
       for (int item = 0; item < counts.length; item++) {
          if (counts[item] > 0 && (lot.categoryMaskAt(item) & 2048) != 0) {
-            com.ea.sims3.GameCanvas.addToList(labels, lot.categoryIdAt(item));
-            com.ea.sims3.GameCanvas.addToList(commands, interaction);
+            GameCanvas.addToList(labels, lot.categoryIdAt(item));
+            GameCanvas.addToList(commands, interaction);
          }
       }
    }
@@ -1020,7 +1020,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.residentGrowth = new int[count];
       }
 
-      com.ea.sims3.GameCanvas.fillInts(this.residentGrowth, 0);
+      GameCanvas.fillInts(this.residentGrowth, 0);
    }
 
    public final int careerPoints(int resident) {
@@ -1074,7 +1074,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.lotLastHour = new byte[this.lotNameTextIds.length];
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.lotLastHour, 0);
+      GameCanvas.fillBytes(this.lotLastHour, 0);
       this.suggestedLot = -1;
       this.suggestionTimer = 1440000;
    }
@@ -1230,7 +1230,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       byte currentLot = this.simLots[0];
       int lot = -1;
       if (entity != null && entity.type != 77) {
-         lot = com.ea.sims3.GameCanvas.indexOfShort(entity.type, this.lotOccupantTypes);
+         lot = GameCanvas.indexOfShort(entity.type, this.lotOccupantTypes);
       } else {
          int minute;
          if ((minute = this.currentMinuteOfDay()) >= 450 && minute <= 1110 && this.suggestedLot != currentLot) {
@@ -1431,11 +1431,11 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int selectedResidentFrame() {
-      return com.ea.sims3.GameCanvas.countAllFlags(this.selectedResidentSpriteB(), this.achievementFlags);
+      return GameCanvas.countAllFlags(this.selectedResidentSpriteB(), this.achievementFlags);
    }
 
    public final int selectedResidentAnimFrame(int frameStep) {
-      return com.ea.sims3.GameCanvas.nthIndexWithFlag(frameStep, this.achievementFlags, this.selectedResidentSpriteB());
+      return GameCanvas.nthIndexWithFlag(frameStep, this.achievementFlags, this.selectedResidentSpriteB());
    }
 
    private int selectedResidentMask() {
@@ -1475,13 +1475,13 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.recentTaskTimes = new int[10];
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.achievementSlots, -1);
+      GameCanvas.fillBytes(this.achievementSlots, -1);
       this.usedTaskBits = 0;
       this.milestoneFlags = 0;
-      com.ea.sims3.GameCanvas.fillInts(this.achievementTimes, this.gameTime);
+      GameCanvas.fillInts(this.achievementTimes, this.gameTime);
       this.altEventCount = 0;
       this.otherEventCount = 0;
-      com.ea.sims3.GameCanvas.fillInts(this.recentTaskTimes, -1);
+      GameCanvas.fillInts(this.recentTaskTimes, -1);
       this.visitedLotBits = 0;
    }
 
@@ -1547,7 +1547,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
 
       int index;
-      if ((index = com.ea.sims3.GameCanvas.indexOfByte(event, this.achievementTriggerIds)) != -1 && this.achievementTimes[index] != -1) {
+      if ((index = GameCanvas.indexOfByte(event, this.achievementTriggerIds)) != -1 && this.achievementTimes[index] != -1) {
          this.achievementTimes[index] = this.gameTime;
       }
 
@@ -1566,7 +1566,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final boolean hasOpenAchievementSlot() {
-      return com.ea.sims3.GameCanvas.indexOfByte(-1, this.achievementSlots) != -1;
+      return GameCanvas.indexOfByte(-1, this.achievementSlots) != -1;
    }
 
    private boolean isAchievementAvailable(int event) {
@@ -1640,7 +1640,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
             return false;
          case 11:
          case 50:
-            if (com.ea.sims3.GameCanvas.countEqualBytes(0, this.simStates) > 1) {
+            if (GameCanvas.countEqualBytes(0, this.simStates) > 1) {
                return true;
             }
 
@@ -1731,7 +1731,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    private int achievementSlotOf(int event) {
-      return com.ea.sims3.GameCanvas.indexOfByte(event, this.achievementSlots);
+      return GameCanvas.indexOfByte(event, this.achievementSlots);
    }
 
    public final int achievementSlotValue(int slot) {
@@ -1943,8 +1943,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
       System.arraycopy(this.needInitialValues, 0, this.needValues, 0, this.needCount);
       System.arraycopy(this.needDecayRates, 0, this.needDecay, 0, this.needCount);
-      com.ea.sims3.GameCanvas.fillInts(this.needModifiers, 0);
-      com.ea.sims3.GameCanvas.fillInts(this.needOffsets, 65536);
+      GameCanvas.fillInts(this.needModifiers, 0);
+      GameCanvas.fillInts(this.needOffsets, 65536);
       this.needTimer = 0;
    }
 
@@ -1957,7 +1957,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          int[] modifiers = this.needModifiers;
 
          for (int need = 0; need < this.needCount; need++) {
-            int amount = com.ea.sims3.FixedMath.mul(offsets[need], decay[need]);
+            int amount = FixedMath.mul(offsets[need], decay[need]);
             this.adjustNeed(need, amount + modifiers[need] >> 1);
          }
       }
@@ -1966,7 +1966,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    public final void adjustNeed(int need, int amount) {
       int[] values = this.needValues;
       this.needValues[need] = this.needValues[need] + amount;
-      values[need] = com.ea.sims3.FixedMath.clamp(values[need], 0, 6553600);
+      values[need] = FixedMath.clamp(values[need], 0, 6553600);
    }
 
    private void adjustNeedIfIdle(int need, int amount, int task) {
@@ -2000,8 +2000,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.taskTimers = new int[6];
       }
 
-      com.ea.sims3.GameCanvas.fillShorts(this.activeTasks, -1);
-      com.ea.sims3.GameCanvas.fillInts(this.taskTimers, 0);
+      GameCanvas.fillShorts(this.activeTasks, -1);
+      GameCanvas.fillInts(this.taskTimers, 0);
    }
 
    private void updateActiveTasks(int elapsed) {
@@ -2085,7 +2085,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
    private void applyMoodDeltas() {
       int[] deltas = this.moodDeltas;
-      com.ea.sims3.GameCanvas.fillInts(this.moodDeltas, 0);
+      GameCanvas.fillInts(this.moodDeltas, 0);
 
       for (int slot = 0; slot < 6; slot++) {
          short task;
@@ -2101,7 +2101,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
 
       for (int clampIndex = 0; clampIndex < 2; clampIndex++) {
-         deltas[clampIndex] = com.ea.sims3.FixedMath.clamp(deltas[clampIndex], -6553600, 6553600);
+         deltas[clampIndex] = FixedMath.clamp(deltas[clampIndex], -6553600, 6553600);
       }
 
       this.updateMood();
@@ -2165,7 +2165,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.achievementTimes[achievement] = -1;
       }
 
-      int slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.activeTasks);
+      int slot = GameCanvas.indexOfShort(-1, this.activeTasks);
       this.setActiveTask(slot, task);
    }
 
@@ -2176,7 +2176,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       }
 
       int slot;
-      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(task, this.activeTasks)) != -1) {
+      if ((slot = GameCanvas.indexOfShort(task, this.activeTasks)) != -1) {
          this.setActiveTask(slot, -1);
       }
    }
@@ -2248,7 +2248,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.moodDeltas = new int[4];
       }
 
-      com.ea.sims3.GameCanvas.fillInts(this.moodDeltas, 1638400);
+      GameCanvas.fillInts(this.moodDeltas, 1638400);
    }
 
    private void updateMood() {
@@ -2352,9 +2352,9 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       for (int sim = 1; sim < count; sim++) {
          this.simStates[sim] = 0;
          this.simMilestones[sim] = 0;
-         com.ea.sims3.GameCanvas.fillInts(this.simNeeds[sim], 0);
-         com.ea.sims3.GameCanvas.fillShorts(this.simActionHistory[sim], -1);
-         com.ea.sims3.GameCanvas.fillBytes(this.simRepeatCounts[sim], 0);
+         GameCanvas.fillInts(this.simNeeds[sim], 0);
+         GameCanvas.fillShorts(this.simActionHistory[sim], -1);
+         GameCanvas.fillBytes(this.simRepeatCounts[sim], 0);
       }
 
       this.simTickTimer = 0;
@@ -2431,8 +2431,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       int[] needs;
       int needX = (needs = this.simNeeds[sim])[0] + (dx << 16);
       int needY = needs[1] + (dy << 16);
-      needs[0] = com.ea.sims3.FixedMath.clamp(needX, -1966080, 1966080);
-      needs[1] = com.ea.sims3.FixedMath.clamp(needY, -327680, 1966080);
+      needs[0] = FixedMath.clamp(needX, -1966080, 1966080);
+      needs[1] = FixedMath.clamp(needY, -327680, 1966080);
    }
 
    private boolean checkStateTransition(int sim) {
@@ -2472,7 +2472,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       byte[] states = this.simStates;
       byte previousState = this.simStates[sim];
       states[sim] = (byte)state;
-      com.ea.sims3.GameCanvas.fillInts(this.simNeeds[sim], 0);
+      GameCanvas.fillInts(this.simNeeds[sim], 0);
       if (previousState == 0) {
          this.unlockAchievement(11);
       }
@@ -2493,7 +2493,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.unlockAchievement(13);
       }
 
-      if (com.ea.sims3.GameCanvas.indexOfByteFrom(0, states, 1) == -1) {
+      if (GameCanvas.indexOfByteFrom(0, states, 1) == -1) {
          this.unlockAchievement(50);
       }
 
@@ -2718,7 +2718,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                resultFlags |= 3;
             } else {
                int needFactor;
-               needFactor = com.ea.sims3.FixedMath.clamp(needFactor = 3 + needSum, 0, 6);
+               needFactor = FixedMath.clamp(needFactor = 3 + needSum, 0, 6);
                resultFlags |= needFactor;
             }
 
@@ -2780,7 +2780,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          int value = needs[need] >> 16;
          if (threshold > 0 && value > 0 || threshold < 0 && value < 0) {
             out[outIndex + 0] = nextStates[index];
-            out[outIndex + 1] = com.ea.sims3.FixedMath.div(value << 16, threshold << 16);
+            out[outIndex + 1] = FixedMath.div(value << 16, threshold << 16);
             outIndex += 2;
          }
       }
@@ -2823,7 +2823,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          if ((lot = this.simHomeLotOf(sim)) != 0) {
             boolean has = (this.simMilestones[sim] & mask) != 0;
             all = all && has;
-            if (has && com.ea.sims3.GameCanvas.indexOfShortFrom(lot, this.simHomeLots, sim + 1) == -1) {
+            if (has && GameCanvas.indexOfShortFrom(lot, this.simHomeLots, sim + 1) == -1) {
                count++;
             }
          }
@@ -2868,7 +2868,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
    public final void addSimMilestoneCount(int sim, int flag) {
       this.simMilestones[sim] = (short)(this.simMilestones[sim] | flag);
-      int count = com.ea.sims3.GameCanvas.countAllFlagsFrom(flag, this.simMilestones, 0);
+      int count = GameCanvas.countAllFlagsFrom(flag, this.simMilestones, 0);
       switch (flag) {
          case 32:
             if (count >= 4) {
@@ -2904,11 +2904,11 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int idleSimCount() {
-      return this.simStates.length - com.ea.sims3.GameCanvas.countEqualBytes(0, this.simStates);
+      return this.simStates.length - GameCanvas.countEqualBytes(0, this.simStates);
    }
 
    public final int countSimsInState(int state) {
-      return com.ea.sims3.GameCanvas.nthIndexNotEqualByte(state, this.simStates, 0);
+      return GameCanvas.nthIndexNotEqualByte(state, this.simStates, 0);
    }
 
    public final int interactionAltText(int index) {
@@ -2948,12 +2948,12 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       boolean romantic = sim.isSitting();
       this.watchSim(simIndex);
       short titleId = this.simNameTextIds[simIndex];
-      com.ea.sims3.GameCanvas.initList(labels, titleId);
-      com.ea.sims3.GameCanvas.initList(commands, titleId);
+      GameCanvas.initList(labels, titleId);
+      GameCanvas.initList(commands, titleId);
       if (this.canvas.gameScreen().isNewNeighborhood()) {
          boolean partnerFlag = false;
-         com.ea.sims3.GameCanvas.addToList(labels, textIds[155]);
-         com.ea.sims3.GameCanvas.addToList(commands, 155);
+         GameCanvas.addToList(labels, textIds[155]);
+         GameCanvas.addToList(commands, 155);
       } else {
          for (int interaction = 0; interaction < count; interaction++) {
             if ((flags[interaction] & 1) != 0 && ((flags[interaction] & 4) != 0 || !romantic) && ((flags[interaction] & 4) == 0 || romantic) && textIds[interaction] != 24) {
@@ -3024,7 +3024,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                if (allowed) {
                   switch (interaction) {
                      case 85:
-                        allowed = com.ea.sims3.GameCanvas.indexOfByte(12, this.simStates) == -1;
+                        allowed = GameCanvas.indexOfByte(12, this.simStates) == -1;
                         break;
                      case 94:
                         Sim playerSim = this.canvas.gameScreen().activePlayer;
@@ -3033,7 +3033,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                         allowed = dx + dy > 2097152;
                         break;
                      case 97:
-                        allowed = com.ea.sims3.GameCanvas.indexOfAnyFlag(2, this.simMilestones) == -1;
+                        allowed = GameCanvas.indexOfAnyFlag(2, this.simMilestones) == -1;
                         break;
                      case 98:
                         allowed = this.simStates[simIndex] != 12;
@@ -3041,8 +3041,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                }
 
                if (allowed) {
-                  com.ea.sims3.GameCanvas.addToList(labels, textIds[interaction]);
-                  com.ea.sims3.GameCanvas.addToList(commands, interaction);
+                  GameCanvas.addToList(labels, textIds[interaction]);
+                  GameCanvas.addToList(commands, interaction);
                }
             }
          }
@@ -3054,21 +3054,21 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       short[] textIds = this.interactionTextIds;
       int[] flags = this.interactionFlags;
       int titleId = entity.typeAnimId();
-      com.ea.sims3.GameCanvas.initList(labels, titleId);
-      com.ea.sims3.GameCanvas.initList(commands, titleId);
+      GameCanvas.initList(labels, titleId);
+      GameCanvas.initList(commands, titleId);
       int type = entity.type;
       Lot lot = this.canvas.lot;
       short[] interactionIds = this.canvas.lot.frameRefsAt(type);
       int typeFlags = lot.objectFlagsAt(type);
       int count = interactionIds.length;
       if ((typeFlags & 67108864) != 0 && entity.hasState(256)) {
-         com.ea.sims3.GameCanvas.addToList(labels, textIds[110]);
-         com.ea.sims3.GameCanvas.addToList(commands, 110);
+         GameCanvas.addToList(labels, textIds[110]);
+         GameCanvas.addToList(commands, 110);
       }
 
       if ((typeFlags & 134217728) != 0 && entity.hasState(512)) {
-         com.ea.sims3.GameCanvas.addToList(labels, textIds[109]);
-         com.ea.sims3.GameCanvas.addToList(commands, 109);
+         GameCanvas.addToList(labels, textIds[109]);
+         GameCanvas.addToList(commands, 109);
       }
 
       for (int index = 0; index < count; index++) {
@@ -3099,33 +3099,33 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
                && (interaction != 150 || this.hasSimMilestone(0, 1) || lot.areaId() == 0)
                && (interaction != 153 || !this.hasSimMilestone(0, 1) && lot.areaId() != 0)) {
                if (interaction == 152) {
-                  int gridX = com.ea.sims3.Lot.toTileX(playerSim.posX);
-                  int gridY = com.ea.sims3.Lot.toTileY(playerSim.posY);
+                  int gridX = Lot.toTileX(playerSim.posX);
+                  int gridY = Lot.toTileY(playerSim.posY);
                   if ((lot.cellFlagsAt(gridX, gridY) & 16) != 0) {
                      continue;
                   }
                }
 
-               com.ea.sims3.GameCanvas.addToList(labels, textIds[interaction]);
-               com.ea.sims3.GameCanvas.addToList(commands, interaction);
+               GameCanvas.addToList(labels, textIds[interaction]);
+               GameCanvas.addToList(commands, interaction);
             }
          }
       }
 
       if ((typeFlags & 4096) != 0) {
-         com.ea.sims3.GameCanvas.addToList(labels, textIds[106]);
-         com.ea.sims3.GameCanvas.addToList(commands, 106);
+         GameCanvas.addToList(labels, textIds[106]);
+         GameCanvas.addToList(commands, 106);
       }
 
       if (labels[0] == 0) {
-         com.ea.sims3.GameCanvas.addToList(labels, 274);
-         com.ea.sims3.GameCanvas.addToList(commands, -4);
+         GameCanvas.addToList(labels, 274);
+         GameCanvas.addToList(commands, -4);
       }
    }
 
    public final void fillInventoryMenu(short[] labels, short[] commands, short[] inventory) {
-      com.ea.sims3.GameCanvas.initList(labels, inventory[1]);
-      com.ea.sims3.GameCanvas.initList(commands, 24);
+      GameCanvas.initList(labels, inventory[1]);
+      GameCanvas.initList(commands, 24);
       short[] textIds = this.interactionTextIds;
       short[] sprites = this.interactionSprites;
       short count = inventory[0];
@@ -3134,11 +3134,11 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          short item = inventory[5 + index];
          short spriteId;
          if ((spriteId = sprites[item]) == 24 || this.countMenuItems(inventory, spriteId) < 2) {
-            com.ea.sims3.GameCanvas.addToList(labels, textIds[item]);
-            com.ea.sims3.GameCanvas.addToList(commands, item);
-         } else if (!com.ea.sims3.GameCanvas.listContains(labels, spriteId)) {
-            com.ea.sims3.GameCanvas.addToList(labels, spriteId);
-            com.ea.sims3.GameCanvas.addToList(commands, -2);
+            GameCanvas.addToList(labels, textIds[item]);
+            GameCanvas.addToList(commands, item);
+         } else if (!GameCanvas.listContains(labels, spriteId)) {
+            GameCanvas.addToList(labels, spriteId);
+            GameCanvas.addToList(commands, -2);
          }
       }
    }
@@ -3160,8 +3160,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void fillFilteredMenu(short[] labels, short[] commands, short[] source, int filter) {
-      com.ea.sims3.GameCanvas.initList(labels, filter);
-      com.ea.sims3.GameCanvas.initList(commands, filter);
+      GameCanvas.initList(labels, filter);
+      GameCanvas.initList(commands, filter);
       short[] textIds = this.interactionTextIds;
       short[] sprites = this.interactionSprites;
       short count = source[0];
@@ -3170,22 +3170,22 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          short item = source[5 + index];
          short spriteId;
          if ((spriteId = sprites[item]) == filter) {
-            com.ea.sims3.GameCanvas.addToList(labels, textIds[item]);
-            com.ea.sims3.GameCanvas.addToList(commands, item);
+            GameCanvas.addToList(labels, textIds[item]);
+            GameCanvas.addToList(commands, item);
          }
       }
    }
 
    public final void fillResidentMenu(short[] labels, short[] commands, int interaction) {
       short textId = this.interactionTextIds[interaction];
-      com.ea.sims3.GameCanvas.initList(labels, textId);
-      com.ea.sims3.GameCanvas.initList(commands, textId);
+      GameCanvas.initList(labels, textId);
+      GameCanvas.initList(commands, textId);
       int lotIndex = this.canvas.lot.areaId();
 
       for (int sim = 1; sim < this.simCount; sim++) {
          if (this.simStates[sim] != 0 && this.simHomeLotOf(sim) != lotIndex) {
-            com.ea.sims3.GameCanvas.addToList(labels, this.simNameTextIds[sim]);
-            com.ea.sims3.GameCanvas.addToList(commands, interaction);
+            GameCanvas.addToList(labels, this.simNameTextIds[sim]);
+            GameCanvas.addToList(commands, interaction);
          }
       }
    }
@@ -3707,8 +3707,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.cardTimes = new int[this.cardLabelTextIds.length];
       }
 
-      com.ea.sims3.GameCanvas.fillBytes(this.cardPerformers, -1);
-      com.ea.sims3.GameCanvas.fillInts(this.cardTimes, -1);
+      GameCanvas.fillBytes(this.cardPerformers, -1);
+      GameCanvas.fillInts(this.cardTimes, -1);
    }
 
    public final int cardLabelText(int index) {
@@ -3724,7 +3724,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    private int cardRequirementId(int index) {
-      return com.ea.sims3.GameCanvas.indexOfShort(index, this.cardRequiredLots);
+      return GameCanvas.indexOfShort(index, this.cardRequiredLots);
    }
 
    private void tryStartCard(int simIndex, int lotId, boolean allowNewCard) {
@@ -3751,8 +3751,8 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          }
 
          if (allowNewCard
-            && com.ea.sims3.GameCanvas.indexOfShort(lotId, this.cardRequirementIds[cardIndex]) != -1
-            && (ownedBySim || com.ea.sims3.GameCanvas.indexOfByte(simIndex, this.cardPerformers) == -1 && (lastStarted == -1 || now - lastStarted >= 1440) && this.canvas.randomPercent() <= 30)) {
+            && GameCanvas.indexOfShort(lotId, this.cardRequirementIds[cardIndex]) != -1
+            && (ownedBySim || GameCanvas.indexOfByte(simIndex, this.cardPerformers) == -1 && (lastStarted == -1 || now - lastStarted >= 1440) && this.canvas.randomPercent() <= 30)) {
             this.cardTimes[cardIndex] = this.gameTime;
             this.startCard(cardIndex, simIndex);
             return;
@@ -3937,7 +3937,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    private void normalizeTaskSlots() {
       if (this.simKnownIds[0].length != 5) {
          this.simKnownIds[0] = new byte[5];
-         com.ea.sims3.GameCanvas.fillBytes(this.simKnownIds[0], -1);
+         GameCanvas.fillBytes(this.simKnownIds[0], -1);
       }
    }
 
@@ -3982,7 +3982,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int simKnownIndex(int sim, int id) {
-      return com.ea.sims3.GameCanvas.indexOfByte(id, this.simKnownIds[sim]);
+      return GameCanvas.indexOfByte(id, this.simKnownIds[sim]);
    }
 
    public final boolean simKnowsWell(int sim, int id) {
@@ -4017,7 +4017,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
    public final int simKnownFreeSlot() {
       byte[] ids;
-      return (ids = this.simKnownIds[0]).length - com.ea.sims3.GameCanvas.countEqualBytes(-1, ids);
+      return (ids = this.simKnownIds[0]).length - GameCanvas.countEqualBytes(-1, ids);
    }
 
    public final void addKnown(int id) {
@@ -4042,7 +4042,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int simIndexOf(int sim) {
-      return com.ea.sims3.GameCanvas.indexOfShortFrom(sim, this.simNameTextIds, 1);
+      return GameCanvas.indexOfShortFrom(sim, this.simNameTextIds, 1);
    }
 
    public final boolean isSimIdle(int sim) {
@@ -4074,12 +4074,12 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
    public final void resetAll() {
       this.paused = false;
       this.watchSim(-1);
-      com.ea.sims3.GameCanvas.fillInts(this.needModifiers, 0);
+      GameCanvas.fillInts(this.needModifiers, 0);
 
       for (int sim = 1; sim < this.simCount; sim++) {
          this.clearSimMilestone(sim, 1);
-         com.ea.sims3.GameCanvas.fillInts(this.simNeedDecay[sim], 0);
-         com.ea.sims3.GameCanvas.fillShorts(this.simActionHistory[sim], -1);
+         GameCanvas.fillInts(this.simNeedDecay[sim], 0);
+         GameCanvas.fillShorts(this.simActionHistory[sim], -1);
       }
 
       this.clearSimMilestone(0, 1);
@@ -4114,19 +4114,19 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
          this.tipTimes = new int[100];
       }
 
-      com.ea.sims3.GameCanvas.fillShorts(this.pendingTips, -1);
-      com.ea.sims3.GameCanvas.fillInts(this.tipValues, 0);
-      com.ea.sims3.GameCanvas.fillInts(this.tipTimes, 0);
+      GameCanvas.fillShorts(this.pendingTips, -1);
+      GameCanvas.fillInts(this.tipValues, 0);
+      GameCanvas.fillInts(this.tipTimes, 0);
    }
 
    public final void pushTip(int key, int subKey, int value) {
       int packedKey;
-      int slot = com.ea.sims3.GameCanvas.indexOfShort(packedKey = key << 8 | subKey, this.pendingTips);
+      int slot = GameCanvas.indexOfShort(packedKey = key << 8 | subKey, this.pendingTips);
       if (value == 0 && slot != -1) {
          this.removeTip(key, subKey);
       } else {
          if (slot == -1) {
-            slot = com.ea.sims3.GameCanvas.indexOfShort(-1, this.pendingTips);
+            slot = GameCanvas.indexOfShort(-1, this.pendingTips);
          }
 
          this.pendingTips[slot] = (short)packedKey;
@@ -4137,17 +4137,17 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
 
    public final int tipValue(int key, int subKey) {
       int slot;
-      return (slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? 0 : this.tipValues[slot];
+      return (slot = GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? 0 : this.tipValues[slot];
    }
 
    public final int tipTime(int key, int subKey) {
       int slot;
-      return (slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? -1 : this.tipTimes[slot];
+      return (slot = GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) == -1 ? -1 : this.tipTimes[slot];
    }
 
    public final void removeTip(int key, int subKey) {
       int slot;
-      if ((slot = com.ea.sims3.GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) != -1) {
+      if ((slot = GameCanvas.indexOfShort(key << 8 | subKey, this.pendingTips)) != -1) {
          this.pendingTips[slot] = -1;
          this.tipValues[slot] = 0;
          this.tipTimes[slot] = 0;
@@ -4160,7 +4160,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       this.resetCareerLevels();
       this.resetSelection();
       this.selectedResident = -1;
-      com.ea.sims3.GameCanvas.fillBytes(this.simKnownIds[0], -1);
+      GameCanvas.fillBytes(this.simKnownIds[0], -1);
       this.resetAchievementState();
       this.resetNeedValues();
       this.resetActiveTasks();
@@ -4169,7 +4169,7 @@ public final class Neighborhood implements SpriteIndex, SoundIndex, Resources {
       this.normalizeTaskSlots();
       this.resetSimStates();
       this.resetTips();
-      com.ea.sims3.GameCanvas.fillBytes(this.simAttributes[0], 0);
+      GameCanvas.fillBytes(this.simAttributes[0], 0);
    }
 
    public final void load(DataInputStream input) throws IOException {

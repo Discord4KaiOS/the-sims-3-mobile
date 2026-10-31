@@ -169,10 +169,10 @@ public final class Sim extends Entity {
          Animator bodyAnimator = null;
          if (this.poseId != 50) {
             if (!super.screen.isNewNeighborhood() && !super.screen.isGoalPageActive() && (this.targetPose == 0 || this.targetPose == 6)) {
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 33, 0, screenX, screenY);
+               SpriteRenderer.drawFrame(gfx, 33, 0, screenX, screenY);
             }
 
-            com.ea.sims3.SpriteRenderer.setRecolorIndex(this.recolorIndex);
+            SpriteRenderer.setRecolorIndex(this.recolorIndex);
             bodyAnimator = this.animatorAt(0);
             if (!super.screen.isNewNeighborhood()) {
                int animId = bodyAnimator.animId;
@@ -189,18 +189,18 @@ public final class Sim extends Entity {
                this.partnerSim().drawBody(gfx);
             }
 
-            com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
+            SpriteRenderer.setRecolorIndex(0);
          }
 
          Animator overlayAnimator = this.animatorAt(2);
          if (this.timer > 0 && overlayAnimator.isRunning()) {
-            int[] frameOffsets = com.ea.sims3.Entity.boundsScratch;
-            int bubbleOffset = (this.fadeOverlay ? com.ea.sims3.FixedMath.smoothStep(1000, 2000, this.timer) : 65536) * 10;
+            int[] frameOffsets = Entity.boundsScratch;
+            int bubbleOffset = (this.fadeOverlay ? FixedMath.smoothStep(1000, 2000, this.timer) : 65536) * 10;
             int bubbleY = screenY + (bubbleOffset >> 16) - 60 - 10;
-            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, overlayAnimator, screenX, bubbleY);
+            SpriteRenderer.drawAnimator(gfx, overlayAnimator, screenX, bubbleY);
             if (this.actionPhase == 5) {
                overlayAnimator.matchesFrame(frameOffsets, 0);
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, this.overlaySpriteId, 0, screenX + frameOffsets[0], bubbleY + frameOffsets[1]);
+               SpriteRenderer.drawFrame(gfx, this.overlaySpriteId, 0, screenX + frameOffsets[0], bubbleY + frameOffsets[1]);
             }
          }
       }
@@ -216,7 +216,7 @@ public final class Sim extends Entity {
          int screenX;
          int screenY;
          if (this.poseId == 50) {
-            int[] offsets = com.ea.sims3.Entity.boundsScratch;
+            int[] offsets = Entity.boundsScratch;
             this.actionTarget.computeFootprintOffset(offsets);
             screenX = lotOriginX + offsets[0];
             screenY = lotOriginY + offsets[1];
@@ -226,9 +226,9 @@ public final class Sim extends Entity {
          }
 
          int frame = this.animatorAt(0).frame;
-         com.ea.sims3.SpriteRenderer.setRecolorIndex(this.recolorIndex);
+         SpriteRenderer.setRecolorIndex(this.recolorIndex);
          this.drawSprite(gfx, animId, frame, screenX, screenY);
-         com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
+         SpriteRenderer.setRecolorIndex(0);
       }
    }
 
@@ -238,10 +238,10 @@ public final class Sim extends Entity {
       int[] frameOffsets = null;
       boolean isPlayer;
       if (isPlayer = super.variant == 0) {
-         frameOffsets = com.ea.sims3.Entity.boundsScratch;
+         frameOffsets = Entity.boundsScratch;
       }
 
-      boolean drawn = com.ea.sims3.SpriteRenderer.drawParts(gfx, animId, frame, screenX, screenY, bodyBase, skinTone, frameOffsets);
+      boolean drawn = SpriteRenderer.drawParts(gfx, animId, frame, screenX, screenY, bodyBase, skinTone, frameOffsets);
       if (isPlayer && drawn) {
          super.screen.drawCursorAnimator(gfx, frameOffsets[0], frameOffsets[1]);
       }
@@ -569,10 +569,10 @@ public final class Sim extends Entity {
       } else {
          if (this.poseIndex == 0 && this.stateTime > 5000 && (nearbyEntity = super.screen.findEntityByObjectType(18)) != null && nearbyEntity.hasState(64)) {
             Object ignored = null;
-            int targetTileX = com.ea.sims3.Lot.toTileX(nearbyEntity.posX);
-            int targetTileY = com.ea.sims3.Lot.toTileY(nearbyEntity.posY);
-            int selfTileX = com.ea.sims3.Lot.toTileX(super.posX);
-            int selfTileY = com.ea.sims3.Lot.toTileY(super.posY);
+            int targetTileX = Lot.toTileX(nearbyEntity.posX);
+            int targetTileY = Lot.toTileY(nearbyEntity.posY);
+            int selfTileX = Lot.toTileX(super.posX);
+            int selfTileY = Lot.toTileY(super.posY);
             if (Math.abs(selfTileX - targetTileX) + Math.abs(selfTileY - targetTileY) < 8) {
                this.queueAction(17, (Entity) null);
                return;
@@ -646,11 +646,11 @@ public final class Sim extends Entity {
       int posY = super.posY;
       int destX = this.destX;
       int destY = this.destY;
-      int tileX = com.ea.sims3.Lot.toTileX(posX);
-      int tileY = com.ea.sims3.Lot.toTileY(posY);
+      int tileX = Lot.toTileX(posX);
+      int tileY = Lot.toTileY(posY);
       int tileFlags = lot.cellFlagsAt(tileX, tileY);
       int dirX;
-      int dirY = (dirX = com.ea.sims3.FixedMath.sign(destX - posX)) != 0 ? 0 : com.ea.sims3.FixedMath.sign(destY - posY);
+      int dirY = (dirX = FixedMath.sign(destX - posX)) != 0 ? 0 : FixedMath.sign(destY - posY);
       short speedX = 2048;
       short speedY = 1024;
       if (this.hasState(2048)) {
@@ -664,20 +664,20 @@ public final class Sim extends Entity {
       if (super.screen.isNewNeighborhood()) {
          speedX = speedY;
          if (this.isNearWater()) {
-            int selfTileX = com.ea.sims3.Lot.toTileX(posX);
-            int selfTileY = com.ea.sims3.Lot.toTileY(posY);
+            int selfTileX = Lot.toTileX(posX);
+            int selfTileY = Lot.toTileY(posY);
             boolean inWater;
             if (inWater = (lot.cellFlagsAt(selfTileX, selfTileY) & 32) != 0) {
                int neighborFlags;
                if (dirY == 0) {
-                  int tileCentreX = com.ea.sims3.Lot.toFixedX(selfTileX);
+                  int tileCentreX = Lot.toFixedX(selfTileX);
                   if ((dirX >= 0 || posX > tileCentreX) && (dirX <= 0 || posX < tileCentreX)) {
                      neighborFlags = lot.cellFlagsAt(selfTileX - dirX, selfTileY);
                   } else {
                      neighborFlags = lot.cellFlagsAt(selfTileX + dirX, selfTileY);
                   }
                } else {
-                  int tileCentreY = com.ea.sims3.Lot.toFixedY(selfTileY);
+                  int tileCentreY = Lot.toFixedY(selfTileY);
                   if ((dirY >= 0 || posY > tileCentreY) && (dirY <= 0 || posY < tileCentreY)) {
                      neighborFlags = lot.cellFlagsAt(selfTileX, selfTileY - dirY);
                   } else {
@@ -711,8 +711,8 @@ public final class Sim extends Entity {
       this.faceDirection(dirX, dirY);
       this.moveTo(posX, posY);
       if (!super.screen.isNewNeighborhood()) {
-         int newTileX = com.ea.sims3.Lot.toTileX(posX);
-         int newTileY = com.ea.sims3.Lot.toTileY(posY);
+         int newTileX = Lot.toTileX(posX);
+         int newTileY = Lot.toTileY(posY);
          int newTileFlags = lot.cellFlagsAt(newTileX, newTileY);
          Entity blockingEntity;
          if ((tileFlags & 32) == 0 && (newTileFlags & 32) != 0 && (blockingEntity = super.screen.findEntityByObjectType(10)) != null && !blockingEntity.hasState(64)) {
@@ -775,7 +775,7 @@ public final class Sim extends Entity {
             slot = target.findNearestSlot(super.posX, super.posY, false, null);
          }
 
-         int[] slotOffsets = com.ea.sims3.Entity.boundsScratch;
+         int[] slotOffsets = Entity.boundsScratch;
          target.computeSlotPosition(slotOffsets, slot);
          targetX = slotOffsets[0];
          targetY = slotOffsets[1];
@@ -783,17 +783,17 @@ public final class Sim extends Entity {
          this.targetLastY = target.posY;
       }
 
-      targetX = com.ea.sims3.Lot.toFixedX(com.ea.sims3.Lot.toTileX(targetX));
-      targetY = com.ea.sims3.Lot.toFixedY(com.ea.sims3.Lot.toTileY(targetY));
+      targetX = Lot.toFixedX(Lot.toTileX(targetX));
+      targetY = Lot.toFixedY(Lot.toTileY(targetY));
       if ((targetX != super.posX || targetY != super.posY) && this.poseIndex != 0) {
          this.actionStep--;
          this.runActionPhase(30);
       } else {
          if (super.screen.isNoSaveMode() && lot.areaId() != 0 && super.variant == 0 && this.actionId != 153 && !this.hasState(32) && !this.neighborhood().hasSimMilestone(0, 1)) {
-            int selfTileX = com.ea.sims3.Lot.toTileX(super.posX);
-            int selfTileY = com.ea.sims3.Lot.toTileY(super.posY);
-            int targetTileX = com.ea.sims3.Lot.toTileX(targetX);
-            int targetTileY = com.ea.sims3.Lot.toTileY(targetY);
+            int selfTileX = Lot.toTileX(super.posX);
+            int selfTileY = Lot.toTileY(super.posY);
+            int targetTileX = Lot.toTileX(targetX);
+            int targetTileY = Lot.toTileY(targetY);
             if ((lot.cellFlagsAt(selfTileX, selfTileY) & 16) == 0 && (lot.cellFlagsAt(targetTileX, targetTileY) & 16) != 0) {
                this.queuedActionId = this.actionId;
                this.queuedTarget = this.actionTarget;
@@ -822,8 +822,8 @@ public final class Sim extends Entity {
                for (int simIndex = 0; simIndex < sims.length; simIndex++) {
                   Sim otherSim;
                   if ((otherSim = sims[simIndex]) != this) {
-                     int otherTileX = com.ea.sims3.Lot.toTileX(otherSim.posX);
-                     int otherTileY = com.ea.sims3.Lot.toTileY(otherSim.posY);
+                     int otherTileX = Lot.toTileX(otherSim.posX);
+                     int otherTileY = Lot.toTileY(otherSim.posY);
                      lot.addWaypoint(otherTileX, otherTileY);
                   }
                }
@@ -896,7 +896,7 @@ public final class Sim extends Entity {
          if (this.waitForTargetTime) {
             finished = this.timer <= this.neighborhood().gameTime;
          } else {
-            if (!com.ea.sims3.GameScreen.isDialogOpen()) {
+            if (!GameScreen.isDialogOpen()) {
                this.timer -= delta;
             }
 
@@ -1099,8 +1099,8 @@ public final class Sim extends Entity {
                int slot = 0;
                if (target.behaviorClass() == 10) {
                   Lot lot = this.lot();
-                  int tileX = com.ea.sims3.Lot.toTileX(super.posX);
-                  int tileY = com.ea.sims3.Lot.toTileY(super.posY);
+                  int tileX = Lot.toTileX(super.posX);
+                  int tileY = Lot.toTileY(super.posY);
                   if ((lot.cellFlagsAt(tileX, tileY) & 16) != 0) {
                      slot = 0;
                   } else {
@@ -1231,7 +1231,7 @@ public final class Sim extends Entity {
       Neighborhood neighborhood = this.neighborhood();
       int otherSimId = otherSim.variant;
       int selfId = super.variant;
-      int[] result = com.ea.sims3.Entity.boundsScratch;
+      int[] result = Entity.boundsScratch;
       neighborhood.resolveInteraction(result, otherSimId, selfId, actionId);
       int replyFlags = result[0];
       int replyActionId = result[1];
@@ -1269,7 +1269,7 @@ public final class Sim extends Entity {
       } else if (actionId == 25 && neighborhood.simPortrait(super.variant) != object.variant) {
          return false;
       } else {
-         int[] result = com.ea.sims3.Entity.boundsScratch;
+         int[] result = Entity.boundsScratch;
          neighborhood.resolveInteraction(result, otherSim.variant, super.variant, actionId);
          int replyActionId;
          if ((replyActionId = result[1]) != -1) {
@@ -1637,12 +1637,12 @@ public final class Sim extends Entity {
             }
 
             GameCanvas canvas;
-            (canvas = com.ea.sims3.GameCanvas.instance()).sound.pendingSound = canvas.randomRange(soundA, (int)soundB);
+            (canvas = GameCanvas.instance()).sound.pendingSound = canvas.randomRange(soundA, (int)soundB);
          }
 
          boolean objectSound = false;
          if (actionId != 136 && actionId != 137 && actionId != 111 && this.actionObjectId != 0) {
-            soundId = com.ea.sims3.Neighborhood.reactionText(this.actionObjectId);
+            soundId = Neighborhood.reactionText(this.actionObjectId);
             objectSound = true;
          }
 
@@ -2052,7 +2052,7 @@ public final class Sim extends Entity {
             if ((flags & 94) != 0) {
                int index = canvas.randomRange(0, AUTONOMY_FLAGS.length - 1);
                if ((flags & 4) != 0) {
-                  index = com.ea.sims3.GameCanvas.indexOfInt(4, AUTONOMY_FLAGS);
+                  index = GameCanvas.indexOfInt(4, AUTONOMY_FLAGS);
                }
 
                for (int flagIndex = 0; flagIndex < AUTONOMY_FLAGS.length; flagIndex++) {
@@ -2253,7 +2253,7 @@ public final class Sim extends Entity {
 
    public final void sitDown(Entity target) {
       this.reserveTarget(target);
-      int[] slotOffsets = com.ea.sims3.Entity.boundsScratch;
+      int[] slotOffsets = Entity.boundsScratch;
       target.computeSlotPosition(slotOffsets, this.reservedSlot);
       this.moveTo(slotOffsets[0], slotOffsets[1]);
       this.faceEntity(target);

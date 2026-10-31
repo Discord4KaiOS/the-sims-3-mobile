@@ -251,14 +251,14 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
 
    public final void computeSlotPosition(int[] out, int slot) {
       Lot lot = this.lot();
-      int originTileX = com.ea.sims3.Lot.toTileX(this.posX);
-      int originTileY = com.ea.sims3.Lot.toTileY(this.posY);
+      int originTileX = Lot.toTileX(this.posX);
+      int originTileY = Lot.toTileY(this.posY);
       int deltaTileX = lot.framePartX(this.type, slot, this.facing);
       int deltaTileY = lot.framePartY(this.type, slot, this.facing);
       int tileX = originTileX + deltaTileX;
       int tileY = originTileY + deltaTileY;
-      out[0] = com.ea.sims3.Lot.toFixedX(tileX);
-      out[1] = com.ea.sims3.Lot.toFixedY(tileY);
+      out[0] = Lot.toFixedX(tileX);
+      out[1] = Lot.toFixedY(tileY);
    }
 
    public final int findNearestSlot(int x, int y, boolean avoidOccupied, Sim ignoreSim) {
@@ -278,16 +278,16 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                int slotY = out[1];
                if (lot.isWalkableAt(slotX, slotY)) {
                   if (avoidOccupied && !this.hasFlag(4194304)) {
-                     int slotTileX = com.ea.sims3.Lot.toTileX(slotX);
-                     int slotTileY = com.ea.sims3.Lot.toTileY(slotY);
+                     int slotTileX = Lot.toTileX(slotX);
+                     int slotTileY = Lot.toTileY(slotY);
                      boolean occupied = false;
                      Sim[] sims = this.screen.getSims();
 
                      for (int index = 0; index < sims.length && !occupied; index++) {
                         Sim other;
                         if ((other = sims[index]) != ignoreSim) {
-                           int otherTileX = com.ea.sims3.Lot.toTileX(other.posX);
-                           int otherTileY = com.ea.sims3.Lot.toTileY(other.posY);
+                           int otherTileX = Lot.toTileX(other.posX);
+                           int otherTileY = Lot.toTileY(other.posY);
                            if (otherTileX == slotTileX && otherTileY == slotTileY) {
                               occupied = true;
                            }
@@ -835,8 +835,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
 
    public final boolean isPassable() {
       Lot lot = this.lot();
-      int tileX = com.ea.sims3.Lot.toTileX(this.posX);
-      int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+      int tileX = Lot.toTileX(this.posX);
+      int tileY = Lot.toTileY(this.posY);
       return !lot.footprintFree(tileX, tileY, 1, 1, this.facing) && this.type != 41;
    }
 
@@ -1506,8 +1506,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
          }
       } else {
          Lot lot = this.lot();
-         int tileX = com.ea.sims3.Lot.toTileX(this.posX);
-         int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+         int tileX = Lot.toTileX(this.posX);
+         int tileY = Lot.toTileY(this.posY);
          int width = lot.objectWidthAt(this.type);
          int height = lot.objectHeightAt(this.type);
          if (this.facing == 1 || this.facing == 3) {
@@ -1614,8 +1614,8 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
                height = swap;
             }
 
-            int tileX = com.ea.sims3.Lot.toTileX(this.posX);
-            int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+            int tileX = Lot.toTileX(this.posX);
+            int tileY = Lot.toTileY(this.posY);
 
             for (int dx = 0; dx < width; dx++) {
                for (int dy = 0; dy < height; dy++) {
@@ -1663,13 +1663,13 @@ public class Entity implements SpriteIndex, SoundIndex, Resources {
       }
 
       int facing = this.facing;
-      int tileX = com.ea.sims3.Lot.toTileX(this.posX);
-      int tileY = com.ea.sims3.Lot.toTileY(this.posY);
+      int tileX = Lot.toTileX(this.posX);
+      int tileY = Lot.toTileY(this.posY);
       int blockMask = lot.directionMaskAt(this.type, tileX, tileY);
 
       for (int step = 1; step <= 4; step++) {
          int direction = (facing + step) % 4;
-         int mask = com.ea.sims3.Lot.DIRECTION_MASKS[direction];
+         int mask = Lot.DIRECTION_MASKS[direction];
          if ((blockMask & mask) != 0) {
             facing = direction;
             break;

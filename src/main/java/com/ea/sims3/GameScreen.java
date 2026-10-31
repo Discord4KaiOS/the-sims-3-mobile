@@ -330,17 +330,17 @@ public final class GameScreen extends BaseScreen implements Runnable {
                int[] sourceColors = loadedLot.paletteAt(0);
                boolean recolorFlag = false;
                int[] targetColors = loadedLot.paletteAt(1);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 0);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 0);
+               SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 0);
+               SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 0);
                targetColors = loadedLot.paletteAt(2);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 1);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 1);
+               SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 1);
+               SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 1);
                targetColors = loadedLot.paletteAt(3);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 2);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 2);
+               SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 2);
+               SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 2);
                targetColors = loadedLot.paletteAt(4);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 3);
-               com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 3);
+               SpriteRenderer.loadTileRecolored(resources, 38, sourceColors, targetColors, 3);
+               SpriteRenderer.loadTileRecolored(resources, 35, sourceColors, targetColors, 3);
                this.loadPlayerPortrait();
                this.loadStep++;
                return;
@@ -396,7 +396,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.slotSimIds = new byte[4];
          }
 
-         com.ea.sims3.GameCanvas.fillBytes(this.slotSimIds, -1);
+         GameCanvas.fillBytes(this.slotSimIds, -1);
       }
    }
 
@@ -422,7 +422,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    private int findFreePortraitSlot() {
-      return com.ea.sims3.GameCanvas.indexOfByte(-1, this.slotSimIds);
+      return GameCanvas.indexOfByte(-1, this.slotSimIds);
    }
 
    private void loadQueuedPortrait() {
@@ -431,10 +431,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int slot = this.portraitSlot;
       int simId = this.portraitSimId;
       int palette = neighborhood.simAttribute(simId, 0) == 0 ? 512 : 256;
-      com.ea.sims3.GameCanvas.gcYield();
+      GameCanvas.gcYield();
       if (canvas.loadNextTileGroup(palette, this.recolorSource, this.recolorTarget, slot)) {
          int tileId = this.simPortraitTile(simId);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(canvas.resources, tileId, this.recolorSource, this.recolorTarget, slot);
+         SpriteRenderer.loadTileRecolored(canvas.resources, tileId, this.recolorSource, this.recolorTarget, slot);
          this.findSimByIndex(simId).recolorIndex = slot;
          this.portraitSimId = -1;
          this.portraitSlot = slot + 1;
@@ -478,7 +478,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    public final void layoutViewport() {
       GameCanvas canvas = super.canvas;
       Lot lot = this.currentLot;
-      this.bottomBarHeight = com.ea.sims3.SpriteRenderer.frameHeight(587, 0) + com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
+      this.bottomBarHeight = SpriteRenderer.frameHeight(587, 0) + SpriteRenderer.frameHeight(586, 0);
       this.viewX = 0;
       this.viewY = 0;
       this.viewWidth = canvas.getWidth() - this.viewX;
@@ -517,7 +517,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.dialogX = 0;
       this.dialogY = -1;
       this.inputIdle = false;
-      this.bottomBarHeight = com.ea.sims3.SpriteRenderer.frameHeight(587, 0) + com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
+      this.bottomBarHeight = SpriteRenderer.frameHeight(587, 0) + SpriteRenderer.frameHeight(586, 0);
       this.viewX = 0;
       this.viewY = 0;
       this.viewWidth = canvas.getWidth() - this.viewX;
@@ -573,14 +573,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.mainMenuOpen = false;
       if (this.menuOptionIds == null) {
          short[] soundChoices;
-         com.ea.sims3.GameCanvas.initListWith(soundChoices = new short[15], 66, canvas.menuRowSpacing);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 67);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 60);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 61);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 70);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 72);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 74);
-         com.ea.sims3.GameCanvas.addToList(soundChoices, 76);
+         GameCanvas.initListWith(soundChoices = new short[15], 66, canvas.menuRowSpacing);
+         GameCanvas.addToList(soundChoices, 67);
+         GameCanvas.addToList(soundChoices, 60);
+         GameCanvas.addToList(soundChoices, 61);
+         GameCanvas.addToList(soundChoices, 70);
+         GameCanvas.addToList(soundChoices, 72);
+         GameCanvas.addToList(soundChoices, 74);
+         GameCanvas.addToList(soundChoices, 76);
          this.menuOptionIds = soundChoices;
       }
 
@@ -697,7 +697,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       super.canvas.unloadTiles(configFlags, -1);
-      com.ea.sims3.SdkSound.muteAll();
+      SdkSound.muteAll();
    }
 
    public final void render(Graphics gfx) {
@@ -765,8 +765,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int[] hitRect = this.frameBounds;
       int centerX = canvas.getWidth() >> 1;
       int bottomY = canvas.getHeight();
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 635, 0, centerX, bottomY);
-      com.ea.sims3.SpriteRenderer.hitTest(hitRect, 635, 0, 0);
+      SpriteRenderer.drawFrame(gfx, 635, 0, centerX, bottomY);
+      SpriteRenderer.hitTest(hitRect, 635, 0, 0);
       int textX = centerX + hitRect[0];
       int textY = bottomY + hitRect[1];
       SdkString label = canvas.beginString();
@@ -1519,7 +1519,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void advanceAnimators(int delta) {
       this.statusAnimator.advance(delta);
       int money = this.neighborhood.money;
-      this.displayedMoney = com.ea.sims3.BaseScreen.approach(this.displayedMoney, money, delta, 9);
+      this.displayedMoney = BaseScreen.approach(this.displayedMoney, money, delta, 9);
       if (!this.isUiBlocked()) {
          this.needDownAnimator.advance(delta);
          this.needUpAnimator.advance(delta);
@@ -1546,19 +1546,19 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int[] hitRect = this.frameBounds;
       int barX = this.viewX + this.viewWidth;
       int barY = this.viewY;
-      if (com.ea.sims3.GameCanvas.landscape) {
+      if (GameCanvas.landscape) {
          barY += 20;
       }
 
       if (screenState == 7) {
-         int iconW = com.ea.sims3.SpriteRenderer.frameWidth(596, 0);
-         int iconH = com.ea.sims3.SpriteRenderer.frameHeight(596, 0);
+         int iconW = SpriteRenderer.frameWidth(596, 0);
+         int iconH = SpriteRenderer.frameHeight(596, 0);
          int iconX = canvas.getWidth() - (iconW + 9);
          int iconY = iconH + 3 - 1;
          this.drawIconBar(gfx, 3, iconX, iconY, 114);
       } else {
-         int firstIconW = com.ea.sims3.SpriteRenderer.frameWidth(4, 0);
-         int normalIconW = com.ea.sims3.SpriteRenderer.frameWidth(5, 0);
+         int firstIconW = SpriteRenderer.frameWidth(4, 0);
+         int normalIconW = SpriteRenderer.frameWidth(5, 0);
          int slotX = this.viewX + 5 + (normalIconW >> 1);
          int slotY = barY + 3 + (normalIconW >> 1);
          int cursorX = slotX;
@@ -1587,8 +1587,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
                }
             }
 
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frame, 0, cursorX, slotY);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, iconFrame, 0, cursorX, slotY);
+            SpriteRenderer.drawFrame(gfx, frame, 0, cursorX, slotY);
+            SpriteRenderer.drawFrame(gfx, iconFrame, 0, cursorX, slotY);
             cursorX += slotWidth + 2;
          }
       }
@@ -1596,15 +1596,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int money = neighborhood.currentMinuteOfDay();
       SdkString label = canvas.beginString();
       canvas.appendTime(money);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 596, 0, barX, barY);
-      com.ea.sims3.SpriteRenderer.hitTest(hitRect, 596, 0, 0);
+      SpriteRenderer.drawFrame(gfx, 596, 0, barX, barY);
+      SpriteRenderer.hitTest(hitRect, 596, 0, 0);
       int textX = barX + hitRect[0];
       int textY = barY + hitRect[1];
-      com.ea.sims3.SpriteRenderer.hitTest(hitRect, 596, 0, 1);
+      SpriteRenderer.hitTest(hitRect, 596, 0, 1);
       int textX2 = barX + hitRect[0];
       int textY2 = barY + hitRect[1];
       canvas.drawString(label, 2, textX + 1, textY + 1, 24);
-      int moodValue = com.ea.sims3.Neighborhood.WEEKDAY_TEXT_IDS[neighborhood.dayOfWeek()];
+      int moodValue = Neighborhood.WEEKDAY_TEXT_IDS[neighborhood.dayOfWeek()];
       canvas.drawStringById(moodValue, 2, textX2 + 1, textY2 + 1, 20);
       byte anchorFrame;
       short statusAnimId;
@@ -1620,8 +1620,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       this.statusAnimator.play(statusAnimId, 4);
-      com.ea.sims3.SpriteRenderer.hitTest(hitRect, 596, 0, anchorFrame);
-      com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.statusAnimator, barX + hitRect[0], barY + hitRect[1]);
+      SpriteRenderer.hitTest(hitRect, 596, 0, anchorFrame);
+      SpriteRenderer.drawAnimator(gfx, this.statusAnimator, barX + hitRect[0], barY + hitRect[1]);
    }
 
    private void drawBottomBar(Graphics gfx) {
@@ -1638,17 +1638,17 @@ public final class GameScreen extends BaseScreen implements Runnable {
          this.drawNeedArrows(gfx);
       }
 
-      if (com.ea.sims3.GameCanvas.landscape) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 588, 0, centerX, bottomY);
+      if (GameCanvas.landscape) {
+         SpriteRenderer.drawFrame(gfx, 588, 0, centerX, bottomY);
       } else {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 587, 0, centerX, bottomY);
+         SpriteRenderer.drawFrame(gfx, 587, 0, centerX, bottomY);
       }
 
       if (this.notifyId != -1) {
          this.drawNotification(gfx);
       }
 
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(hitRect, 587, 0, 0);
+      SpriteRenderer.hitTestMirrored(hitRect, 587, 0, 0);
       int iconX = centerX + hitRect[0];
       int iconY = bottomY + hitRect[1];
 
@@ -1656,11 +1656,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int slotX = iconX + slot * 16;
          Animator animator;
          if ((animator = this.slotAnimators[slot]).isRunning()) {
-            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, animator, slotX, iconY);
+            SpriteRenderer.drawAnimator(gfx, animator, slotX, iconY);
          }
       }
 
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(hitRect, 587, 0, 1);
+      SpriteRenderer.hitTestMirrored(hitRect, 587, 0, 1);
       iconX = centerX + hitRect[0] + -8;
       iconY = bottomY + hitRect[1] + (hitRect[3] >> 1);
       int barWidth = hitRect[2];
@@ -1670,7 +1670,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int index = 0; index < needCount && rightX > iconX; index++) {
          if (neighborhood.needValue(index) < 2293760) {
             short frameId = neighborhood.needHintText(index);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, rightX, iconY);
+            SpriteRenderer.drawFrame(gfx, frameId, 0, rightX, iconY);
             rightX -= 16;
          }
       }
@@ -1678,7 +1678,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int secondIndex = 0; secondIndex < needCount && rightX > iconX; secondIndex++) {
          if (neighborhood.needValue(secondIndex) > 4259840) {
             short secondFrameId = neighborhood.needLabelText(secondIndex);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, secondFrameId, 0, rightX, iconY);
+            SpriteRenderer.drawFrame(gfx, secondFrameId, 0, rightX, iconY);
             rightX -= 16;
          }
       }
@@ -1688,10 +1688,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
       GameCanvas canvas = super.canvas;
       int centerX = super.canvas.getWidth() >> 1;
       int barY = canvas.getHeight() - 15;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 586, 0, centerX, barY);
+      SpriteRenderer.drawFrame(gfx, 586, 0, centerX, barY);
       boolean negative = this.relationPercent < 0;
       int percent = Math.abs(this.relationPercent >> 16);
-      int barWidth = com.ea.sims3.SpriteRenderer.frameWidth(584, 0) * percent / 100;
+      int barWidth = SpriteRenderer.frameWidth(584, 0) * percent / 100;
       int clipX = centerX + (negative ? -barWidth : 0);
       int savedClipX = gfx.getClipX();
       int savedClipY = gfx.getClipY();
@@ -1699,7 +1699,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int savedClipH = gfx.getClipHeight();
       gfx.setClip(clipX, savedClipY, barWidth, savedClipH);
       int frameId = negative ? 585 : 584;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, barY);
+      SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, barY);
       gfx.setClip(savedClipX, savedClipY, savedClipW, savedClipH);
       this.drawCenteredLabel(gfx, centerX, barY);
    }
@@ -1916,13 +1916,13 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void drawNotification(Graphics gfx) {
       GameCanvas canvas = super.canvas;
-      int bubbleHeight = com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
+      int bubbleHeight = SpriteRenderer.frameHeight(670, 0);
       int bubbleY = canvas.getHeight() - 15 - this.bottomBarHeight - bubbleHeight;
       int[] hitRect = this.frameBounds;
-      com.ea.sims3.SpriteRenderer.hitTest(this.frameBounds, 670, 0, 0);
+      SpriteRenderer.hitTest(this.frameBounds, 670, 0, 0);
       int anchorX = 0 + hitRect[0];
       int textY = bubbleY + hitRect[1];
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 670, 0, 0, bubbleY);
+      SpriteRenderer.drawFrame(gfx, 670, 0, 0, bubbleY);
       if (this.notificationTimer >= 1000 || (this.notificationTimer & 511) <= 255) {
          int scrollX = anchorX - (this.notificationScroll >> 16);
          canvas.drawStringById(this.notifyId, 1, scrollX, textY, 20);
@@ -1994,7 +1994,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          if (this.objectMenuOpen) {
             this.drawMenuList(gfx, screenX, screenY);
          } else {
-            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.selectionAnimator, screenX, screenY);
+            SpriteRenderer.drawAnimator(gfx, this.selectionAnimator, screenX, screenY);
             int thoughtId;
             if (this.atTarget && this.followTarget != null && this.stillTime < 1000 && (thoughtId = this.followTarget.interactionAnimId()) != 24) {
                int thoughtW = canvas.stringWidthById(thoughtId, 1);
@@ -2003,9 +2003,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
                int boxH = 2 + thoughtH + 2;
                int boxX = Math.max(0, screenX + -5 - boxW);
                int boxY = screenY + -5 - boxH;
-               com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+               SpriteRenderer.setColor(gfx, 77);
                gfx.drawRect(boxX, boxY, boxW, boxH);
-               com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+               SpriteRenderer.setColor(gfx, 76);
                gfx.fillRect(boxX + 1, boxY + 1, boxW - 1, boxH - 1);
                canvas.drawStringById(thoughtId, 1, boxX + 3 + (thoughtW >> 1), boxY + 2, 17);
             }
@@ -2018,7 +2018,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int xDirection = (this.rightPressed ? 65536 : 0) + (this.leftPressed ? -65536 : 0);
          int yDirection = (this.downPressed ? 65536 : 0) + (this.upPressed ? -65536 : 0);
          if (xDirection != 0 || yDirection != 0) {
-            int angle = com.ea.sims3.FixedMath.atan2(yDirection, xDirection);
+            int angle = FixedMath.atan2(yDirection, xDirection);
             this.turnToNearestEntity(angle);
          }
       }
@@ -2037,14 +2037,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int step = 19660 * delta;
          int targetDx = this.camTargetX - this.camX >> 8;
          int targetDy = this.camTargetY - this.camY >> 8;
-         int distance = com.ea.sims3.FixedMath.length(targetDx, targetDy);
+         int distance = FixedMath.length(targetDx, targetDy);
          if (step >= distance << 8) {
             this.camX = this.camTargetX;
             this.camY = this.camTargetY;
          } else {
-            step = com.ea.sims3.FixedMath.div(step, distance);
-            this.camX = this.camX + com.ea.sims3.FixedMath.mul(targetDx, step);
-            this.camY = this.camY + com.ea.sims3.FixedMath.mul(targetDy, step);
+            step = FixedMath.div(step, distance);
+            this.camX = this.camX + FixedMath.mul(targetDx, step);
+            this.camY = this.camY + FixedMath.mul(targetDy, step);
          }
 
          this.atTarget = this.camX == this.camTargetX && this.camY == this.camTargetY;
@@ -2058,10 +2058,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.followTarget = null;
             this.followTime = 0;
             Tile tile = this.currentLot.groundTile;
-            int mapWidth = (this.currentLot.groundTile.columns * com.ea.sims3.Tile.tileWidth() << 16) - 983040;
-            int mapHeight = (tile.rowCountValue * com.ea.sims3.Tile.tileHeight() << 16) - 983040;
-            this.camX = com.ea.sims3.FixedMath.clamp(this.camX, 0, mapWidth);
-            this.camY = com.ea.sims3.FixedMath.clamp(this.camY, 0, mapHeight);
+            int mapWidth = (this.currentLot.groundTile.columns * Tile.tileWidth() << 16) - 983040;
+            int mapHeight = (tile.rowCountValue * Tile.tileHeight() << 16) - 983040;
+            this.camX = FixedMath.clamp(this.camX, 0, mapWidth);
+            this.camY = FixedMath.clamp(this.camY, 0, mapHeight);
             this.camTargetX = this.camX;
             this.camTargetY = this.camY;
             this.atTarget = true;
@@ -2128,7 +2128,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int bestDistance = 7680;
       int originX = this.camX;
       int originY = this.camY;
-      int wanted = com.ea.sims3.FixedMath.wrapAngle(angle);
+      int wanted = FixedMath.wrapAngle(angle);
       Entity[] entities;
       int count = (entities = this.getEntities()).length;
       int flag = this.followFlag;
@@ -2144,12 +2144,12 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int deltaX = Math.abs(originX - entityX);
             int deltaY = Math.abs(originY - entityY);
             if (deltaX <= rangeX && deltaY <= rangeY && (deltaX != 0 || deltaY != 0)) {
-               int entityAngle = com.ea.sims3.FixedMath.atan2(entityY - originY, entityX - originX);
-               if (Math.abs(com.ea.sims3.FixedMath.wrapAngle(wanted - entityAngle)) < 51472) {
+               int entityAngle = FixedMath.atan2(entityY - originY, entityX - originX);
+               if (Math.abs(FixedMath.wrapAngle(wanted - entityAngle)) < 51472) {
                   int gapX = originX - entityX >> 8;
                   int gapY = originY - entityY >> 8;
                   int distance;
-                  if ((distance = com.ea.sims3.FixedMath.length(gapX, gapY)) < bestDistance) {
+                  if ((distance = FixedMath.length(gapX, gapY)) < bestDistance) {
                      best = entity;
                      bestDistance = distance;
                   }
@@ -2183,7 +2183,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int deltaX = originX - entityX >> 8;
             int deltaY = originY - entityY >> 8;
             int distance;
-            if ((distance = com.ea.sims3.FixedMath.length(deltaX, deltaY)) < bestDistance) {
+            if ((distance = FixedMath.length(deltaX, deltaY)) < bestDistance) {
                best = entity;
                bestDistance = distance;
             }
@@ -2228,17 +2228,17 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int centreY = lot.boundsHeight;
       int halfCentreY = lot.boundsHeight >> 1;
       int minX = halfCentreX << 16;
-      int maxX = tile.columns * com.ea.sims3.Tile.tileWidth() - halfCentreX - 1 << 16;
+      int maxX = tile.columns * Tile.tileWidth() - halfCentreX - 1 << 16;
       int minY = halfCentreY << 16;
-      int maxY = tile.rowCountValue * com.ea.sims3.Tile.tileHeight() - halfCentreY - 1 << 16;
-      if (com.ea.sims3.GameCanvas.landscape) {
-         maxY = tile.rowCountValue * com.ea.sims3.Tile.tileHeight() - halfCentreY - 1 << 16;
+      int maxY = tile.rowCountValue * Tile.tileHeight() - halfCentreY - 1 << 16;
+      if (GameCanvas.landscape) {
+         maxY = tile.rowCountValue * Tile.tileHeight() - halfCentreY - 1 << 16;
       } else {
-         maxX = tile.columns * com.ea.sims3.Tile.tileWidth() - halfCentreX - 1 << 16;
+         maxX = tile.columns * Tile.tileWidth() - halfCentreX - 1 << 16;
       }
 
-      targetX = com.ea.sims3.FixedMath.clamp(targetX, minX, maxX);
-      targetY = com.ea.sims3.FixedMath.clamp(targetY, minY, maxY);
+      targetX = FixedMath.clamp(targetX, minX, maxX);
+      targetY = FixedMath.clamp(targetY, minY, maxY);
       this.clampTargetX = targetX;
       this.clampTargetY = targetY;
    }
@@ -2263,15 +2263,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int maxSpeed = 11534;
       int lotX = 32;
       if (this.objectMenuOpen) {
-         maxSpeed = com.ea.sims3.FixedMath.mul(11534, 196608);
-         lotX = com.ea.sims3.FixedMath.mul(32, 196608);
+         maxSpeed = FixedMath.mul(11534, 196608);
+         lotX = FixedMath.mul(32, 196608);
       }
 
       int lotY = lot.cameraX;
       int signX = lot.cameraY;
       this.updateCameraClampTarget();
-      int signY = com.ea.sims3.FixedMath.sign(this.clampTargetX - lotY);
-      int stepX = com.ea.sims3.FixedMath.sign(this.clampTargetY - signX);
+      int signY = FixedMath.sign(this.clampTargetX - lotY);
+      int stepX = FixedMath.sign(this.clampTargetY - signX);
       if (signY > 0 && this.prevCamVelX > 0) {
          this.camVelX += lotX * delta;
       } else if (signY > 0 && this.prevCamVelX <= 0) {
@@ -2472,15 +2472,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    public final boolean isEntityAtTile(int objectType, int posX, int posY) {
-      int tileX = com.ea.sims3.Lot.toTileX(posX);
-      int tileY = com.ea.sims3.Lot.toTileX(posY);
+      int tileX = Lot.toTileX(posX);
+      int tileY = Lot.toTileX(posY);
       Entity[] entities = this.getEntities();
 
       for (int index = 0; index < entities.length; index++) {
          Entity entity;
          if ((entity = entities[index]).behaviorClass() == objectType) {
-            int entityX = com.ea.sims3.Lot.toTileX(entity.posX);
-            int entityY = com.ea.sims3.Lot.toTileY(entity.posY);
+            int entityX = Lot.toTileX(entity.posX);
+            int entityY = Lot.toTileY(entity.posY);
             if (entityX == tileX && entityY == tileY) {
                return true;
             }
@@ -2576,8 +2576,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
    }
 
    public final Entity createEntityAtTile(int type, int pixelX, int pixelY, int facing, int extra) {
-      int tileX = com.ea.sims3.Lot.toFixedX(pixelX);
-      int tileY = com.ea.sims3.Lot.toFixedY(pixelY);
+      int tileX = Lot.toFixedX(pixelX);
+      int tileY = Lot.toFixedY(pixelY);
       return this.createEntity(type, tileX, tileY, facing, extra);
    }
 
@@ -2624,7 +2624,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if (simIndex != -1) {
          this.simsDirty = true;
          int slot;
-         if ((slot = com.ea.sims3.GameCanvas.indexOfByte(simIndex, this.slotSimIds)) != -1) {
+         if ((slot = GameCanvas.indexOfByte(simIndex, this.slotSimIds)) != -1) {
             int recolorFlag = (this.neighborhood.simAttribute(simIndex, 0) == 0 ? 512 : 256) | 16384;
             super.canvas.unloadTiles(recolorFlag, slot);
             this.slotSimIds[slot] = -1;
@@ -2682,10 +2682,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if (screenState == 7) {
          entity.addResourceIndices(labels);
          labels[4] = this.visibleRows;
-         com.ea.sims3.GameCanvas.copyList(args, labels);
+         GameCanvas.copyList(args, labels);
       } else {
          int slotIndex;
-         if ((slotIndex = com.ea.sims3.GameCanvas.indexOfObject(this.menuTarget, this.queuedTargets)) != -1 && this.queuedInteractions[slotIndex] != 2) {
+         if ((slotIndex = GameCanvas.indexOfObject(this.menuTarget, this.queuedTargets)) != -1 && this.queuedInteractions[slotIndex] != 2) {
             int moodId;
             if (this.menuTarget.hasFlag(16384)) {
                moodId = this.neighborhood.simNameText(this.menuTarget.variant);
@@ -2693,15 +2693,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
                moodId = this.menuTarget.typeAnimId();
             }
 
-            com.ea.sims3.GameCanvas.initList(labels, moodId);
-            com.ea.sims3.GameCanvas.initList(args, moodId);
-            com.ea.sims3.GameCanvas.addToList(labels, 113);
-            com.ea.sims3.GameCanvas.addToList(args, -3);
+            GameCanvas.initList(labels, moodId);
+            GameCanvas.initList(args, moodId);
+            GameCanvas.addToList(labels, 113);
+            GameCanvas.addToList(args, -3);
          } else {
             neighborhood.fillInteractions(this.menuTarget, labels, args);
          }
 
-         com.ea.sims3.GameCanvas.copyList(this.menuExtra, args);
+         GameCanvas.copyList(this.menuExtra, args);
          if (labels[0] > this.visibleRows) {
             neighborhood.fillInventoryMenu(labels, args, this.menuExtra);
          }
@@ -2759,7 +2759,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int optionRows = (hitRect[0] != -1 ? 1 : 0) + (hitRect[2] != -1 ? 1 : 0);
          int panelX = this.viewX + 3;
          int panelWidth = canvas.getWidth() >> 1;
-         int bubbleHeight = com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
+         int bubbleHeight = SpriteRenderer.frameHeight(670, 0);
          int panelY = canvas.getHeight() - 15 - this.bottomBarHeight - 18 * (optionRows + 1);
          if (this.notifyId != -1) {
             panelY -= bubbleHeight;
@@ -2788,16 +2788,16 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
             int actionY = panelY - 14 - 4 - (actionId != -1 ? 12 : 0);
             int actionWidth = panelWidth - 4;
-            com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+            SpriteRenderer.setColor(gfx, 76);
             gfx.fillRect(panelX, actionY, panelWidth, 14);
-            com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+            SpriteRenderer.setColor(gfx, 77);
             gfx.drawRect(panelX, actionY, panelWidth, 14);
             canvas.drawStringById(neighborhood.simNameText(simId), 0, panelX + (panelWidth >> 1), actionY + 0, 17);
             if (actionId != -1) {
                int actionY2 = actionY + 14;
-               com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+               SpriteRenderer.setColor(gfx, 76);
                gfx.fillRect(panelX, actionY2, panelWidth, 12);
-               com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+               SpriteRenderer.setColor(gfx, 77);
                gfx.drawRect(panelX, actionY2, panelWidth, 12);
                canvas.drawTextById(gfx, actionId, 1, panelX + 2, actionY2 + 2, actionWidth, 17);
             }
@@ -2813,7 +2813,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.menuLabels[4] = this.visibleRows;
             this.menuSubPage = false;
             this.menuLabels[2] = this.menuParent;
-            com.ea.sims3.GameCanvas.clampListIndex(this.menuLabels);
+            GameCanvas.clampListIndex(this.menuLabels);
          } else {
             this.closeInteractionMenu();
          }
@@ -2989,36 +2989,36 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.clearMoveFlags();
       short[] options = this.actionOptionIds;
       this.actionMenuOpen = true;
-      com.ea.sims3.GameCanvas.initListWith(options, 35, super.canvas.menuRowSpacing);
+      GameCanvas.initListWith(options, 35, super.canvas.menuRowSpacing);
       if (this.queuedCount > 0) {
-         com.ea.sims3.GameCanvas.addToList(options, 113);
+         GameCanvas.addToList(options, 113);
       }
 
       if (this.neighborhood.canInteractAt(null, 0)) {
-         com.ea.sims3.GameCanvas.addToList(options, 327);
+         GameCanvas.addToList(options, 327);
       }
 
       if (!this.isNewNeighborhood()) {
-         com.ea.sims3.GameCanvas.addToList(options, 328);
+         GameCanvas.addToList(options, 328);
       } else {
-         com.ea.sims3.GameCanvas.addToList(options, 124);
+         GameCanvas.addToList(options, 124);
       }
 
       if (!this.isNewNeighborhood() && this.currentLot.areaId() == 0) {
-         com.ea.sims3.GameCanvas.addToList(options, 114);
+         GameCanvas.addToList(options, 114);
       } else {
-         com.ea.sims3.GameCanvas.addToList(options, 329);
+         GameCanvas.addToList(options, 329);
       }
 
-      com.ea.sims3.GameCanvas.addToList(options, 116);
-      com.ea.sims3.GameCanvas.addToList(options, 115);
-      com.ea.sims3.GameCanvas.addToList(options, 117);
-      com.ea.sims3.GameCanvas.addToList(options, 118);
-      com.ea.sims3.GameCanvas.addToList(options, 119);
-      com.ea.sims3.GameCanvas.addToList(options, 120);
-      com.ea.sims3.GameCanvas.addToList(options, 122);
+      GameCanvas.addToList(options, 116);
+      GameCanvas.addToList(options, 115);
+      GameCanvas.addToList(options, 117);
+      GameCanvas.addToList(options, 118);
+      GameCanvas.addToList(options, 119);
+      GameCanvas.addToList(options, 120);
+      GameCanvas.addToList(options, 122);
       if (super.canvas.cheatToggled) {
-         com.ea.sims3.GameCanvas.addToList(options, 123);
+         GameCanvas.addToList(options, 123);
       }
 
       this.updateInputMasks();
@@ -3051,12 +3051,12 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.clearCameraTarget();
       this.objectMenuOpen = true;
       short[] options = this.objectOptionIds;
-      com.ea.sims3.GameCanvas.initList(this.objectOptionIds, 24);
+      GameCanvas.initList(this.objectOptionIds, 24);
       int count = this.currentLot.objectCount();
 
       for (int index = 0; index < count; index++) {
          if (this.neighborhood.hasVisitedItem(index)) {
-            com.ea.sims3.GameCanvas.addToList(options, index);
+            GameCanvas.addToList(options, index);
          }
       }
 
@@ -3096,11 +3096,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void drawObjectMenu(Graphics gfx) {
       GameCanvas canvas = super.canvas;
-      int frameHeight = com.ea.sims3.SpriteRenderer.frameHeight(581, 0);
+      int frameHeight = SpriteRenderer.frameHeight(581, 0);
       int centerX = this.viewX + (this.viewWidth >> 1);
       int topY = this.viewY + (frameHeight >> 1);
       int bottomY = this.viewY + this.viewHeight - frameHeight;
-      com.ea.sims3.BaseScreen.drawNineSlice(gfx, this.viewX, this.viewY, this.viewWidth, this.viewHeight, 581, -1);
+      BaseScreen.drawNineSlice(gfx, this.viewX, this.viewY, this.viewWidth, this.viewHeight, 581, -1);
       canvas.drawStringById(124, 0, centerX, topY, 3);
       int optionCount = this.objectOptionIds[2] + 5;
       short objectType = this.objectOptionIds[optionCount];
@@ -3110,7 +3110,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       canvas.appendStringId(29);
       canvas.appendStringId(objectId);
       canvas.drawString(label, 1, centerX, bottomY, 3);
-      int arrowHeight = com.ea.sims3.SpriteRenderer.frameHeight(559, 0);
+      int arrowHeight = SpriteRenderer.frameHeight(559, 0);
       int arrowY = bottomY - (arrowHeight >> 1);
       int rightX = canvas.getWidth() - 3;
       super.leftArrowAnim.draw(gfx, 3, arrowY);
@@ -3119,9 +3119,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void drawMenuList(Graphics gfx, int posX, int posY) {
       GameCanvas canvas = super.canvas;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 653, 0, posX, posY);
+      SpriteRenderer.drawFrame(gfx, 653, 0, posX, posY);
       int[] hitRect = this.frameBounds;
-      com.ea.sims3.SpriteRenderer.hitTest(this.frameBounds, 653, 0, 0);
+      SpriteRenderer.hitTest(this.frameBounds, 653, 0, 0);
       SdkString label = canvas.beginString();
       canvas.appendInt(this.objectOptionIds[2] + 1);
       canvas.drawString(label, 0, posX + hitRect[0], posY + hitRect[1], 17);
@@ -3373,13 +3373,13 @@ public final class GameScreen extends BaseScreen implements Runnable {
             objectType = lot.frameDataAt(objectId, 2);
          }
 
-         int frameX = com.ea.sims3.SpriteRenderer.frameMinX(objectType, 0);
-         int frameY = com.ea.sims3.SpriteRenderer.frameMinY(objectType, 0);
-         int frameWidth = com.ea.sims3.SpriteRenderer.frameWidth(objectType, 0);
-         int frameHeight = com.ea.sims3.SpriteRenderer.frameHeight(objectType, 0);
+         int frameX = SpriteRenderer.frameMinX(objectType, 0);
+         int frameY = SpriteRenderer.frameMinY(objectType, 0);
+         int frameWidth = SpriteRenderer.frameWidth(objectType, 0);
+         int frameHeight = SpriteRenderer.frameHeight(objectType, 0);
          int drawX = iconX + (iconWidth >> 1) - frameX - (frameWidth >> 1);
          int drawY = iconY + (iconHeight >> 1) - frameY - (frameHeight >> 1);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, objectType, 0, drawX, drawY);
+         SpriteRenderer.drawFrame(gfx, objectType, 0, drawX, drawY);
       }
 
       hitRect[2] = slotWidth - iconWidth - 3;
@@ -3409,7 +3409,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          canvas.drawStringById(objectType, selected, iconX, rowY + 7, 6);
          rowY += 15;
          rowIndex++;
-         com.ea.sims3.BaseScreen.drawHLine(gfx, posX, rowY, width);
+         BaseScreen.drawHLine(gfx, posX, rowY, width);
       }
    }
 
@@ -3590,7 +3590,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
                }
 
                if (frame != -1) {
-                  com.ea.sims3.GameCanvas.selectListValue(this.actionOptionIds, frame);
+                  GameCanvas.selectListValue(this.actionOptionIds, frame);
                }
             }
             break;
@@ -3808,7 +3808,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.drawTwoToneBar(gfx, valueX, rowY + 2, valueWidth, value, scale, true);
             rowY += 16;
             rowIndex++;
-            com.ea.sims3.BaseScreen.drawHLine(gfx, posX, rowY, width);
+            BaseScreen.drawHLine(gfx, posX, rowY, width);
          }
       }
    }
@@ -3857,13 +3857,13 @@ public final class GameScreen extends BaseScreen implements Runnable {
          SdkString separator = canvas.getString(27);
          int traitCount = 0;
 
-         for (int index = 0; index < com.ea.sims3.Neighborhood.WEEKDAY_BITS.length; index++) {
-            if ((mask & com.ea.sims3.Neighborhood.WEEKDAY_BITS[index]) != 0) {
+         for (int index = 0; index < Neighborhood.WEEKDAY_BITS.length; index++) {
+            if ((mask & Neighborhood.WEEKDAY_BITS[index]) != 0) {
                if (traitCount > 0) {
                   canvas.appendString(separator);
                }
 
-               canvas.appendStringId(com.ea.sims3.Neighborhood.WEEKDAY_TEXT_IDS[index]);
+               canvas.appendStringId(Neighborhood.WEEKDAY_TEXT_IDS[index]);
                traitCount++;
             }
          }
@@ -3882,9 +3882,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
             label = canvas.beginString();
             int secondTraitCount = 0;
 
-            for (int secondIndex = 0; secondIndex < com.ea.sims3.Neighborhood.FEATURE_FLAGS.length; secondIndex++) {
-               if ((mask & com.ea.sims3.Neighborhood.FEATURE_FLAGS[secondIndex]) != 0) {
-                  canvas.appendStringId(com.ea.sims3.Neighborhood.FEATURE_TEXT_IDS[secondIndex]);
+            for (int secondIndex = 0; secondIndex < Neighborhood.FEATURE_FLAGS.length; secondIndex++) {
+               if ((mask & Neighborhood.FEATURE_FLAGS[secondIndex]) != 0) {
+                  canvas.appendStringId(Neighborhood.FEATURE_TEXT_IDS[secondIndex]);
                   secondTraitCount++;
                }
             }
@@ -3939,20 +3939,20 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int normalized = value - 0 >> 10;
       int innerWidth;
       int filledWidth = (innerWidth = width - 2) * normalized / 320;
-      int barHeight = com.ea.sims3.SpriteRenderer.frameHeight(657, 0);
+      int barHeight = SpriteRenderer.frameHeight(657, 0);
       int innerX = posX + 1;
       int innerY = posY + 1;
       int outerHeight = barHeight + 2;
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
       gfx.drawRect(posX, posY, width - 1, outerHeight - 1);
       int savedClipX = gfx.getClipX();
       int savedClipY = gfx.getClipY();
       int savedClipWidth = gfx.getClipWidth();
       int savedClipHeight = gfx.getClipHeight();
       gfx.setClip(innerX, savedClipY, innerWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 657, 0, innerX, innerY);
+      SpriteRenderer.drawFrame(gfx, 657, 0, innerX, innerY);
       gfx.setClip(savedClipX, savedClipY, savedClipWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
 
       for (int tick = 1; tick < 5; tick++) {
          int tickX = posX + width * tick / 5;
@@ -3960,8 +3960,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       gfx.setClip(innerX, savedClipY, filledWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 658, 0, innerX, innerY);
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+      SpriteRenderer.drawFrame(gfx, 658, 0, innerX, innerY);
+      SpriteRenderer.setColor(gfx, 76);
 
       for (int secondTick = 1; secondTick < 5; secondTick++) {
          int secondTickX = posX + width * secondTick / 5;
@@ -3978,7 +3978,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    public final int drawSkillHeader(Graphics gfx, int posX, int posY, int width) {
       if (gfx != null) {
          int iconX = posX + 10;
-         int iconHeight = com.ea.sims3.SpriteRenderer.frameHeight(565, 0);
+         int iconHeight = SpriteRenderer.frameHeight(565, 0);
          int iconY = 13 - (iconHeight >> 1);
          int textWidth = width - 30;
          int textX = posX + width - textWidth;
@@ -3991,7 +3991,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          }
 
          super.canvas.drawSlotText(19, labelId, 1, textWidth, textX, posY + 13 + 2, 6);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, iconX, posY + iconY);
+         SpriteRenderer.drawFrame(gfx, frameId, 0, iconX, posY + iconY);
       }
 
       return 30;
@@ -4048,7 +4048,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          this.drawGauge(gfx, valueX, rowY + 5, valueWidth, value);
          rowY += 17;
          rowIndex++;
-         com.ea.sims3.BaseScreen.drawHLine(gfx, posX, rowY, width);
+         BaseScreen.drawHLine(gfx, posX, rowY, width);
       }
    }
 
@@ -4094,7 +4094,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int textX = (iconRight = posX + 3 + 16 + 3) + 3;
       int valueX;
       int dividerX = (valueX = posX + width - 3) - 25;
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 75);
+      SpriteRenderer.setColor(gfx, 75);
       gfx.fillRect(iconRight, posY, 1, height);
       gfx.fillRect(dividerX, posY, 1, height);
       int rowY = posY;
@@ -4117,7 +4117,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.drawClippedRow(gfx, posX, rowY, width, 18, posY + height, 82, rowIndex);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, iconX, rowY + 9);
+         SpriteRenderer.drawFrame(gfx, frameId, 0, iconX, rowY + 9);
          canvas.drawStringById(iconId, 1, textX, rowY + 9, 6);
          int value;
          if ((value = neighborhood.itemCount(objectId)) > 0 || kind == 6) {
@@ -4135,14 +4135,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
          rowY += 18;
          rowIndex++;
-         com.ea.sims3.BaseScreen.drawHLine(gfx, posX, rowY, width);
+         BaseScreen.drawHLine(gfx, posX, rowY, width);
       }
    }
 
    private void drawObjectPage(Graphics gfx) {
       GameCanvas canvas = super.canvas;
       Lot lot = this.currentLot;
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
       gfx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
       int nextY = this.drawIconRow(gfx, 4, canvas.getWidth() - 8, 122);
       int objectIndex = lot.refAt(this.objectIndex);
@@ -4159,7 +4159,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       GameCanvas canvas = super.canvas;
       Neighborhood neighborhood = this.neighborhood;
       int simId = this.currentSimId();
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
       gfx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
       int nextY = this.drawIconRow(gfx, 4, canvas.getWidth() - 8, 116);
       this.setValue(1, neighborhood.simNameText(simId));
@@ -4217,22 +4217,22 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int savedClipY = gfx.getClipY();
       int savedClipWidth = gfx.getClipWidth();
       int savedClipHeight = gfx.getClipHeight();
-      int scaledWidth = com.ea.sims3.FixedMath.mul(width, value);
-      int leftWidth = com.ea.sims3.SpriteRenderer.frameWidth(leftFrame, frameIndex);
-      int rightWidth = com.ea.sims3.SpriteRenderer.frameWidth(rightFrame, frameIndex);
+      int scaledWidth = FixedMath.mul(width, value);
+      int leftWidth = SpriteRenderer.frameWidth(leftFrame, frameIndex);
+      int rightWidth = SpriteRenderer.frameWidth(rightFrame, frameIndex);
       int middleWidth = Math.min(width - rightWidth - leftWidth, scaledWidth - leftWidth);
       gfx.setClip(posX, savedClipY, scaledWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, leftFrame, frameIndex, posX, posY);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, rightFrame, frameIndex, posX + width - rightWidth, posY);
+      SpriteRenderer.drawFrame(gfx, leftFrame, frameIndex, posX, posY);
+      SpriteRenderer.drawFrame(gfx, rightFrame, frameIndex, posX + width - rightWidth, posY);
       gfx.setClip(posX + leftWidth, savedClipY, middleWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, middleFrame, frameIndex, posX + leftWidth, posY);
+      SpriteRenderer.drawFrame(gfx, middleFrame, frameIndex, posX + leftWidth, posY);
       gfx.setClip(savedClipX, savedClipY, savedClipWidth, savedClipHeight);
    }
 
    private void drawGauge(Graphics gfx, int posX, int posY, int width, int value) {
       drawBorderedRect(gfx, posX, posY, width, 65536, 664, 665, 663, 0);
       int frameIndex = value < 2293760 ? 2 : 1;
-      value = com.ea.sims3.FixedMath.div(value, 6553600);
+      value = FixedMath.div(value, 6553600);
       drawBorderedRect(gfx, posX, posY, width, value, 664, 665, 663, frameIndex);
    }
 
@@ -4386,7 +4386,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       byte rowCount = 1;
       if (firstId != -1) {
          rowCount = 20;
-         this.setValue(2, com.ea.sims3.Neighborhood.statTextId(firstId));
+         this.setValue(2, Neighborhood.statTextId(firstId));
          SdkString label = canvas.beginString();
          canvas.appendInt(neighborhood.statValue(firstId));
          canvas.appendStringId(27);
@@ -4397,7 +4397,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       if (secondId != -1) {
          rowCount = 21;
-         this.setValue(4, com.ea.sims3.Neighborhood.statTextId(secondId));
+         this.setValue(4, Neighborhood.statTextId(secondId));
          SdkString secondLabel = canvas.beginString();
          canvas.appendInt(neighborhood.statValue(secondId));
          canvas.appendStringId(27);
@@ -4541,7 +4541,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int textY = posY + 9;
          int valueX = posX + width - 3;
          int iconId = lot.categoryValueAt(objectIndex);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, iconId, 0, iconX, iconY);
+         SpriteRenderer.drawFrame(gfx, iconId, 0, iconX, iconY);
          SdkString label = canvas.beginString();
          if (this.dialogArg1 != 1) {
             canvas.appendInt(this.dialogArg1);
@@ -4918,8 +4918,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
          this.queuedArgs2 = new int[3];
       }
 
-      com.ea.sims3.GameCanvas.fillInts(this.queuedInteractions, -1);
-      com.ea.sims3.GameCanvas.fillObjects(this.queuedTargets, (Object) null);
+      GameCanvas.fillInts(this.queuedInteractions, -1);
+      GameCanvas.fillObjects(this.queuedTargets, (Object) null);
    }
 
    private void promoteNextInteraction() {
@@ -5012,7 +5012,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.resetIdleTimer();
       if (entity != null && this.queuedCount > 0) {
          int slot;
-         if ((slot = com.ea.sims3.GameCanvas.indexOfObject(entity, this.queuedTargets)) == 0) {
+         if ((slot = GameCanvas.indexOfObject(entity, this.queuedTargets)) == 0) {
             this.activePlayer.cancelAction();
             return;
          }
@@ -5156,7 +5156,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       }
 
       int targetPercent = neighborhood.moodValue;
-      this.relationPercent = com.ea.sims3.BaseScreen.approach(this.relationPercent, targetPercent, delta, 8);
+      this.relationPercent = BaseScreen.approach(this.relationPercent, targetPercent, delta, 8);
       if (!this.activePlayer.isLeavingLot()) {
          int flags;
          if (((flags = neighborhood.lotStateNow(0)) & 1) == 0 || this.hasNotification()) {
@@ -5212,7 +5212,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int iconX = this.viewX + 8;
       int rowY = canvas.getHeight() - 15 - this.bottomBarHeight;
       if (this.notifyId != -1) {
-         rowY -= com.ea.sims3.SpriteRenderer.frameHeight(670, 0);
+         rowY -= SpriteRenderer.frameHeight(670, 0);
       }
 
       for (int index = 0; index < 6; index++) {
@@ -5221,7 +5221,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int labelId = neighborhood.taskId(needId);
             int flags = neighborhood.taskFlagsOf(needId);
             int labelWidth = canvas.stringWidthById(labelId, 1);
-            com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+            SpriteRenderer.setColor(gfx, 76);
             gfx.fillRect(leftX, rowY - 12, labelWidth + iconX - leftX + 4, 12);
             ((flags & 1) == 0 ? this.needDownAnimator : this.needUpAnimator).draw(gfx, leftX, rowY + -1);
             canvas.drawStringById(labelId, 1, iconX, rowY + 1, 36);
@@ -5399,22 +5399,22 @@ public final class GameScreen extends BaseScreen implements Runnable {
             mask = 67108864;
       }
 
-      com.ea.sims3.SpriteRenderer.loadTile(resources, 14);
-      com.ea.sims3.SpriteRenderer.loadTile(resources, 13);
+      SpriteRenderer.loadTile(resources, 14);
+      SpriteRenderer.loadTile(resources, 13);
       if (mask == 33554432) {
          lot.buildPaletteFor(0, recolorSource, recolorTarget);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 7, recolorSource, recolorTarget, 0);
+         SpriteRenderer.loadTileRecolored(resources, 7, recolorSource, recolorTarget, 0);
          int objectIndex = neighborhood.lotKind(this.friendSimId);
          lot.buildPaletteFor(objectIndex, recolorSource, recolorTarget);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 8, recolorSource, recolorTarget, 0);
+         SpriteRenderer.loadTileRecolored(resources, 8, recolorSource, recolorTarget, 0);
       } else if (mask == 1048576) {
          lot.buildPaletteFor(0, recolorSource, recolorTarget);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 11, recolorSource, recolorTarget, 0);
+         SpriteRenderer.loadTileRecolored(resources, 11, recolorSource, recolorTarget, 0);
          lot.buildPaletteFor(subjectType, recolorSource, recolorTarget);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 12, recolorSource, recolorTarget, this.findSimByIndex(subjectType).recolorIndex);
+         SpriteRenderer.loadTileRecolored(resources, 12, recolorSource, recolorTarget, this.findSimByIndex(subjectType).recolorIndex);
       } else if (mask == 8388608) {
          lot.buildPaletteFor(0, recolorSource, recolorTarget);
-         com.ea.sims3.SpriteRenderer.loadTileRecolored(resources, 16, recolorSource, recolorTarget, 0);
+         SpriteRenderer.loadTileRecolored(resources, 16, recolorSource, recolorTarget, 0);
       } else {
          super.canvas.loadTilesBlocking(mask);
       }
@@ -5547,10 +5547,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void drawDialogContent(Graphics gfx) {
       GameCanvas canvas = super.canvas;
       Neighborhood neighborhood = this.neighborhood;
-      if (com.ea.sims3.GameCanvas.landscape) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 46, 0, canvas.halfWidth(), canvas.halfHeight() - 7);
+      if (GameCanvas.landscape) {
+         SpriteRenderer.drawFrame(gfx, 46, 0, canvas.halfWidth(), canvas.halfHeight() - 7);
       } else {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 45, 0, canvas.halfWidth(), canvas.halfHeight() - 7);
+         SpriteRenderer.drawFrame(gfx, 45, 0, canvas.halfWidth(), canvas.halfHeight() - 7);
       }
 
       SdkString label = null;
@@ -5584,7 +5584,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int overlayFrame = neighborhood.simAttribute(0, 0) == 0 ? 81 : 80;
             this.drawScrollingBanner(gfx, groundFrame, wallFrame);
             this.drawDialogBox(gfx, objectFrame, null, null);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, overlayFrame, 0, canvas.halfWidth(), canvas.halfHeight());
+            SpriteRenderer.drawFrame(gfx, overlayFrame, 0, canvas.halfWidth(), canvas.halfHeight());
             return;
          case 5:
             this.drawScrollingBanner(gfx, 61, 88);
@@ -5619,30 +5619,30 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       int centerX = screenWidth >> 1;
       int centerY = (screenHeight >> 1) + offsetY;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
+      SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
       int[] hitRect = super.hitRect;
       if (topLabel != null) {
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, frameId, 0, 0);
+         SpriteRenderer.hitTest(hitRect, frameId, 0, 0);
          canvas.drawString(topLabel, 1, centerX + hitRect[0], centerY + 1 + hitRect[1] - 13, 17);
       }
 
       if (bottomLabel != null) {
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, frameId, 0, 1);
+         SpriteRenderer.hitTest(hitRect, frameId, 0, 1);
          canvas.drawString(bottomLabel, 1, centerX + hitRect[0], centerY + 1 + hitRect[1] + 13, 17);
       }
 
       if (kind == 8) {
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, frameId, 0, 0);
+         SpriteRenderer.hitTest(hitRect, frameId, 0, 0);
          this.drawIcon(gfx, centerX + hitRect[0], centerY + hitRect[1], 0, true, 0);
       } else if (kind == 5) {
          int iconFrame = this.currentLot.stageMusicId();
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, iconFrame, 0, 1);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, iconFrame, 0, centerX - hitRect[0], centerY - hitRect[1]);
+         SpriteRenderer.hitTest(hitRect, iconFrame, 0, 1);
+         SpriteRenderer.drawFrame(gfx, iconFrame, 0, centerX - hitRect[0], centerY - hitRect[1]);
       }
 
       if (this.miniGamePhase == 3) {
          if (this.dialogIconTop != -1) {
-            int iconHeight = com.ea.sims3.SpriteRenderer.frameHeight(frameId, 0);
+            int iconHeight = SpriteRenderer.frameHeight(frameId, 0);
             int halfCenterY;
             int topIconY = (halfCenterY = centerY - (iconHeight >> 1)) >> 1;
             if (kind != 3 && kind != 7) {
@@ -5653,7 +5653,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          }
 
          if (this.dialogIconBottom != -1) {
-            int bottomGap = screenHeight - 15 - (centerY + (com.ea.sims3.SpriteRenderer.frameHeight(frameId, 0) >> 1));
+            int bottomGap = screenHeight - 15 - (centerY + (SpriteRenderer.frameHeight(frameId, 0) >> 1));
             int bottomIconY = screenHeight - 15 - (bottomGap >> 1);
             canvas.drawSlotText(0, this.dialogIconBottom, 0, super.dialogWidth, centerX, bottomIconY, 3);
          }
@@ -5667,7 +5667,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int leftX = (screenWidth = canvas.getWidth()) / 3 >> 1;
       int rightX = screenWidth - leftX;
       int waveAmplitude = screenWidth * 15 / 100;
-      int bannerHeight = Math.max(com.ea.sims3.SpriteRenderer.frameHeight(frameA, 0), com.ea.sims3.SpriteRenderer.frameHeight(frameB, 0));
+      int bannerHeight = Math.max(SpriteRenderer.frameHeight(frameA, 0), SpriteRenderer.frameHeight(frameB, 0));
       int maxY = bottomY + bannerHeight;
       int scrollOffset = -(this.dialogClock * 850 % 5898240);
       int frameId = frameA;
@@ -5676,25 +5676,25 @@ public final class GameScreen extends BaseScreen implements Runnable {
          frameId = frameB;
       }
 
-      int wavePhase = this.dialogClock * 125 % 411775 - com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul(164709, -scrollOffset), 2949120);
+      int wavePhase = this.dialogClock * 125 % 411775 - FixedMath.div(FixedMath.mul(164709, -scrollOffset), 2949120);
       int rowY = scrollOffset >> 16;
       int phase = wavePhase;
 
       for (int currentFrame = frameId; rowY < maxY; currentFrame = currentFrame == frameA ? frameB : frameA) {
-         int waveOffset = com.ea.sims3.FixedMath.mul(waveAmplitude, com.ea.sims3.FixedMath.cos(phase));
+         int waveOffset = FixedMath.mul(waveAmplitude, FixedMath.cos(phase));
          if (currentFrame == frameB && this.dialogKind == 7) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 91, 0, leftX + waveOffset, rowY + -15);
+            SpriteRenderer.drawFrame(gfx, 91, 0, leftX + waveOffset, rowY + -15);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, currentFrame, 0, leftX + waveOffset, rowY);
+         SpriteRenderer.drawFrame(gfx, currentFrame, 0, leftX + waveOffset, rowY);
          int secondPhase = phase + 82354;
-         waveOffset = com.ea.sims3.FixedMath.mul(waveAmplitude, com.ea.sims3.FixedMath.cos(secondPhase));
+         waveOffset = FixedMath.mul(waveAmplitude, FixedMath.cos(secondPhase));
          int secondRowY = rowY + 22;
          if (currentFrame == frameB && this.dialogKind == 7) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 91, 0, rightX + waveOffset, secondRowY + -15);
+            SpriteRenderer.drawFrame(gfx, 91, 0, rightX + waveOffset, secondRowY + -15);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, currentFrame, 0, rightX + waveOffset, secondRowY);
+         SpriteRenderer.drawFrame(gfx, currentFrame, 0, rightX + waveOffset, secondRowY);
          rowY += 45;
          phase += 164709;
       }
@@ -5734,11 +5734,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
       int labelId = neighborhood.simAttribute(0, 2) + 1;
       int rowCount = neighborhood.simAttribute(subjectType, 2) + 1;
-      com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
-      com.ea.sims3.SpriteRenderer.drawParts(gfx, groundFrame, 0, canvas.halfWidth(), canvas.halfHeight(), groundFrame2, labelId, null);
-      com.ea.sims3.SpriteRenderer.setRecolorIndex(this.findSimByIndex(subjectType).recolorIndex);
-      com.ea.sims3.SpriteRenderer.drawParts(gfx, wallFrame, 0, canvas.halfWidth(), canvas.halfHeight(), wallFrame2, rowCount, null);
-      com.ea.sims3.SpriteRenderer.setRecolorIndex(0);
+      SpriteRenderer.setRecolorIndex(0);
+      SpriteRenderer.drawParts(gfx, groundFrame, 0, canvas.halfWidth(), canvas.halfHeight(), groundFrame2, labelId, null);
+      SpriteRenderer.setRecolorIndex(this.findSimByIndex(subjectType).recolorIndex);
+      SpriteRenderer.drawParts(gfx, wallFrame, 0, canvas.halfWidth(), canvas.halfHeight(), wallFrame2, rowCount, null);
+      SpriteRenderer.setRecolorIndex(0);
    }
 
    private void drawRelationshipGraph(Graphics gfx) {
@@ -5752,7 +5752,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int otherY = other.posY;
       int centerX = lot.toScreenFixedX(playerX, playerY) + lot.toScreenFixedX(otherX, otherY) >> 1;
       int centerY = lot.toScreenFixedY(playerX, playerY) + lot.toScreenFixedY(otherX, otherY) >> 1;
-      com.ea.sims3.SpriteRenderer.hitTest(hitRect, 67, 0, 2);
+      SpriteRenderer.hitTest(hitRect, 67, 0, 2);
       centerX += hitRect[0] << 16;
       centerY -= hitRect[1] << 17;
       this.currentLot.drawEntityPair(gfx, player, other, centerX, centerY);
@@ -6022,10 +6022,10 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void drawMiniGameProgress(Graphics gfx) {
       GameCanvas canvas = super.canvas;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 568, 0, 0, 34);
-      int bottomBarHeight = com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
+      SpriteRenderer.drawFrame(gfx, 568, 0, 0, 34);
+      int bottomBarHeight = SpriteRenderer.frameHeight(586, 0);
       int barY = canvas.getHeight() - 15 - 34 - bottomBarHeight;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 569, 0, 0, barY);
+      SpriteRenderer.drawFrame(gfx, 569, 0, 0, barY);
       this.panelTop = 34;
       this.panelBottom = barY;
       this.drawRelationshipBar(gfx);
@@ -6034,28 +6034,28 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int savedClipWidth = gfx.getClipWidth();
       int savedClipHeight = gfx.getClipHeight();
       int centerX = canvas.getWidth() >> 1;
-      int progressHeight = com.ea.sims3.SpriteRenderer.frameHeight(634, 0);
+      int progressHeight = SpriteRenderer.frameHeight(634, 0);
       int progressY = 17 - progressHeight;
       int progressWidth = canvas.getWidth() - 40;
       int progressX = centerX - (progressWidth >> 1);
       gfx.setClip(progressX, savedClipY, progressWidth, savedClipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 633, 0, progressX, progressY);
+      SpriteRenderer.drawFrame(gfx, 633, 0, progressX, progressY);
       int filledWidth = this.progressValue * progressWidth / this.progressMax;
       gfx.setClip(progressX, savedClipY, filledWidth, savedClipHeight);
       if (this.miniStep == 5) {
-         com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.effectAnimators[0], progressX, progressY);
+         SpriteRenderer.drawAnimator(gfx, this.effectAnimators[0], progressX, progressY);
       } else {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 634, 0, progressX, progressY);
+         SpriteRenderer.drawFrame(gfx, 634, 0, progressX, progressY);
       }
 
       gfx.setClip(savedClipX, savedClipY, savedClipWidth, savedClipHeight);
    }
 
    private void drawMiniGameTop(Graphics gfx) {
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 568, 0, 0, 14);
-      int posX = com.ea.sims3.SpriteRenderer.frameHeight(586, 0);
+      SpriteRenderer.drawFrame(gfx, 568, 0, 0, 14);
+      int posX = SpriteRenderer.frameHeight(586, 0);
       int posY = super.canvas.getHeight() - 15 - 64 - posX;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 569, 0, 0, posY);
+      SpriteRenderer.drawFrame(gfx, 569, 0, 0, posY);
       this.panelTop = 14;
       this.panelBottom = posY;
       this.drawRelationshipBar(gfx);
@@ -6119,7 +6119,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void resetEffectAnimators() {
       for (int slot = 0; slot < 24; slot++) {
          this.effectAnimators[slot].setRunning(false);
-         com.ea.sims3.GameCanvas.fillInts(this.effectPositions[slot], -1);
+         GameCanvas.fillInts(this.effectPositions[slot], -1);
       }
    }
 
@@ -6179,12 +6179,12 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int savedClipWidth = gfx.getClipWidth();
       int savedClipHeight = gfx.getClipHeight();
       gfx.setClip(posX, posY, width, height);
-      int tileWidth = com.ea.sims3.SpriteRenderer.frameWidth(frameId, 0);
-      int tileHeight = com.ea.sims3.SpriteRenderer.frameHeight(frameId, 0);
+      int tileWidth = SpriteRenderer.frameWidth(frameId, 0);
+      int tileHeight = SpriteRenderer.frameHeight(frameId, 0);
 
       for (int row = 0; row < height; row += tileHeight) {
          for (int column = 0; column < width; column += tileWidth) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, posX + column, posY + row);
+            SpriteRenderer.drawFrame(gfx, frameId, 0, posX + column, posY + row);
          }
       }
 
@@ -6244,11 +6244,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int savedClipWidth = gfx.getClipWidth();
       int savedClipHeight = gfx.getClipHeight();
       int centerX = this.viewX + (this.viewWidth >> 1);
-      int columnWidth = com.ea.sims3.SpriteRenderer.frameWidth(610, 0);
-      int columnHeight = com.ea.sims3.SpriteRenderer.frameHeight(611, 0);
+      int columnWidth = SpriteRenderer.frameWidth(610, 0);
+      int columnHeight = SpriteRenderer.frameHeight(611, 0);
       int columnX = centerX - (columnWidth * this.candleColumns >> 1) + (columnWidth >> 1);
       int baseY = this.panelTop + this.panelBottom + columnHeight >> 1;
-      int candleHeight = com.ea.sims3.SpriteRenderer.frameHeight(612, 0);
+      int candleHeight = SpriteRenderer.frameHeight(612, 0);
       int[] hitRect = this.frameBounds;
       int posX = columnX;
 
@@ -6269,15 +6269,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
          }
 
          int candleValue = this.candleTargets[column];
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, baseFrame, 0, posX, baseY);
+         SpriteRenderer.drawFrame(gfx, baseFrame, 0, posX, baseY);
          int fillHeight = candleHeight * (candleValue >> 16) / 100;
          gfx.setClip(savedClipX, baseY - fillHeight, savedClipWidth, fillHeight);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, animId, frame, posX, baseY);
+         SpriteRenderer.drawFrame(gfx, animId, frame, posX, baseY);
          gfx.setClip(savedClipX, savedClipY, savedClipWidth, savedClipHeight);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 615, 0, posX, baseY);
+         SpriteRenderer.drawFrame(gfx, 615, 0, posX, baseY);
          if (candleValue > 0 && candleValue < 6553600) {
-            com.ea.sims3.SpriteRenderer.hitTest(hitRect, 611, 0, 0);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 608, this.candleFrames[column], posX + hitRect[0], baseY + hitRect[1]);
+            SpriteRenderer.hitTest(hitRect, 611, 0, 0);
+            SpriteRenderer.drawFrame(gfx, 608, this.candleFrames[column], posX + hitRect[0], baseY + hitRect[1]);
          }
 
          posX += columnWidth;
@@ -6304,8 +6304,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.setMiniGameStep(5);
          } else {
             int centerX = this.viewX + (this.viewWidth >> 1);
-            int columnWidth = com.ea.sims3.SpriteRenderer.frameWidth(610, 0);
-            int columnHeight = com.ea.sims3.SpriteRenderer.frameHeight(611, 0);
+            int columnWidth = SpriteRenderer.frameWidth(610, 0);
+            int columnHeight = SpriteRenderer.frameHeight(611, 0);
             int columnX = centerX - (columnWidth * this.candleColumns >> 1) + (columnWidth >> 1);
             int baseY = this.panelTop + this.panelBottom + columnHeight >> 1;
             int[] hitRect = this.frameBounds;
@@ -6338,9 +6338,9 @@ public final class GameScreen extends BaseScreen implements Runnable {
                   (secondAnimator = this.effectAnimators[this.candleColumns + column]).play(frameId, 4);
                }
 
-               this.candleTargets[column] = com.ea.sims3.BaseScreen.approach(this.candleTargets[column], candleValue, delta, 8);
+               this.candleTargets[column] = BaseScreen.approach(this.candleTargets[column], candleValue, delta, 8);
                if (candleValue > 6553600 || this.candleTargets[column] < 65536) {
-                  com.ea.sims3.SpriteRenderer.hitTest(hitRect, 611, 0, 0);
+                  SpriteRenderer.hitTest(hitRect, 611, 0, 0);
                   this.toastAnimSlot = this.playEffect(609, posX + hitRect[0], baseY + hitRect[1], 16);
                   super.canvas.vibrateShort();
                   this.setMiniGameStep(6);
@@ -6447,17 +6447,17 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if (this.miniStep != 0 && this.miniStep != 7) {
          int centerX = this.viewX + (this.viewWidth >> 1);
          int topY = this.panelBottom + 18;
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 622, 0, centerX, topY);
+         SpriteRenderer.drawFrame(gfx, 622, 0, centerX, topY);
          int[] hitRect = this.frameBounds;
-         com.ea.sims3.SpriteRenderer.hitTestMirrored(this.frameBounds, 622, 0, 0);
+         SpriteRenderer.hitTestMirrored(this.frameBounds, 622, 0, 0);
          int barY = topY + hitRect[1] + hitRect[3];
          int barX = centerX + hitRect[0];
          int barWidth = hitRect[2];
-         int markerX = barX + com.ea.sims3.FixedMath.mul(barWidth, com.ea.sims3.FixedMath.div(this.sliderPosition, 131072));
+         int markerX = barX + FixedMath.mul(barWidth, FixedMath.div(this.sliderPosition, 131072));
          if (this.isSliderNear()) {
             int frame = -1;
             if (this.timingMeter < 58982) {
-               int frameCount = com.ea.sims3.SpriteRenderer.frameCount(619);
+               int frameCount = SpriteRenderer.frameCount(619);
                int frameStep = 65536 / frameCount;
                frame = this.timingMeter / frameStep;
             }
@@ -6468,20 +6468,20 @@ public final class GameScreen extends BaseScreen implements Runnable {
             int savedClipHeight = gfx.getClipHeight();
             gfx.setClip(barX, savedClipY, barWidth, savedClipHeight);
             if (frame != -1) {
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 619, frame, markerX, barY);
+               SpriteRenderer.drawFrame(gfx, 619, frame, markerX, barY);
             } else {
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.candleGlowAnimator, markerX, barY);
+               SpriteRenderer.drawAnimator(gfx, this.candleGlowAnimator, markerX, barY);
             }
 
             gfx.setClip(savedClipX, savedClipY, savedClipWidth, savedClipHeight);
          }
 
          if (this.timingMeter > -16384 && this.timingMeter < 65536) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 621, 0, markerX, barY);
+            SpriteRenderer.drawFrame(gfx, 621, 0, markerX, barY);
          }
 
-         markerX = barX + com.ea.sims3.FixedMath.mul(barWidth, com.ea.sims3.FixedMath.div(this.targetPosition, 131072));
-         com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.candleFlameAnimator, markerX, barY);
+         markerX = barX + FixedMath.mul(barWidth, FixedMath.div(this.targetPosition, 131072));
+         SpriteRenderer.drawAnimator(gfx, this.candleFlameAnimator, markerX, barY);
       }
    }
 
@@ -6650,7 +6650,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.cursorPosition = 65536;
       this.seedCells = new short[rowCount][5];
       int tileWidth;
-      int rowStep = (tileWidth = com.ea.sims3.SpriteRenderer.frameWidth(630, 0) / DIR_X_TABLE[0]) << 2;
+      int rowStep = (tileWidth = SpriteRenderer.frameWidth(630, 0) / DIR_X_TABLE[0]) << 2;
 
       for (int row = 0; row < rowCount; row++) {
          byte[] rowData = this.seedRows[row];
@@ -6681,7 +6681,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
    private void drawSeedGame(Graphics gfx) {
       int tileWidth;
       int rowStep;
-      int totalHeight = (rowStep = (tileWidth = com.ea.sims3.SpriteRenderer.frameWidth(630, 0) / DIR_X_TABLE[0]) << 2) * this.plotCount;
+      int totalHeight = (rowStep = (tileWidth = SpriteRenderer.frameWidth(630, 0) / DIR_X_TABLE[0]) << 2) * this.plotCount;
       int halfHeight;
       int rowY = (halfHeight = this.panelTop + this.panelBottom - totalHeight >> 1) + rowStep;
       int startX;
@@ -6691,18 +6691,18 @@ public final class GameScreen extends BaseScreen implements Runnable {
       for (int row = 0; row < this.plotCount; row++) {
          int posX = startX;
          int posY = rowY + row * rowStep;
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 627, 0, startX, posY);
+         SpriteRenderer.drawFrame(gfx, 627, 0, startX, posY);
          byte[] rowData = this.seedRows[row];
 
          for (int index = 0; index < rowData.length; index++) {
             byte direction = rowData[index];
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 630, direction, posX, posY);
+            SpriteRenderer.drawFrame(gfx, 630, direction, posX, posY);
             posX += DIR_X_TABLE[direction] * tileWidth;
             posY += DIR_Y_TABLE[direction] * tileWidth;
          }
       }
 
-      int cursorY = halfHeight + com.ea.sims3.FixedMath.mul(totalHeight, com.ea.sims3.FixedMath.div(this.cursorPosition, 131072));
+      int cursorY = halfHeight + FixedMath.mul(totalHeight, FixedMath.div(this.cursorPosition, 131072));
       this.seedCursorAnimator.draw(gfx, startY, cursorY);
       this.drawEffectsScaled(gfx, 1, startX, rowY);
    }
@@ -6776,14 +6776,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
                      int dirY;
                      if (posX == seedX) {
                         dirX = 0;
-                        dirY = com.ea.sims3.FixedMath.sign(startY - endY);
+                        dirY = FixedMath.sign(startY - endY);
                      } else {
-                        dirX = com.ea.sims3.FixedMath.sign(startX - endX);
+                        dirX = FixedMath.sign(startX - endX);
                         dirY = 0;
                      }
 
                      int step = (speed >> 1) + 65536;
-                     int newX = com.ea.sims3.FixedMath.mul(delta * 1310, step);
+                     int newX = FixedMath.mul(delta * 1310, step);
                      int newY = posX + dirX * newX;
                      int threshold = posY + dirY * newX;
                      if ((dirX <= 0 || posX >= seedX || newY <= seedX) && (dirX >= 0 || posX <= seedX || newY >= seedX)) {
@@ -6796,7 +6796,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
                         if (dirY > 0 && posY < startY && threshold >= startY || dirY < 0 && posY > startY && threshold <= startY) {
                            threshold = startY;
-                           newY = seedX + com.ea.sims3.FixedMath.sign(startX - endX);
+                           newY = seedX + FixedMath.sign(startX - endX);
                         }
                      } else {
                         newY = seedX;
@@ -6848,7 +6848,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
 
    private void plantSeed() {
       int step = 131072 / this.plotCount;
-      int index = com.ea.sims3.GameCanvas.indexOfByte(Math.min(this.cursorPosition / step, this.plotCount - 1), this.seedTypes);
+      int index = GameCanvas.indexOfByte(Math.min(this.cursorPosition / step, this.plotCount - 1), this.seedTypes);
       this.spawnSeedEffect(index, true);
    }
 
@@ -6913,11 +6913,11 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.progressMax = duration;
       this.vehicleAnimator = this.effectAnimators[1];
       this.vehicleAnimator.play(605, 20);
-      int tileWidth = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
+      int tileWidth = SpriteRenderer.frameWidth(603, 0);
       int fieldWidth = 4 * tileWidth;
       int fieldHeight = 4 * tileWidth;
-      int cellWidth = com.ea.sims3.SpriteRenderer.frameWidth(606, 0);
-      int cellHeight = com.ea.sims3.SpriteRenderer.frameHeight(606, 0);
+      int cellWidth = SpriteRenderer.frameWidth(606, 0);
+      int cellHeight = SpriteRenderer.frameHeight(606, 0);
       int cellSpanX = cellWidth;
       int cellSpanY = cellHeight;
       int rangeX = fieldWidth - cellWidth;
@@ -6934,15 +6934,15 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.gridX = 262144;
       this.gridY = 262144;
       this.hoverCell = -1;
-      this.phaseX = com.ea.sims3.FixedMath.mul(1966, this.wobbleSpeed);
-      this.phaseY = com.ea.sims3.FixedMath.mul(1638, this.wobbleSpeed);
+      this.phaseX = FixedMath.mul(1966, this.wobbleSpeed);
+      this.phaseY = FixedMath.mul(1638, this.wobbleSpeed);
       this.offsetX = 0;
       this.offsetY = 0;
       this.progressValue = 0;
    }
 
    private void drawVehicleGame(Graphics gfx) {
-      int cellWidth = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
+      int cellWidth = SpriteRenderer.frameWidth(603, 0);
       int fieldWidth = 4 * cellWidth;
       int fieldHeight = 4 * cellWidth;
       fillTiled(gfx, this.viewX + 15, this.panelTop + 5, this.viewWidth - 30, this.panelBottom - this.panelTop - 10, 603);
@@ -6954,14 +6954,14 @@ public final class GameScreen extends BaseScreen implements Runnable {
          int[] position;
          int cellValue;
          if ((cellValue = (position = this.effectPositions[cell])[2]) != -1) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 606, cellValue, fieldX + position[0], fieldY + position[1]);
+            SpriteRenderer.drawFrame(gfx, 606, cellValue, fieldX + position[0], fieldY + position[1]);
          }
       }
 
       int cursorX = this.gridX + this.offsetX >> 3;
       int cursorY = this.gridY + this.offsetY >> 3;
-      int posX = com.ea.sims3.FixedMath.mul(cursorX, fieldWidth);
-      int posY = com.ea.sims3.FixedMath.mul(cursorY, fieldHeight);
+      int posX = FixedMath.mul(cursorX, fieldWidth);
+      int posY = FixedMath.mul(cursorY, fieldHeight);
       this.vehicleAnimator.draw(gfx, fieldX + posX, fieldY + posY);
       this.drawEffects(gfx, 2, fieldX, fieldY);
    }
@@ -6994,18 +6994,18 @@ public final class GameScreen extends BaseScreen implements Runnable {
                this.gridY = Math.max(0, Math.min(524288, this.gridY + moveY));
                this.phaseX += delta;
                this.phaseY += delta;
-               int phaseX = com.ea.sims3.FixedMath.mul(this.wobbleSpeed, 1966);
-               int phaseY = com.ea.sims3.FixedMath.mul(this.wobbleSpeed, 1638);
+               int phaseX = FixedMath.mul(this.wobbleSpeed, 1966);
+               int phaseY = FixedMath.mul(this.wobbleSpeed, 1638);
                if (this.phaseX > phaseX) {
                   this.phaseX = 0;
                }
 
                if (this.phaseX > phaseX >> 1) {
-                  int smoothValue = com.ea.sims3.FixedMath.smoothStep(phaseX >> 1, phaseX, this.phaseX);
-                  this.offsetX = this.wobbleAmount - com.ea.sims3.FixedMath.mul(smoothValue, this.wobbleAmount);
+                  int smoothValue = FixedMath.smoothStep(phaseX >> 1, phaseX, this.phaseX);
+                  this.offsetX = this.wobbleAmount - FixedMath.mul(smoothValue, this.wobbleAmount);
                } else {
-                  int smoothValue2 = com.ea.sims3.FixedMath.smoothStep(0, phaseX >> 1, this.phaseX);
-                  this.offsetX = com.ea.sims3.FixedMath.mul(smoothValue2, this.wobbleAmount);
+                  int smoothValue2 = FixedMath.smoothStep(0, phaseX >> 1, this.phaseX);
+                  this.offsetX = FixedMath.mul(smoothValue2, this.wobbleAmount);
                }
 
                this.offsetX = this.offsetX - (this.wobbleAmount >> 1);
@@ -7014,23 +7014,23 @@ public final class GameScreen extends BaseScreen implements Runnable {
                }
 
                if (this.phaseY > phaseY >> 1) {
-                  int smoothHigh = com.ea.sims3.FixedMath.smoothStep(phaseY >> 1, phaseY, this.phaseY);
-                  this.offsetY = this.wobbleAmount - com.ea.sims3.FixedMath.mul(smoothHigh, this.wobbleAmount);
+                  int smoothHigh = FixedMath.smoothStep(phaseY >> 1, phaseY, this.phaseY);
+                  this.offsetY = this.wobbleAmount - FixedMath.mul(smoothHigh, this.wobbleAmount);
                } else {
-                  int smoothLow = com.ea.sims3.FixedMath.smoothStep(0, phaseY >> 1, this.phaseY);
-                  this.offsetY = com.ea.sims3.FixedMath.mul(smoothLow, this.wobbleAmount);
+                  int smoothLow = FixedMath.smoothStep(0, phaseY >> 1, this.phaseY);
+                  this.offsetY = FixedMath.mul(smoothLow, this.wobbleAmount);
                }
 
                this.offsetY = this.offsetY - (this.wobbleAmount >> 1);
             }
 
-            int cellWidth = com.ea.sims3.SpriteRenderer.frameWidth(603, 0);
+            int cellWidth = SpriteRenderer.frameWidth(603, 0);
             int fieldWidth = 4 * cellWidth;
             int fieldHeight = 4 * cellWidth;
             int cursorX = this.gridX + this.offsetX >> 3;
             int cursorY = this.gridY + this.offsetY >> 3;
-            int posX = com.ea.sims3.FixedMath.mul(cursorX, fieldWidth);
-            int posY = com.ea.sims3.FixedMath.mul(cursorY, fieldHeight);
+            int posX = FixedMath.mul(cursorX, fieldWidth);
+            int posY = FixedMath.mul(cursorY, fieldHeight);
             boolean noCells = true;
             int hoverCell = -1;
             int bestDistance = -1;
@@ -7084,7 +7084,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
       if (cell != -1) {
          int[] position;
          int value = (position = this.effectPositions[cell])[2];
-         if (++value >= com.ea.sims3.SpriteRenderer.frameCount(606)) {
+         if (++value >= SpriteRenderer.frameCount(606)) {
             value = -1;
             this.effectAnimators[cell].play(607, 16);
          }
@@ -7236,7 +7236,7 @@ public final class GameScreen extends BaseScreen implements Runnable {
          minAmount = -neighborhood.itemCount(objectIndex);
       }
 
-      this.interactionAmount = com.ea.sims3.FixedMath.clamp(amount, minAmount, maxAmount);
+      this.interactionAmount = FixedMath.clamp(amount, minAmount, maxAmount);
       this.updateInputMasks();
    }
 
@@ -7253,60 +7253,60 @@ public final class GameScreen extends BaseScreen implements Runnable {
       Neighborhood neighborhood = this.neighborhood;
       short[] ids = new short[35];
       SdkString[] labels = new SdkString[35];
-      com.ea.sims3.GameCanvas.initListWith(ids, 123, canvas.menuRowSpacing - 4);
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[0] = com.ea.sims3.GameCanvas.createString("Give Money");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[1] = com.ea.sims3.GameCanvas.createString("Advance 1 hour");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[2] = com.ea.sims3.GameCanvas.createString("Advance 1 day");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[3] = com.ea.sims3.GameCanvas.createString("Clear Motives");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[4] = com.ea.sims3.GameCanvas.createString("Get Friends");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[5] = com.ea.sims3.GameCanvas.createString("Break everything");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[6] = com.ea.sims3.GameCanvas.createString("Fix everything");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[7] = com.ea.sims3.GameCanvas.createString("Dirty everything");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[8] = com.ea.sims3.GameCanvas.createString("Clean everything");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[9] = com.ea.sims3.GameCanvas.createString("Unlock bonus");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[10] = com.ea.sims3.GameCanvas.createString("Give all");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[11] = com.ea.sims3.GameCanvas.createString("< Cooking: " + neighborhood.residentLevel(0) + " >");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[12] = com.ea.sims3.GameCanvas.createString("< Cleaning: " + neighborhood.residentLevel(1) + " >");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[13] = com.ea.sims3.GameCanvas.createString("< Fishing: " + neighborhood.residentLevel(2) + " >");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[14] = com.ea.sims3.GameCanvas.createString("< Repairing: " + neighborhood.residentLevel(3) + " >");
-      com.ea.sims3.GameCanvas.addToList(ids, 0);
-      labels[15] = com.ea.sims3.GameCanvas.createString("< Gardening: " + neighborhood.residentLevel(4) + " >");
+      GameCanvas.initListWith(ids, 123, canvas.menuRowSpacing - 4);
+      GameCanvas.addToList(ids, 0);
+      labels[0] = GameCanvas.createString("Give Money");
+      GameCanvas.addToList(ids, 0);
+      labels[1] = GameCanvas.createString("Advance 1 hour");
+      GameCanvas.addToList(ids, 0);
+      labels[2] = GameCanvas.createString("Advance 1 day");
+      GameCanvas.addToList(ids, 0);
+      labels[3] = GameCanvas.createString("Clear Motives");
+      GameCanvas.addToList(ids, 0);
+      labels[4] = GameCanvas.createString("Get Friends");
+      GameCanvas.addToList(ids, 0);
+      labels[5] = GameCanvas.createString("Break everything");
+      GameCanvas.addToList(ids, 0);
+      labels[6] = GameCanvas.createString("Fix everything");
+      GameCanvas.addToList(ids, 0);
+      labels[7] = GameCanvas.createString("Dirty everything");
+      GameCanvas.addToList(ids, 0);
+      labels[8] = GameCanvas.createString("Clean everything");
+      GameCanvas.addToList(ids, 0);
+      labels[9] = GameCanvas.createString("Unlock bonus");
+      GameCanvas.addToList(ids, 0);
+      labels[10] = GameCanvas.createString("Give all");
+      GameCanvas.addToList(ids, 0);
+      labels[11] = GameCanvas.createString("< Cooking: " + neighborhood.residentLevel(0) + " >");
+      GameCanvas.addToList(ids, 0);
+      labels[12] = GameCanvas.createString("< Cleaning: " + neighborhood.residentLevel(1) + " >");
+      GameCanvas.addToList(ids, 0);
+      labels[13] = GameCanvas.createString("< Fishing: " + neighborhood.residentLevel(2) + " >");
+      GameCanvas.addToList(ids, 0);
+      labels[14] = GameCanvas.createString("< Repairing: " + neighborhood.residentLevel(3) + " >");
+      GameCanvas.addToList(ids, 0);
+      labels[15] = GameCanvas.createString("< Gardening: " + neighborhood.residentLevel(4) + " >");
       int simId = neighborhood.watchedSim;
       if (neighborhood.watchedSim != -1) {
          String simName = canvas.getString(neighborhood.simNameText(simId)).toString();
-         com.ea.sims3.GameCanvas.addToList(ids, 3);
-         labels[16] = com.ea.sims3.GameCanvas.createString(simName + ": Friends");
-         com.ea.sims3.GameCanvas.addToList(ids, 4);
-         labels[17] = com.ea.sims3.GameCanvas.createString(simName + ": Disliked");
-         com.ea.sims3.GameCanvas.addToList(ids, 5);
-         labels[18] = com.ea.sims3.GameCanvas.createString(simName + ": Romance");
-         com.ea.sims3.GameCanvas.addToList(ids, 6);
-         labels[19] = com.ea.sims3.GameCanvas.createString(simName + ": Good Friends");
-         com.ea.sims3.GameCanvas.addToList(ids, 7);
-         labels[20] = com.ea.sims3.GameCanvas.createString(simName + ": Enemies");
-         com.ea.sims3.GameCanvas.addToList(ids, 8);
-         labels[21] = com.ea.sims3.GameCanvas.createString(simName + ": Date");
-         com.ea.sims3.GameCanvas.addToList(ids, 9);
-         labels[22] = com.ea.sims3.GameCanvas.createString(simName + ": Best Friends");
-         com.ea.sims3.GameCanvas.addToList(ids, 10);
-         labels[23] = com.ea.sims3.GameCanvas.createString(simName + ": Nemesis");
-         com.ea.sims3.GameCanvas.addToList(ids, 11);
-         labels[24] = com.ea.sims3.GameCanvas.createString(simName + ": Partner");
+         GameCanvas.addToList(ids, 3);
+         labels[16] = GameCanvas.createString(simName + ": Friends");
+         GameCanvas.addToList(ids, 4);
+         labels[17] = GameCanvas.createString(simName + ": Disliked");
+         GameCanvas.addToList(ids, 5);
+         labels[18] = GameCanvas.createString(simName + ": Romance");
+         GameCanvas.addToList(ids, 6);
+         labels[19] = GameCanvas.createString(simName + ": Good Friends");
+         GameCanvas.addToList(ids, 7);
+         labels[20] = GameCanvas.createString(simName + ": Enemies");
+         GameCanvas.addToList(ids, 8);
+         labels[21] = GameCanvas.createString(simName + ": Date");
+         GameCanvas.addToList(ids, 9);
+         labels[22] = GameCanvas.createString(simName + ": Best Friends");
+         GameCanvas.addToList(ids, 10);
+         labels[23] = GameCanvas.createString(simName + ": Nemesis");
+         GameCanvas.addToList(ids, 11);
+         labels[24] = GameCanvas.createString(simName + ": Partner");
       }
 
       this.cheatLabels = ids;
@@ -7406,25 +7406,25 @@ public final class GameScreen extends BaseScreen implements Runnable {
             boolean bulkApplied = false;
             if (option == 11) {
                neighborhood.applyCommand(decrease ? 13 : 14);
-               this.cheatText[11] = com.ea.sims3.GameCanvas.createString("< Cooking: " + neighborhood.residentLevel(0) + " >");
+               this.cheatText[11] = GameCanvas.createString("< Cooking: " + neighborhood.residentLevel(0) + " >");
             } else if (option == 12) {
                neighborhood.applyCommand(decrease ? 15 : 16);
-               this.cheatText[12] = com.ea.sims3.GameCanvas.createString("< Cleaning: " + neighborhood.residentLevel(1) + " >");
+               this.cheatText[12] = GameCanvas.createString("< Cleaning: " + neighborhood.residentLevel(1) + " >");
             } else if (option == 13) {
                neighborhood.applyCommand(decrease ? 17 : 18);
-               this.cheatText[13] = com.ea.sims3.GameCanvas.createString("< Fishing: " + neighborhood.residentLevel(2) + " >");
+               this.cheatText[13] = GameCanvas.createString("< Fishing: " + neighborhood.residentLevel(2) + " >");
             } else {
                if (option != 14) {
                   if (option == 15) {
                      neighborhood.applyCommand(decrease ? 21 : 22);
-                     this.cheatText[15] = com.ea.sims3.GameCanvas.createString("< Gardening: " + neighborhood.residentLevel(4) + " >");
+                     this.cheatText[15] = GameCanvas.createString("< Gardening: " + neighborhood.residentLevel(4) + " >");
                   }
 
                   return;
                }
 
                neighborhood.applyCommand(decrease ? 19 : 20);
-               this.cheatText[14] = com.ea.sims3.GameCanvas.createString("< Repairing: " + neighborhood.residentLevel(3) + " >");
+               this.cheatText[14] = GameCanvas.createString("< Repairing: " + neighborhood.residentLevel(3) + " >");
             }
          } else if (this.matchesInput(keyState, actionMask, 0, 4)) {
             this.closeMainMenu();

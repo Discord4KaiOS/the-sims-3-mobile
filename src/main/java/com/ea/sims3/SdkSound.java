@@ -9,7 +9,7 @@ import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
 
 public final class SdkSound implements PlayerListener {
-   private static int targetFps = com.ea.sims3.SdkConfig.targetFps();
+   private static int targetFps = SdkConfig.targetFps();
    public boolean isWavFormat = false;
    public int currentSound = -1;
    public int loopCount = 1;
@@ -121,7 +121,7 @@ public final class SdkSound implements PlayerListener {
    }
 
    public final void vibrate(int duration) {
-      duration = duration * com.ea.sims3.SdkConfig.vibrateScaleDen() / com.ea.sims3.SdkConfig.vibrateScaleNum();
+      duration = duration * SdkConfig.vibrateScaleDen() / SdkConfig.vibrateScaleNum();
       this.display = Display.getDisplay(GameCanvas.instance().app);
       this.display.vibrate(duration);
    }

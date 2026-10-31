@@ -133,7 +133,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                this.mainMenuItems = items;
                this.buildMainMenu(-1);
                this.playClickSound();
-               com.ea.sims3.SdkText.loadStringsChunk(1);
+               SdkText.loadStringsChunk(1);
                this.loadStep++;
                canvas.resetTileLoad();
                return;
@@ -160,8 +160,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    public final void pause() {
       super.canvas.unloadTiles(3076, -1);
       super.canvas.setSoundLoop(-1);
-      com.ea.sims3.SdkSound.muteAll();
-      com.ea.sims3.SdkText.freeStringsChunk(1);
+      SdkSound.muteAll();
+      SdkText.freeStringsChunk(1);
    }
 
    public final void render(Graphics gfx) {
@@ -454,7 +454,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          case 7:
             canvas.setSoundLoop(10);
             this.introStep = 18;
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 82);
+            SpriteRenderer.loadTile(super.canvas.resources, 82);
             canvas.unloadTiles(2, 0);
             canvas.setSoftKeys(0, 16);
             return;
@@ -463,12 +463,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             canvas.setSoftKeys(4, 0);
             return;
          case 9:
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 48);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 47);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 46);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 45);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 44);
-            com.ea.sims3.SpriteRenderer.loadTile(super.canvas.resources, 43);
+            SpriteRenderer.loadTile(super.canvas.resources, 48);
+            SpriteRenderer.loadTile(super.canvas.resources, 47);
+            SpriteRenderer.loadTile(super.canvas.resources, 46);
+            SpriteRenderer.loadTile(super.canvas.resources, 45);
+            SpriteRenderer.loadTile(super.canvas.resources, 44);
+            SpriteRenderer.loadTile(super.canvas.resources, 43);
             canvas.promoActive = true;
             canvas.promoImages.reset();
             return;
@@ -551,17 +551,17 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    public final void buildMainMenu(int selectedId) {
       short[] items = this.mainMenuItems;
-      com.ea.sims3.GameCanvas.initListWith(this.mainMenuItems, 50, super.canvas.menuRowSpacing);
-      com.ea.sims3.GameCanvas.addToList(items, 51);
-      com.ea.sims3.GameCanvas.addToList(items, 59);
-      com.ea.sims3.GameCanvas.addToList(items, 60);
-      com.ea.sims3.GameCanvas.addToList(items, 61);
+      GameCanvas.initListWith(this.mainMenuItems, 50, super.canvas.menuRowSpacing);
+      GameCanvas.addToList(items, 51);
+      GameCanvas.addToList(items, 59);
+      GameCanvas.addToList(items, 60);
+      GameCanvas.addToList(items, 61);
       if (super.canvas.promoImages.isAvailable()) {
-         com.ea.sims3.GameCanvas.addToList(items, 63);
+         GameCanvas.addToList(items, 63);
       }
 
-      com.ea.sims3.GameCanvas.addToList(items, 42);
-      com.ea.sims3.GameCanvas.selectListValue(items, selectedId);
+      GameCanvas.addToList(items, 42);
+      GameCanvas.selectListValue(items, selectedId);
    }
 
    private void personaKeyPressed(int menuId) {
@@ -572,13 +572,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          default:
             return;
          case 51:
-            com.ea.sims3.SpriteRenderer.unloadTile(82, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(48, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(47, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(46, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(45, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(44, 0);
-            com.ea.sims3.SpriteRenderer.unloadTile(43, 0);
+            SpriteRenderer.unloadTile(82, 0);
+            SpriteRenderer.unloadTile(48, 0);
+            SpriteRenderer.unloadTile(47, 0);
+            SpriteRenderer.unloadTile(46, 0);
+            SpriteRenderer.unloadTile(45, 0);
+            SpriteRenderer.unloadTile(44, 0);
+            SpriteRenderer.unloadTile(43, 0);
             canvas.selectProfile(0);
             this.onTick(14);
             return;
@@ -611,13 +611,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int headerCount = super.canvas.headerCount;
          short[] items = new short[5 + headerCount];
          this.languageMenuItems = items;
-         com.ea.sims3.GameCanvas.initListWith(items, 3, super.canvas.menuRowSpacing);
+         GameCanvas.initListWith(items, 3, super.canvas.menuRowSpacing);
          SdkString[] names = new SdkString[headerCount + 1];
          this.languageNames = names;
 
          for (int headerIndex = 0; headerIndex < headerCount; headerIndex++) {
-            com.ea.sims3.GameCanvas.addToList(items, headerIndex);
-            names[headerIndex] = com.ea.sims3.SdkText.getHeaderString(headerIndex, 0, null);
+            GameCanvas.addToList(items, headerIndex);
+            names[headerIndex] = SdkText.getHeaderString(headerIndex, 0, null);
          }
 
          int languageIndex = super.canvas.language;
@@ -646,7 +646,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       } else {
          if (this.matchesInput(keyCode, action, 524288, 32768)) {
             if (canvas.menuMode == 5) {
-               com.ea.sims3.SdkText.setCurrentLanguage(canvas.language);
+               SdkText.setCurrentLanguage(canvas.language);
                canvas.setMenuMode(0);
                return;
             }
@@ -654,7 +654,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             super.canvas.navigateLeftRight(this.languageMenuItems, keyCode);
             short selectedId;
             if ((selectedId = this.languageMenuItems[2]) != previousId) {
-               com.ea.sims3.SdkText.setCurrentLanguage(selectedId);
+               SdkText.setCurrentLanguage(selectedId);
             }
          }
       }
@@ -827,20 +827,20 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void fillScreen(Graphics gfx, int colorIndex) {
       GameCanvas canvas = super.canvas;
-      com.ea.sims3.SpriteRenderer.setColor(gfx, colorIndex);
+      SpriteRenderer.setColor(gfx, colorIndex);
       gfx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
    private void drawIntroBackground(Graphics gfx) {
       GameCanvas canvas = super.canvas;
       this.fillScreen(gfx, 60);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 556, 0, canvas.halfWidth(), canvas.halfHeight());
+      SpriteRenderer.drawFrame(gfx, 556, 0, canvas.halfWidth(), canvas.halfHeight());
    }
 
    private void drawIntroSim(Graphics gfx) {
       GameCanvas canvas = super.canvas;
       short frameId = 0;
-      if (com.ea.sims3.GameCanvas.currentLandscape == 1) {
+      if (GameCanvas.currentLandscape == 1) {
          frameId = 558;
       } else {
          frameId = 557;
@@ -850,24 +850,24 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int centerY = canvas.halfHeight();
       int progress = 0;
       if (this.introDuration != 0) {
-         progress = com.ea.sims3.FixedMath.div(this.introElapsed, this.introDuration);
+         progress = FixedMath.div(this.introElapsed, this.introDuration);
       }
 
       if (this.introStep >= 12) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
+         SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
          if (this.introStep == 12) {
             this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
          }
       }
 
       if (this.introStep >= 11) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 6, centerX, centerY);
+         SpriteRenderer.drawFrame(gfx, frameId, 6, centerX, centerY);
          if (this.introStep == 11) {
             this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
          }
       }
 
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
+      SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
       int simX = centerX;
       if (this.introStep == 10) {
          int width = canvas.getWidth();
@@ -876,17 +876,17 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
       int shiftX = Math.min(0, simX - centerX);
       if (this.introStep >= 8) {
-         int doorTop = -com.ea.sims3.SpriteRenderer.frameHeight(frameId, 1);
+         int doorTop = -SpriteRenderer.frameHeight(frameId, 1);
          int doorY = centerY;
          if (this.introStep == 8) {
             doorY = easeValue(doorTop, centerY, progress, 4);
          }
 
          if (doorY >= centerY) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 2, centerX, centerY);
+            SpriteRenderer.drawFrame(gfx, frameId, 2, centerX, centerY);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 1, centerX + shiftX, doorY);
+         SpriteRenderer.drawFrame(gfx, frameId, 1, centerX + shiftX, doorY);
       }
 
       if (this.introStep >= 9) {
@@ -896,20 +896,20 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          }
 
          int[] hitRect = super.hitRect;
-         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, frameId, 3, 0);
+         SpriteRenderer.hitTest(super.hitRect, frameId, 3, 0);
          this.drawSampleLetter(headX + shiftX + hitRect[0], centerY + hitRect[1], 3);
       }
 
       if (this.introStep >= 10) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 4, simX, centerY);
+         SpriteRenderer.drawFrame(gfx, frameId, 4, simX, centerY);
          if (simX <= centerX) {
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 5, simX, centerY);
+            SpriteRenderer.drawFrame(gfx, frameId, 5, simX, centerY);
          }
       }
 
       if (this.introStep == 13 && this.introElapsed % 750 < 375) {
          int[] pressRect = super.hitRect;
-         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, frameId, 7, 0);
+         SpriteRenderer.hitTest(super.hitRect, frameId, 7, 0);
          canvas.drawStringById(34, 0, centerX + pressRect[0], centerY + pressRect[1], 3);
       }
    }
@@ -925,58 +925,58 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       switch (kind) {
          case 0:
          default:
-            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
+            return from + FixedMath.clamp(FixedMath.mul(progress, range), 0, range);
          case 1:
-            progress = com.ea.sims3.FixedMath.smoothStep(0, 65536, progress);
-            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
+            progress = FixedMath.smoothStep(0, 65536, progress);
+            return from + FixedMath.clamp(FixedMath.mul(progress, range), 0, range);
          case 2:
-            progress = com.ea.sims3.FixedMath.smoothStep(0, 65536, 32768 + (progress >> 1));
-            return from + com.ea.sims3.FixedMath.clamp(com.ea.sims3.FixedMath.mul(progress, range), 0, range);
+            progress = FixedMath.smoothStep(0, 65536, 32768 + (progress >> 1));
+            return from + FixedMath.clamp(FixedMath.mul(progress, range), 0, range);
          case 3:
             if (progress < 58982) {
-               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 58982, progress), 68812);
+               progress = FixedMath.mul(FixedMath.smoothStep(0, 58982, progress), 68812);
             } else {
-               int overshootOne = 65536 - com.ea.sims3.FixedMath.div(progress - 58982, 6554);
-               progress = 65536 + com.ea.sims3.FixedMath.mul(3276, overshootOne);
+               int overshootOne = 65536 - FixedMath.div(progress - 58982, 6554);
+               progress = 65536 + FixedMath.mul(3276, overshootOne);
             }
 
-            return from + com.ea.sims3.FixedMath.mul(progress, range);
+            return from + FixedMath.mul(progress, range);
          case 4:
             if (progress < 55705) {
-               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 55705, progress), 68812);
+               progress = FixedMath.mul(FixedMath.smoothStep(0, 55705, progress), 68812);
             } else {
-               int overshootTwo = 65536 - com.ea.sims3.FixedMath.div(progress - 55705, 9831);
-               progress = 65536 + com.ea.sims3.FixedMath.mul(3276, overshootTwo);
+               int overshootTwo = 65536 - FixedMath.div(progress - 55705, 9831);
+               progress = 65536 + FixedMath.mul(3276, overshootTwo);
             }
 
-            return from + com.ea.sims3.FixedMath.mul(progress, range);
+            return from + FixedMath.mul(progress, range);
          case 5:
             if (progress < 49152) {
-               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.smoothStep(0, 49152, progress), 98304);
+               progress = FixedMath.mul(FixedMath.smoothStep(0, 49152, progress), 98304);
             } else {
-               int overshootThree = 65536 - com.ea.sims3.FixedMath.div(progress - 49152, 16384);
-               progress = 65536 + com.ea.sims3.FixedMath.mul(32768, overshootThree);
+               int overshootThree = 65536 - FixedMath.div(progress - 49152, 16384);
+               progress = 65536 + FixedMath.mul(32768, overshootThree);
             }
 
-            return from + com.ea.sims3.FixedMath.mul(progress, range);
+            return from + FixedMath.mul(progress, range);
          case 6:
             if (progress < 32768) {
-               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul(progress, 102944), 32768)), 72089);
+               progress = FixedMath.mul(FixedMath.sinShifted(FixedMath.div(FixedMath.mul(progress, 102944), 32768)), 72089);
             } else {
                int fraction;
-               int angle = com.ea.sims3.FixedMath.mul(fraction = com.ea.sims3.FixedMath.div(progress - 32768, 32768), 617662);
-               int amplitude = 6554 - com.ea.sims3.FixedMath.mul(6554, fraction);
-               progress = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(angle), amplitude) + 65536;
+               int angle = FixedMath.mul(fraction = FixedMath.div(progress - 32768, 32768), 617662);
+               int amplitude = 6554 - FixedMath.mul(6554, fraction);
+               progress = FixedMath.mul(FixedMath.cos(angle), amplitude) + 65536;
             }
 
-            return from + com.ea.sims3.FixedMath.mul(progress, range);
+            return from + FixedMath.mul(progress, range);
       }
    }
 
    private void drawIntroLogo(Graphics gfx) {
       GameCanvas canvas = super.canvas;
       short frameId = 0;
-      if (com.ea.sims3.GameCanvas.currentLandscape == 1) {
+      if (GameCanvas.currentLandscape == 1) {
          frameId = 558;
       } else {
          frameId = 557;
@@ -984,7 +984,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
       int centerX = canvas.halfWidth();
       int centerY = canvas.halfHeight();
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
+      SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
    }
 
    private void drawMainMenuBox(Graphics gfx) {
@@ -998,7 +998,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int boxY = (canvas.getHeight() - boxHeight >> 1) + 2;
       int progress = 0;
       if (this.introDuration != 0) {
-         progress = com.ea.sims3.FixedMath.div(this.introElapsed, this.introDuration);
+         progress = FixedMath.div(this.introElapsed, this.introDuration);
       }
 
       int drawX = boxY;
@@ -1014,12 +1014,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int titleHeight;
          int titleY = titleHeight = boxY + 9;
          if (this.introStep == 15) {
-            titleY = easeValue(-com.ea.sims3.SpriteRenderer.frameHeight(557, 9), titleHeight, progress, 3);
+            titleY = easeValue(-SpriteRenderer.frameHeight(557, 9), titleHeight, progress, 3);
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 557, 9, drawY, titleY);
+         SpriteRenderer.drawFrame(gfx, 557, 9, drawY, titleY);
          int[] buttonRect = super.hitRect;
-         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, 557, 9, 0);
+         SpriteRenderer.hitTest(super.hitRect, 557, 9, 0);
          this.drawSampleLetter(drawY + buttonRect[0], titleY + buttonRect[1], 4);
       }
 
@@ -1029,7 +1029,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int animIndex = count;
          if (this.introStep == 16) {
             animIndex = this.introElapsed / 200;
-            progress = com.ea.sims3.FixedMath.div(this.introElapsed % 200, 200);
+            progress = FixedMath.div(this.introElapsed % 200, 200);
          }
 
          int rowY = boxY + 22 + 7;
@@ -1090,7 +1090,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int animId = this.simAnimator.animId;
       if (offsetByFrame) {
          int[] hitRect = super.hitRect;
-         com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, animId, 0, 1);
+         SpriteRenderer.hitTest(super.hitRect, animId, 0, 1);
          xPos -= hitRect[0];
          yPos -= hitRect[1];
       }
@@ -1099,10 +1099,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int[] frameRect = super.hitRect;
       this.simAnimator.matchesFrame(frameRect, 0);
       int hairStyle = neighborhood.simAttribute(0, 2);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, this.simFrameId, hairStyle, xPos + frameRect[0], yPos + frameRect[1]);
+      SpriteRenderer.drawFrame(gfx, this.simFrameId, hairStyle, xPos + frameRect[0], yPos + frameRect[1]);
       if (neighborhood.simAttribute(0, 8) != 0) {
          int accentFrameId = animId == 703 ? 704 : (animId == 706 ? 707 : 17091);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, accentFrameId, 0, xPos, yPos);
+         SpriteRenderer.drawFrame(gfx, accentFrameId, 0, xPos, yPos);
       }
    }
 
@@ -1147,8 +1147,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
 
       this.advanceArrows(deltaMs);
-      this.optionScroll = com.ea.sims3.BaseScreen.approach(this.optionScroll, this.optionScrollTarget, deltaMs, 8);
-      this.variantScroll = com.ea.sims3.BaseScreen.approach(this.variantScroll, this.variantScrollTarget, deltaMs, 8);
+      this.optionScroll = BaseScreen.approach(this.optionScroll, this.optionScrollTarget, deltaMs, 8);
+      this.variantScroll = BaseScreen.approach(this.variantScroll, this.variantScrollTarget, deltaMs, 8);
       if (Math.abs(this.optionScroll - this.optionScrollTarget) < 32768) {
          this.optionScroll = this.optionScrollTarget;
       }
@@ -1234,12 +1234,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          index += step;
       }
 
-      int listHeight = canvas.getHeight() - 15 - (com.ea.sims3.SpriteRenderer.frameHeight(697, 0) << 1);
-      int frameCount = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int frameHeight = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
+      int listHeight = canvas.getHeight() - 15 - (SpriteRenderer.frameHeight(697, 0) << 1);
+      int frameCount = SpriteRenderer.frameCount(687);
+      int frameHeight = SpriteRenderer.frameHeight(688, 0);
       int scrollY = (listHeight >> 1) + 2 - frameHeight * index - (frameHeight >> 1);
       int minScroll = listHeight - 2 - frameHeight * frameCount;
-      scrollY = com.ea.sims3.FixedMath.clamp(scrollY, minScroll, 2);
+      scrollY = FixedMath.clamp(scrollY, minScroll, 2);
       this.optionScrollTarget = scrollY << 16;
       if (step == 0) {
          this.optionScroll = scrollY << 16;
@@ -1325,7 +1325,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       if (variantSlot != -1) {
          this.optionMax = canvas.lot.tableRowAt(variantSlot).length - 1;
       } else {
-         this.optionMax = com.ea.sims3.SpriteRenderer.frameCount(iconId) - 1;
+         this.optionMax = SpriteRenderer.frameCount(iconId) - 1;
       }
 
       if (slotIndex != -1) {
@@ -1379,15 +1379,15 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
 
       int[] hitRect = super.hitRect;
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.hitRect, 689, 0, 0);
+      SpriteRenderer.hitTestMirrored(super.hitRect, 689, 0, 0);
       int listHeight = hitRect[2];
       int rowCount = this.optionMax - this.optionMin + 1;
-      int rowHeight = com.ea.sims3.SpriteRenderer.frameHeight(683, 0);
+      int rowHeight = SpriteRenderer.frameHeight(683, 0);
       int visibleRows = Math.min(rowCount * rowHeight, listHeight);
       int maxOffset = listHeight - visibleRows;
       int targetOffset = (visibleRows >> 1) + 0 - rowHeight * value - (rowHeight >> 1) + maxOffset;
       int minOffset = visibleRows - 0 - rowHeight * rowCount + (maxOffset >> 1);
-      targetOffset = com.ea.sims3.FixedMath.clamp(targetOffset, minOffset, 0);
+      targetOffset = FixedMath.clamp(targetOffset, minOffset, 0);
       this.variantScrollTarget = targetOffset << 16;
       if (immediate) {
          this.variantScroll = targetOffset << 16;
@@ -1400,7 +1400,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int offsetY = 0;
 
       for (int band = 0; band < count; band++) {
-         com.ea.sims3.SpriteRenderer.setColor(gfx, colors[band]);
+         SpriteRenderer.setColor(gfx, colors[band]);
          int nextOffset = (band + 1) * bandHeight + 32768 >> 16;
          gfx.fillRect(xPos, yPos + offsetY, width, nextOffset - offsetY);
          offsetY = nextOffset;
@@ -1415,7 +1415,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private static final int panelGradientHeight(int height) {
-      return com.ea.sims3.FixedMath.mul(17902, height);
+      return FixedMath.mul(17902, height);
    }
 
    private void drawAppearanceScreen(Graphics gfx) {
@@ -1424,9 +1424,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int height = canvas.getHeight() - 15;
       drawPanelGradient(gfx, 0, 0, width, height);
       int[] hitRect = super.hitRect;
-      int panelFrameHeight = com.ea.sims3.SpriteRenderer.frameHeight(697, 0);
+      int panelFrameHeight = SpriteRenderer.frameHeight(697, 0);
       int panelFrameWidth;
-      int panelWidth = (panelFrameWidth = com.ea.sims3.SpriteRenderer.frameWidth(697, 0)) + 4;
+      int panelWidth = (panelFrameWidth = SpriteRenderer.frameWidth(697, 0)) + 4;
       int listTop = 0 + panelFrameHeight;
       int listWidth = panelFrameWidth - 4;
       int listHeight = height - (panelFrameHeight << 1);
@@ -1437,28 +1437,28 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int clipY = gfx.getClipY();
       int clipWidth = gfx.getClipWidth();
       int clipHeight = gfx.getClipHeight();
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 60);
+      SpriteRenderer.setColor(gfx, 60);
       gfx.fillRect(2, 0, 1, height);
       gfx.fillRect(2 + panelWidth - 1, 0, 1, height);
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
       gfx.fillRect(3, 0, 1, height);
       gfx.fillRect(2 + panelWidth - 2, 0, 1, height);
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 76);
+      SpriteRenderer.setColor(gfx, 76);
       gfx.fillRect(4, panelFrameHeight, 2, listHeight);
       gfx.fillRect(2 + panelWidth - 2 - 2, panelFrameHeight, 2, listHeight);
       drawVerticalGradient(gfx, scrollBarGradient, 6, listTop, listWidth, listHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 697, 0, 4, 0);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 696, 0, 4, height);
+      SpriteRenderer.drawFrame(gfx, 697, 0, 4, 0);
+      SpriteRenderer.drawFrame(gfx, 696, 0, 4, height);
       int gradientTop = 6 + (listWidth >> 1);
-      int optionCount = com.ea.sims3.SpriteRenderer.frameCount(687);
-      int rowHeight = com.ea.sims3.SpriteRenderer.frameHeight(688, 0);
+      int optionCount = SpriteRenderer.frameCount(687);
+      int rowHeight = SpriteRenderer.frameHeight(688, 0);
       if (this.optionIndex > 0) {
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, 697, 0, 0);
+         SpriteRenderer.hitTest(hitRect, 697, 0, 0);
          this.upArrowAnimator.draw(gfx, 4 + hitRect[0], 0 + hitRect[1]);
       }
 
       if (this.optionIndex < optionCount - 1) {
-         com.ea.sims3.SpriteRenderer.hitTest(hitRect, 696, 0, 0);
+         SpriteRenderer.hitTest(hitRect, 696, 0, 0);
          this.downArrowAnimator.draw(gfx, 4 + hitRect[0], height + hitRect[1]);
       }
 
@@ -1483,12 +1483,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             rowFrameIndex = 0;
          }
 
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, rowFrameId, rowFrameIndex, gradientTop, rowY);
+         SpriteRenderer.drawFrame(gfx, rowFrameId, rowFrameIndex, gradientTop, rowY);
          rowY += rowHeight;
       }
 
       gfx.setClip(clipX, clipY, clipWidth, clipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 702, 0, panelCenterX, panelY);
+      SpriteRenderer.drawFrame(gfx, 702, 0, panelCenterX, panelY);
       this.drawSimPreview(gfx, panelCenterX, panelY, false);
       short optionId = optionIds[this.optionIndex];
       rowY = canvas.getWidth() - panelWidth - 2 - 8;
@@ -1496,15 +1496,15 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       gradientTop = this.drawIconPanel(gfx, swatchX, rowY, 719, optionId);
       rowHeight = this.optionIconId;
       if (this.optionIconId != 196) {
-         swatchX = gradientTop + com.ea.sims3.FixedMath.mul(height - panelHeight - gradientTop, 12179);
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, rowHeight, 0, panelCenterX, swatchX);
-         com.ea.sims3.SpriteRenderer.hitTestMirrored(hitRect, rowHeight, 0, 0);
+         swatchX = gradientTop + FixedMath.mul(height - panelHeight - gradientTop, 12179);
+         SpriteRenderer.drawFrame(gfx, rowHeight, 0, panelCenterX, swatchX);
+         SpriteRenderer.hitTestMirrored(hitRect, rowHeight, 0, 0);
          int iconX = panelCenterX + hitRect[0];
          int iconY = swatchX + hitRect[1];
          int iconWidth = hitRect[2];
          int iconHeight = hitRect[3];
          int iconCenterY = iconY + (iconHeight >> 1);
-         int cellWidth = com.ea.sims3.SpriteRenderer.frameWidth(683, 0);
+         int cellWidth = SpriteRenderer.frameWidth(683, 0);
          gfx.setClip(iconX, iconY, iconWidth, iconHeight);
          boolean hasVariants = this.variantSlot != -1;
          int cellX = iconX + (this.variantScroll >> 16) + (hasVariants ? 0 : cellWidth >> 1);
@@ -1518,7 +1518,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                this.drawVariantCell(gfx, cellX, iconCenterY, colors, variantIndex == this.optionValue);
             } else {
                int cellFrameId = variantIndex == this.optionValue ? this.optionFrameSelected : this.optionFrameNormal;
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, cellFrameId, variantIndex, cellX, iconCenterY);
+               SpriteRenderer.drawFrame(gfx, cellFrameId, variantIndex, cellX, iconCenterY);
             }
 
             cellX += cellWidth;
@@ -1526,12 +1526,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
          gfx.setClip(clipX, clipY, clipWidth, clipHeight);
          if (this.optionValue > this.optionMin || optionId == 723) {
-            com.ea.sims3.SpriteRenderer.hitTest(hitRect, rowHeight, 0, 0);
+            SpriteRenderer.hitTest(hitRect, rowHeight, 0, 0);
             super.leftArrowAnim.draw(gfx, panelCenterX + hitRect[0], swatchX + hitRect[1]);
          }
 
          if (this.optionValue < this.optionMax || optionId == 723) {
-            com.ea.sims3.SpriteRenderer.hitTest(hitRect, rowHeight, 0, 1);
+            SpriteRenderer.hitTest(hitRect, rowHeight, 0, 1);
             super.rightArrowAnim.draw(gfx, panelCenterX + hitRect[0], swatchX + hitRect[1]);
          }
       }
@@ -1541,9 +1541,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void drawVariantCell(Graphics gfx, int xPos, int yPos, int[] colors, boolean selected) {
       int frameId = selected ? 683 : 682;
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, frameId, 0, xPos, yPos);
+      SpriteRenderer.drawFrame(gfx, frameId, 0, xPos, yPos);
       int[] hitRect = super.hitRect;
-      com.ea.sims3.SpriteRenderer.hitTestMirrored(super.hitRect, 682, 0, 0);
+      SpriteRenderer.hitTestMirrored(super.hitRect, 682, 0, 0);
       int cellX = xPos + hitRect[0];
       int cellY = yPos + hitRect[1];
       int cellWidth = hitRect[2];
@@ -1618,7 +1618,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          canvas.drawStringById(traitId, textFrame, centerX, rowY + rowFrame, 17);
          rowY += 15;
          startIndex++;
-         com.ea.sims3.BaseScreen.drawHLine(gfx, xPos, rowY, width);
+         BaseScreen.drawHLine(gfx, xPos, rowY, width);
       }
    }
 
@@ -1678,7 +1678,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void layoutTraitList() {
-      this.beginList(com.ea.sims3.Neighborhood.initialScreenId(), 15, 0);
+      this.beginList(Neighborhood.initialScreenId(), 15, 0);
    }
 
    public final void drawTraitRows(Graphics gfx, int xPos, int yPos, int width, int height) {
@@ -1714,7 +1714,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          canvas.drawStringById(interestId, textFrame, centerX, rowY + rowFrame, 17);
          rowY += 15;
          startIndex++;
-         com.ea.sims3.BaseScreen.drawHLine(gfx, xPos, rowY, width);
+         BaseScreen.drawHLine(gfx, xPos, rowY, width);
       }
    }
 
@@ -1877,22 +1877,22 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int cursorWidth = 5;
          int cursorX = nameX;
          if (name != null) {
-            cursorX = nameX + com.ea.sims3.SdkText.substringWidth(name, 0, cursorPos);
+            cursorX = nameX + SdkText.substringWidth(name, 0, cursorPos);
             if (cursorPos != canvas.profileNameLength()) {
-               cursorWidth = com.ea.sims3.SdkText.substringWidth(name, cursorPos, 1);
+               cursorWidth = SdkText.substringWidth(name, cursorPos, 1);
             }
          }
 
          int cursorY = nameY + lineHeight;
-         com.ea.sims3.SpriteRenderer.setColor(gfx, 0);
+         SpriteRenderer.setColor(gfx, 0);
          gfx.fillRect(cursorX, cursorY, cursorWidth, 1);
       }
 
       int centerX = width >> 1;
       nameWidth = boxTop + (height - boxTop - boxHeight >> 1);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 709, 0, centerX, nameWidth);
+      SpriteRenderer.drawFrame(gfx, 709, 0, centerX, nameWidth);
       int[] hitRect = super.hitRect;
-      com.ea.sims3.SpriteRenderer.hitTest(super.hitRect, 709, 0, 0);
+      SpriteRenderer.hitTest(super.hitRect, 709, 0, 0);
       nameY = centerX + hitRect[0];
       lineHeight = nameWidth + hitRect[1];
       this.drawCenteredLabel(gfx, nameY, lineHeight);
@@ -1914,7 +1914,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
 
       int hintY = canvas.getHeight() - 30;
-      if (com.ea.sims3.GameCanvas.landscape) {
+      if (GameCanvas.landscape) {
          canvas.drawStringById(957, 0, this.hintScrollX >> 16, hintY, 20);
       }
 
@@ -1971,7 +1971,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       int rowY = 3 + listHeight - (panelGradientHeight(listHeight) >> 1);
       int panelWidth = width - 3 - 64 - 3 - 3;
       int colorIndex = state == 14 ? 77 : 43;
-      com.ea.sims3.SpriteRenderer.setColor(gfx, colorIndex);
+      SpriteRenderer.setColor(gfx, colorIndex);
       gfx.fillRect(0, 0, width, height);
       colorIndex = gfx.getClipX();
       int clipX = gfx.getClipY();
@@ -1980,7 +1980,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       gfx.setClip(colorIndex, 3, clipY, listHeight);
       drawPanelGradient(gfx, 3, 3, 64, listHeight);
       gfx.setClip(colorIndex, clipX, clipY, clipWidth);
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 0);
+      SpriteRenderer.setColor(gfx, 0);
       gfx.drawRect(3, 3, 63, listHeight - 1);
       if (!this.newSimSelected && canvas.isProfileUsed()) {
          this.drawSimPreview(gfx, 35, rowY, false);

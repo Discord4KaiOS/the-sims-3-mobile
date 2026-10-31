@@ -173,7 +173,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    private GameCanvas(MonkeyApp app) {
-      com.ea.sims3.SdkText.setMidlet((MIDlet)app);
+      SdkText.setMidlet((MIDlet)app);
       if (this.getWidth() > this.getHeight()) {
          lastLandscape = 1;
          currentLandscape = 1;
@@ -195,9 +195,9 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       this.soundLoopId = -1;
       this.preloadSounds();
       this.random = new Random();
-      com.ea.sims3.SpriteRenderer.loadSpriteRects(this.resources);
-      com.ea.sims3.SpriteRenderer.loadFrameData(this.resources);
-      com.ea.sims3.SpriteRenderer.loadPalette(this.resources);
+      SpriteRenderer.loadSpriteRects(this.resources);
+      SpriteRenderer.loadFrameData(this.resources);
+      SpriteRenderer.loadPalette(this.resources);
       this.leftSoftKeyAnimator = new Animator();
       this.rightSoftKeyAnimator = new Animator();
       this.initWorld();
@@ -257,13 +257,13 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       this.saveSettings();
       this.setGcPending(true);
 
-      for (int index = 0; index < com.ea.sims3.SoundIndex.SOUND_IDS.length; index++) {
+      for (int index = 0; index < SoundIndex.SOUND_IDS.length; index++) {
          this.sound.stopAll();
       }
    }
 
    public final void showNotify() {
-      if (!com.ea.sims3.GameScreen.updateBlocked) {
+      if (!GameScreen.updateBlocked) {
          if (this.suspended) {
             this.resumeGame();
             this.startTimer();
@@ -277,7 +277,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       } catch (Exception ignored) {
       }
 
-      if (!com.ea.sims3.GameScreen.updateBlocked) {
+      if (!GameScreen.updateBlocked) {
          this.suspendGame();
       }
    }
@@ -304,21 +304,21 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          if (this.screen != null) {
             if (this.screen instanceof GameScreen) {
                GameScreen game = (GameScreen)this.screen;
-               if (com.ea.sims3.GameScreen.screenState != 1) {
+               if (GameScreen.screenState != 1) {
                   game.layoutViewport();
                   return;
                }
             } else if (this.screen instanceof TitleScreen) {
                Object unused = null;
-               if (com.ea.sims3.TitleScreen.state == 5) {
+               if (TitleScreen.state == 5) {
                   this.screen.onTick(5);
                }
 
-               if (com.ea.sims3.TitleScreen.state == 11) {
+               if (TitleScreen.state == 11) {
                   this.slotStringIds[0] = 0;
                }
 
-               if (com.ea.sims3.TitleScreen.state == 10) {
+               if (TitleScreen.state == 10) {
                   this.screen.onTick(10);
                }
             }
@@ -381,7 +381,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final void muteSound() {
-      com.ea.sims3.SdkSound.muteAll();
+      SdkSound.muteAll();
       this.running = false;
    }
 
@@ -392,7 +392,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          this.screen.stop();
       }
 
-      com.ea.sims3.SdkSound.muteAll();
+      SdkSound.muteAll();
       this.sound.playQueued();
       this.sound.update();
       this.suspended = true;
@@ -466,7 +466,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final synchronized void paint(Graphics gfx) {
       try {
          Graphics graphicsCopy = gfx;
-         com.ea.sims3.SdkText.setGraphics(gfx);
+         SdkText.setGraphics(gfx);
 
          try {
             if (this.screen != null && this.running) {
@@ -628,10 +628,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    private void loadFonts() {
       ioBuffer = new byte[2600];
       byte[] header = this.readResource("/hdr");
-      this.headerCount = com.ea.sims3.SdkText.loadTextHeader(header);
+      this.headerCount = SdkText.loadTextHeader(header);
       int languageArg = 0;
       int fontSetIndex;
-      int selectedLanguage = fontSetIndex = com.ea.sims3.SdkText.chooseLanguage(languageArg = 0 + this.language);
+      int selectedLanguage = fontSetIndex = SdkText.chooseLanguage(languageArg = 0 + this.language);
       if (fontSetIndex < 0) {
          selectedLanguage = -1;
          fontSetIndex = 0;
@@ -640,7 +640,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       Object[] fontArray = new Object[5];
       Image[] fontImages = new Image[5];
       this.fonts = fontArray;
-      String fontPath = "/" + com.ea.sims3.SdkText.getFontDifferentiator(fontSetIndex);
+      String fontPath = "/" + SdkText.getFontDifferentiator(fontSetIndex);
 
       try {
          fontImages[0] = Image.createImage(fontPath + "font_sims_white_outline.png");
@@ -652,15 +652,15 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       byte[] data = this.readResource(fontPath + "font_sims_white_outline.rff");
-      fontArray[0] = com.ea.sims3.SdkText.createFont(fontImages[0], data);
+      fontArray[0] = SdkText.createFont(fontImages[0], data);
       data = this.readResource(fontPath + "font_sims_black.rff");
-      fontArray[1] = com.ea.sims3.SdkText.createFont(fontImages[1], data);
+      fontArray[1] = SdkText.createFont(fontImages[1], data);
       data = this.readResource(fontPath + "font_sims_white_smallcaps.rff");
-      fontArray[2] = com.ea.sims3.SdkText.createFont(fontImages[2], data);
+      fontArray[2] = SdkText.createFont(fontImages[2], data);
       data = this.readResource(fontPath + "font_the.rff");
-      fontArray[3] = com.ea.sims3.SdkText.createFont(fontImages[3], data);
+      fontArray[3] = SdkText.createFont(fontImages[3], data);
       data = this.readResource(fontPath + "font_thesmall.rff");
-      fontArray[4] = com.ea.sims3.SdkText.createFont(fontImages[4], data);
+      fontArray[4] = SdkText.createFont(fontImages[4], data);
       ioBuffer = null;
       gcYield();
       this.setLanguage(fontSetIndex);
@@ -675,7 +675,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
       try {
          InputStream stream = this.resources.openStream(52);
-         byte[] productData = new byte[com.ea.sims3.ResourceLoader.getSize(52)];
+         byte[] productData = new byte[ResourceLoader.getSize(52)];
          stream.read(productData);
          stream.close();
          this.promoImages.setProductData(productData);
@@ -686,10 +686,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void setLanguage(int languageIndex) {
       this.language = languageIndex;
-      com.ea.sims3.SdkText.setCurrentLanguage(languageIndex);
-      com.ea.sims3.SdkText.loadStringsChunk(2);
+      SdkText.setCurrentLanguage(languageIndex);
+      SdkText.loadStringsChunk(2);
       if (this.titleScreen() != null) {
-         com.ea.sims3.SdkText.loadStringsChunk(1);
+         SdkText.loadStringsChunk(1);
       }
 
       fillShorts(this.slotStringIds, -1);
@@ -725,32 +725,32 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void drawStringById(int stringId, int fontIndex, int xPos, int yPos, int anchor) {
       if (stringId != -1) {
          SdkString text = this.getString(stringId);
-         com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+         SdkText.setFont(this.fonts[fontIndex]);
          this.drawString(text, fontIndex, xPos, yPos, anchor);
       }
    }
 
    public final void drawString(SdkString text, int fontIndex, int xPos, int yPos, int anchor) {
       if (text != null) {
-         com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-         com.ea.sims3.SdkText.setSpaceSpacing(5);
+         SdkText.setFont(this.fonts[fontIndex]);
+         SdkText.setSpaceSpacing(5);
          if ((anchor & 2) != 0) {
-            yPos -= com.ea.sims3.SdkText.getLineHeight() - com.ea.sims3.SdkText.getLeadingSpacing() >> 1;
+            yPos -= SdkText.getLineHeight() - SdkText.getLeadingSpacing() >> 1;
             anchor &= -3;
          }
 
-         com.ea.sims3.SdkText.drawString(text, xPos, yPos, anchor);
+         SdkText.drawString(text, xPos, yPos, anchor);
       }
    }
 
    public final int spaceWidth(int fontIndex) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      return com.ea.sims3.SdkText.getSpaceSpacing();
+      SdkText.setFont(this.fonts[fontIndex]);
+      return SdkText.getSpaceSpacing();
    }
 
    public final int lineHeight(int fontIndex) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      return com.ea.sims3.SdkText.getLineHeight();
+      SdkText.setFont(this.fonts[fontIndex]);
+      return SdkText.getLineHeight();
    }
 
    public final SdkString getString(int stringId) {
@@ -759,18 +759,18 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       } else {
          SdkString buffer = this.tempStrings[this.tempStringCursor];
          this.tempStringCursor = (this.tempStringCursor + 1) % 10;
-         return stringId <= 3 ? com.ea.sims3.SdkText.getHeaderString(com.ea.sims3.SdkText.getCurrentLanguage(), stringId, buffer) : com.ea.sims3.SdkText.getString(stringId, buffer);
+         return stringId <= 3 ? SdkText.getHeaderString(SdkText.getCurrentLanguage(), stringId, buffer) : SdkText.getString(stringId, buffer);
       }
    }
 
    public final int stringWidthById(int stringId, int fontIndex) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      return com.ea.sims3.SdkText.stringWidth(this.getString(stringId));
+      SdkText.setFont(this.fonts[fontIndex]);
+      return SdkText.stringWidth(this.getString(stringId));
    }
 
    public final int stringWidth(SdkString text, int fontIndex) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      return com.ea.sims3.SdkText.stringWidth(text);
+      SdkText.setFont(this.fonts[fontIndex]);
+      return SdkText.stringWidth(text);
    }
 
    public static SdkString createString(String text) {
@@ -951,7 +951,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final int setWrappedString(int stringId, int fontIndex, int width) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      SdkText.setFont(this.fonts[fontIndex]);
       if (stringId == -1) {
          return 0;
       } else {
@@ -961,7 +961,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             this.wrappedString = this.wrappedString.format(version);
          }
 
-         com.ea.sims3.SdkText.wrapText(this.wrappedString, this.wrappedLineOffsets, width, (short)124);
+         SdkText.wrapText(this.wrappedString, this.wrappedLineOffsets, width, (short)124);
          return this.wrappedLineOffsets[0];
       }
    }
@@ -971,16 +971,16 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final void drawWrappedText(int fontIndex, int xPos, int yPos, int anchor) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      com.ea.sims3.SdkText.setSpaceSpacing(5);
-      com.ea.sims3.SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, 1, this.wrappedLineOffsets[0], xPos, yPos, anchor);
+      SdkText.setFont(this.fonts[fontIndex]);
+      SdkText.setSpaceSpacing(5);
+      SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, 1, this.wrappedLineOffsets[0], xPos, yPos, anchor);
    }
 
    public final void drawWrappedTextClipped(int fontIndex, int xPos, int yPos, int anchor, int firstLine, int lineCount) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      com.ea.sims3.SdkText.setSpaceSpacing(5);
+      SdkText.setFont(this.fonts[fontIndex]);
+      SdkText.setSpaceSpacing(5);
       if ((anchor & 2) != 0) {
-         int lineHeight = com.ea.sims3.SdkText.getLineHeight() + com.ea.sims3.SdkText.getLeadingSpacing();
+         int lineHeight = SdkText.getLineHeight() + SdkText.getLeadingSpacing();
          int halfHeight;
          int centerOffset = (halfHeight = lineCount * lineHeight) >> 1;
          yPos -= centerOffset;
@@ -988,17 +988,17 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       }
 
       lineCount = Math.min(this.wrappedLineOffsets[0] - firstLine, lineCount);
-      com.ea.sims3.SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, firstLine + 1, lineCount, xPos, yPos, anchor);
+      SdkText.drawWrappedString(this.wrappedString, this.wrappedLineOffsets, firstLine + 1, lineCount, xPos, yPos, anchor);
    }
 
    private int setSlotText(int slot, int stringId, int fontIndex, int width) {
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
+      SdkText.setFont(this.fonts[fontIndex]);
       this.slotStringIds[slot] = (short)stringId;
       if (stringId == -1) {
          return 0;
       } else {
          this.slotTexts[slot] = this.getString(stringId).copy();
-         com.ea.sims3.SdkText.wrapText(this.slotTexts[slot], this.wrapOffsets[slot], width, (short)124);
+         SdkText.wrapText(this.slotTexts[slot], this.wrapOffsets[slot], width, (short)124);
          return this.wrapOffsets[slot][0];
       }
    }
@@ -1009,9 +1009,9 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          this.slotStringIds[slot] = (short)stringId;
       }
 
-      com.ea.sims3.SdkText.setFont(this.fonts[fontIndex]);
-      com.ea.sims3.SdkText.setSpaceSpacing(5);
-      com.ea.sims3.SdkText.drawWrappedString(this.slotTexts[slot], this.wrapOffsets[slot], 1, this.wrapOffsets[slot][0], yPos, firstLine, lineCount);
+      SdkText.setFont(this.fonts[fontIndex]);
+      SdkText.setSpaceSpacing(5);
+      SdkText.drawWrappedString(this.slotTexts[slot], this.wrapOffsets[slot], 1, this.wrapOffsets[slot][0], yPos, firstLine, lineCount);
    }
 
    public final void drawTextById(Graphics gfx, int stringId, int fontIndex, int xPos, int yPos, int maxWidth, int anchor) {
@@ -1140,7 +1140,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
    public final void drawScrollingText(int slot, int fontIndex, int stringId, int xPos, int yPos, int anchor) {
       if (this.marqueeStringIds[slot] != fontIndex) {
-         this.setMarqueeText(slot, stringId, com.ea.sims3.SdkText.getString(fontIndex, null));
+         this.setMarqueeText(slot, stringId, SdkText.getString(fontIndex, null));
          this.marqueeStringIds[slot] = fontIndex;
          this.marqueeTimers[slot] = 1500;
       }
@@ -1171,8 +1171,8 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       for (int charIndex = 0; charIndex < charCount; charIndex++) {
          charString.setCharAt(0, text.charAt(charIndex));
          if (penX >= waveStart && penX <= waveEnd) {
-            int phase = com.ea.sims3.FixedMath.div(penX - waveStart << 16, 1310720);
-            int wave = com.ea.sims3.FixedMath.cos(com.ea.sims3.FixedMath.mul(411775, phase) - 205887) * 6;
+            int phase = FixedMath.div(penX - waveStart << 16, 1310720);
+            int wave = FixedMath.cos(FixedMath.mul(411775, phase) - 205887) * 6;
             this.drawString(charString, stringId, xPos + penX, yPos - (wave >> 16) - 6, anchor);
          } else {
             this.drawString(charString, stringId, xPos + penX, yPos, anchor);
@@ -1352,16 +1352,16 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             case 1:
                int half = (int)(duration >> 1);
                if (elapsed < half) {
-                  value = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.sinShifted(com.ea.sims3.FixedMath.div(com.ea.sims3.FixedMath.mul((int)elapsed, 102944), half)), 72089);
+                  value = FixedMath.mul(FixedMath.sinShifted(FixedMath.div(FixedMath.mul((int)elapsed, 102944), half)), 72089);
                } else {
                   int progress;
-                  int angle = com.ea.sims3.FixedMath.mul(progress = com.ea.sims3.FixedMath.div((int)elapsed - half, (int)duration - half), 617662);
-                  int amplitude = 6554 - com.ea.sims3.FixedMath.mul(6554, progress);
-                  value = com.ea.sims3.FixedMath.mul(com.ea.sims3.FixedMath.cos(angle), amplitude) + 65536;
+                  int angle = FixedMath.mul(progress = FixedMath.div((int)elapsed - half, (int)duration - half), 617662);
+                  int amplitude = 6554 - FixedMath.mul(6554, progress);
+                  value = FixedMath.mul(FixedMath.cos(angle), amplitude) + 65536;
                }
                break;
             case 2:
-               value = com.ea.sims3.FixedMath.smoothStep(0, (int)duration, (int)elapsed);
+               value = FixedMath.smoothStep(0, (int)duration, (int)elapsed);
          }
 
          return from + (value * (toValue - from) >> 16);
@@ -1423,10 +1423,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void drawBottomBar(Graphics gfx, int yOffset) {
       int height = this.getHeight();
       int width = this.getWidth();
-      int frameWidth = com.ea.sims3.SpriteRenderer.frameWidth(674, 0);
+      int frameWidth = SpriteRenderer.frameWidth(674, 0);
 
       for (int xPos = 0; xPos < width; xPos += frameWidth) {
-         com.ea.sims3.SpriteRenderer.drawFrame(gfx, 674, 0, xPos, height + yOffset);
+         SpriteRenderer.drawFrame(gfx, 674, 0, xPos, height + yOffset);
       }
 
       if (!this.isFading()) {
@@ -1448,13 +1448,13 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int leftXWide;
             int centerXWide = (leftXWide = (rightXWide = this.getWidth() - 11) - leftWidthWide + 4) + rightXWide >> 1;
             if (this.leftSoftKeyAnimator.isRunning() && this.rightSoftKeySelected) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, leftXWide, leftYWide);
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightXWide, leftYWide);
+               SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, leftXWide, leftYWide);
+               SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightXWide, leftYWide);
                drawDivider(gfx, leftXWide + 2, leftYWide, rightXWide - leftXWide - 4, true);
                this.drawString(leftTextWide, 0, centerXWide, leftTextYWide, 3);
             } else {
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightXWide, leftYWide);
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, leftXWide, leftYWide);
+               SpriteRenderer.drawFrame(gfx, 677, 0, rightXWide, leftYWide);
+               SpriteRenderer.drawFrame(gfx, 675, 0, leftXWide, leftYWide);
                drawDivider(gfx, leftXWide + 2, leftYWide, rightXWide - leftXWide - 4, false);
                this.drawString(leftTextWide, 0, centerXWide, leftTextYWide, 3);
             }
@@ -1470,15 +1470,15 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int rightLeftXWide;
             int rightCenterXWide = (rightLeftXWide = (rightRightXWide = this.getWidth() - 11) - rightWidthWide + 4) + rightRightXWide >> 1;
             if (this.leftSoftKeyAnimator.isRunning() && this.rightSoftKeySelected) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightLeftXWide, rightYWide);
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightRightXWide, rightYWide);
+               SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightLeftXWide, rightYWide);
+               SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightRightXWide, rightYWide);
                drawDivider(gfx, rightLeftXWide + 2, rightYWide, rightRightXWide - rightLeftXWide - 4, true);
                this.drawString(rightTextWide, 0, rightCenterXWide, rightTextYWide, 3);
                return;
             }
 
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightRightXWide, rightYWide);
-            com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, rightLeftXWide, rightYWide);
+            SpriteRenderer.drawFrame(gfx, 677, 0, rightRightXWide, rightYWide);
+            SpriteRenderer.drawFrame(gfx, 675, 0, rightLeftXWide, rightYWide);
             drawDivider(gfx, rightLeftXWide + 2, rightYWide, rightRightXWide - rightLeftXWide - 4, false);
             this.drawString(rightTextWide, 0, rightCenterXWide, rightTextYWide, 3);
          }
@@ -1492,13 +1492,13 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int rightX = 11 + leftWidth - 4;
             int leftCenterX = 11 + rightX >> 1;
             if (this.leftSoftKeyAnimator.isRunning() && !this.rightSoftKeySelected) {
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, 11, leftY);
-               com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightX, leftY);
+               SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, 11, leftY);
+               SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightX, leftY);
                drawDivider(gfx, 13, leftY, rightX - 11 - 4, true);
                this.drawString(leftText, 0, leftCenterX, leftTextY, 3);
             } else {
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightX, leftY);
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, 11, leftY);
+               SpriteRenderer.drawFrame(gfx, 677, 0, rightX, leftY);
+               SpriteRenderer.drawFrame(gfx, 675, 0, 11, leftY);
                drawDivider(gfx, 13, leftY, rightX - 11 - 4, false);
                this.drawString(leftText, 0, leftCenterX, leftTextY, 3);
             }
@@ -1514,15 +1514,15 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int rightRightX;
             int rightCenterX = (rightRightX = (rightLimit = this.getWidth() - 11) - rightWidth + 4) + rightLimit >> 1;
             if (!this.leftSoftKeyAnimator.isRunning() || !this.rightSoftKeySelected) {
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 677, 0, rightLimit, rightY);
-               com.ea.sims3.SpriteRenderer.drawFrame(gfx, 675, 0, rightRightX, rightY);
+               SpriteRenderer.drawFrame(gfx, 677, 0, rightLimit, rightY);
+               SpriteRenderer.drawFrame(gfx, 675, 0, rightRightX, rightY);
                drawDivider(gfx, rightRightX + 2, rightY, rightLimit - rightRightX - 4, false);
                this.drawString(rightText, 0, rightCenterX, rightTextY, 3);
                return;
             }
 
-            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightRightX, rightY);
-            com.ea.sims3.SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightLimit, rightY);
+            SpriteRenderer.drawAnimator(gfx, this.leftSoftKeyAnimator, rightRightX, rightY);
+            SpriteRenderer.drawAnimator(gfx, this.rightSoftKeyAnimator, rightLimit, rightY);
             drawDivider(gfx, rightRightX + 2, rightY, rightLimit - rightRightX - 4, true);
             this.drawString(rightText, 0, rightCenterX, rightTextY, 3);
          }
@@ -1536,7 +1536,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       int clipWidth = gfx.getClipWidth();
       int clipHeight = gfx.getClipHeight();
       gfx.setClip(xPos, clipY, width, clipHeight);
-      com.ea.sims3.SpriteRenderer.drawFrame(gfx, 676, frame, xPos, yPos);
+      SpriteRenderer.drawFrame(gfx, 676, frame, xPos, yPos);
       gfx.setClip(clipX, clipY, clipWidth, clipHeight);
    }
 
@@ -1557,7 +1557,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          if ((this.tileMasks[(index << 1) + 1] & mask) != 0) {
             int attempt = 1;
 
-            while (!com.ea.sims3.SpriteRenderer.loadTileRecolored(loader, this.tileMasks[index << 1], recolorFrom, recolorTo, recolorIndex) && attempt < 2) {
+            while (!SpriteRenderer.loadTileRecolored(loader, this.tileMasks[index << 1], recolorFrom, recolorTo, recolorIndex) && attempt < 2) {
                attempt++;
                gcYield();
             }
@@ -1593,10 +1593,10 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             int tileId = masks[index << 1];
             if (variant == -1) {
                for (int variantIndex = 0; variantIndex < 4; variantIndex++) {
-                  com.ea.sims3.SpriteRenderer.unloadTile(tileId, variantIndex);
+                  SpriteRenderer.unloadTile(tileId, variantIndex);
                }
             } else {
-               com.ea.sims3.SpriteRenderer.unloadTile(tileId, variant);
+               SpriteRenderer.unloadTile(tileId, variant);
             }
          }
       }
@@ -2354,7 +2354,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    }
 
    public final void drawLoadingScreen(Graphics gfx) {
-      com.ea.sims3.SpriteRenderer.setColor(gfx, 77);
+      SpriteRenderer.setColor(gfx, 77);
       gfx.fillRect(0, 0, this.getWidth(), this.getHeight());
       this.screen.drawTextBlock(gfx, 0, 0, 0, this.getWidth(), this.getHeight());
       if (this.loadingTipId != -1) {

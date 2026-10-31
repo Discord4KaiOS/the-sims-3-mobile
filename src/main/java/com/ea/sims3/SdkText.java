@@ -84,7 +84,7 @@ public final class SdkText {
       glyphData = null;
       colorTable = null;
       if (fontData != null) {
-         if (fontData instanceof Font && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+         if (fontData instanceof Font && SdkFeatures.isSystemFontEnabled()) {
             (fontHeader = new byte[12])[0] = 1;
             fontHeader[1] = 2;
             fontHeader[7] = 0;
@@ -94,7 +94,7 @@ public final class SdkText {
             if (graphics != null) {
                graphics.setFont((Font)fontData);
             }
-         } else if (com.ea.sims3.SdkFeatures.isRectangleFontEnabled() || com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+         } else if (SdkFeatures.isRectangleFontEnabled() || SdkFeatures.isFreeTypeFontEnabled()) {
             fontHeader = (byte[])((Object[])fontData)[1];
             fontImage = ((Object[])fontData)[0];
             usesTransform = (Integer)((Object[])fontData)[7];
@@ -117,7 +117,7 @@ public final class SdkText {
    }
 
    public static int getSpaceSpacing() {
-      if (font == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (font == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getSpaceSpacing::no font loaded, use setFont(Object)", 4);
       }
 
@@ -125,7 +125,7 @@ public final class SdkText {
    }
 
    public static int getLeadingSpacing() {
-      if (font == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (font == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getLeadingSpacing::no font loaded, use setFont(Object)", 4);
       }
 
@@ -133,14 +133,14 @@ public final class SdkText {
    }
 
    public static int getLineHeight() {
-      if (font == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (font == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getLineSize::no font loaded, use setFont(Object)", 4);
       }
 
-      if ((fontHeader[10] & 4) != 0 && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+      if ((fontHeader[10] & 4) != 0 && SdkFeatures.isSystemFontEnabled()) {
          return ((Font)font).getHeight();
       } else {
-         return !com.ea.sims3.SdkFeatures.isRectangleFontEnabled() && !com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled() ? -1 : (fontHeader[3] & 0xFF) + (fontHeader[4] & 0xFF) + fontHeader[2];
+         return !SdkFeatures.isRectangleFontEnabled() && !SdkFeatures.isFreeTypeFontEnabled() ? -1 : (fontHeader[3] & 0xFF) + (fontHeader[4] & 0xFF) + fontHeader[2];
       }
    }
 
@@ -163,7 +163,7 @@ public final class SdkText {
    }
 
    private static void drawSubString(SdkString text, int offset, int count, int x, int y, int anchor) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          if (graphics == null) {
             log(logPrefix + "drawSubString::Graphics are null, use setGraphics(Graphics)", 4);
          }
@@ -172,12 +172,12 @@ public final class SdkText {
             log(logPrefix + "drawSubString ::Font is null, use setFont(Object)", 4);
          }
 
-         if (!com.ea.sims3.SdkFeatures.isSystemFontEnabled() && !com.ea.sims3.SdkFeatures.isRectangleFontEnabled() && !com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+         if (!SdkFeatures.isSystemFontEnabled() && !SdkFeatures.isRectangleFontEnabled() && !SdkFeatures.isFreeTypeFontEnabled()) {
             log(logPrefix + "drawSubString ::no font support enabled, you must enable at least 1 type of font support in SDKConfig", 4);
          }
       }
 
-      if ((fontHeader[10] & 4) != 0 && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+      if ((fontHeader[10] & 4) != 0 && SdkFeatures.isSystemFontEnabled()) {
          if (systemFontBuffer == null) {
             systemFontBuffer = new StringBuffer();
          }
@@ -191,14 +191,14 @@ public final class SdkText {
             }
          }
 
-         if (fontHeader[7] != 0 && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (fontHeader[7] != 0 && SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "drawSubString ::rendering of system fonts does not support transform: " + fontHeader[7], 4);
          }
 
          graphics.setColor(textColor);
          graphics.drawString(systemFontBuffer.toString(), x, y, anchor);
       } else {
-         if (com.ea.sims3.SdkFeatures.isRectangleFontEnabled() || com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+         if (SdkFeatures.isRectangleFontEnabled() || SdkFeatures.isFreeTypeFontEnabled()) {
             int ascent = fontHeader[3] & 255;
             int lineHeight = getLineHeight();
             int transform = fontHeader[8];
@@ -236,7 +236,7 @@ public final class SdkText {
 
             penPosition[0] = x;
             penPosition[1] = y;
-            if ((x = text.encoding()) != 1 && x != 0 && x != languageEncodings[currentLanguage] && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if ((x = text.encoding()) != 1 && x != 0 && x != languageEncodings[currentLanguage] && SdkFeatures.isLoggingEnabled()) {
                log(
                   logPrefix
                      + "drawSubString::SDKString ["
@@ -251,9 +251,9 @@ public final class SdkText {
 
             byte boundsAnchorX = (byte)((transform & 5) != 0 ? (transform & 4) >> 1 : ((currentColor & 1) << 1) + ((~currentColor & 2) >> 1));
             byte boundsAnchorY = (byte)((transform & 10) != 0 ? (transform & 8) >> 2 : (currentColor & 2) + (~currentColor & 1));
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "drawSubString::offset = " + offset + " len = " + count + " \"" + text.toString() + "\"", 1);
-               if (isFreeType && com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled() && fontHeader[7] != 0) {
+               if (isFreeType && SdkFeatures.isFreeTypeFontEnabled() && fontHeader[7] != 0) {
                   log(logPrefix + "drawSubString ::rendering of rectangle fonts does not currently support transform: " + fontHeader[7], 4);
                }
             }
@@ -267,7 +267,7 @@ public final class SdkText {
                   int glyphWidth = glyphHeight(glyphOffset = glyphIndex((short)charCode, x));
                   if (glyphOffset == -1) {
                      if (charCode != 32) {
-                        if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                        if (SdkFeatures.isLoggingEnabled()) {
                            log(logPrefix + "drawSubString::character not in Font: \\u" + (x != 0 && charCode >= 128 ? fromCharset((short)charCode) : charCode), 4);
                         }
 
@@ -286,7 +286,7 @@ public final class SdkText {
                      charCode = (short)(glyphData[recordOffset] & 255);
 
                      for (int pixelIndex = 0; pixelIndex < charCode; pixelIndex++) {
-                        if (isFreeType && com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+                        if (isFreeType && SdkFeatures.isFreeTypeFontEnabled()) {
                            int colorIndex = glyphData[glyphOffset++] & 255;
                            byte glyphOffsetX = glyphData[glyphOffset++];
                            byte glyphOffsetY = glyphData[glyphOffset++];
@@ -308,7 +308,7 @@ public final class SdkText {
                            graphics.fillRect(penPosition[0] + glyphOffsetX, penPosition[1] + ascent - glyphOffsetY, rectWidth, rectHeight);
                         }
 
-                        if (!isFreeType && com.ea.sims3.SdkFeatures.isRectangleFontEnabled()) {
+                        if (!isFreeType && SdkFeatures.isRectangleFontEnabled()) {
                            int sourceX = glyphData[glyphOffset++] & 255;
                            int sourceY = glyphData[glyphOffset++] & 255;
                            int drawX = glyphData[glyphOffset++];
@@ -340,7 +340,7 @@ public final class SdkText {
    }
 
    public static void drawWrappedString(SdkString text, short[] wrapOffsets, int firstLine, int lineCount, int x, int y, int anchor) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          if (graphics == null) {
             log(logPrefix + "drawWrappedString::Graphics are null, use setGraphics(Graphics)", 4);
          }
@@ -411,14 +411,14 @@ public final class SdkText {
    }
 
    private static short[] wrapTextImpl(SdkString text, int offset, int count, short[] offsets, int maxWidth, short lineSeparator) {
-      if (font == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (font == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "wrapSubString ::Font is null, use setFont(Object)", 4);
       }
 
       boolean ownsOffsets = false;
       if (offsets == null) {
          if (glyphOffsetTable == null) {
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "wrapSubString ::allocating initial _wrapOffsets[] with size: " + 50, 1);
             }
 
@@ -439,7 +439,7 @@ public final class SdkText {
       for (int charIndex = offset; charIndex < count + offset; charIndex++) {
          short charCode = text.charCodeAt(charIndex);
          if (writeIndex + 3 >= offsets.length && ownsOffsets) {
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "wrapSubString ::_wrapOffsets[] is growing to size: " + (offsets.length + 50), 1);
             }
 
@@ -455,9 +455,9 @@ public final class SdkText {
             wordStart = -1;
          } else {
             int charWidth = 0;
-            if ((fontHeader[10] & 4) != 0 && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+            if ((fontHeader[10] & 4) != 0 && SdkFeatures.isSystemFontEnabled()) {
                charWidth = ((Font)font).charWidth(text.charAt(charIndex));
-            } else if (com.ea.sims3.SdkFeatures.isRectangleFontEnabled() || com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+            } else if (SdkFeatures.isRectangleFontEnabled() || SdkFeatures.isFreeTypeFontEnabled()) {
                charWidth = glyphHeight(glyphIndex(charCode, encoding));
             }
 
@@ -489,7 +489,7 @@ public final class SdkText {
       offsets[0] = (short)(writeIndex - 1);
       offsets[writeIndex] = (short)(count + offset);
       offsets[writeIndex + 1] = lineSeparator;
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          for (int offsetIndex = 0; offsetIndex <= writeIndex + 1; offsetIndex++) {
             log(logPrefix + "wrapSubString::offsets[" + offsetIndex + "] = " + (offsets[offsetIndex] & 65535), 1);
          }
@@ -509,14 +509,14 @@ public final class SdkText {
    }
 
    public static int substringWidth(SdkString text, int offset, int count) {
-      if (font == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (font == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getSubStringSize::no font loaded, use setFont(Object)", 4);
       }
 
       int width = 0;
-      if ((fontHeader[10] & 4) != 0 && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+      if ((fontHeader[10] & 4) != 0 && SdkFeatures.isSystemFontEnabled()) {
          width = ((Font)font).substringWidth(text.toString(), offset, count);
-      } else if (com.ea.sims3.SdkFeatures.isRectangleFontEnabled() || com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+      } else if (SdkFeatures.isRectangleFontEnabled() || SdkFeatures.isFreeTypeFontEnabled()) {
          int encoding = text.encoding();
 
          for (int index = offset; index < offset + count; index++) {
@@ -533,7 +533,7 @@ public final class SdkText {
    }
 
    public static int loadStringsChunk(int chunkId) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          if (currentLanguage == -1) {
             log(logPrefix + "loadStringsChunk::language must be selected first!", 4);
          }
@@ -548,7 +548,7 @@ public final class SdkText {
       }
 
       if (isChunkLoaded(chunkId) && !changingLanguage) {
-         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "loadStringsChunk::chunkID: " + chunkId + " already loaded, it won't be loaded again", 3);
          }
 
@@ -559,7 +559,7 @@ public final class SdkText {
          try {
             byte resourceIndex = (chunkFlags[chunkId] & 64) == 0 ? currentLanguage : 0;
             if (chunkConfig == 0) {
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadStringsChunk::chunkID: " + chunkId + " is being loaded using CHUNK_CONFIG_CONCAT for resIndex: " + resourceIndex, 1);
                }
 
@@ -571,19 +571,19 @@ public final class SdkText {
                   }
                }
             } else if (chunkConfig == 1) {
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadStringsChunk::chunkID: " + chunkId + " is being loaded using CHUNK_CONFIG_SEPARATE for resIndex: " + resourceIndex, 1);
                }
 
                stream = midlet.getClass().getResourceAsStream("/t_" + languageCodes[resourceIndex] + chunkId);
-            } else if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            } else if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadStringsChunk::illegal value of chunk config: " + chunkConfig, 4);
             }
 
             byte groupId = chunkGroupOfId[chunkId];
             if (chunkStringOffsets[groupId] == null) {
                chunkStringOffsets[groupId] = new short[chunkOffsetCount[groupId]];
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadStringsChunk::allocating _chunkStringOffsets[" + groupId + "] to be of size: " + chunkOffsetCount[groupId], 1);
                }
             }
@@ -592,27 +592,27 @@ public final class SdkText {
                tempShort[0] = (byte)stream.read();
                tempShort[1] = (byte)stream.read();
                chunkStringOffsets[groupId][stringIndex] = readShort(tempShort, 0);
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadStringsChunk::_chunkStringOffsets[" + groupId + "][" + stringIndex + "]: " + (chunkStringOffsets[groupId][stringIndex] & 65535), 1);
                }
             }
 
             if (strings[groupId] == null) {
                strings[groupId] = new byte[chunkDataSize[groupId] & '\uffff'];
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadStringsChunk::allocating _chunkStringData[" + groupId + "] to be of size: " + (chunkDataSize[groupId] & 65535), 1);
                }
             }
 
             readFully(stream, strings[groupId], 0, storageChunkOffsets[resourceIndex][chunkId] & '\uffff');
             chunkOwners[groupId] = (byte)chunkId;
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadStringsChunk::_groupMap[" + groupId + "]: " + chunkId, 1);
             }
 
             stream.close();
          } catch (IOException error) {
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadStringsChunk::IOException, e.msg: " + error.getMessage(), 4);
             }
          }
@@ -622,7 +622,7 @@ public final class SdkText {
    }
 
    public static void freeStringsChunk(int chunkId) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "freeStringsChunk::freeing chunkID: " + chunkId, 1);
       }
 
@@ -630,7 +630,7 @@ public final class SdkText {
          strings[chunkGroupOfId[chunkId]] = null;
          chunkStringOffsets[chunkGroupOfId[chunkId]] = null;
       } else {
-         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "freeStringsChunk::you are not allowed to free chunkID: " + chunkId, 3);
          }
       }
@@ -639,7 +639,7 @@ public final class SdkText {
    public static int loadTextHeader(byte[] data) {
       int offset = 0;
       if (midlet == null) {
-         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "loadTextHeader::the MIDlet must be set first, use setMidlet(MIDlet)", 4);
          }
 
@@ -648,7 +648,7 @@ public final class SdkText {
          offset++;
          byte headerStringCount;
          if ((headerStringCount = data[0]) != 1) {
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadTextHeader::unsupported text header format:" + headerStringCount, 4);
             }
 
@@ -672,7 +672,7 @@ public final class SdkText {
             short chunkCount = data[9];
             int storageGroupCount = groupSize + 1;
             int chunkTotal = chunkCount + 1;
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadTextHeader::_chunkConfig = " + chunkConfig, 1);
                log(logPrefix + "loadTextHeader::_textEncodings = " + numFontGlyphs, 1);
                log(logPrefix + "loadTextHeader::numHeaderStrings = " + headerStringCount, 1);
@@ -703,14 +703,14 @@ public final class SdkText {
                offset += 5;
                languageEncodings[languageIndex] = data[offset++];
                fontDifferentiators[languageIndex] = data[offset++];
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadTextHeader::_languageISOCodes[" + languageIndex + "]: " + languageCodes[languageIndex], 1);
                   log(logPrefix + "loadTextHeader::_languageEncodings[" + languageIndex + "]: " + languageEncodings[languageIndex], 1);
                   log(logPrefix + "loadTextHeader::_languageFontDifferentiator[" + languageIndex + "]: " + fontDifferentiators[languageIndex], 1);
                }
 
                if (headerStringCount > 0) {
-                  if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                  if (SdkFeatures.isLoggingEnabled()) {
                      log(logPrefix + "loadTextHeader::reading header string offsets for lang: " + languageIndex, 1);
                   }
 
@@ -720,7 +720,7 @@ public final class SdkText {
 
                   for (int headerIndex = 0; headerIndex < groupSize; headerIndex++) {
                      chunkStringOffsets[0][languageIndex * groupSize + headerIndex] = readShort(data, offset);
-                     if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                     if (SdkFeatures.isLoggingEnabled()) {
                         log(
                            logPrefix
                               + "loadTextHeader::_chunkStringOffsets[HEADER_CHUNK_INDEX]["
@@ -738,19 +738,19 @@ public final class SdkText {
 
             if (headerStringCount > 0) {
                chunkCount = chunkStringOffsets[0][languageCount * groupSize - 1];
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadTextHeader::headerChunkLen = " + chunkCount, 1);
                }
 
                strings[0] = new byte[chunkCount];
                System.arraycopy(data, offset, strings[0], 0, chunkCount);
                offset += chunkCount;
-            } else if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            } else if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "loadTextHeader::skipping allocation and reading of header " + "string offsets and data because numHeaderStrings == 0", 1);
             }
 
             for (int chunkId = 1; chunkId < chunkTotal; chunkId++) {
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadTextHeader::reading data for chunk: " + chunkId, 1);
                }
 
@@ -760,12 +760,12 @@ public final class SdkText {
                offset += 2;
                if (chunkStringCount[chunkId] + 1 > chunkOffsetCount[chunkGroupOfId[chunkId]]) {
                   chunkOffsetCount[chunkGroupOfId[chunkId]] = (short)(chunkStringCount[chunkId] + 1);
-                  if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                  if (SdkFeatures.isLoggingEnabled()) {
                      log(logPrefix + "loadTextHeader::setting _groupMaxNumOffsets[" + chunkGroupOfId[chunkId] + "]: " + chunkOffsetCount[chunkGroupOfId[chunkId]], 1);
                   }
                }
 
-               if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+               if (SdkFeatures.isLoggingEnabled()) {
                   log(logPrefix + "loadTextHeader::_chunkFlags[" + chunkId + "]: " + chunkFlags[chunkId], 1);
                   log(logPrefix + "loadTextHeader::_chunkGroup[" + chunkId + "]: " + chunkGroupOfId[chunkId], 1);
                   log(logPrefix + "loadTextHeader:: _numStringsPerChunk[" + chunkId + "]: " + chunkStringCount[chunkId], 1);
@@ -773,13 +773,13 @@ public final class SdkText {
 
                for (int languageIndex = 0; languageIndex < languageCount; languageIndex++) {
                   storageChunkOffsets[languageIndex][chunkId] = readShort(data, offset);
-                  if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                  if (SdkFeatures.isLoggingEnabled()) {
                      log(logPrefix + "loadTextHeader::chunkSize[" + languageIndex + "][" + chunkId + "]: " + (storageChunkOffsets[languageIndex][chunkId] & 65535), 1);
                   }
 
                   if ((storageChunkOffsets[languageIndex][chunkId] & '\uffff') > (chunkDataSize[chunkGroupOfId[chunkId]] & '\uffff')) {
                      chunkDataSize[chunkGroupOfId[chunkId]] = storageChunkOffsets[languageIndex][chunkId];
-                     if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+                     if (SdkFeatures.isLoggingEnabled()) {
                         log(logPrefix + "loadTextHeader::setting _groupMaxSize[" + chunkGroupOfId[chunkId] + "]: " + (chunkDataSize[chunkGroupOfId[chunkId]] & 65535), 1);
                      }
                   }
@@ -798,7 +798,7 @@ public final class SdkText {
    }
 
    public static SdkString getHeaderString(int languageIndex, int stringId, SdkString result) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getHeaderString::getting stringID: " + stringId + " for language: " + languageIndex, 1);
          if (stringId >= chunkStringCount[0]) {
             log(logPrefix + "getHeaderString::stringID: " + stringId + " is not in the header strings chunk, use getString(int,SDKString)", 4);
@@ -814,7 +814,7 @@ public final class SdkText {
       result.offset = chunkStringOffsets[0][languageIndex];
       result.length = (short)(chunkStringOffsets[0][languageIndex + 1] - chunkStringOffsets[0][languageIndex] >> 1);
       result.flags = 0;
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getHeaderString::string.toString(): " + result.toString(), 1);
          log(logPrefix + "getHeaderString::string.off: " + result.offset, 1);
          log(logPrefix + "getHeaderString::string.len: " + result.length, 1);
@@ -825,7 +825,7 @@ public final class SdkText {
    }
 
    public static SdkString getString(int stringId, SdkString result) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getString::getting stringID: " + stringId, 1);
          if (currentLanguage == -1) {
             log(logPrefix + "getString::language must be selected first!", 4);
@@ -839,14 +839,14 @@ public final class SdkText {
          cumulative += chunkStringCount[index];
          if (stringId < cumulative) {
             chunkId = index;
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "getString::found stringID: " + stringId + " in chunkID: " + index, 1);
             }
             break;
          }
       }
 
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          if (chunkId == -1) {
             log(logPrefix + "getString::failed to get the chunkID for stringID: " + stringId, 4);
          } else if (chunkId == 0) {
@@ -856,7 +856,7 @@ public final class SdkText {
 
       int chunkOffset = stringId - (cumulative - chunkStringCount[chunkId]);
       byte groupId = chunkGroupOfId[chunkId];
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getString::calculated first stringID for this chunk as: " + (cumulative - chunkStringCount[chunkId]), 1);
          log(logPrefix + "getString::chunkOffset: " + chunkOffset, 1);
          log(logPrefix + "getString::groupID: " + groupId, 1);
@@ -882,7 +882,7 @@ public final class SdkText {
       }
 
       result.flags = encoding;
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "getString::string.toString(): " + result.toString(), 1);
          log(logPrefix + "getString::string.off: " + result.offset, 1);
          log(logPrefix + "getString::string.len: " + result.length, 1);
@@ -899,12 +899,12 @@ public final class SdkText {
    public static boolean setCurrentLanguage(int languageIndex) {
       byte previousLanguage = currentLanguage;
       if (languageCodes != null && languageIndex >= 0 && languageIndex < languageCodes.length) {
-         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "setCurrentLanguage::setting _langIndex: " + languageIndex, 1);
          }
 
          currentLanguage = (byte)languageIndex;
-      } else if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      } else if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "setCurrentLanguage::invalid index: " + languageIndex, 4);
       }
 
@@ -912,7 +912,7 @@ public final class SdkText {
          changingLanguage = true;
 
          for (int chunkId = 1; chunkId < chunkGroupOfId.length; chunkId++) {
-            if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+            if (SdkFeatures.isLoggingEnabled()) {
                log(logPrefix + "setCurrentLanguage::checking storage for chunkID: " + chunkId + " ,groupID: " + chunkGroupOfId[chunkId], 1);
             }
 
@@ -935,7 +935,7 @@ public final class SdkText {
    }
 
    public static int chooseLanguage(int requested) {
-      if (midlet == null && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (midlet == null && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "chooseLanguage::midlet instance not set. Call setMidlet() first!", 4);
       }
 
@@ -1004,7 +1004,7 @@ public final class SdkText {
    }
 
    public static int getFontDifferentiator(int languageIndex) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && languageIndex < 0 || languageIndex >= fontDifferentiators.length) {
+      if (SdkFeatures.isLoggingEnabled() && languageIndex < 0 || languageIndex >= fontDifferentiators.length) {
          log(logPrefix + "getFontDifferentiator::langIndex out of bounds", 4);
       }
 
@@ -1014,13 +1014,13 @@ public final class SdkText {
    public static void setGraphics(Graphics gfx) {
       graphics = null;
       graphics = gfx;
-      if (font != null && (fontHeader[10] & 4) != 0 && com.ea.sims3.SdkFeatures.isSystemFontEnabled()) {
+      if (font != null && (fontHeader[10] & 4) != 0 && SdkFeatures.isSystemFontEnabled()) {
          graphics.setFont((Font)font);
       }
    }
 
    public static void log(String message, int severity) {
-      if (severity >= com.ea.sims3.SdkFeatures.configMode() && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (severity >= SdkFeatures.configMode() && SdkFeatures.isLoggingEnabled()) {
          if (logBuffer == null) {
             logBuffer = new StringBuffer();
          }
@@ -1057,7 +1057,7 @@ public final class SdkText {
 
    public static short toCharset(short charCode) {
       int index;
-      if ((index = glyphWidth(glyphIndexTable, charCode, 0, glyphIndexTable.length - 1)) == glyphIndexTable.length && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if ((index = glyphWidth(glyphIndexTable, charCode, 0, glyphIndexTable.length - 1)) == glyphIndexTable.length && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "utf2iso::character code: " + charCode + " is not defined in encoding: " + languageEncodings[currentLanguage], 3);
       }
 
@@ -1065,7 +1065,7 @@ public final class SdkText {
    }
 
    public static short fromCharset(short charCode) {
-      if ((charCode < 128 || charCode > 255) && com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if ((charCode < 128 || charCode > 255) && SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "iso2utf::character code: " + charCode + " is out of bounds for this method (must be in the range 128-255)", 4);
       }
 
@@ -1098,7 +1098,7 @@ public final class SdkText {
    }
 
    private static void flushLog() {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "drawRegion::the function is called with short[] parameter on non-Nokia-API phone!", 4);
       }
    }
@@ -1122,7 +1122,7 @@ public final class SdkText {
    }
 
    private static void loadFontChunk(byte encoding) {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          if (encoding < 2) {
             log(logPrefix + "loadCharMap::encoding: " + encoding + " should not be searched in the charmap binary!", 4);
          } else {
@@ -1155,18 +1155,18 @@ public final class SdkText {
 
          stream.close();
       } catch (IOException error) {
-         if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+         if (SdkFeatures.isLoggingEnabled()) {
             log(logPrefix + "loadCharMap::IOException, e.msg: " + error.getMessage(), 4);
          }
       }
 
-      if (font != null && (fontHeader[10] & 4) == 0 && (com.ea.sims3.SdkFeatures.isRectangleFontEnabled() || com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled())) {
+      if (font != null && (fontHeader[10] & 4) == 0 && (SdkFeatures.isRectangleFontEnabled() || SdkFeatures.isFreeTypeFontEnabled())) {
          loadChunksForLanguage();
       }
    }
 
    private static void loadChunksForLanguage() {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "refreshISOOffsets::mapping offsets for encoding: " + languageEncodings[currentLanguage], 1);
       }
 
@@ -1180,13 +1180,13 @@ public final class SdkText {
    private static Object[] parseFontChunk(byte[] data) {
       int offset = 0;
       byte fontVersion = data[0];
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled() && (fontVersion & 63) != 33) {
+      if (SdkFeatures.isLoggingEnabled() && (fontVersion & 63) != 33) {
          log(logPrefix + "loadFontChunk::unsupported font version:" + fontVersion, 4);
       }
 
       boolean rectangleFont = (fontVersion & 128) != 0;
       boolean compactGlyphs = (fontVersion & 64) != 0;
-      if (rectangleFont && !com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+      if (rectangleFont && !SdkFeatures.isFreeTypeFontEnabled()) {
          log(logPrefix + "loadFontChunk::detected rectangle font but support disabled, use SDKConfig to enable", 4);
       }
 
@@ -1210,7 +1210,7 @@ public final class SdkText {
       offset += 2;
       short totalGlyphs = readShort(data, 10);
       offset += 2;
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          log(logPrefix + "loadFontChunk::fontVersion = " + fontVersion, 1);
          log(logPrefix + "loadFontChunk::textDirection = " + header[0], 1);
          log(logPrefix + "loadFontChunk::lineDirection = " + header[1], 1);
@@ -1239,7 +1239,7 @@ public final class SdkText {
 
       glyphOffsets[charCount] = -1;
       int glyphStride = 6;
-      if (rectangleFont && com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+      if (rectangleFont && SdkFeatures.isFreeTypeFontEnabled()) {
          glyphStride = compactGlyphs ? 4 : 5;
       }
 
@@ -1248,7 +1248,7 @@ public final class SdkText {
       System.arraycopy(data, offset, glyphData, 0, dataSize);
       offset += dataSize;
       int[] colorTable = null;
-      if (rectangleFont && com.ea.sims3.SdkFeatures.isFreeTypeFontEnabled()) {
+      if (rectangleFont && SdkFeatures.isFreeTypeFontEnabled()) {
          int colorCount = data[offset++];
          colorTable = new int[colorCount];
 
@@ -1280,7 +1280,7 @@ public final class SdkText {
    }
 
    static {
-      if (com.ea.sims3.SdkFeatures.isLoggingEnabled()) {
+      if (SdkFeatures.isLoggingEnabled()) {
          logPrefix = "SDKUtils::";
       }
    }
