@@ -536,19 +536,19 @@ public final class i extends c {
       this.w += var1;
       if (super.a4 == 0) {
          if (this.m2 > 3000 && this.a8().z(10) != -1) {
-            this.a(3, null);
+            this.a(3, (c) null);
             return;
          }
 
          if (this.m2 > 3500 && this.n2 == 0) {
             int var2;
             if ((var2 = this.a8().h6) > 4915200) {
-               this.a(5, null);
+               this.a(5, (c) null);
                return;
             }
 
             if (var2 < -3276800) {
-               this.a(6, null);
+               this.a(6, (c) null);
                return;
             }
          }
@@ -565,7 +565,7 @@ public final class i extends c {
             var10 = 15;
          }
 
-         this.a(var10, null);
+         this.a(var10, (c) null);
       } else {
          if (this.n2 == 0 && this.m2 > 5000 && (var8 = super.a2.b4(18)) != null && var8.b8(64)) {
             Object var3 = null;
@@ -574,7 +574,7 @@ public final class i extends c {
             int var6 = com.ea.sims3.o.f(super.c);
             int var7 = com.ea.sims3.o.g(super.d);
             if (Math.abs(var6 - var4) + Math.abs(var7 - var5) < 8) {
-               this.a(17, null);
+               this.a(17, (c) null);
                return;
             }
          }
@@ -946,7 +946,7 @@ public final class i extends c {
          this.c(false);
       } else {
          if (var2.c3()) {
-            var2.a(2, this);
+            var2.a(2, (c) this);
             this.E();
          }
       }
@@ -1130,7 +1130,7 @@ public final class i extends c {
       c var4 = this.b6;
       i var5 = this.a4();
       boolean var6 = super.b == 0;
-      this.a(0, null);
+      this.a(0, (c) null);
       int var7 = var2.K(var3);
       if (!var1 && var5 != null && (var7 & 1) != 0) {
          this.a3(null);
@@ -1241,7 +1241,7 @@ public final class i extends c {
       }
 
       if (var1 == 103 || var1 == 98) {
-         this.a(0, null);
+         this.a(0, (c) null);
          this.s2(256);
       } else if (var8 != -1) {
          if ((var3.K(var8) & 1) == 0 && var8 != 106) {

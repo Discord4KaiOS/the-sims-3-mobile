@@ -127,6 +127,33 @@ annotated with a comment in the source:
 | `t.java`, `k.java` | `short`/`byte` arithmetic that needs an explicit cast |
 | `r.java`, `p.java`, `o.java`, `i.java` | calls that pass `null` to an overloaded method; the original descriptors were read from the class files to pick the right overload |
 
+### Porting bugs found while play-testing
+
+Two behaviours of the original bytecode are *not* preserved automatically when
+it is expressed as Java source, and both were visible in game:
+
+1. **Overload binding.** The obfuscator produced methods such as
+   `i.a(int, c)` and `i.a(int, i)` — `i` extends `c`. A call that passes `null`
+   (or an `i` where the original invoked the `c` variant) is re-bound by javac to
+   the most derived overload, i.e. to a *different method*. That produced
+   `NullPointerException`s inside the game's own update step, which the retail
+   code silently swallows, so Sims stopped updating (they could vanish) and the
+   game could stop responding. Every such call site now has an explicit cast.
+2. **`Graphics.drawRegion` transforms.** The desktop `drawRegion` originally
+   mapped the source region with an offset error for the mirrored variants, so
+   sprites drawn with `TRANS_MIRROR` (which the game uses for the direction a Sim
+   faces) were shifted out of their destination rectangle.
+
+`tools/NullArgs.java` lists every call that passes a null constant together with
+the descriptor the original bytecode used, and `tools/CallDump.java` dumps all
+calls into the game's classes so the compiled port and the original archive can
+be diffed; both need the [ASM](https://asm.ow2.io/) jars on the classpath:
+
+```sh
+javac -cp asm.jar:asm-tree.jar:asm-analysis.jar -d classes tools/NullArgs.java
+java -cp classes:asm.jar:asm-tree.jar:asm-analysis.jar NullArgs classes/**/*.class
+```
+
 ### Class map
 
 The names are left as they are in the archive. These are the roles that could be

@@ -172,9 +172,17 @@ public class Graphics {
         g.drawImage(img.getBufferedImage(), dx, dy, null);
     }
 
+    /**
+     * Copies a region of an image, optionally mirroring/rotating it, into an
+     * anchored position.
+     *
+     * The transform is expressed as the affine map from source coordinates to
+     * destination-local coordinates, then drawn clipped to the destination
+     * rectangle.
+     */
     public void drawRegion(Image src, int xSrc, int ySrc, int width, int height,
                            int transform, int xDest, int yDest, int anchor) {
-        if (src == null) {
+        if (src == null || width <= 0 || height <= 0) {
             return;
         }
         boolean swap = transform == TRANS_ROT90 || transform == TRANS_ROT270
@@ -184,54 +192,68 @@ public class Graphics {
         int dx = anchorX(xDest, dstW, anchor);
         int dy = anchorY(yDest, dstH, anchor);
 
-        AffineTransform saved = g.getTransform();
+        // x' = m00*x + m01*y + m02, y' = m10*x + m11*y + m12, with x,y in image space.
+        double m00 = 1, m01 = 0, m02 = -xSrc;
+        double m10 = 0, m11 = 1, m12 = -ySrc;
+        switch (transform) {
+            case TRANS_NONE:
+                break;
+            case TRANS_MIRROR:
+                m00 = -1;
+                m02 = xSrc + width;
+                break;
+            case TRANS_ROT180:
+                m00 = -1;
+                m02 = xSrc + width;
+                m11 = -1;
+                m12 = ySrc + height;
+                break;
+            case TRANS_MIRROR_ROT180:
+                m11 = -1;
+                m12 = ySrc + height;
+                break;
+            case TRANS_ROT90:
+                m00 = 0;
+                m01 = -1;
+                m02 = ySrc + height;
+                m10 = 1;
+                m11 = 0;
+                m12 = -xSrc;
+                break;
+            case TRANS_ROT270:
+                m00 = 0;
+                m01 = 1;
+                m02 = -ySrc;
+                m10 = -1;
+                m11 = 0;
+                m12 = xSrc + width;
+                break;
+            case TRANS_MIRROR_ROT90:
+                m00 = 0;
+                m01 = -1;
+                m02 = ySrc + height;
+                m10 = -1;
+                m11 = 0;
+                m12 = xSrc + width;
+                break;
+            case TRANS_MIRROR_ROT270:
+                m00 = 0;
+                m01 = 1;
+                m02 = -ySrc;
+                m10 = 1;
+                m11 = 0;
+                m12 = -xSrc;
+                break;
+            default:
+                return;
+        }
+
         java.awt.Shape savedClip = g.getClip();
+        AffineTransform saved = g.getTransform();
         try {
-            AffineTransform t = new AffineTransform();
-            switch (transform) {
-                case TRANS_NONE:
-                    break;
-                case TRANS_MIRROR:
-                    t.translate(width, 0);
-                    t.scale(-1, 1);
-                    break;
-                case TRANS_ROT180:
-                    t.translate(width, height);
-                    t.scale(-1, -1);
-                    break;
-                case TRANS_MIRROR_ROT180:
-                    t.translate(0, height);
-                    t.scale(1, -1);
-                    break;
-                case TRANS_ROT90:
-                    t.translate(height, 0);
-                    t.rotate(Math.PI / 2);
-                    break;
-                case TRANS_ROT270:
-                    t.translate(0, width);
-                    t.rotate(-Math.PI / 2);
-                    break;
-                case TRANS_MIRROR_ROT90:
-                    t.translate(height, 0);
-                    t.rotate(Math.PI / 2);
-                    t.translate(width, 0);
-                    t.scale(-1, 1);
-                    break;
-                case TRANS_MIRROR_ROT270:
-                    t.translate(0, width);
-                    t.rotate(-Math.PI / 2);
-                    t.translate(width, 0);
-                    t.scale(-1, 1);
-                    break;
-                default:
-                    return;
-            }
-            t.translate(-xSrc, -ySrc);
-            // Restrict drawing to the destination rectangle: the transform maps the
-            // source region onto it, so clipping is what selects the region.
             g.clipRect(dx, dy, dstW, dstH);
             g.translate(dx, dy);
-            g.drawImage(src.getBufferedImage(), t, null);
+            g.drawImage(src.getBufferedImage(), new AffineTransform(m00, m10, m01, m11, m02, m12), null);
         } finally {
             g.setTransform(saved);
             g.setClip(savedClip);

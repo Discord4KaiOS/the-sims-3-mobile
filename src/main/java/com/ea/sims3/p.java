@@ -1303,7 +1303,7 @@ public final class p extends u implements Runnable {
    }
 
    public final void e2() {
-      this.a14.a(6, null);
+      this.a14.a(6, (c) null);
       this.g2();
    }
 
@@ -1824,7 +1824,7 @@ public final class p extends u implements Runnable {
                      if (this.a17.U(var3.b) != 0) {
                         var3.a10();
                      } else {
-                        var3.a(0, null);
+                        var3.a(0, (c) null);
                      }
                   }
                }
@@ -4767,7 +4767,7 @@ public final class p extends u implements Runnable {
          var1.c(var3);
       } else {
          if (var1.b == 0) {
-            var1.a(6, null);
+            var1.a(6, (c) null);
          }
       }
    }

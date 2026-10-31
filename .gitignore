@@ -1,6 +1,7 @@
 # original archive and local build output
 the_sims_3_mobile.jar
 build/
+bin/
 .gradle/
 work/
 
