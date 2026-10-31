@@ -168,6 +168,32 @@ public final class Rename {
                 }
             }
         }
+        java.util.Map<String, java.util.Set<String>> declared = new HashMap<>();
+        for (CompilationUnitTree u : units) {
+            for (com.sun.source.tree.Tree t : u.getTypeDecls()) {
+                if (!(t instanceof ClassTree)) {
+                    continue;
+                }
+                ClassTree ct = (ClassTree) t;
+                java.util.Set<String> names = declared.computeIfAbsent(
+                        ct.getSimpleName().toString(), k -> new java.util.HashSet<>());
+                for (com.sun.source.tree.Tree member : ct.getMembers()) {
+                    if (member instanceof VariableTree) {
+                        names.add(((VariableTree) member).getName().toString());
+                    } else if (member instanceof MethodTree) {
+                        MethodTree mt = (MethodTree) member;
+                        StringBuilder sb = new StringBuilder(mt.getName().toString()).append('(');
+                        for (int i = 0; i < mt.getParameters().size(); i++) {
+                            if (i > 0) {
+                                sb.append(',');
+                            }
+                            sb.append(simpleTypeText(mt.getParameters().get(i).getType()));
+                        }
+                        names.add(sb.append(')').toString());
+                    }
+                }
+            }
+        }
         java.util.Set<String> identifiers = currentClasses;
         java.util.List<String> unused = new ArrayList<>();
         CLASSES.forEach((k, v) -> {
@@ -177,22 +203,22 @@ public final class Rename {
         });
         FIELDS.forEach((k, v) -> {
             String owner = k.substring(0, k.indexOf('#'));
-            if (!USED.contains("F " + k) && identifiers.contains(owner)) {
+            String name = k.substring(k.indexOf('#') + 1);
+            java.util.Set<String> names = declared.get(owner);
+            if (!USED.contains("F " + k) && names != null && names.contains(name)) {
                 unused.add("F " + k);
             }
         });
         METHODS.forEach((k, v) -> {
             String owner = k.substring(0, k.indexOf('#'));
-            if (!USED.contains("M " + k) && identifiers.contains(owner)) {
+            String sig = k.substring(k.indexOf('#') + 1);
+            java.util.Set<String> names = declared.get(owner);
+            if (!USED.contains("M " + k) && names != null && names.contains(sig)) {
                 unused.add("M " + k);
             }
         });
-        VARIABLES.forEach((k, v) -> {
-            String owner = k.substring(0, k.indexOf('#'));
-            if (!USED.contains("V " + k) && identifiers.contains(owner)) {
-                unused.add("V " + k);
-            }
-        });
+        // Variable entries are derived from the current sources, so they are not
+        // reported: after a batch is applied the old varN names are simply gone.
         if (!unused.isEmpty()) {
             System.out.println("UNUSED mapping entries (" + unused.size() + "):");
             unused.forEach(u -> System.out.println("  " + u));
@@ -366,6 +392,23 @@ public final class Rename {
             sb.append(simpleType(params.get(i).asType()));
         }
         return sb.append(')').toString();
+    }
+
+    /** Simple type name from a source type tree (for building mapping keys). */
+    private static String simpleTypeText(com.sun.source.tree.Tree node) {
+        if (node == null) {
+            return "?";
+        }
+        String text = node.toString();
+        int lt = text.indexOf('<');
+        if (lt >= 0) {
+            text = text.substring(0, lt);
+        }
+        int dot = text.lastIndexOf('.');
+        if (dot >= 0) {
+            text = text.substring(dot + 1);
+        }
+        return text;
     }
 
     private static String simpleType(javax.lang.model.type.TypeMirror type) {

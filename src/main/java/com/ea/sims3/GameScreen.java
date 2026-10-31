@@ -484,8 +484,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.u = var1.getWidth() - this.s;
       this.v = var1.getHeight() - 15 - this.t - this.r + 5;
       Tile var3 = this.a18.a8;
-      this.a18.a8.setLooping(true);
-      var3.reset();
+      this.a18.a8.setBackingEnabled(true);
+      var3.invalidateBacking();
       var2.b2(this.s, this.t, this.u, this.v);
       this.b7 = true;
       this.c7 = true;
@@ -498,8 +498,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
       this.J = this.L;
       this.I();
       this.J();
-      var3.setLooping(true);
-      var3.reset();
+      var3.setBackingEnabled(true);
+      var3.invalidateBacking();
    }
 
    public final void setLanguage(int var1) {
@@ -2058,8 +2058,8 @@ public final class GameScreen extends BaseScreen implements Runnable {
             this.c6 = null;
             this.N = 0;
             Tile var17 = this.a18.a8;
-            int var7 = (this.a18.a8.c * com.ea.sims3.Tile.tileWidth() << 16) - 983040;
-            int var8 = (var17.d * com.ea.sims3.Tile.tileHeight() << 16) - 983040;
+            int var7 = (this.a18.a8.columns * com.ea.sims3.Tile.tileWidth() << 16) - 983040;
+            int var8 = (var17.rowCountValue * com.ea.sims3.Tile.tileHeight() << 16) - 983040;
             this.I = com.ea.sims3.FixedMath.clamp(this.I, 0, var7);
             this.J = com.ea.sims3.FixedMath.clamp(this.J, 0, var8);
             this.K = this.I;
@@ -2228,13 +2228,13 @@ public final class GameScreen extends BaseScreen implements Runnable {
       int var9 = var2.d6;
       int var10 = var2.d6 >> 1;
       int var11 = var8 << 16;
-      int var12 = var18.c * com.ea.sims3.Tile.tileWidth() - var8 - 1 << 16;
+      int var12 = var18.columns * com.ea.sims3.Tile.tileWidth() - var8 - 1 << 16;
       int var13 = var10 << 16;
-      int var14 = var18.d * com.ea.sims3.Tile.tileHeight() - var10 - 1 << 16;
+      int var14 = var18.rowCountValue * com.ea.sims3.Tile.tileHeight() - var10 - 1 << 16;
       if (com.ea.sims3.GameCanvas.b) {
-         var14 = var18.d * com.ea.sims3.Tile.tileHeight() - var10 - 1 << 16;
+         var14 = var18.rowCountValue * com.ea.sims3.Tile.tileHeight() - var10 - 1 << 16;
       } else {
-         var12 = var18.c * com.ea.sims3.Tile.tileWidth() - var8 - 1 << 16;
+         var12 = var18.columns * com.ea.sims3.Tile.tileWidth() - var8 - 1 << 16;
       }
 
       var4 = com.ea.sims3.FixedMath.clamp(var4, var11, var12);

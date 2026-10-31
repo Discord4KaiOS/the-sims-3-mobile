@@ -845,8 +845,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       GameCanvas var2 = this.a;
       Image var4 = com.ea.sims3.ResourceLoader.loadImage(0);
       Tile var5;
-      (var5 = new Tile(var1, var4)).a2(this.a6, this.b5, this.c6, this.d6);
-      var5.setLooping(true);
+      (var5 = new Tile(var1, var4)).setBounds(this.a6, this.b5, this.c6, this.d6);
+      var5.setBackingEnabled(true);
       this.a8 = var5;
       this.f3(var1);
       this.b(true);
@@ -868,8 +868,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       GameCanvas var2 = this.a;
       Image var4 = com.ea.sims3.ResourceLoader.loadImage(1);
       Tile var6;
-      (var6 = new Tile(40, var4)).a2(this.a6, this.b5, this.c6, this.d6);
-      var6.setLooping(true);
+      (var6 = new Tile(40, var4)).setBounds(this.a6, this.b5, this.c6, this.d6);
+      var6.setBackingEnabled(true);
       this.a8 = var6;
       this.l2();
       this.b(false);
@@ -903,7 +903,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       GameScreen var2 = this.a.a6();
       Tile var3 = this.a8;
       int var4 = this.a8.frameCount();
-      short[] var5 = var3.a2;
+      short[] var5 = var3.frames;
 
       for (int var6 = 0; var6 < var4; var6++) {
          int var7 = var6 * 3;
@@ -921,7 +921,7 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       }
 
       int var16 = var3.rowCount();
-      short[] var17 = var3.b;
+      short[] var17 = var3.rows;
 
       for (int var18 = 0; var18 < var16; var18++) {
          int var19 = var18 * 3;
@@ -1076,8 +1076,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       int var5 = var1.getClipWidth();
       int var6 = var1.getClipHeight();
       var1.setClip(this.a6, this.b5, this.c6, this.d6);
-      var2.a3 = this.e5 - (this.c6 >> 1 << 16);
-      var2.b2 = this.f4 - (this.d6 >> 1 << 16);
+      var2.worldX = this.e5 - (this.c6 >> 1 << 16);
+      var2.worldY = this.f4 - (this.d6 >> 1 << 16);
       var2.draw(var1);
       this.c(var1);
       var1.setClip(var3, var4, var5, var6);
@@ -1087,8 +1087,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
       if (this.a8 == null) {
          Image var3 = com.ea.sims3.ResourceLoader.loadImage(0);
          Tile var4;
-         (var4 = new Tile(64, 64, var3)).a2(this.a6, this.b5, this.c6, this.d6);
-         var4.setLooping(true);
+         (var4 = new Tile(64, 64, var3)).setBounds(this.a6, this.b5, this.c6, this.d6);
+         var4.setBackingEnabled(true);
          this.a8 = var4;
       }
 
@@ -1096,8 +1096,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          Image var27 = com.ea.sims3.ResourceLoader.loadImage(2);
          Tile var29 = new Tile(64, 64, var27);
          this.b6 = var29;
-         var29.a2(this.a6, this.b5, this.c6, this.d6);
-         this.a8.a7 = var29;
+         var29.setBounds(this.a6, this.b5, this.c6, this.d6);
+         this.a8.next = var29;
       }
 
       byte[] var28 = this.d5[var1];
@@ -1136,8 +1136,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
          }
       }
 
-      com.ea.sims3.GameCanvas.a3(this.a8.a, 16);
-      com.ea.sims3.GameCanvas.a3(this.b6.a, 60);
+      com.ea.sims3.GameCanvas.a3(this.a8.cellIndices, 16);
+      com.ea.sims3.GameCanvas.a3(this.b6.cellIndices, 60);
       int var32 = this.n3;
 
       for (int var35 = 0; var35 < var12; var35++) {
@@ -1173,14 +1173,14 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
       this.j2();
       this.k2();
-      this.a8.reset();
+      this.a8.invalidateBacking();
    }
 
    private void b(int var1, int var2, int var3, int var4, int var5, int var6) {
       Tile var7 = this.a8;
-      byte[] var8 = this.a8.a;
-      byte[] var9 = this.b6.a;
-      int var10 = var7.c;
+      byte[] var8 = this.a8.cellIndices;
+      byte[] var9 = this.b6.cellIndices;
+      int var10 = var7.columns;
       int var11 = l(var1, var2);
       int var12 = m(var1, var2);
       int var13 = var3 + var4;
@@ -1227,8 +1227,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void c(int var1, int var2, int var3, int var4, int var5, int var6) {
       Tile var7 = this.a8;
-      int var8 = this.a8.c;
-      byte[] var9 = this.b6.a;
+      int var8 = this.a8.columns;
+      byte[] var9 = this.b6.cellIndices;
       int var10 = l(var1, var2);
       int var11 = m(var1, var2);
       boolean var12;
@@ -1297,8 +1297,8 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    private void d(int var1, int var2, int var3, int var4) {
       GameCanvas var5 = this.a;
       Tile var6 = this.a8;
-      byte[] var7 = this.a8.a;
-      int var8 = var6.c;
+      byte[] var7 = this.a8.cellIndices;
+      int var8 = var6.columns;
       int var9 = l(var1, var2);
       int var10 = m(var1, var2);
       int var11 = var3 + var4 + 2;
@@ -1398,9 +1398,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void a2(int var1, byte[] var2) {
       Tile var3 = this.a8;
-      byte[] var4 = this.a8.a;
-      int var5 = var3.c;
-      int var6 = var3.d;
+      byte[] var4 = this.a8.cellIndices;
+      int var5 = var3.columns;
+      int var6 = var3.rowCountValue;
       int var7 = var2.length - 1;
       int var8 = var5 - var7;
       int var9 = var6 - 1;
@@ -1437,10 +1437,10 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void j2() {
       Tile var1 = this.a8;
-      byte[] var2 = this.b6.a;
-      byte[] var3 = var1.a;
-      int var4 = var1.c;
-      int var5 = var1.d;
+      byte[] var2 = this.b6.cellIndices;
+      byte[] var3 = var1.cellIndices;
+      int var4 = var1.columns;
+      int var5 = var1.rowCountValue;
       byte[] var6 = this.b9(4);
       byte[] var7 = this.b9(5);
       byte[] var8 = this.b9(26);
@@ -1649,9 +1649,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void k2() {
       Tile var1 = this.b6;
-      byte[] var2 = this.b6.a;
-      int var3 = var1.c;
-      int var4 = var1.d;
+      byte[] var2 = this.b6.cellIndices;
+      int var3 = var1.columns;
+      int var4 = var1.rowCountValue;
       byte[] var5 = this.k4;
 
       for (int var6 = 0; var6 < this.k4.length; var6++) {
@@ -1692,9 +1692,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
 
    private void l2() {
       Tile var1 = this.a8;
-      byte[] var2 = this.a8.a;
-      int var3 = var1.c;
-      int var4 = var1.d;
+      byte[] var2 = this.a8.cellIndices;
+      int var3 = var1.columns;
+      int var4 = var1.rowCountValue;
       byte[] var5 = this.b9(34);
       com.ea.sims3.GameCanvas.a3(this.k4, 128);
 
@@ -1737,9 +1737,9 @@ public final class Lot implements SpriteIndex, SoundIndex, Resources {
    private void f3(int var1) {
       byte[] var2 = this.b9(var1 == 39 ? 36 : 35);
       Tile var3 = this.a8;
-      byte[] var4 = this.a8.a;
-      int var5 = var3.c;
-      int var6 = var3.d;
+      byte[] var4 = this.a8.cellIndices;
+      int var5 = var3.columns;
+      int var6 = var3.rowCountValue;
 
       for (int var7 = 0; var7 < var5; var7++) {
          for (int var8 = 0; var8 < var6; var8++) {

@@ -279,3 +279,71 @@ M BaseScreen o2() showLeftArrow
 M BaseScreen p2() showRightArrow
 M BaseScreen i2(int) advanceArrows
 M BaseScreen k2(int,int) setValue
+
+# ---------------------------------------------------------------- Tile (fields)
+F Tile a cellIndices
+F Tile a2 frames
+F Tile b rows
+F Tile e drawX
+F Tile f drawY
+F Tile g drawWidth
+F Tile h drawHeight
+F Tile a3 worldX
+F Tile b2 worldY
+F Tile a4 sheet
+F Tile a5 loaded
+F Tile c columns
+F Tile d rowCountValue
+F Tile b3 backing
+F Tile a6 backingGraphics
+F Tile b4 backingEnabled
+F Tile c2 backingDirty
+F Tile i backingX
+F Tile j backingY
+F Tile k wrapX
+F Tile l wrapY
+F Tile a7 next
+M Tile a2(int,int,int,int) setBounds
+M Tile a13(int) load
+M Tile a2(Graphics,int,int,int,int,int,int) drawCells
+M Tile setLooping(boolean) setBackingEnabled
+M Tile reset() invalidateBacking
+M Tile a(Graphics,int,int) drawBacking
+M Tile a(Graphics,int,int,int,int,int,int) copyRows
+M Tile b(Graphics,int,int,int,int,int,int) copyColumns
+V Tile setBounds(int,int,int,int) var1 x
+V Tile setBounds(int,int,int,int) var2 y
+V Tile setBounds(int,int,int,int) var3 width
+V Tile setBounds(int,int,int,int) var4 height
+V Tile draw(Graphics) var1 g
+V Tile draw(Graphics) var2 clipX
+V Tile draw(Graphics) var3 clipY
+V Tile draw(Graphics) var4 clipW
+V Tile draw(Graphics) var5 clipH
+V Tile draw(Graphics) var6 x
+V Tile draw(Graphics) var7 y
+V Tile draw(Graphics) var8 dstX
+V Tile draw(Graphics) var9 dstY
+V Tile draw(Graphics) var10 dstW
+V Tile draw(Graphics) var11 dstH
+V Tile load(int) var1 index
+V Tile load(int) var3 in
+V Tile load(int) var4 stream
+V Tile load(int) var5 columns
+V Tile load(int) var6 rows
+V Tile load(int) var7 cells
+V Tile load(int) var8 i
+V Tile load(int) var9 frames
+V Tile load(int) var10 i2
+V Tile load(int) var11 i3
+V Tile load(int) var12 exception
+V Tile load(int) var13 frameCount
+V Tile load(int) var14 rowCount
+V Tile load(int) var15 rowsData
+V Tile drawCells(Graphics,int,int,int,int,int,int) var1 g
+V Tile drawCells(Graphics,int,int,int,int,int,int) var2 x
+V Tile drawCells(Graphics,int,int,int,int,int,int) var3 y
+V Tile drawCells(Graphics,int,int,int,int,int,int) var4 left
+V Tile drawCells(Graphics,int,int,int,int,int,int) var5 top
+V Tile drawCells(Graphics,int,int,int,int,int,int) var6 width
+V Tile drawCells(Graphics,int,int,int,int,int,int) var7 height
