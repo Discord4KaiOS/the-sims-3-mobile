@@ -73,9 +73,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       this.c5.setRunning(false);
    }
 
-   public final void a12(int var1) {
-      this.n2();
-      super.a.u2();
+   public final void setLanguage(int var1) {
+      this.initLayout();
+      super.canvas.u2();
       this.f2();
       if (var1 == -1) {
          var1 = 7;
@@ -83,17 +83,17 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
       this.n = var1;
       if (var1 != 4 && var1 != 5) {
-         this.c4(1);
+         this.onTick(1);
       } else {
          this.n = 6;
-         this.c4(var1);
+         this.onTick(var1);
       }
 
       this.o = 0;
    }
 
    private void e3(int var1) {
-      super.a.q2(var1);
+      super.canvas.q2(var1);
       if (this.a6 == null) {
          this.a6 = new Thread(this);
          this.p = 0;
@@ -124,8 +124,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void a10() {
-      GameCanvas var1 = super.a;
-      if (!super.a.a11()) {
+      GameCanvas var1 = super.canvas;
+      if (!super.canvas.a11()) {
          new StringBuffer().append("updateLoadingState: ").append(this.o).toString();
          switch (this.o) {
             case 0:
@@ -144,30 +144,30 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                }
                break;
             case 2:
-               this.c4(this.n);
+               this.onTick(this.n);
                this.p = 2;
          }
       }
    }
 
    private void d2() {
-      super.a.a7.play(10);
+      super.canvas.a7.play(10);
    }
 
-   public final void b4() {
+   public final void stop() {
    }
 
-   public final void c2() {
-      super.a.c2(3076, -1);
-      super.a.a12(-1);
+   public final void pause() {
+      super.canvas.c2(3076, -1);
+      super.canvas.a12(-1);
       com.ea.sims3.SdkSound.muteAll();
       com.ea.sims3.SdkText.b7(1);
    }
 
-   public final void a(Graphics var1) {
-      GameCanvas var2 = super.a;
-      int var3 = super.a.k2;
-      if (super.a.k2 != -1) {
+   public final void render(Graphics var1) {
+      GameCanvas var2 = super.canvas;
+      int var3 = super.canvas.k2;
+      if (super.canvas.k2 != -1) {
          if (var3 == 5) {
             if (a5 == 4) {
                this.c(var1, 77);
@@ -255,11 +255,11 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
    }
 
-   public final void a4(int var1, int var2) {
+   public final void update(int var1, int var2) {
       if (a5 != 1) {
-         GameCanvas var3 = super.a;
-         if (super.a.e4 && this.b4 != 0) {
-            this.c4(this.b4);
+         GameCanvas var3 = super.canvas;
+         if (super.canvas.e4 && this.b4 != 0) {
+            this.onTick(this.b4);
             var3.k2();
             this.b4 = 0;
          } else if (!var3.a11()) {
@@ -272,7 +272,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                }
 
                if (var3.k2 == -1) {
-                  this.c4(a5);
+                  this.onTick(a5);
                }
             } else {
                switch (a5) {
@@ -280,13 +280,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                      this.c2(var1, var2);
                      return;
                   case 5:
-                     if (this.a3(var1, var2, 4128, 256)) {
+                     if (this.matchesInput(var1, var2, 4128, 256)) {
                         var3.a7.setEnabled(true);
                         this.f3(1);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 512)) {
+                     if (this.matchesInput(var1, var2, 0, 512)) {
                         var3.a7.setEnabled(false);
                         this.f3(1);
                         return;
@@ -296,14 +296,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                      this.d2(var1, var2);
                      return;
                   case 7:
-                     if (this.a3(var1, var2, 4128, 16)) {
+                     if (this.matchesInput(var1, var2, 4128, 16)) {
                         int var5 = 5 + this.b5[2];
                         this.g2(this.b5[var5]);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 4)) {
-                        this.c4(19);
+                     if (this.matchesInput(var1, var2, 0, 4)) {
+                        this.onTick(19);
                         return;
                      }
 
@@ -311,8 +311,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                      return;
                   case 8:
                      this.a5(var1, var2);
-                     if (this.a3(var1, var2, 0, 4)) {
-                        this.c4(7);
+                     if (this.matchesInput(var1, var2, 0, 4)) {
+                        this.onTick(7);
                         return;
                      }
                   case 9:
@@ -335,50 +335,50 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                      this.j2(var1, var2);
                      return;
                   case 16:
-                     if (this.a3(var1, var2, 4128, 256)) {
+                     if (this.matchesInput(var1, var2, 4128, 256)) {
                         var3.m2(var3.j);
                         var3.c3();
-                        this.c4(14);
+                        this.onTick(14);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 512)) {
-                        this.c4(15);
+                     if (this.matchesInput(var1, var2, 0, 512)) {
+                        this.onTick(15);
                         return;
                      }
                      break;
                   case 17:
-                     if (this.a3(var1, var2, 4128, 256)) {
-                        this.c4(14);
+                     if (this.matchesInput(var1, var2, 4128, 256)) {
+                        this.onTick(14);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 516)) {
-                        this.c4(10);
+                     if (this.matchesInput(var1, var2, 0, 516)) {
+                        this.onTick(10);
                         return;
                      }
                      break;
                   case 18:
-                     if (this.a3(var1, var2, 4128, 256)) {
+                     if (this.matchesInput(var1, var2, 4128, 256)) {
                         var3.r2();
                         var3.s2();
                         this.b2(2, -1);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 516)) {
-                        this.c4(13);
+                     if (this.matchesInput(var1, var2, 0, 516)) {
+                        this.onTick(13);
                         return;
                      }
                      break;
                   case 19:
-                     if (this.a3(var1, var2, 4128, 256)) {
-                        this.c4(3);
+                     if (this.matchesInput(var1, var2, 4128, 256)) {
+                        this.onTick(3);
                         return;
                      }
 
-                     if (this.a3(var1, var2, 0, 516)) {
-                        this.c4(7);
+                     if (this.matchesInput(var1, var2, 0, 516)) {
+                        this.onTick(7);
                      }
                }
             }
@@ -386,7 +386,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
    }
 
-   public final void b7(int var1) {
+   public final void keyPressed(int var1) {
       if (a5 == 1) {
          this.e3(var1);
       } else {
@@ -422,8 +422,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
       }
    }
 
-   public final void c4(int var1) {
-      GameCanvas var2 = super.a;
+   public final void onTick(int var1) {
+      GameCanvas var2 = super.canvas;
       int var3 = a5;
       a5 = var1;
       var2.g2();
@@ -454,7 +454,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          case 7:
             var2.a12(10);
             this.q = 18;
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 82);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 82);
             var2.c2(2, 0);
             var2.a4(0, 16);
             return;
@@ -463,12 +463,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             var2.a4(4, 0);
             return;
          case 9:
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 48);
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 47);
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 46);
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 45);
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 44);
-            com.ea.sims3.SpriteRenderer.a(super.a.a6, 43);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 48);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 47);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 46);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 45);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 44);
+            com.ea.sims3.SpriteRenderer.a(super.canvas.a6, 43);
             var2.c = true;
             var2.a5.a10();
             return;
@@ -538,8 +538,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void f3(int var1) {
       this.b4 = var1;
-      if (!super.a.b5()) {
-         super.a.j2();
+      if (!super.canvas.b5()) {
+         super.canvas.j2();
       }
    }
 
@@ -551,12 +551,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    public final void d3(int var1) {
       short[] var2 = this.b5;
-      com.ea.sims3.GameCanvas.a(this.b5, 50, super.a.a22);
+      com.ea.sims3.GameCanvas.a(this.b5, 50, super.canvas.a22);
       com.ea.sims3.GameCanvas.c2(var2, 51);
       com.ea.sims3.GameCanvas.c2(var2, 59);
       com.ea.sims3.GameCanvas.c2(var2, 60);
       com.ea.sims3.GameCanvas.c2(var2, 61);
-      if (super.a.a5.a11()) {
+      if (super.canvas.a5.a11()) {
          com.ea.sims3.GameCanvas.c2(var2, 63);
       }
 
@@ -565,10 +565,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void g2(int var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       switch (var1) {
          case 42:
-            this.c4(19);
+            this.onTick(19);
          default:
             return;
          case 51:
@@ -580,10 +580,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             com.ea.sims3.SpriteRenderer.a5(44, 0);
             com.ea.sims3.SpriteRenderer.a5(43, 0);
             var2.l2(0);
-            this.c4(14);
+            this.onTick(14);
             return;
          case 59:
-            this.c4(8);
+            this.onTick(8);
             return;
          case 60:
             var2.r2(0);
@@ -592,26 +592,26 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             var2.r2(3);
             return;
          case 63:
-            this.c4(9);
+            this.onTick(9);
       }
    }
 
    private void e2() {
-      PromoImages var1 = super.a.a5;
-      if (super.a.a5.a7) {
+      PromoImages var1 = super.canvas.a5;
+      if (super.canvas.a5.a7) {
          var1.b4();
       } else {
-         super.a.c = false;
-         this.c4(7);
+         super.canvas.c = false;
+         this.onTick(7);
       }
    }
 
    private void f2() {
       if (this.c4 == null) {
-         int var1 = super.a.f;
+         int var1 = super.canvas.f;
          short[] var2 = new short[5 + var1];
          this.c4 = var2;
-         com.ea.sims3.GameCanvas.a(var2, 3, super.a.a22);
+         com.ea.sims3.GameCanvas.a(var2, 3, super.canvas.a22);
          SdkString[] var3 = new SdkString[var1 + 1];
          this.a7 = var3;
 
@@ -620,8 +620,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             var3[var4] = com.ea.sims3.SdkText.a(var4, 0, null);
          }
 
-         int var5 = super.a.i2;
-         if (super.a.i2 != -1) {
+         int var5 = super.canvas.i2;
+         if (super.canvas.i2 != -1) {
             var2[2] = (short)var5;
          }
       }
@@ -629,13 +629,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void d(Graphics var1) {
       this.a(var1, this.c4, 1, this.a7);
-      super.a.b(var1);
+      super.canvas.b(var1);
    }
 
    private void c2(int var1, int var2) {
-      GameCanvas var3 = super.a;
+      GameCanvas var3 = super.canvas;
       short var4 = this.c4[2];
-      if (this.a3(var1, var2, 4128, 16384)) {
+      if (this.matchesInput(var1, var2, 4128, 16384)) {
          var3.d3(var4);
          var3.c3();
          if (var3.k2 == 5) {
@@ -644,14 +644,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             this.f3(5);
          }
       } else {
-         if (this.a3(var1, var2, 524288, 32768)) {
+         if (this.matchesInput(var1, var2, 524288, 32768)) {
             if (var3.k2 == 5) {
                com.ea.sims3.SdkText.a13(var3.i2);
                var3.r2(0);
                return;
             }
          } else {
-            super.a.b3(this.c4, var1);
+            super.canvas.b3(this.c4, var1);
             short var5;
             if ((var5 = this.c4[2]) != var4) {
                com.ea.sims3.SdkText.a13(var5);
@@ -661,7 +661,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void g2() {
-      super.a.l2();
+      super.canvas.l2();
       this.h2(0);
    }
 
@@ -723,7 +723,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             var2 = 500;
             break;
          case 18:
-            this.c4(7);
+            this.onTick(7);
       }
 
       this.q = var1;
@@ -744,7 +744,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void d2(int var1, int var2) {
-      if (this.q == 13 && this.a3(var1, var2, 4128, 0)) {
+      if (this.q == 13 && this.matchesInput(var1, var2, 4128, 0)) {
          this.h2(this.q + 1);
       }
    }
@@ -804,21 +804,21 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void a(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.a;
+      GameCanvas var4 = super.canvas;
       int var5 = 255 - Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var4.b2(var1, 66, var6, 0, 0, var4.getWidth(), var4.getHeight());
    }
 
    private void d(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.a;
+      GameCanvas var4 = super.canvas;
       int var5 = Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var4.b2(var1, 65, var6, 0, 0, var4.getWidth(), var4.getHeight());
    }
 
    private void e(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = super.a;
+      GameCanvas var4 = super.canvas;
       int var5 = Math.min(var2 * 255 / var3, 255);
       int var6 = 0xFF000000 | var5 << 16 | var5 << 8 | var5 << 0;
       var1.setColor(var6);
@@ -826,19 +826,19 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void c(Graphics var1, int var2) {
-      GameCanvas var3 = super.a;
+      GameCanvas var3 = super.canvas;
       com.ea.sims3.SpriteRenderer.a(var1, var2);
       var1.fillRect(0, 0, var3.getWidth(), var3.getHeight());
    }
 
    private void f(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       this.c(var1, 60);
       com.ea.sims3.SpriteRenderer.drawFrame(var1, 556, 0, var2.a(), var2.b());
    }
 
    private void g(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       short var3 = 0;
       if (com.ea.sims3.GameCanvas.b2 == 1) {
          var3 = 558;
@@ -915,8 +915,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void a4(int var1, int var2, int var3) {
-      GameCanvas var4 = super.a;
-      SdkString var5 = super.a.a4(25);
+      GameCanvas var4 = super.canvas;
+      SdkString var5 = super.canvas.a4(25);
       var4.a(var5, var3, var1, var2, 3);
    }
 
@@ -974,7 +974,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void h(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       short var3 = 0;
       if (com.ea.sims3.GameCanvas.b2 == 1) {
          var3 = 558;
@@ -988,7 +988,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void i(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       short[] var3 = this.b5;
       short var4 = this.b5[0];
       short var5 = var3[2];
@@ -1059,22 +1059,22 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void h2() {
-      GameCanvas var1 = super.a;
-      Neighborhood var2 = super.a.a23;
+      GameCanvas var1 = super.canvas;
+      Neighborhood var2 = super.canvas.a23;
       var1.p2();
       var1.q2();
       this.a8 = var2.i(0, 6) != 0;
       this.b6 = var2.i(0, 8) != 0;
       this.c7 = this.a13(var2.i(0, 2));
       this.H = 0;
-      this.c4(10);
+      this.onTick(10);
       this.a(false);
    }
 
    private void a(boolean var1) {
       this.b(var1);
-      GameCanvas var2 = super.a;
-      Lot var3 = super.a.a24;
+      GameCanvas var2 = super.canvas;
+      Lot var3 = super.canvas.a24;
       Neighborhood var4 = var2.a23;
       int[] var5 = this.c6;
       int[] var6 = this.d3;
@@ -1085,8 +1085,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void a(Graphics var1, int var2, int var3, boolean var4) {
-      GameCanvas var5 = super.a;
-      Neighborhood var6 = super.a.a23;
+      GameCanvas var5 = super.canvas;
+      Neighborhood var6 = super.canvas.a23;
       int var7 = this.c5.animId;
       if (var4) {
          int[] var8 = super.a2;
@@ -1107,10 +1107,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void b(boolean var1) {
-      Neighborhood var2 = super.a.a23;
+      Neighborhood var2 = super.canvas.a23;
       short var3;
       short var4;
-      if (super.a.a23.i(0, 0) == 0) {
+      if (super.canvas.a23.i(0, 0) == 0) {
          if (var1) {
             var3 = 706;
             var4 = 708;
@@ -1146,7 +1146,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          this.e2.play(679, 20);
       }
 
-      this.i2(var1);
+      this.advanceArrows(var1);
       this.v = com.ea.sims3.BaseScreen.a(this.v, this.w, var1, 8);
       this.z = com.ea.sims3.BaseScreen.a(this.z, this.A, var1, 8);
       if (Math.abs(this.v - this.w) < 32768) {
@@ -1159,40 +1159,40 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void e2(int var1, int var2) {
-      if (this.a3(var1, var2, 0, 4)) {
-         this.c4(17);
-      } else if (this.a3(var1, var2, 0, 2)) {
+      if (this.matchesInput(var1, var2, 0, 4)) {
+         this.onTick(17);
+      } else if (this.matchesInput(var1, var2, 0, 2)) {
          this.f3(11);
-      } else if (this.a3(var1, var2, 8196, 0) && this.u > 0) {
+      } else if (this.matchesInput(var1, var2, 8196, 0) && this.u > 0) {
          this.d4.play(680, 16);
          this.f2(this.u - 1, -1);
-      } else if (this.a3(var1, var2, 16640, 0) && this.u < d2.length - 1) {
+      } else if (this.matchesInput(var1, var2, 16640, 0) && this.u < d2.length - 1) {
          this.e2.play(678, 16);
          this.f2(this.u + 1, 1);
       } else {
          if (d2[this.u] == 723) {
-            if (this.a3(var1, var2, 32784, 0)) {
+            if (this.matchesInput(var1, var2, 32784, 0)) {
                this.m2(this.E - 1);
-               this.o2();
+               this.showLeftArrow();
                return;
             }
 
-            if (this.a3(var1, var2, 65600, 0)) {
+            if (this.matchesInput(var1, var2, 65600, 0)) {
                this.m2(this.E + 1);
-               this.p2();
+               this.showRightArrow();
                return;
             }
          } else {
-            if (this.a3(var1, var2, 32784, 0) && this.E > this.F) {
+            if (this.matchesInput(var1, var2, 32784, 0) && this.E > this.F) {
                this.b(this.E - 1, false);
-               this.o2();
+               this.showLeftArrow();
                this.a(false);
                return;
             }
 
-            if (this.a3(var1, var2, 65600, 0) && this.E < this.G) {
+            if (this.matchesInput(var1, var2, 65600, 0) && this.E < this.G) {
                this.b(this.E + 1, false);
-               this.p2();
+               this.showRightArrow();
                this.a(false);
             }
          }
@@ -1200,8 +1200,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void m2(int var1) {
-      Neighborhood var2 = super.a.a23;
-      int var3 = super.a.a23.c6;
+      Neighborhood var2 = super.canvas.a23;
+      int var3 = super.canvas.a23.c6;
       if (var1 < 0) {
          var1 = var3 - 1;
       } else if (var1 >= var3) {
@@ -1221,7 +1221,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void f2(int var1, int var2) {
-      GameCanvas var3 = super.a;
+      GameCanvas var3 = super.canvas;
       if (!this.a8 && d2[var1] == 731) {
          var1 += var2;
       }
@@ -1337,7 +1337,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private boolean a13(int var1) {
       int var2 = 1 << var1;
-      if (super.a.a23.i(0, 0) == 0) {
+      if (super.canvas.a23.i(0, 0) == 0) {
          var2 <<= 16;
       }
 
@@ -1345,7 +1345,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void b(int var1, boolean var2) {
-      Neighborhood var3 = super.a.a23;
+      Neighborhood var3 = super.canvas.a23;
       this.E = var1;
       if (this.x != -1) {
          var3.i2(this.x, var1);
@@ -1419,8 +1419,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void j(Graphics var1) {
-      GameCanvas var2 = super.a;
-      int var3 = super.a.getWidth();
+      GameCanvas var2 = super.canvas;
+      int var3 = super.canvas.getWidth();
       int var4 = var2.getHeight() - 15;
       c2(var1, 0, 0, var3, var4);
       int[] var5 = super.a2;
@@ -1527,12 +1527,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          var1.setClip(var21, var22, var23, var24);
          if (this.E > this.F || var44 == 723) {
             com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 0);
-            super.a4.draw(var1, var18 + var5[0], var47 + var5[1]);
+            super.leftArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
 
          if (this.E < this.G || var44 == 723) {
             com.ea.sims3.SpriteRenderer.a2(var5, var27, 0, 1);
-            super.b2.draw(var1, var18 + var5[0], var47 + var5[1]);
+            super.rightArrowAnim.draw(var1, var18 + var5[0], var47 + var5[1]);
          }
       }
 
@@ -1558,21 +1558,21 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void g2(int var1, int var2) {
       this.a5(var1, var2);
-      if (this.a3(var1, var2, 0, 4)) {
-         this.c4(10);
-      } else if (this.a3(var1, var2, 0, 2)) {
-         this.c4(12);
+      if (this.matchesInput(var1, var2, 0, 4)) {
+         this.onTick(10);
+      } else if (this.matchesInput(var1, var2, 0, 2)) {
+         this.onTick(12);
       } else {
-         if (this.a3(var1, var2, 4128, 16)) {
+         if (this.matchesInput(var1, var2, 4128, 16)) {
             int var3 = super.l;
-            super.a.a23.d3(var3);
-            super.a.a4(4, 2);
+            super.canvas.a23.d3(var3);
+            super.canvas.a4(4, 2);
          }
       }
    }
 
    private void k(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       this.a(var1, 18);
       int var3 = var2.getWidth();
       int var4 = var2.getHeight() - 15;
@@ -1581,13 +1581,13 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void i2() {
-      Neighborhood var1 = super.a.a23;
+      Neighborhood var1 = super.canvas.a23;
       this.d(var1.j(), 15, 0);
    }
 
    public final void a2(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = super.a;
-      Neighborhood var7 = super.a.a23;
+      GameCanvas var6 = super.canvas;
+      Neighborhood var7 = super.canvas.a23;
       int var8 = var2 + (var4 >> 1);
       int var9 = var3;
       int var10 = super.k;
@@ -1630,8 +1630,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          int var7 = var2 + 4;
          int var8;
          int var9 = (var8 = var3 + 4) + super.e;
-         GameCanvas var10 = super.a;
-         super.a.a2(722, 1, var7, var8, 20);
+         GameCanvas var10 = super.canvas;
+         super.canvas.a2(722, 1, var7, var8, 20);
          int var11 = super.l;
          short var12 = var10.a23.b6(var11);
          var10.a(0, var12, 1, var6, var7, var9, 20);
@@ -1641,19 +1641,19 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void n2(int var1) {
-      super.a.i2(var1);
+      super.canvas.i2(var1);
    }
 
    private void h2(int var1, int var2) {
-      GameCanvas var3 = super.a;
-      Neighborhood var4 = super.a.a23;
+      GameCanvas var3 = super.canvas;
+      Neighborhood var4 = super.canvas.a23;
       this.a5(var1, var2);
-      if (this.a3(var1, var2, 0, 4)) {
-         this.c4(11);
-      } else if (this.a3(var1, var2, 0, 2)) {
-         this.c4(13);
+      if (this.matchesInput(var1, var2, 0, 4)) {
+         this.onTick(11);
+      } else if (this.matchesInput(var1, var2, 0, 2)) {
+         this.onTick(13);
       } else {
-         if (this.a3(var1, var2, 4128, 16)) {
+         if (this.matchesInput(var1, var2, 4128, 16)) {
             int var5 = super.l;
             if (var4.j(0, var5) == -1) {
                var4.l2(var5);
@@ -1669,7 +1669,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void l(Graphics var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       this.a(var1, 19);
       int var3 = var2.getWidth();
       int var4 = var2.getHeight() - 15;
@@ -1682,8 +1682,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    public final void b2(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = super.a;
-      Neighborhood var7 = super.a.a23;
+      GameCanvas var6 = super.canvas;
+      Neighborhood var7 = super.canvas.a23;
       int var8 = var2 + (var4 >> 1);
       int var9 = var3;
       int var10 = super.k;
@@ -1747,15 +1747,15 @@ public final class TitleScreen extends BaseScreen implements Runnable {
 
    private void k2() {
       this.d5 = false;
-      this.H = super.a.b2().a4;
+      this.H = super.canvas.b2().a4;
       this.I = 0;
       this.J = -1;
       this.K = 0;
    }
 
    private void o2(int var1) {
-      GameCanvas var2 = super.a;
-      super.a.c4(1023);
+      GameCanvas var2 = super.canvas;
+      super.canvas.c4(1023);
       char[] var3 = a9[var1];
       if (this.d5 && var1 == this.J) {
          this.I = 0;
@@ -1785,7 +1785,7 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void p2(int var1) {
-      GameCanvas var2 = super.a;
+      GameCanvas var2 = super.canvas;
       this.I += var1;
       this.M -= var1 * 1638;
       this.L = var2.a2(957, 0);
@@ -1799,25 +1799,25 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void i2(int var1, int var2) {
-      GameCanvas var3 = super.a;
-      int var4 = super.a.e();
-      if (this.a3(var1, var2, 1023, 0)) {
+      GameCanvas var3 = super.canvas;
+      int var4 = super.canvas.e();
+      if (this.matchesInput(var1, var2, 1023, 0)) {
          int var5;
          if ((var5 = b2(var1)) != -1) {
             this.o2(var5);
             var3.a4(4, var3.e() != 0 ? 2 : 0);
          }
       } else {
-         if (this.a3(var1, var2, 4096, 2)) {
+         if (this.matchesInput(var1, var2, 4096, 2)) {
             if (var3.e() != 0) {
-               this.c4(18);
+               this.onTick(18);
                return;
             }
          } else {
-            if (this.a3(var1, var2, 524288, 0)) {
+            if (this.matchesInput(var1, var2, 524288, 0)) {
                this.l2();
                if (var4 == 0) {
-                  this.c4(12);
+                  this.onTick(12);
                   return;
                }
 
@@ -1830,18 +1830,18 @@ public final class TitleScreen extends BaseScreen implements Runnable {
                return;
             }
 
-            if (this.a3(var1, var2, 0, 4)) {
-               this.c4(12);
+            if (this.matchesInput(var1, var2, 0, 4)) {
+               this.onTick(12);
                return;
             }
 
-            if (this.a3(var1, var2, 32768, 0)) {
+            if (this.matchesInput(var1, var2, 32768, 0)) {
                this.l2();
                if (this.H != 0) {
                   this.H--;
                   return;
                }
-            } else if (this.a3(var1, var2, 65536, 0)) {
+            } else if (this.matchesInput(var1, var2, 65536, 0)) {
                this.l2();
                if (this.H != var4) {
                   this.H++;
@@ -1852,8 +1852,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void m(Graphics var1) {
-      GameCanvas var2 = super.a;
-      Neighborhood var3 = super.a.a23;
+      GameCanvas var2 = super.canvas;
+      Neighborhood var3 = super.canvas.a23;
       c2(var1, 0, 0, var2.getWidth(), var2.getHeight() - 15);
       int var4 = var2.getWidth();
       int var5 = var2.getHeight() - 15;
@@ -1922,18 +1922,18 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void j2(int var1, int var2) {
-      GameCanvas var3 = super.a;
+      GameCanvas var3 = super.canvas;
       int var4;
       int var5 = var4 = this.e4 ? 2 : var3.j;
       int var6 = 2 + (a5 == 14 ? 1 : 0);
-      if (this.a3(var1, var2, 0, 68)) {
-         this.c4(a5 == 14 ? 7 : 14);
-      } else if (this.a3(var1, var2, 4128, 48)) {
+      if (this.matchesInput(var1, var2, 0, 68)) {
+         this.onTick(a5 == 14 ? 7 : 14);
+      } else if (this.matchesInput(var1, var2, 4128, 48)) {
          if (this.e4) {
-            this.c4(15);
+            this.onTick(15);
          } else if (a5 == 15) {
             if (var3.e3()) {
-               this.c4(16);
+               this.onTick(16);
             }
          } else if (var3.e3()) {
             var3.s2();
@@ -1941,9 +1941,9 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          } else {
             this.h2();
          }
-      } else if (this.a3(var1, var2, 8196, 0)) {
+      } else if (this.matchesInput(var1, var2, 8196, 0)) {
          var4 = (var4 + var6 - 1) % var6;
-      } else if (this.a3(var1, var2, 16640, 0)) {
+      } else if (this.matchesInput(var1, var2, 16640, 0)) {
          var4 = (var4 + 1) % var6;
       }
 
@@ -1964,8 +1964,8 @@ public final class TitleScreen extends BaseScreen implements Runnable {
    }
 
    private void n(Graphics var1) {
-      GameCanvas var2 = super.a;
-      int var3 = super.a.getWidth();
+      GameCanvas var2 = super.canvas;
+      int var3 = super.canvas.getWidth();
       int var4;
       int var5 = (var4 = var2.getHeight() - 15) - 6;
       int var6 = 3 + var5 - (a3(var5) >> 1);

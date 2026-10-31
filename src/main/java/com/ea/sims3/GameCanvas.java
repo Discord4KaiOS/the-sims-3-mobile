@@ -251,7 +251,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
    public final void b4() {
       this.k = false;
       if (this.a2 != null) {
-         this.a2.c2();
+         this.a2.pause();
       }
 
       this.c3();
@@ -311,7 +311,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             } else if (this.a2 instanceof TitleScreen) {
                Object var3 = null;
                if (com.ea.sims3.TitleScreen.a5 == 5) {
-                  this.a2.c4(5);
+                  this.a2.onTick(5);
                }
 
                if (com.ea.sims3.TitleScreen.a5 == 11) {
@@ -319,7 +319,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
                }
 
                if (com.ea.sims3.TitleScreen.a5 == 10) {
-                  this.a2.c4(10);
+                  this.a2.onTick(10);
                }
             }
          }
@@ -389,7 +389,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
       this.h2();
       this.g2();
       if (this.a2 != null) {
-         this.a2.b4();
+         this.a2.stop();
       }
 
       com.ea.sims3.SdkSound.muteAll();
@@ -448,14 +448,14 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
                   this.u = 0;
                }
 
-               this.a2.a4(this.t, var2);
+               this.a2.update(this.t, var2);
                this.x2(this.u);
             } catch (Exception var3) {
             }
 
             try {
                this.y2(var1);
-               this.a2.b7(var1);
+               this.a2.keyPressed(var1);
                return;
             } catch (Exception var4) {
             }
@@ -470,7 +470,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
 
          try {
             if (this.a2 != null && this.k) {
-               this.a2.a(var2);
+               this.a2.render(var2);
             }
 
             if (this.a11()) {
@@ -1269,7 +1269,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          boolean var3 = this.a6() != null && var1 == 2;
          this.D = -1;
          if (this.a2 != null) {
-            this.a2.c2();
+            this.a2.pause();
          }
 
          this.l2();
@@ -1288,7 +1288,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
             }
          }
 
-         this.a2.a12(var2);
+         this.a2.setLanguage(var2);
       } catch (Exception var4) {
       }
 
@@ -1410,7 +1410,7 @@ public final class GameCanvas extends Canvas implements SpriteIndex, SoundIndex,
          if (!this.a20.isRunning()) {
             int var2 = this.o ? this.d2 : this.e;
             if (this.a2 != null) {
-               this.a2.a4(0, var2);
+               this.a2.update(0, var2);
             }
          }
       }

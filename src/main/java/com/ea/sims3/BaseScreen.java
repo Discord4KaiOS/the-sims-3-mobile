@@ -3,7 +3,7 @@ package com.ea.sims3;
 import javax.microedition.lcdui.Graphics;
 
 public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
-   public final GameCanvas a;
+   public final GameCanvas canvas;
    public final int[] a2;
    public int d;
    private int a3;
@@ -14,8 +14,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    public int i;
    private static final int[] c = new int[6];
    private final short[] b = new short[11];
-   public Animator a4;
-   public Animator b2;
+   public Animator leftArrowAnim;
+   public Animator rightArrowAnim;
    public int j;
    private int b3;
    public int k;
@@ -23,47 +23,47 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    public int l;
    private int m;
 
-   public boolean a3(int var1, int var2, int var3, int var4) {
+   public boolean matchesInput(int var1, int var2, int var3, int var4) {
       if ((var2 & var4) == 0 && (var1 & var3) == 0) {
          return false;
       } else {
-         this.a.h2();
-         this.a.c4(var3);
+         this.canvas.h2();
+         this.canvas.c4(var3);
          return true;
       }
    }
 
    public BaseScreen(GameCanvas var1) {
-      this.a = var1;
+      this.canvas = var1;
       this.a2 = new int[4];
    }
 
-   public abstract void a12(int var1);
+   public abstract void setLanguage(int var1);
 
-   public abstract void b4();
+   public abstract void stop();
 
-   public abstract void c2();
+   public abstract void pause();
 
-   public abstract void a(Graphics var1);
+   public abstract void render(Graphics var1);
 
-   public abstract void a4(int var1, int var2);
+   public abstract void update(int var1, int var2);
 
-   public abstract void b7(int var1);
+   public abstract void keyPressed(int var1);
 
-   public abstract void c4(int var1);
+   public abstract void onTick(int var1);
 
    public final void a(Graphics var1, int var2) {
-      GameCanvas var3 = this.a;
+      GameCanvas var3 = this.canvas;
       this.b(var1, var2, 0, 0, var3.getWidth(), var3.getHeight() - 15);
    }
 
    public final void b(Graphics var1, int var2, int var3) {
-      GameCanvas var4 = this.a;
+      GameCanvas var4 = this.canvas;
       this.b(var1, var2, 0, var3, var4.getWidth(), var4.getHeight() - 15 - var3);
    }
 
-   public final void n2() {
-      GameCanvas var1 = this.a;
+   public final void initLayout() {
+      GameCanvas var1 = this.canvas;
       this.e = var1.b2(1);
       this.f = 216;
       this.g = this.f * 4 / 5;
@@ -71,33 +71,33 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
       this.h = 192;
       this.a3 = var1.getHeight() * 3 / 5 / var1.b2(1);
       this.i = var1.b2(1) + 2;
-      this.a4 = new Animator();
-      this.b2 = new Animator();
-      this.a4.play(560, 4);
-      this.b2.play(562, 4);
+      this.leftArrowAnim = new Animator();
+      this.rightArrowAnim = new Animator();
+      this.leftArrowAnim.play(560, 4);
+      this.rightArrowAnim.play(562, 4);
    }
 
-   public final void o2() {
-      this.a4.play(559, 16);
+   public final void showLeftArrow() {
+      this.leftArrowAnim.play(559, 16);
    }
 
-   public final void p2() {
-      this.b2.play(561, 16);
+   public final void showRightArrow() {
+      this.rightArrowAnim.play(561, 16);
    }
 
-   public final void i2(int var1) {
-      this.a4.advance(var1);
-      this.b2.advance(var1);
-      if (!this.a4.isRunning()) {
-         this.a4.play(560, 20);
+   public final void advanceArrows(int var1) {
+      this.leftArrowAnim.advance(var1);
+      this.rightArrowAnim.advance(var1);
+      if (!this.leftArrowAnim.isRunning()) {
+         this.leftArrowAnim.play(560, 20);
       }
 
-      if (!this.b2.isRunning()) {
-         this.b2.play(562, 20);
+      if (!this.rightArrowAnim.isRunning()) {
+         this.rightArrowAnim.play(562, 20);
       }
    }
 
-   public final void k2(int var1, int var2) {
+   public final void setValue(int var1, int var2) {
       this.b[var1] = (short)var2;
    }
 
@@ -208,7 +208,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    private void a(Graphics var1, int var2, int[] var3) {
-      GameCanvas var4 = this.a;
+      GameCanvas var4 = this.canvas;
       int var5 = var3[0];
       int var6 = var3[1];
       int var7 = var3[2];
@@ -228,7 +228,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
          case 4:
             if (var2 == 4) {
                var7 = this.f;
-               var5 = this.a.getWidth() - var7 >> 1;
+               var5 = this.canvas.getWidth() - var7 >> 1;
             }
 
             if (var1 != null) {
@@ -446,7 +446,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a2(Graphics var1, int var2, int var3, int var4, int var5, int var6, int var7) {
-      GameCanvas var8 = this.a;
+      GameCanvas var8 = this.canvas;
       if (var7 == 4) {
          this.i(var1, var2, var3, var4, var5);
       }
@@ -487,8 +487,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
          }
 
          if (((GameScreen)this).c9 != 0 || GameScreen.a5 != 11 && GameScreen.a5 != 10) {
-            this.a4.draw(var1, var21, var19);
-            this.b2.draw(var1, var17, var19);
+            this.leftArrowAnim.draw(var1, var21, var19);
+            this.rightArrowAnim.draw(var1, var17, var19);
          }
       }
 
@@ -564,7 +564,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, int var7) {
-      this.a(var1, var2, var3, var4, var5, var6, this.a.a4(var7));
+      this.a(var1, var2, var3, var4, var5, var6, this.canvas.a4(var7));
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, int var5, boolean var6, SdkString var7) {
@@ -577,7 +577,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
          b2(var1, var2, var3, var4, var5, 579, 90);
       }
 
-      this.a.a(var7, var8, var2 + (var4 >> 1), var3 + (var5 >> 1) + 2, 3);
+      this.canvas.a(var7, var8, var2 + (var4 >> 1), var3 + (var5 >> 1) + 2, 3);
    }
 
    public final void i(Graphics var1, int var2, int var3, int var4, int var5) {
@@ -603,8 +603,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void b(Graphics var1, int[] var2) {
-      GameCanvas var3 = this.a;
-      int var4 = this.a.b2(1);
+      GameCanvas var3 = this.canvas;
+      int var4 = this.canvas.b2(1);
       int var5 = Math.max(5, Math.min(var3.c(), this.a3));
       int var6 = var4 * var5 + 16;
       if (var1 == null) {
@@ -623,7 +623,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int b(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = this.a;
+      GameCanvas var6 = this.canvas;
       int var7 = var4 - 3 - 3;
       int var9 = 6 + var7 + 3;
       this.i(var1, var2, -3, var3, var9);
@@ -639,7 +639,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final int c(Graphics var1, int var2, int var3, int var4, int var5) {
-      GameCanvas var6 = this.a;
+      GameCanvas var6 = this.canvas;
       this.i(var1, var2, -3, var3, 47);
       int var9 = var3 - 6;
       int var10 = var2 + (var3 - var9 >> 1);
@@ -658,9 +658,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a(Graphics var1, int var2, int var3, int var4, boolean var5, int var6) {
-      GameCanvas var7 = this.a;
-      Neighborhood var8 = this.a.a23;
-      int var9 = this.a.a23.i(var4, 0) == 0 ? (var5 ? 595 : 594) : (var5 ? 593 : 592);
+      GameCanvas var7 = this.canvas;
+      Neighborhood var8 = this.canvas.a23;
+      int var9 = this.canvas.a23.i(var4, 0) == 0 ? (var5 ? 595 : 594) : (var5 ? 593 : 592);
       int var10 = var8.i(var4, 2);
       SpriteRenderer.a12(var6);
       SpriteRenderer.drawFrame(var1, var9, var10, var2, var3 + 0);
@@ -676,7 +676,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final SdkString a4(int var1) {
-      GameCanvas var2 = this.a;
+      GameCanvas var2 = this.canvas;
       if (var1 >= -12) {
          return var2.a4(var1);
       } else {
@@ -690,7 +690,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final short[] a16(int var1) {
-      return this.a.a16(var1);
+      return this.canvas.a16(var1);
    }
 
    public final void d(int var1, int var2, int var3) {
@@ -711,9 +711,9 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
             var4 = this.l;
          }
 
-         if (this.a3(var1, var2, 16640, 0)) {
+         if (this.matchesInput(var1, var2, 16640, 0)) {
             var4++;
-         } else if (this.a3(var1, var2, 8196, 0)) {
+         } else if (this.matchesInput(var1, var2, 8196, 0)) {
             var4--;
          }
 
@@ -730,7 +730,7 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void e(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      GameCanvas var7 = this.a;
+      GameCanvas var7 = this.canvas;
       int var8 = var4 - b();
       int var9 = var2 + 2;
       int var10 = var3 + 2;
@@ -824,32 +824,32 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void b(Graphics var1, int var2) {
-      GameCanvas var3 = this.a;
-      int var4 = this.a.a23.m();
+      GameCanvas var3 = this.canvas;
+      int var4 = this.canvas.a23.m();
       SdkString var5 = var3.a2();
       var3.e3(551);
       var3.f3(var3.g());
       var3.e3(27);
       var3.f3(var4);
       var3.a2(-9, var5);
-      this.k2(1, -9);
+      this.setValue(1, -9);
       var5 = var3.a2();
       var3.e3(550);
       var3.f3(var3.f());
       var3.e3(27);
       var3.f3(var4);
       var3.a2(-8, var5);
-      this.k2(2, -8);
+      this.setValue(2, -8);
       this.a(var1, var2);
    }
 
    public final void q2() {
-      this.d(this.a.a23.m(), 27, -1);
+      this.d(this.canvas.a23.m(), 27, -1);
    }
 
    private int b2(int var1) {
-      GameCanvas var2 = this.a;
-      int var3 = this.a.a23.m();
+      GameCanvas var2 = this.canvas;
+      int var3 = this.canvas.a23.m();
       int var4 = var2.f();
       int var5 = var2.g();
       int var6 = 0;
@@ -881,8 +881,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    private void h(Graphics var1, int var2, int var3, int var4, int var5, int var6) {
-      GameCanvas var7 = this.a;
-      Neighborhood var8 = this.a.a23;
+      GameCanvas var7 = this.canvas;
+      Neighborhood var8 = this.canvas.a23;
       int var9 = var2 + 3;
       int var10 = SpriteRenderer.d(565, 0);
       int var11 = 13 - (var10 >> 1);
@@ -958,8 +958,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    public final int d(Graphics var1, int var2, int var3, int var4, int var5) {
       int var6 = 8 + 6 * this.e;
       if (var1 != null) {
-         GameCanvas var7 = this.a;
-         Neighborhood var8 = this.a.a23;
+         GameCanvas var7 = this.canvas;
+         Neighborhood var8 = this.canvas.a23;
          int var9 = 0;
          int var10 = 5;
          if (var5 == 36) {
@@ -1016,8 +1016,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void l2(int var1, int var2) {
-      this.k2(0, var2);
-      this.a.a(var1, 1, this.g);
+      this.setValue(0, var2);
+      this.canvas.a(var1, 1, this.g);
    }
 
    public final void b(Graphics var1) {
@@ -1025,8 +1025,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void m2(int var1, int var2) {
-      this.k2(0, var2);
-      this.a.a(var1, 1, this.d);
+      this.setValue(0, var2);
+      this.canvas.a(var1, 1, this.d);
       this.m = 0;
    }
 
@@ -1035,11 +1035,11 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void j2(int var1) {
-      if (this.a3(var1, 0, 8196, 0)) {
+      if (this.matchesInput(var1, 0, 8196, 0)) {
          this.m = Math.max(0, this.m - 1);
       }
 
-      if (this.a3(var1, 0, 16640, 0) && this.a.c() > this.m + this.a3) {
+      if (this.matchesInput(var1, 0, 16640, 0) && this.canvas.c() > this.m + this.a3) {
          this.m++;
       }
    }
@@ -1049,8 +1049,8 @@ public abstract class BaseScreen implements SpriteIndex, SoundIndex, Resources {
    }
 
    public final void a(Graphics var1, short[] var2, int var3, SdkString[] var4) {
-      GameCanvas var5 = this.a;
-      Lot var6 = this.a.a24;
+      GameCanvas var5 = this.canvas;
+      Lot var6 = this.canvas.a24;
       short var7 = var2[0];
       short var8 = var2[3];
       short var9 = var2[2];

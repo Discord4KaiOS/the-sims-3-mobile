@@ -9,7 +9,7 @@ import javax.microedition.media.PlayerListener;
 import javax.microedition.media.control.VolumeControl;
 
 public final class SdkSound implements PlayerListener {
-   private static int e = com.ea.sims3.SdkConfig.targetFps();
+   private static int targetFps = com.ea.sims3.SdkConfig.targetFps();
    public boolean isWavFormat = false;
    public int currentSound = -1;
    public int loopCount = 1;
@@ -18,30 +18,30 @@ public final class SdkSound implements PlayerListener {
    public Player player;
    public ResourceLoader resources = null;
    public Display display;
-   public static boolean c2 = false;
+   public static boolean muted = false;
    public int pendingSound = -2;
 
    public SdkSound() {
       this.isWavFormat = true;
    }
 
-   public final void setLoopCount(int var1) {
-      if (SdkFeatures.isLoggingEnabled() && var1 < 1 && var1 != -1) {
-         SdkText.a("SDKSound::setCurrentLoop::count: " + var1 + " will result in undefined behavior", 4);
+   public final void setLoopCount(int count) {
+      if (SdkFeatures.isLoggingEnabled() && count < 1 && count != -1) {
+         SdkText.a("SDKSound::setCurrentLoop::count: " + count + " will result in undefined behavior", 4);
       }
 
-      this.loopCount = var1;
+      this.loopCount = count;
    }
 
-   public final void play(int var1) {
-      if (this.currentSound != var1) {
-         byte[] var2 = this.soundBytes(var1);
+   public final void play(int soundId) {
+      if (this.currentSound != soundId) {
+         byte[] data = this.soundBytes(soundId);
          if (this.player != null) {
             this.player.removePlayerListener(this);
             this.player.close();
          }
 
-         this.player = this.createPlayer(var2);
+         this.player = this.createPlayer(data);
 
          try {
             this.player.realize();
@@ -58,45 +58,45 @@ public final class SdkSound implements PlayerListener {
       muteAll();
    }
 
-   private void playIfEnabled(int var1) {
+   private void playIfEnabled(int soundId) {
       try {
          if (this.enabled) {
             if (this.isFirstLoop() && this.currentLoop == 1) {
                return;
             }
 
-            this.play(var1);
-            this.startPlayer(var1);
+            this.play(soundId);
+            this.startPlayer(soundId);
          }
-      } catch (Exception var3) {
-         var3.printStackTrace();
+      } catch (Exception exception) {
+         exception.printStackTrace();
       }
    }
 
-   private void startPlayer(int var1) {
+   private void startPlayer(int soundId) {
       if (this.player != null) {
          try {
             this.player.setLoopCount(this.loopCount);
             this.player.setMediaTime(0L);
-         } catch (Exception var3) {
+         } catch (Exception ignored) {
          }
 
          try {
-            VolumeControl var2;
-            if (this.player != null && (var2 = (VolumeControl)this.player.getControl("VolumeControl")) != null) {
-               var2.setLevel(50);
+            VolumeControl volume;
+            if (this.player != null && (volume = (VolumeControl)this.player.getControl("VolumeControl")) != null) {
+               volume.setLevel(50);
             }
 
             this.player.start();
-            this.currentSound = var1;
+            this.currentSound = soundId;
             return;
-         } catch (Exception var4) {
+         } catch (Exception ignored2) {
          }
       }
    }
 
    public static void muteAll() {
-      c2 = true;
+      muted = true;
    }
 
    private void stopCurrent() {
@@ -111,8 +111,8 @@ public final class SdkSound implements PlayerListener {
             }
 
             this.player.getState();
-         } catch (Exception var2) {
-            var2.printStackTrace();
+         } catch (Exception exception) {
+            exception.printStackTrace();
             return;
          }
 
@@ -120,55 +120,55 @@ public final class SdkSound implements PlayerListener {
       }
    }
 
-   public final void vibrate(int var1) {
-      var1 = var1 * com.ea.sims3.SdkConfig.vibrateScaleDen() / com.ea.sims3.SdkConfig.vibrateScaleNum();
+   public final void vibrate(int duration) {
+      duration = duration * com.ea.sims3.SdkConfig.vibrateScaleDen() / com.ea.sims3.SdkConfig.vibrateScaleNum();
       this.display = Display.getDisplay(GameCanvas.a7().a);
-      this.display.vibrate(var1);
+      this.display.vibrate(duration);
    }
 
-   public final void setEnabled(boolean var1) {
-      this.enabled = var1;
-      if (!var1) {
+   public final void setEnabled(boolean enable) {
+      this.enabled = enable;
+      if (!enable) {
          muteAll();
       }
    }
 
-   private byte[] soundBytes(int var1) {
-      return this.resources.loadSound(var1);
+   private byte[] soundBytes(int soundId) {
+      return this.resources.loadSound(soundId);
    }
 
-   private Player createPlayer(byte[] var1) {
-      byte var2 = var1[0];
-      String var3 = null;
-      switch (var2) {
+   private Player createPlayer(byte[] data) {
+      byte format = data[0];
+      String contentType = null;
+      switch (format) {
          case 35:
-            var3 = "audio/amr";
+            contentType = "audio/amr";
             break;
          case 77:
-            var3 = "audio/midi";
+            contentType = "audio/midi";
             break;
          case 82:
             if (this.isWavFormat) {
-               var3 = "audio/x-wav";
+               contentType = "audio/x-wav";
             } else {
-               var3 = "audio/wav";
+               contentType = "audio/wav";
             }
       }
 
-      if (var3 == null) {
+      if (contentType == null) {
          return null;
       } else {
-         Player var4 = null;
+         Player player = null;
 
          try {
-            ByteArrayInputStream var5;
-            var4 = Manager.createPlayer(var5 = new ByteArrayInputStream(var1), var3);
-            var5.close();
-         } catch (Exception var6) {
-            var6.printStackTrace();
+            ByteArrayInputStream stream;
+            player = Manager.createPlayer(stream = new ByteArrayInputStream(data), contentType);
+            stream.close();
+         } catch (Exception exception) {
+            exception.printStackTrace();
          }
 
-         return var4;
+         return player;
       }
    }
 
@@ -184,15 +184,15 @@ public final class SdkSound implements PlayerListener {
    }
 
    public final void update() {
-      if (c2) {
+      if (muted) {
          this.stopCurrent();
       }
 
-      c2 = false;
+      muted = false;
    }
 
-   public final void playerUpdate(Player var1, String var2, Object var3) {
-      if (var2 == "endOfMedia" && this.loopCount != -1) {
+   public final void playerUpdate(Player player, String event, Object data) {
+      if (event == "endOfMedia" && this.loopCount != -1) {
          this.currentSound = -1;
       }
    }

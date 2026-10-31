@@ -49,12 +49,13 @@ public final class Rename {
     private static final Map<String, String> CLASSES = new HashMap<>();
     private static final Map<String, String> FIELDS = new HashMap<>();
     private static final Map<String, String> METHODS = new HashMap<>();
+    private static final Map<String, String> VARIABLES = new HashMap<>();
     private static final java.util.Set<String> USED = new java.util.HashSet<>();
 
     public static void main(String[] args) throws Exception {
         loadMapping(args[0]);
-        System.out.println("mapping: " + CLASSES.size() + " classes, "
-                + FIELDS.size() + " fields, " + METHODS.size() + " methods");
+        System.out.println("mapping: " + CLASSES.size() + " classes, " + FIELDS.size()
+                + " fields, " + METHODS.size() + " methods, " + VARIABLES.size() + " variables");
 
         List<File> files = new ArrayList<>();
         collect(new File(args[1]), files);
@@ -71,11 +72,13 @@ public final class Rename {
         task.parse().forEach(units::add);
         task.analyze();
 
+        StringBuilder allText = new StringBuilder();
         int edits = 0;
         Map<String, String> fileRenames = new LinkedHashMap<>();
         for (CompilationUnitTree unit : units) {
             String path = Path.of(unit.getSourceFile().toUri()).toString();
             String text = unit.getSourceFile().getCharContent(true).toString();
+            allText.append(text).append('\n');
             Map<Integer, String> fileEdits = new HashMap<>();
 
             new TreePathScanner<Void, Void>() {
@@ -152,21 +155,42 @@ public final class Rename {
             System.out.println("renamed file " + from.getFileName() + " -> " + to.getFileName());
         }
         System.out.println("applied " + edits + " edits");
+        String allSourceText = allText.toString();
 
+        // Only report entries whose old name still exists in the sources: entries
+        // from earlier batches are simply no-ops now.
+        // Current class names: only entries whose owner still exists can be typos.
+        java.util.Set<String> currentClasses = new java.util.HashSet<>();
+        for (CompilationUnitTree u : units) {
+            for (com.sun.source.tree.Tree t : u.getTypeDecls()) {
+                if (t instanceof ClassTree) {
+                    currentClasses.add(((ClassTree) t).getSimpleName().toString());
+                }
+            }
+        }
+        java.util.Set<String> identifiers = currentClasses;
         java.util.List<String> unused = new ArrayList<>();
         CLASSES.forEach((k, v) -> {
-            if (!USED.contains("C " + k)) {
+            if (!USED.contains("C " + k) && identifiers.contains(k)) {
                 unused.add("C " + k);
             }
         });
-        FIELDS.keySet().forEach(k -> {
-            if (!USED.contains("F " + k)) {
+        FIELDS.forEach((k, v) -> {
+            String owner = k.substring(0, k.indexOf('#'));
+            if (!USED.contains("F " + k) && identifiers.contains(owner)) {
                 unused.add("F " + k);
             }
         });
-        METHODS.keySet().forEach(k -> {
-            if (!USED.contains("M " + k)) {
+        METHODS.forEach((k, v) -> {
+            String owner = k.substring(0, k.indexOf('#'));
+            if (!USED.contains("M " + k) && identifiers.contains(owner)) {
                 unused.add("M " + k);
+            }
+        });
+        VARIABLES.forEach((k, v) -> {
+            String owner = k.substring(0, k.indexOf('#'));
+            if (!USED.contains("V " + k) && identifiers.contains(owner)) {
+                unused.add("V " + k);
             }
         });
         if (!unused.isEmpty()) {
@@ -311,10 +335,22 @@ public final class Rename {
                 }
                 return null;
             }
-            default:
-                if (element instanceof VariableElement) {
-                    return FIELDS.get(owner + "#" + element.getSimpleName());
+            case PARAMETER:
+            case LOCAL_VARIABLE:
+            case EXCEPTION_PARAMETER: {
+                Element parent = element.getEnclosingElement();
+                if (parent instanceof ExecutableElement) {
+                    String key = parent.getEnclosingElement().getSimpleName() + "#"
+                            + signature((ExecutableElement) parent) + "#" + element.getSimpleName();
+                    String name = VARIABLES.get(key);
+                    if (name != null) {
+                        USED.add("V " + key);
+                    }
+                    return name;
                 }
+                return null;
+            }
+            default:
                 return null;
         }
     }
@@ -347,7 +383,7 @@ public final class Rename {
         List<TypeElement> supertypes = new ArrayList<>();
         collectSupertypes(type, supertypes);
         for (TypeElement s : supertypes) {
-            String found = METHODS.get(s.getSimpleName() + "#" + name + sig);
+            String found = METHODS.get(s.getSimpleName() + "#" + sig);
             if (found != null) {
                 return found;
             }
@@ -394,6 +430,7 @@ public final class Rename {
                 case "C" -> CLASSES.put(p[1], p[2]);
                 case "F" -> FIELDS.put(p[1] + "#" + p[2], p[3]);
                 case "M" -> METHODS.put(p[1] + "#" + p[2], p[3]);
+                case "V" -> VARIABLES.put(p[1] + "#" + p[2] + "#" + p[3], p[4]);
                 default -> throw new IllegalArgumentException("bad mapping line: " + line);
             }
         }

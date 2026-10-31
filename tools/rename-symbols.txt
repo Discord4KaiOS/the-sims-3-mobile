@@ -171,3 +171,111 @@ M t a3(int,int) frameDuration
 M t a2(Graphics,int,int,int,int) drawFrame
 M t a(Graphics,d,int,int) drawAnimator
 M t a3(int,int,int) getTileImage
+
+# ---------------------------------------------------------------- SdkSound (params/locals)
+F SdkSound e targetFps
+F SdkSound c2 muted
+V SdkSound setLoopCount(int) var1 count
+V SdkSound play(int) var1 soundId
+V SdkSound play(int) var2 data
+V SdkSound playIfEnabled(int) var1 soundId
+V SdkSound playIfEnabled(int) var3 exception
+V SdkSound startPlayer(int) var1 soundId
+V SdkSound startPlayer(int) var2 volume
+V SdkSound startPlayer(int) var3 ignored
+V SdkSound startPlayer(int) var4 ignored2
+V SdkSound stop() var2 exception
+V SdkSound vibrate(int) var1 duration
+V SdkSound setEnabled(boolean) var1 enable
+V SdkSound soundBytes(int) var1 soundId
+V SdkSound createPlayer(byte[]) var1 data
+V SdkSound createPlayer(byte[]) var2 format
+V SdkSound createPlayer(byte[]) var3 contentType
+V SdkSound createPlayer(byte[]) var4 player
+V SdkSound createPlayer(byte[]) var5 stream
+V SdkSound createPlayer(byte[]) var6 exception
+V SdkSound playerUpdate(Player,String,Object) var1 player
+V SdkSound playerUpdate(Player,String,Object) var2 event
+V SdkSound playerUpdate(Player,String,Object) var3 data
+
+# ---------------------------------------------------------------- ResourceLoader (params/locals)
+V ResourceLoader getSize(int) var0 index
+V ResourceLoader getName(int) var0 index
+V ResourceLoader loadImage(int) var0 index
+V ResourceLoader loadImage(int) var2 ignored
+V ResourceLoader openStream(int) var1 index
+V ResourceLoader loadSound(int) var1 index
+V ResourceLoader loadBytes(int) var1 index
+V ResourceLoader loadBytes(int) var2 size
+V ResourceLoader loadBytes(int) var3 data
+V ResourceLoader loadBytes(int) var4 in
+V ResourceLoader loadBytes(int) var5 exception
+V ResourceLoader ubyte(byte) var0 value
+V ResourceLoader readInt(byte[],int) var0 data
+V ResourceLoader readInt(byte[],int) var1 offset
+V ResourceLoader readInt(byte[],int) var2 b0
+V ResourceLoader readInt(byte[],int) var3 b1
+V ResourceLoader readInt(byte[],int) var4 b2
+V ResourceLoader readInt(byte[],int) var5 b3
+V ResourceLoader initCrcTable() var1 i
+V ResourceLoader initCrcTable() var2 crc
+V ResourceLoader initCrcTable() var3 bit
+V ResourceLoader crc32(byte[],int,int) var1 data
+V ResourceLoader crc32(byte[],int,int) var2 offset
+V ResourceLoader crc32(byte[],int,int) var3 length
+V ResourceLoader crc32(byte[],int,int) var4 crc
+V ResourceLoader crc32(byte[],int,int) var5 i
+V ResourceLoader crc32(byte[],int,int) var6 index
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var0 data
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var1 offset
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var2 length
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var3 fromColors
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var4 toColors
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var5 count
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var6 pixelCount
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var7 i
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var8 fromColor
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var9 fromR
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var10 fromG
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var11 fromB
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var12 pos
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var13 p
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var14 r
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var15 g
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var16 b
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var17 toR
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var18 toG
+V ResourceLoader replacePalette(byte[],int,int,int[],int[]) var19 toB
+V ResourceLoader loadImageRecolored(int,int[],int[]) var1 index
+V ResourceLoader loadImageRecolored(int,int[],int[]) var2 fromColors
+V ResourceLoader loadImageRecolored(int,int[],int[]) var3 toColors
+V ResourceLoader loadImageRecolored(int,int[],int[]) var4 png
+V ResourceLoader loadImageRecolored(int,int[],int[]) var5 chunkLength
+V ResourceLoader loadImageRecolored(int,int[],int[]) var6 chunkType
+V ResourceLoader loadImageRecolored(int,int[],int[]) var7 bitDepth
+V ResourceLoader loadImageRecolored(int,int[],int[]) var8 colorType
+V ResourceLoader loadImageRecolored(int,int[],int[]) var9 paletteOffset
+V ResourceLoader loadImageRecolored(int,int[],int[]) var10 paletteLength
+V ResourceLoader loadImageRecolored(int,int[],int[]) var11 pos
+V ResourceLoader loadImageRecolored(int,int[],int[]) var12 length
+V ResourceLoader loadImageRecolored(int,int[],int[]) var13 crcOffset
+V ResourceLoader loadImageRecolored(int,int[],int[]) var14 ignored
+V ResourceLoader loadImageRecolored(int,int[],int[]) var16 image
+
+# ---------------------------------------------------------------- BaseScreen
+F BaseScreen a canvas
+F BaseScreen a4 leftArrowAnim
+F BaseScreen b2 rightArrowAnim
+M BaseScreen a(Graphics) render
+M BaseScreen a4(int,int) update
+M BaseScreen b7(int) keyPressed
+M BaseScreen a12(int) setLanguage
+M BaseScreen c2() pause
+M BaseScreen b4() stop
+M BaseScreen c4(int) onTick
+M BaseScreen a3(int,int,int,int) matchesInput
+M BaseScreen n2() initLayout
+M BaseScreen o2() showLeftArrow
+M BaseScreen p2() showRightArrow
+M BaseScreen i2(int) advanceArrows
+M BaseScreen k2(int,int) setValue
