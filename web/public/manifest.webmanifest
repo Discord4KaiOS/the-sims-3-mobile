@@ -1,0 +1,31 @@
+{
+  "id": "thesims3",
+  "name": "The Sims 3",
+  "short_name": "The Sims 3",
+  "description": "The Sims 3",
+  "lang": "en-US",
+  "dir": "ltr",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#4a9335",
+  "theme_color": "#4a9335",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {
+      "src": "/game/icon.png",
+      "type": "image/png",
+      "sizes": "64x64",
+      "purpose": "any"
+    }
+  ],
+  "b2g_features": {
+    "version": "3.0.0",
+    "subtitle": "The Sims 3",
+    "origin": "thesims3",
+    "developer": {
+      "name": "Electronic Arts"
+    }
+  }
+}

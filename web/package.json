@@ -1,0 +1,19 @@
+{
+  "name": "the-sims-3-mobile-web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "rsbuild build && node scripts/package.mjs",
+    "preview": "rsbuild preview",
+    "typecheck": "tsc --noEmit",
+    "assets": "node scripts/copy-assets.mjs",
+    "game": "../tools/web/generate.sh",
+    "package": "node scripts/package.mjs"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^1.5.0",
+    "typescript": "^5.9.0"
+  }
+}

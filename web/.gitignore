@@ -1,0 +1,5 @@
+node_modules/
+dist/
+# game assets are property of Electronic Arts and are not redistributed
+public/game/
+application.zip

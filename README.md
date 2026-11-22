@@ -112,6 +112,181 @@ The emulator window can be scaled with system properties, for example
 | `midp.home` | `~/.the_sims_3_mobile` | where record stores are written |
 | `midlet.Force-Locale` | unset | e.g. `-Dmidlet.Force-Locale=de` |
 
+## Web port
+
+`web/` contains a browser port of the same game. It is a TypeScript rewrite that
+keeps the behaviour of the Java code rather than its shape: the game classes are
+translated from this repository's de-obfuscated sources and the J2ME APIs are
+reimplemented on top of canvas, Web Audio and `localStorage`.
+
+```sh
+cd web
+npm install
+npm run assets      # copy resources, pre-render MIDI/AMR to Ogg (needs ffmpeg + timidity)
+npm run dev         # or: npm run build && npm run preview
+```
+
+`npm run build` also packs the output into `web/application.zip` (the contents of
+`dist/` at the archive root, which is the layout KaiOS installs); the archive is
+git ignored and `npm run package` repacks without rebuilding.
+
+| Piece | Implementation |
+|:-|:-|
+| Graphics | `src/runtime/graphics.ts`, a MIDP `Graphics` over a 2D canvas (clipping, regions, anchors) |
+| Images | `src/runtime/png.ts` decodes PNGs with the browser's own decoder; `image.ts` preloads every image at boot so the game can keep its synchronous loading |
+| Fonts / text | the game's own bitmap font engine, unchanged; `font.ts` only provides metrics |
+| Input | `src/runtime/display.ts` maps arrows, Enter, Space, F1–F4, Backspace, numbers, `*` and `#` to MIDP key codes, and also the KaiOS key names `SoftLeft`/`SoftRight`/`Enter`, which arrive with an empty `code`; the hardware back key is prevented from closing the app |
+| Record stores | `src/runtime/rms.ts`, stored as base64 record lists in `localStorage` |
+| Audio | `src/runtime/media.ts`; the build renders every MIDI/AMR/WAV asset to mono 22.05 kHz Ogg Vorbis. A loop count of −1 sets `HTMLAudioElement.loop`, matching the Java sequencer's `LOOP_CONTINUOUSLY` without a seam |
+| Resources | synchronous `XMLHttpRequest` from `public/game` (`src/runtime/io.ts`) |
+| Threads | the loading "threads" become cooperative pumps driven by key presses |
+
+> `public/manifest.webmanifest` is the KaiOS 3.0 manifest: fullscreen, portrait,
+> the plumbob green from `icon.png` as background and theme colour, and that same
+> `icon.png` (copied into `public/game` by `npm run assets`) as the single app
+> icon. Quitting the game calls `window.close()`, which is how KaiOS closes a
+> packaged app; a desktop browser ignores it.
+
+### Regenerating the ported game code
+
+`web/src/game` is generated from `src/main/java/com/ea/sims3` by
+`tools/web/JavaToTs.java` (javac's `Trees` API, so every reference, overload and
+cast resolves against the real Java symbols) plus `tools/web/postprocess.mjs`,
+which applies the handful of adjustments that have no direct JavaScript
+equivalent:
+
+* the 64 bit progress flags in `GameCanvas` use `BigInt` (JavaScript numbers
+  only hold bits up to 2^53 and bitwise operators stop at 32),
+* the loading threads become `setTimeout` pumps instead of blocking waits,
+* mid/AMR playback is replaced by the pre-rendered Ogg assets,
+* Java overloads are renamed (`name_2`, `name_3`) because TypeScript has no
+  method overloading, and `StringBuffer.append(char)` is mapped to a character
+  append instead of a number append.
+
+```sh
+npm run game        # tools/web/generate.sh, needs a JDK
+```
+
+### Images
+
+The game asks for its sprite sheets while it loads, so the port fetches and
+decodes every PNG once at start up (`preloadImages`) and the game then gets
+ready made bitmaps. Decoding is done by the browser (`createImageBitmap`), which
+is faster than inflating the data in JavaScript and removes the `fflate`
+dependency; `scripts/copy-assets.mjs` writes `public/game/png.json` with the list
+of images to preload.
+
+The recolouring path is worth a note: the Java build rewrites the `PLTE` chunk
+in memory and decodes the edited PNG again. `ResourceLoader.replacePalette` walks
+the whole `fromColors` array and, for each entry that is not the `0x00FF00FF`
+"skip" marker, replaces *every* palette entry of that colour — sequentially, so a
+later entry can match an earlier replacement. The port decodes each image once
+and runs the same substitution over the palette it read from the PNG, then maps
+the decoded pixels back through it (by colour *and* alpha, so entries sharing a
+colour stay distinct). The result matches the Java build pixel for pixel.
+
+`ScreenFade.ts` is written by hand: the Java build draws the fades through the
+M3G shim, which reduces to a single alpha blended rectangle.
+
+### Integer and 64 bit arithmetic
+
+Java's `int` operators wrap at 32 bits and its `long` operators at 64; a
+JavaScript number does neither, so the translator spells the Java result out:
+
+| Java | Emitted | Why |
+|:-|:-|:-|
+| `a / b`, `a % b` (int) | `((a / b) \| 0)` | truncate toward zero, keep the sign wrap |
+| `a * b` (int) | `Math.imul(a, b)` | exact 32 bit product; `a * b` loses precision past 2^53 |
+| `a + b`, `a - b` (int) | `((a + b) \| 0)` | 32 bit wrap |
+| `-a` (int) | `((a * -1) \| 0)` | `-Integer.MIN_VALUE` stays negative in Java |
+| `a >>> b` (int) | `((a >>> b) \| 0)` | `>>>` yields an unsigned value, Java's result is signed |
+| `a << b`, `a >> b`, `a & b`, `a \| b`, `a ^ b` (int) | unchanged | JavaScript bitwise operators already work on int32 |
+| `(byte) x`, `(short) x`, `(char) x` | `(x << 24 >> 24)`, `(x << 16 >> 16)`, `(x & 0xffff)` | narrowing conversions |
+| `x += y` and friends on an int | `x = ((x + y) \| 0)` | Java narrows and wraps compound assignments too |
+| `x += y` on a byte/short/char | `x = (((x + y) \| 0) << 24 >> 24)` | Java converts back to the variable's type |
+| `a << b` (long) | `a * Math.pow(2, b & 63)` | 64 bit shifts do not fit an int32; the distance is masked like Java |
+| `a >> b` (long) | `Math.floor(a / Math.pow(2, b & 63))` | an arithmetic shift is a floor division by a power of two |
+| `a / b` (long) | `Math.trunc(a / b)` | exact for every dividend a double can hold: the quotient is more than half an ulp from the next integer |
+
+Anything a JavaScript number cannot represent at all is emitted with a
+`SIM_INEXACT` marker: `long` bitwise operators, `long <<` with a variable
+distance and `long >>>`. `tools/web/generate.sh` fails if a marker survives the
+post processing step, so a new 64 bit operation cannot silently lose its high
+bits; the flag bitsets are the only places that need the `BigInt` rewrite.
+
+`long` `+ - * %` stay plain numbers and are exact for every value this game
+produces (millisecond timestamps, elapsed times and the fixed point
+intermediates, all far below 2^53).
+
+### Numeric parity checks
+
+```sh
+tools/web/parity/run.sh     # needs a JDK and node, no gradle
+```
+
+translates a generated class holding one method per operator/operand-type
+combination, runs it through javac and through the emitted TypeScript and
+compares 19 086 results, then does the same for the fixed point maths
+(191 515 cases covering the whole `sin`/`cos`/`sqrt` range plus `Integer`
+edge values) and for the ported `java.util.Random` against the JDK
+implementation. Cases whose exact result needs more than 53 bits are reported
+as known losses; everything else has to match.
+
+## Web port status
+
+The port boots, reaches the main menu, the Create A Sim flow and the lot itself.
+Frames were compared against the desktop build by capturing both at the same
+game states: the sound prompt, the title screen and matched menu frames are
+pixel identical.
+
+Three classes of difference are handled by restoring Java semantics where
+JavaScript would silently continue:
+
+* typed arrays ignore out-of-range writes, so `SdkString` checks its buffer
+  bounds and throws `IndexOutOfBoundsException` like the Java `byte[]` would
+  (the game catches these and skips the draw, which is why some list rows are
+  blank),
+* `SdkString` throws for unknown string ids for the same reason,
+* compound integer assignment truncates like Java (`divisor /= 10` was dividing
+  into a float and looping ~324 times instead of 10, which broke the number
+  formatting behind the Traits list rows),
+* integer division keeps its `| 0` wrapper parenthesised, because `|` binds
+  looser than the operators around it (`listY` came out as `-9` instead of
+  `183 - 14`, which collapsed every wrapped text block into one character per
+  line and broke the in-game tutorial screen).
+
+Every `int` operation now wraps at 32 bits like Java (see the table above), and
+the numeric parity suite covers the translation rules rather than individual
+call sites.
+
+Timing differs slightly because the port loads resources synchronously, so key
+presses land on the same screens a little sooner than on the desktop build.
+
+### Memory and frame cost
+
+The target is a low end phone, so the runtime avoids anything that grows or
+allocates per frame:
+
+* clipping is computed arithmetically and the result is reused instead of
+  returning a fresh rectangle for every sprite,
+* `drawRegion` clips once (not twice) and skips both the clip and the draw when a
+  sprite is off screen or already inside the clip,
+* one `Graphics` instance is reused per frame and `fillStyle` is only assigned
+  when it changes,
+* the frame buffer is *not* cleared between frames, matching the desktop build,
+  which paints onto a persistent buffer — that way a repaint that draws nothing
+  (the exit sequence) leaves the last frame visible instead of flashing black,
+* every canvas `save()` is paired with `restore()` in a `finally`, so a throwing
+  draw cannot leak the canvas state stack,
+* `ctx.roundRect` (absent on KaiOS) is replaced by a portable path,
+* audio players detach their listeners and drop their source on close, and the
+  autoplay retry queue is bounded,
+* images are preloaded four at a time; the 81 decoded sprites total about 3.8 MB
+  and are shared rather than copied per caller.
+
+A 30 second soak (menus, movement, dialog churn) keeps the JavaScript heap flat at
+about 6.8 MB.
+
 ## Decompilation notes
 
 ### Tooling
@@ -154,6 +329,7 @@ annotated with a comment in the source:
 | `Neighborhood.java`, `SdkMoreGames.java`, `Lot.java` | one local slot reused for two different variables |
 | `SpriteRenderer.java`, `SdkText.java` | `short`/`byte` arithmetic that needs an explicit cast |
 | `GameCanvas.java`, `GameScreen.java`, `Lot.java`, `Sim.java` | calls that pass `null` to an overloaded method; the original descriptors were read from the class files to pick the right overload |
+| `TitleScreen.java` (`y`) | the intro flashed white before the EA logo and back to black, and dimmed the white sim/logo frames to black; it now holds black with the EA logo, fades to white once, and stays white (`drawFadeIn`/`drawFadeBands` removed) |
 
 ### Porting bugs found while play-testing
 
@@ -205,7 +381,7 @@ for the mapping):
 | `SdkText` | EA SDK text engine: strings, glyph tables, text drawing |
 | `SdkString` | EA SDK string class with encodings |
 | `SdkSound`, `SdkConfig`, `SdkFeatures` | EA SDK sound manager and configuration |
-| `ResourceLoader` | resource loading, including the PNG palette recolouring trick |
+| `ResourceLoader` | resource loading, including the PNG palette recolouring trick (the port recolours decoded pixels instead of re-encoding the PNG) |
 | `Resources` | resource name/size tables |
 | `SpriteRenderer` | sprite and glyph drawing helpers |
 | `SpriteIndex`, `SoundIndex` | sprite and sound index tables (constant interfaces) |

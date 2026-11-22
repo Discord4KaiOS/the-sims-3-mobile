@@ -755,18 +755,12 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             this.fillScreen(gfx, 0);
             return;
          case 1:
-            this.drawIntroBackground(gfx);
-            this.drawFadeIn(gfx, this.introDuration - this.introElapsed, this.introDuration);
-            return;
          case 2:
-            this.drawIntroBackground(gfx);
-            return;
          case 3:
-            this.drawIntroBackground(gfx);
-            this.drawFadeIn(gfx, this.introElapsed, this.introDuration);
-            return;
          case 4:
-            this.fillScreen(gfx, 0);
+            // Black with the EA logo until the single fade to white below: the
+            // intro must not flash white before the logo and back to black.
+            this.drawIntroBackground(gfx);
             return;
          case 5:
             this.fillFadeBlack(gfx, this.introElapsed, this.introDuration);
@@ -775,9 +769,10 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             this.fillScreen(gfx, 1);
             return;
          case 7:
+            // No bands here either: they dimmed the white scene back to black and
+            // flashed again when step 8 repainted it.
             this.fillScreen(gfx, 1);
             this.drawIntroSim(gfx);
-            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
             return;
          case 8:
          case 9:
@@ -801,20 +796,6 @@ public final class TitleScreen extends BaseScreen implements Runnable {
             this.drawMainMenuBox(gfx);
          case 18:
       }
-   }
-
-   private void drawFadeIn(Graphics gfx, int elapsed, int duration) {
-      GameCanvas canvas = super.canvas;
-      int alpha = 255 - Math.min(elapsed * 255 / duration, 255);
-      int color = 0xFF000000 | alpha << 16 | alpha << 8 | alpha << 0;
-      canvas.drawFadeRect(gfx, 66, color, 0, 0, canvas.getWidth(), canvas.getHeight());
-   }
-
-   private void drawFadeBands(Graphics gfx, int elapsed, int duration) {
-      GameCanvas canvas = super.canvas;
-      int alpha = Math.min(elapsed * 255 / duration, 255);
-      int color = 0xFF000000 | alpha << 16 | alpha << 8 | alpha << 0;
-      canvas.drawFadeRect(gfx, 65, color, 0, 0, canvas.getWidth(), canvas.getHeight());
    }
 
    private void fillFadeBlack(Graphics gfx, int elapsed, int duration) {
@@ -853,18 +834,14 @@ public final class TitleScreen extends BaseScreen implements Runnable {
          progress = FixedMath.div(this.introElapsed, this.introDuration);
       }
 
+      // No dimming bands on the logo frames either: they pulled the white scene
+      // back down to black instead of leaving it white.
       if (this.introStep >= 12) {
          SpriteRenderer.drawFrame(gfx, frameId, 8, centerX, centerY);
-         if (this.introStep == 12) {
-            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
-         }
       }
 
       if (this.introStep >= 11) {
          SpriteRenderer.drawFrame(gfx, frameId, 6, centerX, centerY);
-         if (this.introStep == 11) {
-            this.drawFadeBands(gfx, this.introDuration - this.introElapsed, this.introDuration);
-         }
       }
 
       SpriteRenderer.drawFrame(gfx, frameId, 0, centerX, centerY);
